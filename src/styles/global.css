@@ -440,7 +440,11 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   flex-shrink: 0; /* pill has a fixed height and this box's own height exceeds the leftover space, so the flex algorithm was silently squishing it instead of letting it overflow */
   width: 640px;
   max-width: 90vw;
-  height: 480px;
+  /* aspect-ratio (not a fixed height) so the canvas scales down cleanly
+     instead of getting squished/cropped once max-width kicks in on narrower
+     viewports. */
+  aspect-ratio: 640 / 480;
+  height: auto;
   margin-top: 15px;
   /* the source capture was cropped at the waist, leaving a hard edge — fade it out instead of
      showing a jagged cut where it overflows into the plain background below the pill. */
@@ -581,8 +585,8 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 }
 .card:hover .card__cta { opacity: 1; transform: translateY(0); }
 .card__body { padding: 0 20px 16px; display: flex; flex-direction: column; gap: 5px; }
-.card__meta { display: flex; align-items: center; gap: 5px; margin: 0; }
-.card__meta .label-mono { font-size: 20px; letter-spacing: 0.04em; }
+.card__meta { display: flex; align-items: center; gap: 5px; row-gap: 4px; margin: 0; flex-wrap: wrap; }
+.card__meta .label-mono { font-size: 20px; letter-spacing: 0.04em; white-space: nowrap; }
 .card__body h3 { font-family: var(--font-display); font-size: 20px; margin: 0; transition: font-size 0.3s ease; }
 .card:hover .card__body h3 { font-size: 22px; }
 
@@ -890,7 +894,44 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   .method__circle { width: 100%; }
   .method__center { font-size: 16px; }
   .method__step { display: none; }
-  .about-teaser { flex-direction: column; }
+  .about-teaser { flex-direction: column; align-items: center; text-align: center; }
+  .about-teaser__content { align-items: center; }
   .audiovisual__controls, .btn-watch { position: static; margin-top: 16px; }
   .audiovisual__video { padding: 32px; }
+  .display-l { font-size: 44px; }
+  .footer__main { padding: 64px 32px 40px; }
+  .footer__columns { gap: 40px; }
+}
+
+/* Phone tier: the 900px cut keeps the mobile nav for tablets too, but text
+   sizes and fixed-px paddings tuned for a 1440 desktop canvas still need to
+   shrink further once we're down to a phone-width viewport. */
+@media (max-width: 600px) {
+  .hero { padding: 16px 16px 160px; }
+  .hero__pill { height: auto; padding: 40px 16px; gap: 14px; }
+  .hero__headline { font-size: 32px; line-height: 1.25; }
+  .hero__subhead { font-size: 17px; }
+  .hero__head { width: 100%; max-width: 320px; }
+  .hero__lettering { font-size: 26vw; }
+  /* Desktop's 17%/24% offsets land the bubble right on the face once the
+     head shrinks to mobile width — push it out to the side instead. */
+  .hero__bubble { top: 10%; left: -4%; }
+
+  .work { padding: 40px 20px; }
+  .method, .thoughts { padding: 64px 20px; }
+  .audiovisual__title { margin-bottom: 16px; }
+  .audiovisual__title h2.display-l { font-size: 32px; }
+  .btn-watch, .pill-cta { padding: 12px 18px; font-size: 15px; }
+  .round-btn { width: 40px; height: 40px; font-size: 15px; }
+  .audiovisual__side { width: 28px; }
+
+  .trust-strip.label-mono { font-size: 14px; gap: 12px; padding: 24px 20px; justify-content: flex-start; }
+
+  .about-teaser { padding: 40px 20px 64px; }
+  .about-teaser__content .hero__headline { font-size: 28px; }
+
+  .footer__main { padding: 48px 20px 32px; }
+  .footer__brand, .footer__col, .footer__col--contact { width: 100%; max-width: 100%; }
+  .footer__logo { font-size: 32px; }
+  .footer__bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
