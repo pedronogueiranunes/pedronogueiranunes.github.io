@@ -121,7 +121,18 @@ const menu = [
     </button>
     <button class="btn-primary" type="button">Book a call</button>
   </div>
+
+  <button class="mega-navbar__burger" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <nav class="mobile-menu__links">
+    {menu.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+  <button class="btn-primary" type="button">Book a call</button>
+</div>
 
 <script>
   import { gsap } from 'gsap';
@@ -198,5 +209,20 @@ const menu = [
     if (openItem && !openItem.contains(e.target as Node)) {
       closePanel(openItem, true);
     }
+  });
+
+  const burger = document.getElementById('mobile-menu-toggle')!;
+  const mobileMenu = document.getElementById('mobile-menu')!;
+  burger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('is-open');
+    burger.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  mobileMenu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('is-open');
+      burger.classList.remove('is-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
   });
 </script>
