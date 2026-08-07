@@ -256,17 +256,17 @@ a { color: inherit; text-decoration: none; }
 
 .hero__bubble {
   position: absolute;
-  top: 391px;
-  left: 300px;
+  top: 22%;
+  left: 10%;
   background: #fff;
   border: 1px solid var(--accent);
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 9px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 10px 16px;
-  border-radius: 16px;
+  padding: 7px 11px;
+  border-radius: 11px;
   white-space: nowrap;
   z-index: 3;
   animation: bubble-bob 2.4s ease-in-out infinite;
@@ -275,10 +275,10 @@ a { color: inherit; text-decoration: none; }
 .hero__bubble::after {
   content: '';
   position: absolute;
-  bottom: -3px;
-  right: 4px;
-  width: 12px;
-  height: 12px;
+  bottom: -2px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
   background: #fff;
   border-right: 1px solid var(--accent);
   border-bottom: 1px solid var(--accent);

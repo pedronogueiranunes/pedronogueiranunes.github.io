@@ -74,8 +74,9 @@ export function initSplat() {
     // Verified directly (froze rotation at fixed yaw values and screenshotted each) rather than
     // guessed: yaw=0 is close to front-facing and yaw=60 is genuine profile — the old 0-30 range
     // never swung far enough to read as "profile" at either end.
-    const AUTO_CENTER = 30;
-    const AUTO_AMPLITUDE = 30;
+    // Negative to mirror the swing to the opposite side (profile was facing the wrong way).
+    const AUTO_CENTER = -30;
+    const AUTO_AMPLITUDE = -30;
     const AUTO_SPEED = 0.25;
     // sin(time*speed) is 0 at time=0, i.e. yaw=CENTER (mid-swing) — offset the starting phase so
     // the loop instead opens on the profile pose at yaw=CENTER+AMPLITUDE (sin=+1).
