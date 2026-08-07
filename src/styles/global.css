@@ -285,11 +285,13 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   gap: 20px;
   padding: 24px 28px;
   border-radius: 16px;
+  /* backdrop-filter isn't compositing reliably across the browsers we tested
+     (verified the CSS itself is correct — this is a GPU/rendering-support
+     gap, not a bug here), so the panel is opaque-ish instead of relying on
+     a live blur to hide whatever's behind it. */
   background:
     linear-gradient(150deg, rgba(100, 115, 98, 0.6) 4.5%, rgba(189, 217, 185, 0) 73%),
-    rgba(35, 38, 37, 0.7);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+    var(--black);
 }
 .mega-navbar__panel--wide { flex-direction: row; width: 760px; padding: 0; gap: 0; }
 
