@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={Astro.currentLocale ?? 'en'}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <script is:inline>
+    // Runs before paint so there's no flash of the wrong theme.
+    const saved = localStorage.getItem('theme');
+    const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('theme-dark', dark);
+  </script>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="navbar__brand">Pedro Nogueira</div>
+  <nav class="navbar__links">
+    <a href="#work">Projects</a>
+    <a href="#about">About</a>
+    <a href="#experiments">Experiments</a>
+    <a href="#thoughts">Thoughts</a>
+  </nav>
+  <div class="navbar__actions">
+    <button class="pill-toggle" id="lang-toggle" type="button" aria-label="Toggle language">
+      <img src="/assets/icon-globe.svg" alt="" width="14" height="14">
+      <span id="lang-toggle-label">US</span>
+    </button>
+    <button class="pill-toggle pill-toggle--grow" id="theme-toggle" type="button" aria-label="Toggle theme">
+      <img src="/assets/icon-moon.svg" alt="" width="14" height="14">
+    </button>
+    <button class="btn-primary" type="button">Book a call</button>
+  </div>
+</header>
+
+<main>
+  <slot />
+</main>
+
+<footer class="footer">
+  <div class="footer__glow">
+    <img src="/assets/globe-footer.svg" alt="">
+  </div>
+  <div class="footer__marquee">
+    <div class="footer__marquee-track">LETS WORK TOGETHER + LETS WORK TOGETHER + LETS WORK TOGETHER + LETS WORK TOGETHER + LETS WORK TOGETHER +</div>
+  </div>
+  <div class="footer__main">
+    <div class="footer__columns">
+      <div class="footer__brand">
+        <div class="footer__logo">superfluid</div>
+        <p class="muted">Web developer + UI/UX and motion designer. 10+ years, clients in the US, Germany, and Canada.</p>
+        <a class="label-mono accent" href="#">LinkedIn ↗</a>
+      </div>
+      <div class="footer__col">
+        <p class="label-mono muted">// Menu</p>
+        <a href="#work">Projects</a>
+        <a href="#about">About</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#thoughts">Thoughts</a>
+      </div>
+      <div class="footer__col">
+        <p class="label-mono muted">// Categories</p>
+        <a href="#">Web Design &amp; Dev</a>
+        <a href="#">Branding</a>
+        <a href="#">Motion</a>
+        <a href="#">Digital Art</a>
+      </div>
+      <div class="footer__col footer__col--contact">
+        <p class="label-mono muted">// Contact</p>
+        <a href="mailto:pedronogueiranunes@gmail.com">pedronogueiranunes@gmail.com</a>
+        <p class="muted">Based in Brazil, working with clients in the US, Germany, and Canada.</p>
+      </div>
+    </div>
+    <div class="footer__divider"></div>
+    <div class="footer__bottom label-mono muted">
+      <p>© 2026 Pedro Nogueira</p>
+      <div class="footer__legal">
+        <a href="#">Legal notice</a>
+        <a href="#">Privacy policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ponytail: toggles are visual state only, i18n switching still TODO once pt-br/es content exists.
+  const langs = ['US', 'PT', 'ES'];
+  let langIndex = 0;
+  const langLabel = document.getElementById('lang-toggle-label')!;
+  document.getElementById('lang-toggle')!.addEventListener('click', () => {
+    langIndex = (langIndex + 1) % langs.length;
+    langLabel.textContent = langs[langIndex];
+  });
+
+  document.getElementById('theme-toggle')!.addEventListener('click', () => {
+    const dark = document.documentElement.classList.toggle('theme-dark');
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+</script>
+</body>
+</html>

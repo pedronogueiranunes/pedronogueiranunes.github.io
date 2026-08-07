@@ -1,0 +1,179 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Pedro Nogueira — Portfolio">
+
+  <section class="hero">
+    <div class="hero__pill">
+      <div class="hero__lettering" aria-hidden="true">
+        <div class="hero__lettering-track">
+          <span>figma&nbsp;+&nbsp;ux&nbsp;design&nbsp;+&nbsp;web&nbsp;development&nbsp;+&nbsp;</span>
+          <span>figma&nbsp;+&nbsp;ux&nbsp;design&nbsp;+&nbsp;web&nbsp;development&nbsp;+&nbsp;</span>
+        </div>
+      </div>
+      <div class="hero__globe">
+        <img src="/assets/brazil-globe.svg" alt="" width="96" height="58">
+        <p class="label-mono accent">made in brazil</p>
+      </div>
+      <h1 class="hero__headline">I build digital experiences that bring together design, code, and motion.</h1>
+      <p class="hero__subhead">Web developer + UI/UX and motion designer. 10+ years, clients in the US, Germany, and Canada.</p>
+      <span class="hero__est label-mono accent">est 1991</span>
+      <div class="hero__head" id="splat-viewport">
+        <canvas id="splat-canvas"></canvas>
+      </div>
+      <div class="hero__bubble" id="splat-bubble">play with me</div>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <h2 class="section-title">Selected work</h2>
+    <div class="work__grid">
+      {projects.map((project) => (
+        <article
+          class={`card ${project.data.featured ? 'card--featured' : ''}`}
+          style={project.data.color ? `background:${project.data.color}` : undefined}
+        >
+          <div class={`card__shot ${project.data.featured ? 'card__shot--tall' : ''}`}>
+            <img src={project.data.image} alt={`${project.data.title} preview`} />
+          </div>
+          <div class="card__body">
+            <p class="card__meta">
+              <span class="label-mono accent">{project.data.category}</span>
+              <span class="label-mono muted">{project.data.year}</span>
+            </p>
+            <h3>{project.data.title}</h3>
+          </div>
+          {project.data.trail && <div class="card__trail label-mono">{project.data.trail}</div>}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="method">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow">method</span>
+        <h2 class="display-l">The method works. <span class="accent">Always.</span></h2>
+      </div>
+      <div class="counter">
+        <p class="counter__num">07</p>
+        <p class="label-mono accent">Steps</p>
+      </div>
+    </div>
+
+    <div class="method__circle">
+      <img class="method__ring" src="/assets/ellipse-big.svg" alt="">
+      <img class="method__dot method__dot--mid" src="/assets/ellipse-mid.svg" alt="">
+      <img class="method__dot method__dot--small" src="/assets/ellipse-small.svg" alt="">
+      <p class="method__center">I think in product.<br>I design the experience.<br>I build with code and motion.</p>
+
+      <div class="method__step" style="--x:400; --y:64;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">01</span><strong>Discover</strong>
+      </div>
+      <div class="method__step" style="--x:650; --y:220;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">02</span><strong>Structure</strong>
+      </div>
+      <div class="method__step" style="--x:712; --y:490;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">03</span><strong>Design</strong>
+      </div>
+      <div class="method__step" style="--x:539; --y:707;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">04</span><strong>Build</strong>
+      </div>
+      <div class="method__step" style="--x:261; --y:707;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">05</span><strong>Animate</strong>
+      </div>
+      <div class="method__step" style="--x:88; --y:490;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">06</span><strong>Test</strong>
+      </div>
+      <div class="method__step" style="--x:150; --y:220;">
+        <img class="method__marker" src="/assets/marker.svg" alt="">
+        <span class="label-mono accent">07</span><strong>Evolve</strong>
+      </div>
+    </div>
+
+    <a class="see-more label-mono accent" href="#">→ See the full method</a>
+  </section>
+
+  <section class="thoughts" id="thoughts">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow">blog</span>
+        <h2 class="section-title">Notes from the field.</h2>
+      </div>
+      <div class="counter">
+        <p class="counter__num">{String(posts.length).padStart(2, '0')}</p>
+        <p class="label-mono accent">Posts</p>
+      </div>
+    </div>
+
+    <div class="thoughts__row">
+      {posts.map((post) => (
+        <article class="post">
+          <div class="post__visual"><img src={post.data.image} alt="" /></div>
+          <div class="post__body">
+            <p class="post__meta label-mono">
+              <span class="muted">{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+              <span class="muted">·</span>
+              <span class="accent">{post.data.tag}</span>
+            </p>
+            <h3>{post.data.title}</h3>
+            <p class="post__excerpt">{post.data.excerpt}</p>
+            <a class="label-mono accent" href={`/thoughts/${post.slug}`}>Read more →</a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <a class="see-more label-mono accent" href="#">→ See all posts</a>
+  </section>
+
+  <section class="audiovisual" id="experiments">
+    <div class="marquee marquee--top"><div class="marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div></div>
+    <div class="audiovisual__video">
+      <div class="audiovisual__title">
+        <span class="eyebrow eyebrow--dark">bonus stuff</span>
+        <h2 class="display-l light">Audiovisual Work</h2>
+        <p class="body-l light">Motion, editing, and audiovisual production</p>
+      </div>
+      <button class="btn-watch label-mono" type="button">Watch ↗</button>
+      <div class="audiovisual__controls">
+        <button class="pill-cta label-mono" type="button">See full category →</button>
+        <button class="round-btn" type="button" aria-label="Previous">←</button>
+        <button class="round-btn" type="button" aria-label="Next">→</button>
+      </div>
+    </div>
+    <div class="marquee marquee--bottom"><div class="marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div></div>
+  </section>
+
+  <div class="trust-strip label-mono accent">
+    <span>10+ years of experience</span>
+    <span>3 continents served</span>
+    <span>Qodeture · Molina Chambô · BSA Legal · Green Nation</span>
+  </div>
+
+  <section class="about-teaser" id="about">
+    <img class="about-teaser__head" src="/assets/head-about.png" alt="Photo of Pedro Nogueira">
+    <div class="about-teaser__content">
+      <span class="eyebrow">About me</span>
+      <h2 class="hero__headline" style="width:auto">I build digital experiences that bring together design, code, and motion.</h2>
+      <p class="body-l">I'm Pedro. Brazilian, 35 years old, and I split my career between code and design, helping brands and agencies communicate better through well thought out digital products.</p>
+      <a class="label-mono accent" href="#">→ Read my story</a>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/playcanvas/build/playcanvas.min.js" is:inline></script>
+  <script>
+    import { initSplat } from '../scripts/splat-hero.js';
+    initSplat();
+  </script>
+</Base>
