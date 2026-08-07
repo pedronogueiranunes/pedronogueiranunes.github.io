@@ -24,6 +24,9 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
       <span class="hero__est label-mono accent">est 1991</span>
       <div class="hero__head" id="splat-viewport">
         <canvas id="splat-canvas"></canvas>
+        <svg class="splat-loader" id="splat-loader" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
+          <circle cx="24" cy="24" r="20" fill="none" stroke-width="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray="90 40" />
+        </svg>
       </div>
       <div class="hero__bubble" id="splat-bubble">play with me</div>
     </div>

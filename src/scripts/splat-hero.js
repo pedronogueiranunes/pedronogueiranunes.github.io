@@ -56,6 +56,7 @@ export function initSplat() {
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       camera.setPosition(0, 0, radius * 1.66);
       camera.lookAt(0, 0, 0);
+      document.getElementById('splat-loader')?.classList.add('is-hidden');
     });
 
     // Drag to rotate — model stays put otherwise. Horizontal drag only: yaw is the only axis the
