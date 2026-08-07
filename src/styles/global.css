@@ -109,36 +109,88 @@ a { color: inherit; text-decoration: none; }
 .see-more { display: inline-block; margin-top: 32px; }
 
 /* Navbar */
-.navbar {
+.mega-navbar {
   position: sticky;
-  top: 0;
+  top: 14px;
   z-index: 50;
+  margin: 14px 15px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: #fff;
-  padding: 16px 32px;
-}
-.navbar__brand {
-  border: 1px solid rgba(255, 90, 31, 0.33);
-  background: rgba(255, 90, 31, 0.04);
-  color: var(--accent);
-  padding: 10px 18px;
+  padding: 14px 32px;
   border-radius: 50px;
-  font-size: 15px;
-  white-space: nowrap;
+  background:
+    linear-gradient(88deg, #fff 23.236%, rgba(255, 255, 255, 0) 99.891%),
+    rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12.4px);
+  box-shadow: inset -2px -2px 8.2px rgba(100, 115, 98, 0.11);
 }
-.navbar__links {
-  display: flex;
-  gap: 28px;
-  background: var(--green);
+.mega-navbar__logo {
+  flex-shrink: 0;
+  background: var(--accent);
   color: #fff;
-  padding: 12px 24px;
-  border-radius: 999px;
-  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: 50px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 0.9;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
 }
-.navbar__actions { display: flex; align-items: center; gap: 9px; }
+
+.mega-navbar__pill {
+  display: flex;
+  gap: 32px;
+  background: var(--green);
+  border-radius: 999px;
+  padding: 12px 24px;
+  box-shadow: inset -2px -2px 8px rgba(132, 164, 128, 0.6);
+  transition: padding 0.2s ease;
+}
+/* Hovering any item switches the whole pill from the resting mono/uppercase
+   look to the compact sans-serif look the megamenu states use in Figma. */
+.mega-navbar__pill:has(.mega-navbar__item:hover),
+.mega-navbar__pill:has(.mega-navbar__item:focus-within) {
+  padding: 8px 12px;
+}
+.mega-navbar__item { position: static; }
+.mega-navbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mega-navbar__arrow { display: none; transform: rotate(45deg); color: var(--accent); }
+.mega-navbar__pill:has(.mega-navbar__item:hover) .mega-navbar__link,
+.mega-navbar__pill:has(.mega-navbar__item:focus-within) .mega-navbar__link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 6px 0;
+}
+.mega-navbar__item:hover .mega-navbar__link,
+.mega-navbar__item:focus-within .mega-navbar__link {
+  background: #fff;
+  color: var(--black);
+  padding: 6px 14px 6px 16px;
+}
+.mega-navbar__item:hover .mega-navbar__arrow,
+.mega-navbar__item:focus-within .mega-navbar__arrow {
+  display: inline-block;
+}
+
+.mega-navbar__actions { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
 .pill-toggle {
   display: flex;
   align-items: center;
@@ -164,7 +216,104 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
   text-transform: uppercase;
   cursor: pointer;
+  white-space: nowrap;
 }
+
+/* Megamenu panels */
+.mega-navbar__panel {
+  position: absolute;
+  top: calc(100% + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  width: 453px;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  background:
+    linear-gradient(150deg, rgba(100, 115, 98, 0.6) 4.5%, rgba(189, 217, 185, 0) 73%),
+    var(--black);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.mega-navbar__panel--wide { flex-direction: row; width: 760px; padding: 0; gap: 0; }
+.mega-navbar__item:hover .mega-navbar__panel,
+.mega-navbar__item:focus-within .mega-navbar__panel {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mega-navbar__heading {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--olive);
+}
+.mega-navbar__panel--wide .mega-navbar__col {
+  width: 460px;
+  padding: 40px 32px 40px 40px;
+}
+.mega-navbar__rows { display: flex; flex-direction: column; width: 100%; }
+.mega-navbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--black);
+}
+.mega-navbar__row:first-child { border-top: none; }
+.mega-navbar__row-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--text-on-dark);
+}
+.mega-navbar__row-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--olive);
+}
+.mega-navbar__panel--wide .mega-navbar__row { padding: 16px 0; }
+.mega-navbar__panel--wide .mega-navbar__row-title { font-size: 32px; line-height: 38px; }
+
+.mega-navbar__feature {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--black);
+}
+.mega-navbar__feature-thumb { height: 100px; border-radius: 6px; background: var(--olive); }
+.mega-navbar__feature-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.mega-navbar__feature-title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 16px; color: var(--text-on-dark); }
+.mega-navbar__feature-meta { margin: 0; font-size: 14px; color: var(--olive); }
+.mega-navbar__feature-cta { margin: 0; font-size: 14px; color: var(--accent); }
+
+.mega-navbar__panel--wide .mega-navbar__feature {
+  width: 300px;
+  height: 100%;
+  padding: 24px;
+  border-radius: 0;
+  justify-content: flex-start;
+}
+.mega-navbar__panel--wide .mega-navbar__feature-thumb { height: 252px; }
+.mega-navbar__panel--wide .mega-navbar__feature-eyebrow { font-size: 20px; letter-spacing: 0.04em; }
+.mega-navbar__panel--wide .mega-navbar__feature-title { font-size: 24px; line-height: 30px; }
 
 /* Hero */
 .hero { background: #fff; padding: 24px 32px 320px; }

@@ -1,0 +1,124 @@
+---
+// Menu content is data-driven so the 4 megamenu columns share one markup block
+// instead of 4 hand-copied ones. "Projects" is the wide two-column layout from
+// Figma (32:263 -> 31:59); the other three are the narrow single-column layout
+// (32:132 / 32:198 / 32:262).
+const menu = [
+  {
+    key: 'projects',
+    label: 'Projects',
+    href: '#work',
+    wide: true,
+    rows: [
+      { title: 'Web Design & Dev', num: '01' },
+      { title: 'Branding & Graphic Design', num: '02' },
+      { title: 'Digital Art & Illustration', num: '03' },
+      { title: 'Music & Audiovisual', num: '04' },
+      { title: 'See all projects →', num: '05', href: '#work' },
+    ],
+    feature: {
+      eyebrow: 'FEATURED CASE',
+      title: 'Green Nation Collective',
+      meta: 'Web Design & Dev · 2025–26',
+      cta: 'See case →',
+    },
+  },
+  {
+    key: 'about',
+    label: 'About',
+    href: '#about',
+    heading: 'ABOUT',
+    rows: [
+      { title: 'My story', num: '01' },
+      { title: 'Career timeline', num: '02' },
+      { title: 'Skills & Stack', num: '03' },
+      { title: 'How I work', num: '04' },
+    ],
+    feature: {
+      eyebrow: 'ABOUT ME',
+      title: '10+ years creating for international agencies and brands',
+      cta: 'Download CV →',
+    },
+  },
+  {
+    key: 'experiments',
+    label: 'Experiments',
+    href: '#experiments',
+    heading: 'EXPERIMENTS',
+    rows: [
+      { title: 'Code', num: '01' },
+      { title: 'Generative art', num: '02' },
+      { title: 'Prototypes', num: '03' },
+      { title: 'Music', num: '04' },
+    ],
+    feature: {
+      eyebrow: 'RECENT EXPERIMENT',
+      title: '[placeholder title]',
+      cta: 'See experiment →',
+    },
+  },
+  {
+    key: 'thoughts',
+    label: 'Thoughts',
+    href: '#thoughts',
+    heading: 'THOUGHTS',
+    rows: [
+      { title: 'Latest posts', num: '01' },
+      { title: 'Categories', num: '02' },
+      { title: 'Archive', num: '03' },
+    ],
+    feature: {
+      eyebrow: 'RECENT POST',
+      title: '[placeholder title]',
+      meta: '[placeholder date]',
+      cta: 'Read →',
+    },
+  },
+];
+---
+
+<header class="mega-navbar">
+  <div class="mega-navbar__logo">its pedro!</div>
+
+  <nav class="mega-navbar__pill">
+    {menu.map((item) => (
+      <div class="mega-navbar__item">
+        <a class="mega-navbar__link" href={item.href}>
+          {item.label}
+          <span class="mega-navbar__arrow" aria-hidden="true">→</span>
+        </a>
+        <div class={`mega-navbar__panel ${item.wide ? 'mega-navbar__panel--wide' : ''}`}>
+          <div class="mega-navbar__col">
+            {item.heading && <p class="mega-navbar__heading">{item.heading}</p>}
+            <div class="mega-navbar__rows">
+              {item.rows.map((row) => (
+                <a class="mega-navbar__row" href={row.href ?? '#'}>
+                  <span class="mega-navbar__row-title">{row.title}</span>
+                  <span class="mega-navbar__row-num">{row.num}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <a class="mega-navbar__feature" href="#">
+            <div class="mega-navbar__feature-thumb"></div>
+            <p class="mega-navbar__feature-eyebrow">{item.feature.eyebrow}</p>
+            <p class="mega-navbar__feature-title">{item.feature.title}</p>
+            {item.feature.meta && <p class="mega-navbar__feature-meta">{item.feature.meta}</p>}
+            <p class="mega-navbar__feature-cta">{item.feature.cta}</p>
+          </a>
+        </div>
+      </div>
+    ))}
+  </nav>
+
+  <div class="mega-navbar__actions">
+    <button class="pill-toggle" id="lang-toggle" type="button" aria-label="Toggle language">
+      <img src="/assets/icon-globe.svg" alt="" width="14" height="14">
+      <span id="lang-toggle-label">US</span>
+    </button>
+    <button class="pill-toggle pill-toggle--grow" id="theme-toggle" type="button" aria-label="Toggle theme">
+      <img src="/assets/icon-moon.svg" alt="" width="14" height="14">
+    </button>
+    <button class="btn-primary" type="button">Book a call</button>
+  </div>
+</header>
