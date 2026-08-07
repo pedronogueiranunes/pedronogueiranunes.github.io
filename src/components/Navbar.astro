@@ -154,12 +154,25 @@ const menu = [
     return panel.querySelectorAll('.mega-navbar__heading, .mega-navbar__row, .mega-navbar__feature');
   }
 
+  // The hero's gaussian-splat WebGL canvas breaks backdrop-filter compositing
+  // in this browser engine whenever it's rendering behind the panel — the
+  // blur silently no-ops instead of erroring. The panel already fully covers
+  // it while open, so hiding the canvas for that stretch costs nothing
+  // visible and sidesteps the bug entirely.
+  const splatCanvas = document.getElementById('splat-canvas');
+
   function openPanel(item: HTMLElement) {
     clearTimeout(closeTimer);
     if (openItem === item) return;
-    if (openItem) closePanel(openItem, true);
-
+    if (!openItem && splatCanvas) splatCanvas.style.visibility = 'hidden';
+    const previousItem = openItem;
+    // Reassign before closing the previous item so its closePanel() call
+    // sees openItem already pointing at the new item — otherwise the
+    // "did we fully close" check below would restore canvas visibility for
+    // one frame between switching from one open item straight to another.
     openItem = item;
+    if (previousItem) closePanel(previousItem, true);
+
     item.classList.add('is-open');
     const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
     const children = animatedChildren(panel);
@@ -173,7 +186,9 @@ const menu = [
 
   function closePanel(item: HTMLElement, immediate = false) {
     item.classList.remove('is-open');
-    if (openItem === item) openItem = null;
+    const wasOpenItem = openItem === item;
+    if (wasOpenItem) openItem = null;
+    if (wasOpenItem && splatCanvas) splatCanvas.style.visibility = '';
     const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
     const children = animatedChildren(panel);
 
