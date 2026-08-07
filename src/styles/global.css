@@ -256,13 +256,13 @@ a { color: inherit; text-decoration: none; }
 
 .hero__bubble {
   position: absolute;
-  top: 22%;
-  left: 10%;
+  top: 24%;
+  left: 17%;
   background: #fff;
   border: 1px solid var(--accent);
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 7px 11px;
