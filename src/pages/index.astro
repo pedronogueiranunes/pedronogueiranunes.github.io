@@ -38,10 +38,11 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
       {projects.map((project) => (
         <article
           class={`card ${project.data.featured ? 'card--featured' : ''}`}
-          style={project.data.color ? `background:${project.data.color}` : undefined}
+          style={project.data.color ? `--card-tint:${project.data.color}` : undefined}
         >
           <div class={`card__shot ${project.data.featured ? 'card__shot--tall' : ''}`}>
             <img src={project.data.image} alt={`${project.data.title} preview`} />
+            <span class="card__cta label-mono accent">Learn more</span>
           </div>
           <div class="card__body">
             <p class="card__meta">
