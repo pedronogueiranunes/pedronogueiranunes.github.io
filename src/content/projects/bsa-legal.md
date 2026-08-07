@@ -3,6 +3,7 @@ title: "BSA Legal: corporate website"
 order: 4
 category: "WEB DESIGN & DEV"
 year: "2025"
+country: "Brasil"
 image: "/assets/project-6.png"
 color: "#fff5d9"
 featured: true

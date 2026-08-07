@@ -47,11 +47,25 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
           <div class="card__body">
             <p class="card__meta">
               <span class="label-mono accent">{project.data.category}</span>
-              <span class="label-mono muted">{project.data.year}</span>
+              <span class="label-mono accent">·</span>
+              <span class="label-mono green">{project.data.year}</span>
+              {project.data.country && (
+                <>
+                  <span class="label-mono accent">·</span>
+                  <span class="label-mono green">{project.data.country}</span>
+                </>
+              )}
             </p>
             <h3>{project.data.title}</h3>
           </div>
-          {project.data.trail && <div class="card__trail label-mono">{project.data.trail}</div>}
+          {project.data.trail && (
+            <div class="card__trail">
+              <div class="card__trail-track label-mono accent">
+                <span>{project.data.trail}</span>
+                <span aria-hidden="true">{project.data.trail}</span>
+              </div>
+            </div>
+          )}
         </article>
       ))}
     </div>
