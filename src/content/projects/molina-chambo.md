@@ -6,4 +6,5 @@ year: "2025"
 country: "Brasil"
 image: "/assets/project-3.png"
 color: "#dae1ed"
+trail: "Figma · Webflow · JavaScript · GSAP · Google Analytics"
 ---

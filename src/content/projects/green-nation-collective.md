@@ -6,4 +6,5 @@ year: "2025"
 country: "USA"
 image: "/assets/project-2.png"
 color: "#dce7e1"
+trail: "Webflow · JavaScript · GSAP · MailChimp · Google Analytics"
 ---
