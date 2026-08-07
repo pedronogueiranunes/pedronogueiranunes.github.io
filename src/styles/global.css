@@ -692,7 +692,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 }
 .audiovisual__video {
   position: relative;
-  min-height: 500px;
+  min-height: 640px;
   background: #080808;
   padding: 42px 98px;
   display: flex;
@@ -709,7 +709,10 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: none;
   border-radius: 999px;
   padding: 16px 24px;
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .audiovisual__controls { position: absolute; right: 98px; top: 42px; display: flex; gap: 12px; }
@@ -719,6 +722,10 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: none;
   border-radius: 999px;
   padding: 12px 20px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .round-btn {
@@ -728,6 +735,8 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: 1px solid var(--text-on-dark);
   background: transparent;
   color: #fff;
+  font-family: var(--font-mono);
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -748,10 +757,10 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 /* About teaser */
 .about-teaser {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 48px;
-  padding: 60px 64px 0;
+  padding: 60px 64px 96px;
 }
 .about-teaser__head { max-width: 320px; }
 .about-teaser__content { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 600px; }
