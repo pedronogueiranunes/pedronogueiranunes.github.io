@@ -171,11 +171,12 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
 
     <div class="audiovisual__video">
       <video class="audiovisual__bg" autoplay muted loop playsinline>
+        <source src="/assets/audiovisual-reel.webm" type="video/webm" />
         <source src="/assets/audiovisual-reel.mp4" type="video/mp4" />
       </video>
       <div class="audiovisual__scrim"></div>
       <div class="audiovisual__title">
-        <span class="eyebrow eyebrow--dark">bonus stuff</span>
+        <span class="eyebrow">bonus stuff</span>
         <h2 class="display-l light">Audiovisual Work</h2>
         <p class="body-l light">Motion, editing, and audiovisual production</p>
       </div>

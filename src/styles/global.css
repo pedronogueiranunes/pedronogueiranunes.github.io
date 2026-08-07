@@ -83,7 +83,6 @@ a { color: inherit; text-decoration: none; }
   border-radius: 4px;
   margin-bottom: 20px;
 }
-.eyebrow--dark { border-color: var(--text-on-dark); color: var(--text-on-dark); }
 
 .section-title {
   font-family: var(--font-display);
@@ -687,13 +686,16 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 .audiovisual { position: relative; background: #0d0d0d; overflow: hidden; }
 .marquee { background: var(--black); height: 56px; overflow: hidden; display: flex; align-items: center; }
 .marquee__track {
-  font-family: var(--font-display);
+  font-family: var(--font-grout);
   font-weight: 700;
   font-size: 64px;
   color: #343434;
   white-space: nowrap;
   animation: scroll-left 30s linear infinite;
 }
+/* Bottom bar runs opposite the top one so the two strips read as flowing
+   together in one direction rather than both dragging the same way. */
+.marquee--bottom .marquee__track { animation-direction: reverse; }
 @keyframes scroll-left {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -743,7 +745,6 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 45%);
 }
 .audiovisual__title { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-.audiovisual .eyebrow { font-family: var(--font-grout); }
 .btn-watch {
   position: absolute;
   z-index: 1;
@@ -754,7 +755,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: none;
   border-radius: 999px;
   padding: 16px 24px;
-  font-family: var(--font-grout);
+  font-family: var(--font-mono);
   font-size: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -767,7 +768,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: none;
   border-radius: 999px;
   padding: 12px 20px;
-  font-family: var(--font-grout);
+  font-family: var(--font-mono);
   font-size: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -780,7 +781,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: 1px solid var(--text-on-dark);
   background: transparent;
   color: #fff;
-  font-family: var(--font-grout);
+  font-family: var(--font-mono);
   font-size: 20px;
   cursor: pointer;
 }
