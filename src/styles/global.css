@@ -913,11 +913,19 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   .hero__pill { height: auto; padding: 40px 16px; gap: 14px; }
   .hero__headline { font-size: 32px; line-height: 1.25; }
   .hero__subhead { font-size: 17px; }
-  .hero__head { width: 100%; max-width: 320px; }
+  /* 320px was the old mobile cap; 30% bigger is 416px. width:100% would just
+     resolve to the pill's inner content width (~343px on a 375px phone) and
+     silently cap out well short of that, so this pins an explicit px size
+     with a vw-based ceiling instead — same pattern as the desktop rule
+     above, just scaled down — letting it overflow the pill slightly on
+     purpose (the pill already sets overflow:visible for exactly this). */
+  .hero__head { width: 416px; max-width: 111vw; }
   .hero__lettering { font-size: 26vw; }
   /* Desktop's 17%/24% offsets land the bubble right on the face once the
      head shrinks to mobile width — push it out to the side instead. */
-  .hero__bubble { top: 10%; left: -4%; }
+  /* Head is now 30% bigger (416px) and overflows the viewport symmetrically,
+     so the old -4% offset pushed the bubble off-screen — nudged inward. */
+  .hero__bubble { top: 10%; left: 8%; }
 
   .work { padding: 40px 20px; }
   .method, .thoughts { padding: 64px 20px; }
