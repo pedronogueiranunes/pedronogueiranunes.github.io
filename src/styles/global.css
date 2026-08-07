@@ -67,8 +67,8 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--accent);
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.05em;
+  font-size: 20px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 6px 12px;
   border-radius: 4px;
@@ -86,8 +86,8 @@ a { color: inherit; text-decoration: none; }
 .display-l {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 48px;
-  line-height: 1.2;
+  font-size: 64px;
+  line-height: 1.125;
   margin: 0 0 0;
   max-width: 700px;
 }
@@ -105,8 +105,9 @@ a { color: inherit; text-decoration: none; }
 }
 .counter { text-align: right; }
 .counter__num { font-family: var(--font-display); font-weight: 700; font-size: 32px; margin: 0; }
+.counter .label-mono { font-size: 20px; }
 
-.see-more { display: inline-block; margin-top: 32px; }
+a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 
 /* Navbar */
 .mega-navbar {
@@ -402,7 +403,7 @@ a { color: inherit; text-decoration: none; }
 .hero__globe { display: flex; flex-direction: column; align-items: center; }
 .hero__globe .label-mono { font-size: 20px; letter-spacing: 0; margin-top: 2px; }
 .hero__headline { font-family: var(--font-display); font-weight: 700; font-size: 48px; max-width: 848px; margin: 0; line-height: 1.3; }
-.hero__subhead { color: var(--green); font-size: 20px; max-width: 700px; margin: 0; line-height: 1.6; }
+.hero__subhead { color: var(--green); font-size: 22px; max-width: 700px; margin: 0; line-height: 1.6; }
 .hero__est {
   display: none; /* ponytail: hidden per request, markup kept for easy re-enable */
   position: absolute;
@@ -549,6 +550,8 @@ a { color: inherit; text-decoration: none; }
   background: #fff;
   padding: 14px 20px;
   border-radius: 16px 0 0 0;
+  font-size: 20px;
+  letter-spacing: 0.04em;
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
@@ -558,8 +561,9 @@ a { color: inherit; text-decoration: none; }
 .card__body { padding: 0 20px 16px; display: flex; flex-direction: column; gap: 5px; }
 .card__meta { display: flex; gap: 12px; margin: 0; }
 .card__meta .label-mono, .card__body h3 { transition: font-size 0.3s ease; }
+.card__meta .label-mono { font-size: 17px; letter-spacing: 0.05em; }
 .card__body h3 { font-family: var(--font-display); font-size: 20px; margin: 0; }
-.card:hover .card__meta .label-mono { font-size: 15px; }
+.card:hover .card__meta .label-mono { font-size: 20px; }
 .card:hover .card__body h3 { font-size: 24px; }
 
 .card--featured {
@@ -633,8 +637,8 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
   white-space: nowrap;
 }
-.method__step span { font-size: 30px; letter-spacing: 0.05em; }
-.method__step strong { font-family: var(--font-display); font-size: 18px; }
+.method__step span { font-size: 42px; letter-spacing: 0.04em; }
+.method__step strong { font-family: var(--font-display); font-size: 20px; }
 .method__marker { width: 10px; height: 10px; margin-bottom: 8px; }
 
 /* Thoughts */
@@ -655,6 +659,7 @@ a { color: inherit; text-decoration: none; }
 .post__meta { display: flex; gap: 8px; margin: 0; }
 .post__body h3 { font-family: var(--font-display); font-size: 20px; margin: 0; }
 .post__excerpt { color: var(--green); font-size: 14px; line-height: 1.5; margin: 0; }
+.post__body a { font-size: 20px; }
 
 /* Audiovisual */
 .audiovisual { background: #0d0d0d; overflow: hidden; }
@@ -662,7 +667,7 @@ a { color: inherit; text-decoration: none; }
 .marquee__track {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 40px;
+  font-size: 64px;
   color: #343434;
   white-space: nowrap;
   animation: scroll-left 30s linear infinite;
@@ -713,15 +718,17 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* Trust strip */
-.trust-strip {
+.trust-strip.label-mono {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  background: var(--soft-gray);
+  background: #fafafa;
   border-top: 1px solid var(--olive);
   border-bottom: 1px solid var(--olive);
-  padding: 32px 64px;
+  padding: 40px 64px;
   flex-wrap: wrap;
+  font-size: 20px;
+  letter-spacing: 0.04em;
 }
 
 /* About teaser */
@@ -734,6 +741,7 @@ a { color: inherit; text-decoration: none; }
 }
 .about-teaser__head { max-width: 320px; }
 .about-teaser__content { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 600px; }
+.about-teaser__content a { font-size: 20px; }
 
 /* Footer */
 .footer { position: relative; background: var(--black); overflow: hidden; border-radius: 24px 24px 0 0; }
