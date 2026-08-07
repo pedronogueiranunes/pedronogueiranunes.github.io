@@ -362,7 +362,11 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 
 .mega-navbar__panel--wide .mega-navbar__feature {
   width: 300px;
-  height: 100%;
+  /* No explicit height: a specified cross-size (even one that resolves from
+     an indeterminate %) opts the item out of the flex row's default
+     align-items:stretch, which is what was leaving it shorter than the
+     left column. Let stretch do its job instead. */
+  align-self: stretch;
   padding: 24px;
   border-radius: 0 16px 16px 0;
   justify-content: flex-start;
