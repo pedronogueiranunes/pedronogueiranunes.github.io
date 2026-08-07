@@ -21,6 +21,13 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'GROUT';
+  src: url('/assets/fonts/GROUT-Display.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --accent: #ff5a1f;
@@ -34,6 +41,7 @@
   --font-display: 'Satoshi', sans-serif;
   --font-body: 'Switzer', system-ui, sans-serif;
   --font-mono: 'MEK Mono', ui-monospace, monospace;
+  --font-grout: 'GROUT', 'MEK Mono', ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -135,7 +143,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   color: #fff;
   padding: 12px 14px;
   border-radius: 50px;
-  font-family: var(--font-mono);
+  font-family: var(--font-grout);
   font-size: 18px;
   line-height: 0.9;
   letter-spacing: 0.03em;
@@ -676,7 +684,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
 .post__body a { font-size: 20px; }
 
 /* Audiovisual */
-.audiovisual { background: #0d0d0d; overflow: hidden; }
+.audiovisual { position: relative; background: #0d0d0d; overflow: hidden; }
 .marquee { background: var(--black); height: 56px; overflow: hidden; display: flex; align-items: center; }
 .marquee__track {
   font-family: var(--font-display);
@@ -690,6 +698,34 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+/* Vertical text bars running the full height of the section, along each
+   edge. Built the same way Figma does it: a normal horizontal marquee bar,
+   long enough to cover the section's height once rotated, centered and spun
+   -90/90deg inside a clipped 56px-wide container — cheaper than trying to
+   author a genuinely vertical marquee. */
+.audiovisual__side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  overflow: hidden;
+  background: var(--black);
+  z-index: 2;
+}
+.audiovisual__side--left { left: 0; }
+.audiovisual__side--right { right: 0; }
+.audiovisual__side-track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2000px;
+  height: 56px;
+  overflow: hidden;
+}
+.audiovisual__side--left .audiovisual__side-track { transform: translate(-50%, -50%) rotate(-90deg); }
+.audiovisual__side--right .audiovisual__side-track { transform: translate(-50%, -50%) rotate(90deg); }
+.audiovisual__side-track-inner { animation-duration: 60s; }
+
 .audiovisual__video {
   position: relative;
   min-height: 640px;
@@ -699,9 +735,18 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   flex-direction: column;
   justify-content: flex-end;
 }
-.audiovisual__title { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.audiovisual__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.audiovisual__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 45%);
+}
+.audiovisual__title { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.audiovisual .eyebrow { font-family: var(--font-grout); }
 .btn-watch {
   position: absolute;
+  z-index: 1;
   right: 98px;
   bottom: 42px;
   background: var(--accent);
@@ -709,20 +754,20 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: none;
   border-radius: 999px;
   padding: 16px 24px;
-  font-family: var(--font-mono);
+  font-family: var(--font-grout);
   font-size: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.audiovisual__controls { position: absolute; right: 98px; top: 42px; display: flex; gap: 12px; }
+.audiovisual__controls { position: absolute; z-index: 1; right: 98px; top: 42px; display: flex; gap: 12px; }
 .pill-cta {
   background: var(--text-on-dark);
   color: #0d0d0d;
   border: none;
   border-radius: 999px;
   padding: 12px 20px;
-  font-family: var(--font-mono);
+  font-family: var(--font-grout);
   font-size: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -735,7 +780,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   border: 1px solid var(--text-on-dark);
   background: transparent;
   color: #fff;
-  font-family: var(--font-mono);
+  font-family: var(--font-grout);
   font-size: 20px;
   cursor: pointer;
 }

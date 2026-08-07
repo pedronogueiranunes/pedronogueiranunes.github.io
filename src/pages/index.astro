@@ -157,7 +157,23 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
 
   <section class="audiovisual" id="experiments">
     <div class="marquee marquee--top"><div class="marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div></div>
+
+    <div class="audiovisual__side audiovisual__side--left">
+      <div class="audiovisual__side-track">
+        <div class="audiovisual__side-track-inner marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div>
+      </div>
+    </div>
+    <div class="audiovisual__side audiovisual__side--right">
+      <div class="audiovisual__side-track">
+        <div class="audiovisual__side-track-inner marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div>
+      </div>
+    </div>
+
     <div class="audiovisual__video">
+      <video class="audiovisual__bg" autoplay muted loop playsinline>
+        <source src="/assets/audiovisual-reel.mp4" type="video/mp4" />
+      </video>
+      <div class="audiovisual__scrim"></div>
       <div class="audiovisual__title">
         <span class="eyebrow eyebrow--dark">bonus stuff</span>
         <h2 class="display-l light">Audiovisual Work</h2>
