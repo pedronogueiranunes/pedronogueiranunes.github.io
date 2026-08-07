@@ -288,7 +288,7 @@ a.see-more { display: inline-block; margin-top: 32px; font-size: 20px; }
   overflow: hidden;
   background:
     linear-gradient(150deg, rgba(100, 115, 98, 0.6) 4.5%, rgba(189, 217, 185, 0) 73%),
-    rgba(35, 38, 37, 0.95);
+    rgba(35, 38, 37, 0.7);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
 }
