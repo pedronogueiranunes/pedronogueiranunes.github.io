@@ -147,13 +147,6 @@ a { color: inherit; text-decoration: none; }
   border-radius: 999px;
   padding: 12px 24px;
   box-shadow: inset -2px -2px 8px rgba(132, 164, 128, 0.6);
-  transition: padding 0.2s ease;
-}
-/* Hovering any item switches the whole pill from the resting mono/uppercase
-   look to the compact sans-serif look the megamenu states use in Figma. */
-.mega-navbar__pill:has(.mega-navbar__item:hover),
-.mega-navbar__pill:has(.mega-navbar__item:focus-within) {
-  padding: 8px 12px;
 }
 .mega-navbar__item { position: static; }
 .mega-navbar__link {
@@ -171,22 +164,15 @@ a { color: inherit; text-decoration: none; }
   transition: background 0.15s ease, color 0.15s ease;
 }
 .mega-navbar__arrow { display: none; transform: rotate(45deg); color: var(--accent); }
-.mega-navbar__pill:has(.mega-navbar__item:hover) .mega-navbar__link,
-.mega-navbar__pill:has(.mega-navbar__item:focus-within) .mega-navbar__link {
-  font-family: var(--font-body);
-  font-size: 14px;
-  text-transform: none;
-  letter-spacing: 0;
-  padding: 6px 0;
-}
-.mega-navbar__item:hover .mega-navbar__link,
-.mega-navbar__item:focus-within .mega-navbar__link {
+/* Chip highlight tracks the JS-driven open state (not :hover) so it stays lit
+   for the whole grace period the menu is allowed to stay open, not just while
+   the pointer happens to be over the link itself. */
+.mega-navbar__item.is-open .mega-navbar__link {
   background: #fff;
   color: var(--black);
   padding: 6px 14px 6px 16px;
 }
-.mega-navbar__item:hover .mega-navbar__arrow,
-.mega-navbar__item:focus-within .mega-navbar__arrow {
+.mega-navbar__item.is-open .mega-navbar__arrow {
   display: inline-block;
 }
 
@@ -220,12 +206,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* Megamenu panels */
+/* display/opacity/transform are owned by the GSAP timeline in the script below
+   once JS boots — these are just the closed resting state for first paint. */
 .mega-navbar__panel {
   position: absolute;
   top: calc(100% + 20px);
   left: 50%;
-  transform: translateX(-50%);
-  display: flex;
+  display: none;
+  opacity: 0;
   width: 453px;
   flex-direction: column;
   gap: 20px;
@@ -234,16 +222,8 @@ a { color: inherit; text-decoration: none; }
   background:
     linear-gradient(150deg, rgba(100, 115, 98, 0.6) 4.5%, rgba(189, 217, 185, 0) 73%),
     var(--black);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
 }
 .mega-navbar__panel--wide { flex-direction: row; width: 760px; padding: 0; gap: 0; }
-.mega-navbar__item:hover .mega-navbar__panel,
-.mega-navbar__item:focus-within .mega-navbar__panel {
-  opacity: 1;
-  pointer-events: auto;
-}
 
 .mega-navbar__heading {
   margin: 0;

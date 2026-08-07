@@ -122,3 +122,81 @@ const menu = [
     <button class="btn-primary" type="button">Book a call</button>
   </div>
 </header>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const CLOSE_DELAY_MS = 5000;
+  const items = document.querySelectorAll<HTMLElement>('.mega-navbar__item');
+  let openItem: HTMLElement | null = null;
+  let closeTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // Panels are centered with GSAP's xPercent instead of a CSS transform,
+  // since GSAP tracks x/y/scale as separate components internally and
+  // recomposes them on every tween — a plain CSS `transform` would get
+  // clobbered the moment we animate y/scale for the open/close motion.
+  document.querySelectorAll<HTMLElement>('.mega-navbar__panel').forEach((panel) => {
+    gsap.set(panel, { xPercent: -50 });
+  });
+
+  function animatedChildren(panel: HTMLElement) {
+    return panel.querySelectorAll('.mega-navbar__heading, .mega-navbar__row, .mega-navbar__feature');
+  }
+
+  function openPanel(item: HTMLElement) {
+    clearTimeout(closeTimer);
+    if (openItem === item) return;
+    if (openItem) closePanel(openItem, true);
+
+    openItem = item;
+    item.classList.add('is-open');
+    const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
+    const children = animatedChildren(panel);
+
+    gsap.killTweensOf([panel, ...children]);
+    gsap.set(panel, { display: 'flex' });
+    gsap.timeline()
+      .fromTo(panel, { opacity: 0, y: -14, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.38, ease: 'power3.out' })
+      .fromTo(children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out', stagger: 0.045 }, '-=0.22');
+  }
+
+  function closePanel(item: HTMLElement, immediate = false) {
+    item.classList.remove('is-open');
+    if (openItem === item) openItem = null;
+    const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
+    const children = animatedChildren(panel);
+
+    gsap.killTweensOf([panel, ...children]);
+    gsap.to(panel, {
+      opacity: 0,
+      y: -10,
+      scale: 0.97,
+      duration: immediate ? 0.16 : 0.24,
+      ease: 'power2.in',
+      onComplete: () => gsap.set(panel, { display: 'none' }),
+    });
+  }
+
+  function scheduleClose(item: HTMLElement) {
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      if (openItem === item) closePanel(item);
+    }, CLOSE_DELAY_MS);
+  }
+
+  items.forEach((item) => {
+    item.addEventListener('mouseenter', () => openPanel(item));
+    item.addEventListener('mouseleave', () => scheduleClose(item));
+    item.addEventListener('focusin', () => openPanel(item));
+    item.addEventListener('focusout', (e) => {
+      const next = (e as FocusEvent).relatedTarget as Node | null;
+      if (!next || !item.contains(next)) scheduleClose(item);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (openItem && !openItem.contains(e.target as Node)) {
+      closePanel(openItem, true);
+    }
+  });
+</script>
