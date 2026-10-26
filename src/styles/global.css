@@ -900,9 +900,9 @@ details[open] > summary > .faq-plus:after {
 .footer-cta {
   position: relative;
   min-height: 400px;
-  padding: 70px 40px 40px;
+  padding: 100px 40px 100px;
   border-radius: 32px;
-  background: #fff url("/assets/figma/515-2792-imgDotTexture.svg") center/cover;
+  background: #fff url(/assets/figma/515-2792-imgDotTexture.svg) center / cover;
 }
 .footer-art {
   position: absolute;
@@ -976,7 +976,7 @@ details[open] > summary > .faq-plus:after {
   max-width: 340px;
 }
 .availability {
-  background: var(--accent-secondary);
+  background: white;
   color: #212322;
   display: flex;
   align-items: center;
@@ -1550,8 +1550,8 @@ details[open] > summary > .faq-plus:after {
   position: absolute;
   width: 412px;
   height: 280px;
-  top: 75px;
-  left: -83px;
+  top: 81px;
+  left: -73px;
   pointer-events: none;
 }
 .problem-art img {
