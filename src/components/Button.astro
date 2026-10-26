@@ -1,0 +1,30 @@
+---
+import Icon from "./Icon.astro";
+interface Props {
+  href?: string;
+  disabled?: boolean;
+  secondary?: boolean;
+  icon?: string;
+  type?: "button" | "submit";
+  class?: string;
+}
+const {
+  href,
+  disabled = false,
+  secondary = false,
+  icon = "arrow-right",
+  type = "button",
+  class: className = "",
+} = Astro.props;
+const Tag = href ? "a" : "button";
+---
+
+<Tag
+  href={href}
+  disabled={href ? undefined : disabled}
+  type={href ? undefined : type}
+  class:list={["action", { "action--secondary": secondary }, className]}
+>
+  <slot />
+  {icon && <Icon name={icon} />}
+</Tag>

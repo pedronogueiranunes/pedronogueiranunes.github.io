@@ -1,0 +1,170 @@
+[
+  {
+    "route": "/",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/services",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/projects",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/work/bsa-legal",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/about",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/contact",
+    "width": 1440,
+    "viewport": 1440,
+    "document": 1440,
+    "navOverlap": false
+  },
+  {
+    "route": "/",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/services",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/projects",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/work/bsa-legal",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/about",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/contact",
+    "width": 1024,
+    "viewport": 1024,
+    "document": 1024,
+    "navOverlap": false
+  },
+  {
+    "route": "/",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/services",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/projects",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/work/bsa-legal",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/about",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/contact",
+    "width": 768,
+    "viewport": 768,
+    "document": 768,
+    "navOverlap": false
+  },
+  {
+    "route": "/",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  },
+  {
+    "route": "/services",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  },
+  {
+    "route": "/projects",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  },
+  {
+    "route": "/work/bsa-legal",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  },
+  {
+    "route": "/about",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  },
+  {
+    "route": "/contact",
+    "width": 390,
+    "viewport": 390,
+    "document": 390,
+    "navOverlap": false
+  }
+]

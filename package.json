@@ -9,6 +9,11 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@fontsource/geist-mono": "^5.3.0",
+    "@fontsource/hanken-grotesk": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "@fontsource/pixelify-sans": "^5.3.0",
+    "@fontsource/silkscreen": "^5.3.0",
     "astro": "^5.2.0",
     "gsap": "^3.15.0"
   }

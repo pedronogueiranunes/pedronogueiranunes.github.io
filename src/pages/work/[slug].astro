@@ -1,0 +1,264 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { site } from "../../data/site";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import Button from "../../components/Button.astro";
+import ToolChip from "../../components/ToolChip.astro";
+import Icon from "../../components/Icon.astro";
+import RelatedProjects from "../../components/RelatedProjects.astro";
+import { bsaCase } from "../../data/cases";
+import { logoFor } from "../../data/home";
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.data.caseSlug || project.slug },
+    props: { project },
+  }));
+}
+const { project } = Astro.props;
+const p = project.data;
+const isBsa = project.slug === "bsa-legal";
+const liveUrl = site.projectUrls[project.slug];
+const related = (await getCollection("projects"))
+  .filter((other) => other.slug !== project.slug)
+  .sort((a, b) => a.data.order - b.data.order);
+const metrics = isBsa
+  ? bsaCase.heroMetrics
+  : p.metrics.map((m) => ({ ...m, baseline: "" }));
+---
+
+<Base title={`${p.title} | Pedro Nogueira`}>
+  <section class="case-hero page-section">
+    <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
+      <a href="/projects">Projects</a>
+      <span>/</span>
+      <span>{p.category}</span>
+      <span>/</span>
+      <span>{isBsa ? "BSA Legal" : p.title.split(":")[0]}</span>
+    </nav>
+    <div class="case-hero-top">
+      <div>
+        <h1>
+          {isBsa ? (
+            <>
+              {bsaCase.title.split(" in ")[0]}
+              <br />
+              in three months.
+            </>
+          ) : (
+            p.title
+          )}
+        </h1>
+        <p>{isBsa ? bsaCase.summary : p.summary}</p>
+        <div class="chips">
+          <ToolChip label={p.category} />
+          <ToolChip
+            label={isBsa ? "Webflow" : p.tools[0]}
+            logo={logoFor(isBsa ? "Webflow" : p.tools[0])}
+          />
+          {isBsa && <ToolChip label="CMS + forms" />}
+          <ToolChip label={`${p.location} · ${p.year}`} />
+        </div>
+        <p class="case-client">
+          {isBsa ? bsaCase.client : p.title.split(":")[0]}
+        </p>
+        <p class="muted">
+          {isBsa ? "UI/UX + Webflow build · [X] weeks" : p.tools.join(" · ")}
+        </p>
+        <Button
+          href={liveUrl || undefined}
+          disabled={!liveUrl}
+          secondary
+          icon="arrow-up-right"
+        >
+          Visit live site
+        </Button>
+      </div>
+      <div class="case-result-card">
+        <p class="mono accent">{isBsa ? "Results in 3 months" : "Results"}</p>
+        <dl>
+          {metrics.map((metric) => (
+            <div>
+              <dt>
+                {metric.label}
+                {metric.baseline && <small>{metric.baseline}</small>}
+              </dt>
+              <dd>{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+    <div class="browser-mockup">
+      <div class="browser-toolbar">
+        <div aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        <span class="mono">[client-domain.com]</span>
+        <small>Live since {p.year}</small>
+      </div>
+      <ResponsiveImage
+        src={p.cover || p.image}
+        loading="eager"
+        sizes="(max-width: 768px) calc(100vw - 40px), calc(100vw - 128px)"
+        width="1312"
+        height="800"
+        alt={`${p.title} website`}
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+  <div class="case-body page-section">
+    <div class="case-narrative">
+      <section>
+        <h2>The challenge</h2>
+        <h3>{isBsa ? bsaCase.challengeTitle : p.title}</h3>
+        <p>{isBsa ? bsaCase.challenge : p.summary}</p>
+      </section>
+      <section>
+        <h2>The strategy</h2>
+        <h3>{isBsa ? "Three moves, in this order." : "[Project strategy]"}</h3>
+        {isBsa ? (
+          <ol class="strategy-list">
+            {bsaCase.strategy.map((row) => (
+              <li>
+                <h4>{row[0]}</h4>
+                <p>{row[1]}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div
+            class="case-copy-placeholder"
+            aria-label="Project-specific strategy awaiting content"
+          ></div>
+        )}
+      </section>
+      <section>
+        <h2>The results</h2>
+        <h3>{isBsa ? "Three months later." : p.title.split(":")[0]}</h3>
+        {isBsa ? (
+          <table class="results-table">
+            <thead>
+              <tr>
+                {["Metric", "Before", "After", "Change"].map((label) => (
+                  <th scope="col">{label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bsaCase.results.map((row) => (
+                <tr>
+                  {row.map((value, i) =>
+                    i === 0 ? <th scope="row">{value}</th> : <td>{value}</td>,
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <dl class="featured-metrics">
+            {p.metrics.map((metric) => (
+              <div>
+                <dt>{metric.label}</dt>
+                <dd>{metric.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </section>
+      <blockquote>
+        <span aria-hidden="true">“</span>
+        <p>
+          {isBsa
+            ? bsaCase.quote
+            : "[Client quote about working together and the result. Two or three lines.]"}
+        </p>
+        <cite>{isBsa ? bsaCase.quoteAttribution : "[Name], [Role]"}</cite>
+      </blockquote>
+    </div>
+    <aside class="case-sidebar">
+      <div class="snapshot">
+        <h2>Project snapshot</h2>
+        <dl>
+          {[
+            ["Client", isBsa ? bsaCase.client : p.title.split(":")[0]],
+            ["Industry", isBsa ? bsaCase.industry : p.category],
+            ["Market", p.location],
+            ["Services", isBsa ? bsaCase.services : p.category],
+            ["Timeline", isBsa ? bsaCase.timeline : "[X] weeks"],
+            ["Stack", (isBsa ? bsaCase.stack : p.tools).join(", ")],
+          ].map(([key, value]) => (
+            <div>
+              <dt>{key}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div class="case-sidebar-cta">
+        <h2>Need a site that brings in qualified leads?</h2>
+        <p>
+          Book a 30 minute call. I will review your site first and come with
+          three fixes.
+        </p>
+        <Button href="/contact">Book a call</Button>
+        <a href="mailto:pedronogueiranunes@gmail.com">
+          or email pedronogueiranunes@gmail.com
+        </a>
+      </div>
+    </aside>
+  </div>
+  <section class="case-gallery page-section">
+    <h2>Asset gallery</h2>
+    <div class="gallery-primary">
+      <div></div>
+      <div></div>
+    </div>
+    <div class="gallery-secondary">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </section>
+  <section class="case-specimens page-section">
+    <h2>Design System</h2>
+    <div>
+      {["Buttons", "Inputs", "Cards", "Typography", "Icons"].map((label) => (
+        <figure>
+          <div></div>
+          <figcaption>{label}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+  <section class="case-architecture page-section">
+    <h2>Architecture &amp; Integrations</h2>
+    <div>
+      <p>
+        Simplified diagram: Headless CMS <Icon name="arrow-right" /> API{" "}
+        <Icon name="arrow-right" /> Front-end <Icon name="arrow-right" />{" "}
+        Automated forms <Icon name="arrow-right" /> CRM.
+      </p>
+    </div>
+  </section>
+  <section class="case-responsive page-section">
+    <h2>Responsive</h2>
+    <div>
+      <div></div>
+      <div></div>
+    </div>
+  </section>
+  <section class="case-stack page-section">
+    <h2>Stack &amp; integrations</h2>
+    <div class="chips">
+      {(isBsa ? bsaCase.integrations : p.tools).map((tool) => (
+        <ToolChip label={tool} logo={logoFor(tool)} size="m" />
+      ))}
+    </div>
+  </section>
+  <RelatedProjects projects={related} />
+</Base>

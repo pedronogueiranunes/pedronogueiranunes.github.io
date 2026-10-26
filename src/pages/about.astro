@@ -1,0 +1,119 @@
+---
+import Base from "../layouts/Base.astro";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import ToolChip from "../components/ToolChip.astro";
+import Icon from "../components/Icon.astro";
+import { stats, promises, timeline, skills } from "../data/about";
+import { logoFor } from "../data/home";
+---
+
+<Base title="About | Pedro Nogueira">
+  <section class="about-hero page-section">
+    <div class="about-portrait">
+      <ResponsiveImage
+        src="/assets/figma/488-9498-imgHead.webp"
+        width="718"
+        height="937"
+        alt="Pedro Nogueira"
+        fetchpriority="high"
+        loading="eager"
+      />
+    </div>
+    <div>
+      <Eyebrow>About me</Eyebrow>
+      <h1>Design and code, with a well travelled passport.</h1>
+      <p>
+        I'm Pedro, 35, Brazilian: a web developer, UI/UX and motion designer. I
+        built my first site at 14, went professional at 17, and have spent 20
+        years moving between code, design, and motion for clients across the US,
+        Germany, and Canada.
+      </p>
+    </div>
+  </section>
+  <section class="about-stats page-section">
+    <dl>
+      {stats.map(([value, label]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
+    <div>
+      <p>Numbers updated from client analytics</p>
+      <a class="text-link" href="/projects">
+        See the case studies <Icon name="arrow-right" />
+      </a>
+    </div>
+  </section>
+  <section class="promises-section page-section">
+    <Eyebrow>How I work</Eyebrow>
+    <h2>Four things I put in writing.</h2>
+    <p>
+      Most freelancers ask you to trust them.
+      <br />
+      I'd rather remove the reasons you shouldn't.
+    </p>
+    <div class="promises-grid">
+      {promises.map(([title, body], i) => (
+        <article>
+          <ResponsiveImage
+            src={`/assets/figma/489-7767-imgImage${i || ""}.webp`}
+            width="138"
+            height="138"
+            loading="lazy"
+            alt=""
+          />
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </article>
+      ))}
+    </div>
+    <div class="promise-facts">
+      <p>
+        <span class="mono">Time zone</span>GMT-3, flexible for US and Europe
+      </p>
+      <p>
+        <span class="mono">Availability</span>Freelance projects and agency
+        partnerships
+      </p>
+    </div>
+  </section>
+  <section class="career-section page-section" id="timeline">
+    <h2>Career Timeline</h2>
+    <ol class="career-timeline">
+      {timeline.map(([date, title, description]) => (
+        <li>
+          <span class="career-date mono">{date}</span>
+          <div>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="skills-section page-section" id="skills">
+    <h2 class="skills-title">Skills &amp; tools</h2>
+    <div class="skills-grid">
+      {skills.map(([title, tools]) => (
+        <article>
+          <h3>{title}</h3>
+          <div class="chips">
+            {tools.map((tool) => (
+              <ToolChip
+                label={tool === "Semrush" ? "SEMrush" : tool}
+                logo={logoFor(tool)}
+                size="m"
+              />
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <a class="text-link" href="/services#stacks">
+      See the full stack <Icon name="arrow-right" />
+    </a>
+  </section>
+</Base>

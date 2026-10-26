@@ -1,0 +1,70 @@
+---
+import { comparison } from "../data/home";
+import Eyebrow from "./Eyebrow.astro";
+import Icon from "./Icon.astro";
+import Button from "./Button.astro";
+const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
+---
+
+<section class="comparison page-section">
+  <div class="section-heading">
+    <div>
+      <Eyebrow>Why teams switch</Eyebrow>
+      <h2>
+        Me <span>vs.</span> a generic freelancer
+        <br />
+        <span>vs.</span> a big agency.
+      </h2>
+    </div>
+    <p>
+      Same budget conversation, very different outcomes. Here is the honest
+      version.
+    </p>
+  </div>
+  <div
+    class="comparison-table"
+    role="table"
+    aria-label="Working with Pedro, a freelancer or an agency"
+  >
+    <div class="comparison-head" role="row">
+      <span role="columnheader" class="mono">
+        What matters
+      </span>
+      {labels.map((label) => (
+        <span role="columnheader" class="label">
+          {label}
+        </span>
+      ))}
+    </div>
+    {comparison.map((row, i) => (
+      <div class="comparison-row" role="row">
+        <h3 role="rowheader">{row[0]}</h3>
+        {row.slice(1).map((text, index) => (
+          <div
+            role="cell"
+            class:list={[
+              "comparison-cell",
+              { "comparison-pedro": index === 0 },
+            ]}
+          >
+            <span class="mono comparison-mobile-label">{labels[index]}</span>
+            {i === 6 && index === 0 ? (
+              <Button href="/contact">{text}</Button>
+            ) : (
+              <p>
+                {index === 0 && <Icon name="check" size={20} />}
+                <span>{text}</span>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  <p class="comparison-email">
+    Prefer email?{" "}
+    <a href="mailto:pedronogueiranunes@gmail.com">
+      pedronogueiranunes@gmail.com
+    </a>
+  </p>
+</section>

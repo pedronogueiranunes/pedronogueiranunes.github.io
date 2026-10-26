@@ -1,0 +1,42 @@
+---
+import images from "../data/image-sizes.json";
+interface Props {
+  src: string;
+  alt: string;
+  sizes?: string;
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
+  class?: string;
+  id?: string;
+  width?: number | string;
+  height?: number | string;
+}
+const {
+  src,
+  alt,
+  sizes = "(max-width: 768px) calc(100vw - 40px), 50vw",
+  loading = "lazy",
+  fetchpriority,
+  class: className,
+  id,
+  width,
+  height,
+} = Astro.props;
+const image = (
+  images as Record<string, { width: number; height: number; srcset: string }>
+)[src];
+---
+
+<img
+  src={src}
+  srcset={image?.srcset}
+  sizes={image ? sizes : undefined}
+  width={image?.width || width}
+  height={image?.height || height}
+  alt={alt}
+  loading={loading}
+  fetchpriority={fetchpriority}
+  class={className}
+  id={id}
+  decoding="async"
+/>

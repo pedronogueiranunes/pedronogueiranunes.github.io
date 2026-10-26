@@ -23,5 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: withastro/action@v3
+        env:
+          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ vars.PUBLIC_WEB3FORMS_ACCESS_KEY }}
       - uses: actions/deploy-pages@v4
         id: deployment

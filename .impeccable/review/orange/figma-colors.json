@@ -1,0 +1,17 @@
+{
+  "fileKey": "AzHguwIajTGe7nhB5L21pQ",
+  "nodeId": "488:7974",
+  "variable": "color/accent/primary",
+  "variableId": "VariableID:2:7",
+  "modes": {
+    "2:0": {
+      "name": "Dark",
+      "value": "#FF5A1F"
+    },
+    "2:1": {
+      "name": "Light",
+      "value": "#FF5A1F"
+    }
+  },
+  "interactionStates": "Derived in CSS, not separate authored Figma values"
+}

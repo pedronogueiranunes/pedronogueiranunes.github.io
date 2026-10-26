@@ -1,0 +1,30 @@
+[
+  {
+    "route": "/",
+    "violations": []
+  },
+  {
+    "route": "/services",
+    "violations": []
+  },
+  {
+    "route": "/projects",
+    "violations": []
+  },
+  {
+    "route": "/work/bsa-legal",
+    "violations": []
+  },
+  {
+    "route": "/about",
+    "violations": []
+  },
+  {
+    "route": "/contact",
+    "violations": []
+  },
+  {
+    "route": "/thoughts/design-system-without-overdoing-it",
+    "violations": []
+  }
+]

@@ -1,10 +1,18 @@
 ---
-title: "Waipono Farms, USA"
+title: "Waipono Farms: brand and website"
 order: 5
-category: "WEBDEV & UI/UX DESIGN"
+category: "Brand & website"
 year: "2025"
 country: "USA"
-image: "/assets/project-4.png"
-color: "#f6f0ec"
-trail: "Figma · Webflow · JavaScript · GSAP"
+location: "USA"
+image: "/assets/project-5.png"
+color: "#eee5d8"
+tint: "#eee5d8"
+cover: "/assets/figma/497-3036-imgCover.webp"
+summary: "Identity, illustrations and a Webflow site for a family farm in Hawaii, from the logo to online farm stand orders."
+tools: ["Illustrator", "Figma", "Webflow", "Shopify Lite"]
+caseSlug: "waipono-farms"
+featured: false
+# TODO: confirm real number. These metrics are Figma mock content.
+metrics: [{"value": "6", "label": "brand touchpoints"}, {"value": "+27%", "label": "farm stand inquiries"}]
 ---

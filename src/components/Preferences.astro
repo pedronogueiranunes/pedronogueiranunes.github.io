@@ -1,0 +1,129 @@
+---
+const { id = "preferences", inline = false } = Astro.props;
+---
+
+<div class="preferences" data-preferences>
+  {!inline && (
+    <button
+      type="button"
+      class="preferences-toggle"
+      aria-expanded="false"
+      aria-controls={`${id}-panel`}
+      aria-label="Language and theme preferences"
+    >
+      <img
+        src="/assets/figma/488-7974-imgIconGlobe.svg"
+        width="16"
+        height="16"
+        alt=""
+      />
+      <span data-language-label>EN</span>
+      <span class="preferences-caret" aria-hidden="true"></span>
+    </button>
+  )}
+  <div
+    id={`${id}-panel`}
+    class:list={["preferences-panel", { "preferences-panel--inline": inline }]}
+    hidden={!inline}
+  >
+    <fieldset>
+      <legend>Language</legend>
+      {[
+        ["en", "English", "EN"],
+        ["pt-br", "Português", "PT"],
+        ["es", "Español", "ES"],
+      ].map(([code, label, short]) => (
+        <label class="language-option">
+          <input
+            type="radio"
+            name={`${id}-language`}
+            value={code}
+            checked={code === "en"}
+          />
+          <span>{label}</span>
+          <small>{short}</small>
+        </label>
+      ))}
+    </fieldset>
+    <fieldset>
+      <legend>Theme</legend>
+      <div class="theme-segments">
+        {["Light", "Dark", "Auto"].map((label) => (
+          <label>
+            <input
+              type="radio"
+              name={`${id}-theme`}
+              value={label.toLowerCase()}
+              checked={label === "Auto"}
+            />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  </div>
+</div>
+<script>
+  const roots = document.querySelectorAll<HTMLElement>("[data-preferences]");
+  const sync = () => {
+    const theme = document.documentElement.dataset.theme || "auto";
+    roots.forEach((root) =>
+      root
+        .querySelectorAll<HTMLInputElement>(".theme-segments input")
+        .forEach((input) => (input.checked = input.value === theme)),
+    );
+  };
+  sync();
+  roots.forEach((root) => {
+    const toggle = root.querySelector<HTMLButtonElement>(".preferences-toggle");
+    const panel = root.querySelector<HTMLElement>(".preferences-panel")!;
+    const close = (restore = false) => {
+      if (!toggle) return;
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      if (restore) toggle.focus();
+    };
+    toggle?.addEventListener("click", () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      if (open) panel.querySelector<HTMLInputElement>("input:checked")?.focus();
+    });
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target as Node)) close();
+    });
+    root.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && toggle && !panel.hidden) {
+        event.stopPropagation();
+        close(true);
+      }
+    });
+    root.addEventListener("focusout", (event) => {
+      // A label click may briefly focus the body before activating its radio.
+      // Only a real focus destination outside the popover should dismiss it.
+      if (
+        event.relatedTarget instanceof Node &&
+        !root.contains(event.relatedTarget)
+      )
+        close();
+    });
+    root
+      .querySelectorAll<HTMLInputElement>(".theme-segments input")
+      .forEach((input) =>
+        input.addEventListener("change", () => {
+          document.documentElement.dataset.theme = input.value;
+          try {
+            localStorage.setItem("theme", input.value);
+          } catch {}
+          sync();
+        }),
+      );
+    root
+      .querySelectorAll<HTMLInputElement>(".language-option input")
+      .forEach((input) =>
+        input.addEventListener("change", () => {
+          window.location.assign("/");
+        }),
+      );
+  });
+</script>

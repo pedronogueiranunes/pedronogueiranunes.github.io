@@ -1,62 +1,89 @@
-// Gaussian splat hero portrait — static pose, drag with the mouse to rotate. Self-illuminated so no lights needed.
+// Gaussian splat hero portrait — scrolls into the bio, drag with the mouse to rotate. Self-illuminated so no lights needed.
 // Loaded only on the page that has #splat-canvas, via a dynamic import (see hero markup) so PlayCanvas
 // never ships to pages without it.
 export function initSplat() {
-  const canvas = document.getElementById('splat-canvas');
-  const viewport = document.getElementById('splat-viewport');
+  const canvas = document.getElementById("splat-canvas");
+  const viewport = document.getElementById("splat-viewport");
+  let viewportVisible = true;
   if (!canvas || !window.pc) return;
 
   const app = new pc.Application(canvas, {
-    graphicsDeviceOptions: { alpha: true, antialias: true }
+    graphicsDeviceOptions: { alpha: true, antialias: true },
   });
-  app.graphicsDevice.maxPixelRatio = window.devicePixelRatio || 1;
-  // Application defaults to filling the whole window — opt out so resizeCanvas below actually controls the size.
+  app.graphicsDevice.maxPixelRatio = Math.min(
+    window.devicePixelRatio || 1,
+    1.5,
+  );
+  // Keep the GPU drawing buffer stable while CSS moves/resizes the stage.
+  // Resizing it during scroll clears the WebGL surface between rendered frames.
   app.setCanvasFillMode(pc.FILLMODE_NONE);
-  app.setCanvasResolution(pc.RESOLUTION_AUTO);
-
+  const origin = document.getElementById("portrait-origin") || viewport;
+  let renderWidth = 0;
+  let renderHeight = 0;
   function resize() {
-    const rect = viewport.getBoundingClientRect();
-    app.resizeCanvas(rect.width, rect.height);
+    const width = Math.round(origin.clientWidth);
+    const height = Math.round(origin.clientHeight);
+    if (width === renderWidth && height === renderHeight) return;
+    renderWidth = width;
+    renderHeight = height;
+    app.setCanvasResolution(pc.RESOLUTION_FIXED, width, height);
   }
-  new ResizeObserver(resize).observe(viewport);
+  new ResizeObserver(resize).observe(origin);
   resize();
 
-  const camera = new pc.Entity('camera');
-  camera.addComponent('camera', { clearColor: new pc.Color(0, 0, 0, 0) });
+  const camera = new pc.Entity("camera");
+  camera.addComponent("camera", {
+    clearColor: new pc.Color(0, 0, 0, 0),
+  });
   app.root.addChild(camera);
 
   // SOG is ~40% smaller than compressed PLY at the same SH bands — try it first, fall back to
   // PLY if the browser/engine build can't load the .sog zip bundle for any reason.
-  const sogAsset = new pc.Asset('pedro-head-sog', 'gsplat', { url: '/assets/pedro-head.sog' });
+  const sogAsset = new pc.Asset("pedro-head-sog", "gsplat", {
+    url: "/assets/pedro-head.sog",
+  });
   app.assets.add(sogAsset);
-  sogAsset.on('load', () => attachSplat(sogAsset));
-  sogAsset.on('error', () => {
-    console.warn('SOG splat failed to load, falling back to compressed PLY');
-    const plyAsset = new pc.Asset('pedro-head-ply', 'gsplat', { url: '/assets/pedro-head.splat.ply' });
+  sogAsset.on("load", () => attachSplat(sogAsset));
+  sogAsset.on("error", () => {
+    console.warn("SOG splat failed to load, falling back to compressed PLY");
+    const plyAsset = new pc.Asset("pedro-head-ply", "gsplat", {
+      url: "/assets/pedro-head.splat.ply",
+    });
     app.assets.add(plyAsset);
-    plyAsset.on('load', () => attachSplat(plyAsset));
+    plyAsset.on("load", () => attachSplat(plyAsset));
+    plyAsset.on("error", () => {
+      viewport.dataset.failed = "true";
+      app.destroy();
+    });
     app.assets.load(plyAsset);
   });
   app.assets.load(sogAsset);
 
   function attachSplat(asset) {
-    const rig = new pc.Entity('splat-rig');
-    const splat = new pc.Entity('splat');
-    splat.addComponent('gsplat', { asset });
+    const rig = new pc.Entity("splat-rig");
+    const splat = new pc.Entity("splat");
+    splat.addComponent("gsplat", { asset });
     // ponytail: this capture's up-axis comes in flipped and faces away by default — 180/180 sets it upright and facing the camera, matching the original photo.
     rig.setLocalEulerAngles(180, 0, 0);
     rig.addChild(splat);
     app.root.addChild(rig);
 
     // customAabb isn't populated until the gsplat instance exists, which needs one frame — so frame the camera on the next update rather than right after addComponent.
-    app.once('update', () => {
+    app.once("update", () => {
       const aabb = splat.gsplat.customAabb;
       const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
       const radius = aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       camera.setPosition(0, 0, radius * 1.66);
       camera.lookAt(0, 0, 0);
-      document.getElementById('splat-loader')?.classList.add('is-hidden');
+      // Keep the fallback until the first rendered frame has reached the canvas.
+      app.once("postrender", () => {
+        viewport.dataset.ready = "true";
+        canvas.removeAttribute("aria-hidden");
+        document
+          .getElementById("splat-fallback")
+          ?.setAttribute("aria-hidden", "true");
+      });
     });
 
     // Drag to rotate — model stays put otherwise. Horizontal drag only: yaw is the only axis the
@@ -66,64 +93,101 @@ export function initSplat() {
     let yaw = 0;
     const sensitivity = 0.3;
 
-    // Auto-play: slow eased turn from profile to a more front-facing angle, back and forth,
-    // so a first-time visitor notices this is a real 3D model and not a static photo. sin() gives
-    // a free ease-in/out at both ends of the swing — no tween library needed. Stops for good the
-    // moment the user drags, handing off from wherever the swing was to avoid a visual jump.
-    let autoPlaying = true;
-    // Verified directly (froze rotation at fixed yaw values and screenshotted each) rather than
-    // guessed: yaw=0 is close to front-facing and yaw=60 is genuine profile — the old 0-30 range
-    // never swung far enough to read as "profile" at either end.
-    // Negative to mirror the swing to the opposite side (profile was facing the wrong way).
-    const AUTO_CENTER = -30;
-    const AUTO_AMPLITUDE = -30;
-    const AUTO_SPEED = 0.25;
-    // sin(time*speed) is 0 at time=0, i.e. yaw=CENTER (mid-swing) — offset the starting phase so
-    // the loop instead opens on the profile pose at yaw=CENTER+AMPLITUDE (sin=+1).
-    let time = Math.PI / 2 / AUTO_SPEED;
-
-    app.on('update', (dt) => {
-      if (!autoPlaying) return;
-      time += dt;
-      yaw = AUTO_CENTER + Math.sin(time * AUTO_SPEED) * AUTO_AMPLITUDE;
+    // The final three-quarter pose faces the bio copy. Scrolling owns the
+    // baseline; drag/keyboard offset fades out as the portrait reaches its slot.
+    const HERO_YAW = -60;
+    const BIO_YAW = 30;
+    let pose = Number(viewport.dataset.scrollPose || 0);
+    let manualYaw = 0;
+    let dragCursor;
+    function applyPose() {
+      yaw = HERO_YAW + (BIO_YAW - HERO_YAW) * pose + manualYaw * (1 - pose);
       rig.setLocalEulerAngles(180, yaw, 0);
+      // The stage only scales uniformly; its aspect and GPU buffer stay fixed.
+      app.renderNextFrame = true;
+      const settled = pose >= 0.999;
+      canvas.style.cursor = settled ? "default" : "none";
+      canvas.tabIndex = settled ? -1 : 0;
+      canvas.setAttribute(
+        "aria-label",
+        settled
+          ? "3D portrait of Pedro in the About me pose."
+          : "3D portrait of Pedro. Drag or use the left and right arrow keys to rotate.",
+      );
+      if (settled) dragCursor?.classList.remove("is-visible");
+    }
+    viewport.addEventListener("portraitpose", (event) => {
+      pose = event.detail;
+      applyPose();
     });
+    applyPose();
 
     // Custom "drag me" cursor that follows the pointer while it's over the canvas.
-    const dragCursor = document.createElement('div');
-    dragCursor.className = 'drag-cursor';
-    dragCursor.textContent = 'drag me';
+    dragCursor = document.createElement("div");
+    dragCursor.className = "drag-cursor";
+    dragCursor.textContent = "drag me";
     document.body.appendChild(dragCursor);
-    const bubble = document.getElementById('splat-bubble');
+    const bubble = document.getElementById("splat-bubble");
 
-    canvas.style.cursor = 'none';
-    canvas.addEventListener('pointerenter', () => dragCursor.classList.add('is-visible'));
-    canvas.addEventListener('pointerleave', () => dragCursor.classList.remove('is-visible'));
-    canvas.addEventListener('pointermove', (e) => {
+    applyPose();
+    canvas.addEventListener("keydown", (event) => {
+      if (
+        pose >= 0.999 ||
+        !["ArrowLeft", "ArrowRight", "Home"].includes(event.key)
+      )
+        return;
+      event.preventDefault();
+      manualYaw =
+        event.key === "Home"
+          ? 0
+          : manualYaw + (event.key === "ArrowLeft" ? -10 : 10);
+      applyPose();
+    });
+    canvas.addEventListener("pointercancel", () => {
+      dragging = false;
+      dragCursor.textContent = "drag me";
+      dragCursor.classList.remove("is-visible");
+    });
+    canvas.addEventListener("pointerenter", () => {
+      if (pose < 0.999) dragCursor.classList.add("is-visible");
+    });
+    canvas.addEventListener("pointerleave", () =>
+      dragCursor.classList.remove("is-visible"),
+    );
+    canvas.addEventListener("pointermove", (e) => {
       dragCursor.style.transform = `translate(${e.clientX + 16}px, ${e.clientY + 16}px)`;
     });
 
-    canvas.addEventListener('pointerdown', (e) => {
-      autoPlaying = false;
-      if (bubble) bubble.classList.add('is-hidden');
+    canvas.addEventListener("pointerdown", (e) => {
+      if (pose >= 0.999) return;
+      if (bubble) bubble.classList.add("is-hidden");
       dragging = true;
       lastX = e.clientX;
-      dragCursor.textContent = 'dragging';
+      dragCursor.textContent = "dragging";
       canvas.setPointerCapture(e.pointerId);
     });
-    canvas.addEventListener('pointermove', (e) => {
+    canvas.addEventListener("pointermove", (e) => {
       if (!dragging) return;
-      yaw += (e.clientX - lastX) * sensitivity;
+      manualYaw += (e.clientX - lastX) * sensitivity;
       lastX = e.clientX;
-      rig.setLocalEulerAngles(180, yaw, 0);
+      applyPose();
     });
-    canvas.addEventListener('pointerup', (e) => {
+    canvas.addEventListener("pointerup", (e) => {
       dragging = false;
-      dragCursor.textContent = 'drag me';
-      canvas.releasePointerCapture(e.pointerId);
+      dragCursor.textContent = "drag me";
+      if (canvas.hasPointerCapture(e.pointerId))
+        canvas.releasePointerCapture(e.pointerId);
     });
   }
 
+  const visibility = new IntersectionObserver(([entry]) => {
+    viewportVisible = entry.isIntersecting;
+    app.autoRender = entry.isIntersecting && !document.hidden;
+  });
+  visibility.observe(viewport);
+  document.addEventListener("visibilitychange", () => {
+    app.autoRender = !document.hidden && viewportVisible;
+  });
   app.start();
   resize();
 }

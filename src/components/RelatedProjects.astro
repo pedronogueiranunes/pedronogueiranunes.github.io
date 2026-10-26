@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from "astro:content";
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  title?: string;
+  eyebrow?: string;
+}
+import ProjectCard from "./ProjectCard.astro";
+import Eyebrow from "./Eyebrow.astro";
+const { projects } = Astro.props;
+---
+
+<section class="related-projects page-section">
+  <Eyebrow>More results</Eyebrow>
+  <h2>More sites, more numbers.</h2>
+  <div class="project-grid">
+    {projects.slice(0, 3).map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </div>
+</section>

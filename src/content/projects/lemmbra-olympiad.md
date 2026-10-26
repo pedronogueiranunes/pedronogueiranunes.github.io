@@ -1,10 +1,18 @@
 ---
-title: "Lemmbra Olympiad: identity design"
+title: "Lemmbra Olympiad: identity and registration"
 order: 6
-category: "DIGITAL ART"
+category: "Identity & platform"
 year: "2024"
-country: "Brasil"
-image: "/assets/project-5.png"
-color: "#f3f6f9"
-trail: "Figma · Illustrator · After Effects · Cinema 4D"
+country: "Brazil · Germany"
+location: "Brazil · Germany"
+image: "/assets/project-6.png"
+color: "#e6e3ef"
+tint: "#e6e3ef"
+cover: "/assets/figma/497-3062-imgCover.webp"
+summary: "Visual identity and registration platform for a German language olympiad running in two countries at once."
+tools: ["Webflow", "JavaScript", "GSAP", "Memberstack"]
+caseSlug: "lemmbra-olympiad"
+featured: false
+# TODO: confirm real number. These metrics are Figma mock content.
+metrics: [{"value": "1,200+", "label": "students registered"}, {"value": "2", "label": "countries, one platform"}]
 ---
