@@ -42,14 +42,12 @@ This is a **draft for Pedro’s review**. Content/activation items below remain 
 | Contact | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/contact-desktop.png) | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/contact-mobile.png) |
 
 
-### Follow-up browser corrections
+### Browser corrections
 
-Restore the four Figma megamenu compositions, fonts, active pills and 400ms hover transitions. Fix visible Light-label clicks so focus dismissal cannot hide the radio before activation. Keep keyboard access, 44px hit targets and readable mobile focus states.
+The four megamenus now match their Figma compositions, fonts, active pills and 400ms transitions. Visible Light-label clicks apply the theme without premature dismissal; keyboard access, 44px targets and mobile focus contrast are preserved.
 
-Replace Home's separate About photograph with the same hero 3D model: it travels and turns with scrolling, settles facing the copy and returns on reverse scrolling. Preserve mobile lazy loading and static/reduced-motion alternatives.
+Home uses one portrait canvas travelling from a left-facing hero profile into the About column, where it stops facing the copy. Its desktop source stage matches the published 640×480 reference; uniform scaling fits narrower columns without flattening the model. Reverse scrolling returns it to the hero. The WebGL buffer remains fixed during travel, and the fallback stays visible until the first rendered frame. Mobile lazy activation and reduced-motion alternatives remain available.
 
-Validation: 14-route build; Astro check: 35 files, 0 errors, 0 warnings, 0 hints; measured Figma panel dimensions; visible theme label clicks and reload; portrait destination geometry and return path on desktop/mobile; independent scoped visual review. Evidence in docs/corrections-verification.md.
+Decorative lettering touches the hero panel's bottom, stays behind the model and uses 10% opacity in Dark. Content headings, paragraphs and actions remain in front of the portrait.
 
-Hero refinements: start the portrait in the supplied left-facing profile and use 10% opacity for background lettering in Dark (including Auto-dark).
-
-Portrait sizing: match the published desktop 640×480 stage, cap and center it in the About column, fit mobile, and keep hero/About text above the travelling model.
+Validation: 14-route build; Astro check: 35 files with 0 errors/warnings/hints; measured Figma panel dimensions; visible theme-label clicks and reload; sampled desktop/mobile forward and return states preserve aspect and buffer dimensions; scoped independent visual reviews. Evidence: docs/corrections-verification.md and docs/portrait-motion-review.md. Static captures verify composition and sampled persistence, not frame pacing on every device.

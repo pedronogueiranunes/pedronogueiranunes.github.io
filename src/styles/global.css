@@ -123,7 +123,7 @@
     --text-secondary: #9c9890;
     --border: #2a2a2a;
     --surface: #1e1e1e;
-  --hero-lettering-opacity: 0.1;
+    --hero-lettering-opacity: 0.1;
   }
 }
 * {
@@ -1363,7 +1363,8 @@ details[open] > summary > .faq-plus:after {
   opacity: var(--hero-lettering-opacity);
   position: absolute;
   left: 50%;
-  top: 510px;
+  top: auto;
+  bottom: -0.165em;
   transform: translateX(-50%);
   font: 400 460px/0.95 var(--font-lettering);
   letter-spacing: -0.08em;
@@ -2057,7 +2058,6 @@ details[open] > summary > .faq-plus:after {
   }
   .hero-lettering {
     font-size: 101px;
-    top: 640px;
     letter-spacing: -0.02em;
   }
   .home-portrait {
@@ -5294,11 +5294,14 @@ body {
 
 /* One portrait moves between the hero and the bio slot. */
 .portrait-stage {
+  will-change: transform;
   position: absolute;
   inset: 0 auto auto 0;
   width: var(--portrait-width, 100%);
   height: var(--portrait-height, 100%);
-  transform: translate3d(var(--portrait-x, 0px), var(--portrait-y, 0px), 0);
+  transform-origin: 0 0;
+  transform: translate3d(var(--portrait-x, 0px), var(--portrait-y, 0px), 0)
+    scale(var(--portrait-scale, 1));
 }
 .portrait-stage[data-ready="true"] canvas {
   opacity: 1;
@@ -5318,9 +5321,16 @@ body {
 }
 
 .portrait-stage canvas {
+  backface-visibility: hidden;
+  transform: translateZ(0);
   mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
 }
 
 /* Foreground copy remains readable while the shared portrait travels. */
-.hero-lettering { z-index: 2; }
-.home-bio > :not(.bio-portrait) { position: relative; z-index: 2; }
+.hero-lettering {
+  z-index: 0;
+}
+.home-bio > :not(.bio-portrait) {
+  position: relative;
+  z-index: 2;
+}

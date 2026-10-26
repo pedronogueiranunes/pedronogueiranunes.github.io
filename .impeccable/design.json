@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T15:49:15.585940+00:00",
+  "generatedAt": "2026-10-26T16:00:59.489462+00:00",
   "title": "Design System: Pedro Nogueira Portfolio 2026",
   "extensions": {
     "colorMeta": {
@@ -521,7 +521,7 @@
       {
         "name": "portrait-travel-easing",
         "value": "p * p * (3 - 2 * p)",
-        "purpose": "Reversible scroll progress controlling shared-stage position, width, height and model baseline. Destination dimensions are capped by origin and slot bounds, then centered; never grow to fill the larger bio slot."
+        "purpose": "Reversible scroll progress controls translation, one uniform scale and model baseline. Source width/height are fixed between measurements; no independent axis interpolation or scroll-driven buffer resize."
       },
       {
         "name": "portrait-bio-yaw",
@@ -535,8 +535,13 @@
       },
       {
         "name": "portrait-stage-geometry",
-        "value": "targetWidth = min(origin.width, slot.width); targetHeight = min(origin.height, slot.height)",
-        "purpose": "Published-size reference: desktop origin 640px × 480px; mobile origin min(350px, viewport width minus 40px) × 325px. Center within the destination. Reviewed destinations: 640px × 480px desktop, 498px × 480px at 1135px, 339px × 325px mobile. Portrait z-index 1 stays below hero heading, body, actions, lettering and relatively positioned About copy at z-index 2."
+        "value": "targetScale = min(1, column.width / source.width, slot.height / source.height)",
+        "purpose": "Center the uniformly scaled source within the bio slot. Desktop source/ceiling 640px × 480px; final at 1135px is 498px × 373.5px, preserving 4:3. Mobile source buffer 350px × 325px; final 339px × 314.786px, preserving 350:325. Stage source dimensions are assigned only during measurement; scroll changes translate and uniform scale. Decorative lettering z-index 0, portrait 1, hero/About content 2. Lettering bottom -0.165em trims descent at desktop/mobile; Dark opacity remains 0.1."
+      },
+      {
+        "name": "portrait-buffer-stability",
+        "value": "RESOLUTION_FIXED; static-origin ResizeObserver; ready after first postrender",
+        "purpose": "No stage-driven app.resizeCanvas or manual camera aspect. Auto aspect follows the fixed backbuffer. Ten sampled forward/reverse desktop states retain 640px × 480px; mobile source stays 350px × 325px. Preserve fallback until actual first model render. Sampled captures do not guarantee every temporal frame."
       }
     ],
     "breakpoints": [
@@ -677,7 +682,8 @@
       "**Do** use the approved Current desktop/mobile Figma frames as visual authority.",
       "**Do** preserve pixel orange eyebrows, image-led project cards and the original splat portrait.",
       "**Do** keep the single portrait stage reversible between hero and bio, with a fixed copy-facing destination pose.",
-      "**Do** cap the desktop portrait at 640px × 480px, fit narrower destination columns, and keep all hero/About copy above the travelling model.",
+      "**Do** cap the desktop portrait at 640px × 480px, fit narrower destinations with uniform scale, and keep decorative lettering behind the model and actual hero/About copy above it.",
+      "**Do** keep the drawing buffer tied to the static origin and preserve the fallback until the first rendered frame.",
       "**Do** keep closed desktop menus inert and make the visible Light label activate its theme radio.",
       "**Do** separate exact brand orange from readable ink and action shades.",
       "**Do** use white page surfaces and reserve cream for secondary surfaces and controls.",
@@ -693,7 +699,8 @@
       "**Don't** apply decorative pixel fonts to long body copy or replace established font roles.",
       "**Don't** remove the static portrait fallback or force motion when reduced motion is requested.",
       "**Don't** restore a separate Home bio photograph or allow manual rotation to override the final portrait pose.",
-      "**Don't** grow the portrait to fill the larger bio slot or let it obscure text during travel.",
+      "**Don't** grow the portrait to fill the larger bio slot, distort its source proportions or let it obscure content during travel.",
+      "**Don't** resize the GPU surface from scroll-driven stage geometry or apply manual camera-aspect workarounds.",
       "**Don't** present unavailable links, downloads or an unconfigured form as working destinations."
     ]
   }

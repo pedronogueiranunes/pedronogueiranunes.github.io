@@ -12,15 +12,19 @@ export function initPortraitTravel() {
     const to = destination.getBoundingClientRect();
     const start = Math.max(0, from.top + scrollY - innerHeight * 0.35);
     // Match the published portrait's 640×480 desktop stage, fitting narrow columns.
-    const targetWidth = Math.min(from.width, to.width);
-    const targetHeight = Math.min(from.height, to.height);
+    const targetScale = Math.min(
+      1,
+      to.width / from.width,
+      to.height / from.height,
+    );
+    const targetWidth = from.width * targetScale;
+    const targetHeight = from.height * targetScale;
+    stage.style.setProperty("--portrait-width", `${from.width}px`);
+    stage.style.setProperty("--portrait-height", `${from.height}px`);
     geometry = {
       dx: to.left + (to.width - targetWidth) / 2 - from.left,
       dy: to.top + (to.height - targetHeight) / 2 - from.top,
-      width: from.width,
-      height: from.height,
-      targetWidth,
-      targetHeight,
+      targetScale,
       start,
       end: Math.max(
         start + 1,
@@ -44,12 +48,8 @@ export function initPortraitTravel() {
     stage.style.setProperty("--portrait-x", `${g.dx * pose}px`);
     stage.style.setProperty("--portrait-y", `${g.dy * pose}px`);
     stage.style.setProperty(
-      "--portrait-width",
-      `${g.width + (g.targetWidth - g.width) * pose}px`,
-    );
-    stage.style.setProperty(
-      "--portrait-height",
-      `${g.height + (g.targetHeight - g.height) * pose}px`,
+      "--portrait-scale",
+      String(1 + (g.targetScale - 1) * pose),
     );
     stage.dataset.scrollPose = String(pose);
     stage.dispatchEvent(new CustomEvent("portraitpose", { detail: pose }));

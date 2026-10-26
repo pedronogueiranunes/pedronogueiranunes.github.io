@@ -37,3 +37,13 @@ User reported that the travelling model covered the About heading and requested 
 Actual ready3D destination: desktop640×480 atx51.5/y104 in663×634slot; at1135 width498×480; at390 width339×325. Captures show readable separate copy and no horizontal overflow. Text stacking: portrait1, hero heading/body/actions2, background lettering2, Aboutcopy2. Pose−60→30, reverse movement andDarklettering10% remain intact. Browser errors:none; production build14routespasses.
 
 Evidence: `.impeccable/review/portrait/smaller-bio-desktop.png`, `smaller-travel-desktop.png`, `smaller-bio-1135.png`, `smaller-bio-mobile.png`. User issue image: `/Users/apple/Desktop/Screenshot 2026-10-26 at 12.41.44.png`.
+
+## Lettering, aspect and stable rendering — supersedes prior layer/interpolation notes
+
+The final order is decorative lettering0, travelling model1, content copy2. Hero lettering uses bottom anchoring with a−0.165em descent trim instead of a fixed top offset; desktop and mobile captures show its painted glyphs touching the clipped panel bottom. Dark opacity remains0.1.
+
+The stage now has fixed source width/height and uses translate plus UNIFORM scale. It fits and centers in the About slot without changing the original aspect. The WebGL buffer uses RESOLUTION_FIXED and observes the static origin, rather than the moving/resizing stage. Initial fallback is retained until postrender.
+
+Actual 1135px browser sequence:10 forward/return states, GPU buffer640×480 throughout, ready=true throughout, visual ratio4/3 throughout; final498×373.5 instead of independently resized498×480. Mobile:buffer350×325; intermediate pose0.522 and final pose1 retain350/325ratio; final339×314.786. One buffer reallocation on a real responsive breakpoint change is expected. Browser errors:none. Build14routespasses; detector0findings.
+
+Evidence: `.impeccable/review/motion-stability/measurements.json`, `mobile-measurements.json`, forward0/2/5 captures, return, final-desktop, dark-edge-desktop, travel-mobile, final-mobile. This confirms constant buffer dimensions and aspect at sampled real scroll states; still images do not measure frame pacing on all hardware.

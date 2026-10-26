@@ -14,19 +14,27 @@ export function initSplat() {
     window.devicePixelRatio || 1,
     1.5,
   );
-  // Application defaults to filling the whole window — opt out so resizeCanvas below actually controls the size.
+  // Keep the GPU drawing buffer stable while CSS moves/resizes the stage.
+  // Resizing it during scroll clears the WebGL surface between rendered frames.
   app.setCanvasFillMode(pc.FILLMODE_NONE);
-  app.setCanvasResolution(pc.RESOLUTION_AUTO);
-
+  const origin = document.getElementById("portrait-origin") || viewport;
+  let renderWidth = 0;
+  let renderHeight = 0;
   function resize() {
-    const rect = viewport.getBoundingClientRect();
-    app.resizeCanvas(rect.width, rect.height);
+    const width = Math.round(origin.clientWidth);
+    const height = Math.round(origin.clientHeight);
+    if (width === renderWidth && height === renderHeight) return;
+    renderWidth = width;
+    renderHeight = height;
+    app.setCanvasResolution(pc.RESOLUTION_FIXED, width, height);
   }
-  new ResizeObserver(resize).observe(viewport);
+  new ResizeObserver(resize).observe(origin);
   resize();
 
   const camera = new pc.Entity("camera");
-  camera.addComponent("camera", { clearColor: new pc.Color(0, 0, 0, 0) });
+  camera.addComponent("camera", {
+    clearColor: new pc.Color(0, 0, 0, 0),
+  });
   app.root.addChild(camera);
 
   // SOG is ~40% smaller than compressed PLY at the same SH bands — try it first, fall back to
@@ -68,11 +76,14 @@ export function initSplat() {
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       camera.setPosition(0, 0, radius * 1.66);
       camera.lookAt(0, 0, 0);
-      viewport.dataset.ready = "true";
-      canvas.removeAttribute("aria-hidden");
-      document
-        .getElementById("splat-fallback")
-        ?.setAttribute("aria-hidden", "true");
+      // Keep the fallback until the first rendered frame has reached the canvas.
+      app.once("postrender", () => {
+        viewport.dataset.ready = "true";
+        canvas.removeAttribute("aria-hidden");
+        document
+          .getElementById("splat-fallback")
+          ?.setAttribute("aria-hidden", "true");
+      });
     });
 
     // Drag to rotate — model stays put otherwise. Horizontal drag only: yaw is the only axis the
@@ -92,6 +103,8 @@ export function initSplat() {
     function applyPose() {
       yaw = HERO_YAW + (BIO_YAW - HERO_YAW) * pose + manualYaw * (1 - pose);
       rig.setLocalEulerAngles(180, yaw, 0);
+      // The stage only scales uniformly; its aspect and GPU buffer stay fixed.
+      app.renderNextFrame = true;
       const settled = pose >= 0.999;
       canvas.style.cursor = settled ? "default" : "none";
       canvas.tabIndex = settled ? -1 : 0;
