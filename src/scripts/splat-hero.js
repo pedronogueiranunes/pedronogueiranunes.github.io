@@ -119,13 +119,19 @@ export function initSplat() {
         if (!gl) return true;
         const w = gl.drawingBufferWidth;
         const h = gl.drawingBufferHeight;
-        for (let i = 1; i < 6; i++) {
-          for (let j = 1; j < 6; j++) {
+        // PlayCanvas leaves its own framebuffer bound after rendering; read the
+        // canvas backbuffer instead, then restore the engine's binding.
+        const prev = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        let found = false;
+        for (let i = 1; i < 6 && !found; i++) {
+          for (let j = 1; j < 6 && !found; j++) {
             gl.readPixels(Math.floor((w * i) / 6), Math.floor((h * j) / 6), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-            if (px[3] > 0) return true;
+            if (px[3] > 0) found = true;
           }
         }
-        return false;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, prev);
+        return found;
       };
       const onPostRender = () => {
         if (revealed) return;

@@ -5444,8 +5444,9 @@ body {
 /* Footer lettering: clipped to the footer bounds, marquee like the hero. */
 .footer-lettering {
   position: relative;
-  max-width: 100%;
-  margin-inline: 0;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
   overflow: hidden;
   overflow: clip;
   text-align: left;
@@ -5464,7 +5465,7 @@ body {
   .footer-lettering {
     max-width: none;
     white-space: nowrap;
-    margin-inline: 0;
+    margin-inline: calc(50% - 50vw);
   }
 }
 @media (prefers-reduced-motion: reduce) {
