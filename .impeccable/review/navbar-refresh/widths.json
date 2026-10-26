@@ -1,0 +1,178 @@
+[
+  {
+    "actions": {
+      "bottom": 81,
+      "height": 44,
+      "left": 1088,
+      "right": 1379,
+      "top": 37,
+      "width": 291,
+      "x": 1088,
+      "y": 37
+    },
+    "header": {
+      "bottom": 103,
+      "height": 88,
+      "left": 18,
+      "right": 1411,
+      "top": 15,
+      "width": 1393,
+      "x": 18,
+      "y": 15
+    },
+    "logo": {
+      "bottom": 85.8359375,
+      "height": 53.671875,
+      "left": 50,
+      "right": 220,
+      "top": 32.1640625,
+      "width": 170,
+      "x": 50,
+      "y": 32.1640625
+    },
+    "page": 1429,
+    "pill": {
+      "bottom": 85,
+      "height": 52,
+      "left": 388.75,
+      "right": 919.2578125,
+      "top": 33,
+      "width": 530.5078125,
+      "x": 388.75,
+      "y": 33
+    },
+    "width": 1440
+  },
+  {
+    "actions": {
+      "bottom": 81,
+      "height": 44,
+      "left": 928,
+      "right": 1219,
+      "top": 37,
+      "width": 291,
+      "x": 928,
+      "y": 37
+    },
+    "header": {
+      "bottom": 103,
+      "height": 88,
+      "left": 18,
+      "right": 1251,
+      "top": 15,
+      "width": 1233,
+      "x": 18,
+      "y": 15
+    },
+    "logo": {
+      "bottom": 85.8359375,
+      "height": 53.671875,
+      "left": 50,
+      "right": 220,
+      "top": 32.1640625,
+      "width": 170,
+      "x": 50,
+      "y": 32.1640625
+    },
+    "page": 1269,
+    "pill": {
+      "bottom": 85,
+      "height": 52,
+      "left": 308.75,
+      "right": 839.2578125,
+      "top": 33,
+      "width": 530.5078125,
+      "x": 308.75,
+      "y": 33
+    },
+    "width": 1280
+  },
+  {
+    "actions": {
+      "bottom": 81,
+      "height": 44,
+      "left": 807,
+      "right": 1082,
+      "top": 37,
+      "width": 275,
+      "x": 807,
+      "y": 37
+    },
+    "header": {
+      "bottom": 103,
+      "height": 88,
+      "left": 18,
+      "right": 1106,
+      "top": 15,
+      "width": 1088,
+      "x": 18,
+      "y": 15
+    },
+    "logo": {
+      "bottom": 82.71875,
+      "height": 47.4375,
+      "left": 42,
+      "right": 182,
+      "top": 35.28125,
+      "width": 140,
+      "x": 42,
+      "y": 35.28125
+    },
+    "page": 1124,
+    "pill": {
+      "bottom": 85,
+      "height": 52,
+      "left": 253.25,
+      "right": 735.7578125,
+      "top": 33,
+      "width": 482.5078125,
+      "x": 253.25,
+      "y": 33
+    },
+    "width": 1135
+  },
+  {
+    "actions": {
+      "bottom": 81,
+      "height": 44,
+      "left": 697,
+      "right": 972,
+      "top": 37,
+      "width": 275,
+      "x": 697,
+      "y": 37
+    },
+    "header": {
+      "bottom": 103,
+      "height": 88,
+      "left": 18,
+      "right": 996,
+      "top": 15,
+      "width": 978,
+      "x": 18,
+      "y": 15
+    },
+    "logo": {
+      "bottom": 82.71875,
+      "height": 47.4375,
+      "left": 42,
+      "right": 182,
+      "top": 35.28125,
+      "width": 140,
+      "x": 42,
+      "y": 35.28125
+    },
+    "page": 1014,
+    "pill": {
+      "bottom": 85,
+      "height": 52,
+      "left": 198.25,
+      "right": 680.7578125,
+      "top": 33,
+      "width": 482.5078125,
+      "x": 198.25,
+      "y": 33
+    },
+    "width": 1025
+  }
+]

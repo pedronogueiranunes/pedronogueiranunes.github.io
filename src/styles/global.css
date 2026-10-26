@@ -354,7 +354,8 @@ img {
   top: 10px;
 }
 .site-nav {
-  position: relative;
+  position: sticky;
+  top: 14px;
   z-index: 50;
   display: flex;
   justify-content: space-between;
@@ -365,6 +366,7 @@ img {
   min-height: 88px;
   border-radius: 50px;
   background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(12.4px);
   box-shadow: inset -2px -2px 12px #6473620f;
 }
 .site-logo {
@@ -379,7 +381,7 @@ img {
   align-items: center;
   gap: 32px;
   border-radius: 999px;
-  padding: 12px;
+  padding: 12px 24px;
   background: var(--green);
   box-shadow: inset -2px -2px 8px #84a480;
 }
@@ -388,17 +390,17 @@ img {
   z-index: 1;
   display: flex;
   align-items: center;
-  min-height: 16px;
+  min-height: 28px;
+  padding: 6px 14px;
   border-radius: 999px;
   color: white;
-  font: 400 14px/16px var(--font-label);
+  font: 400 13px/16px var(--font-label);
   text-transform: uppercase;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.055em;
   white-space: nowrap;
   transition:
-    padding 400ms ease-in-out,
-    background-color 400ms ease-in-out,
-    color 400ms ease-in-out;
+    background-color 150ms ease,
+    color 150ms ease;
 }
 .nav-link::before {
   content: "";
@@ -416,12 +418,10 @@ img {
   height: 0;
   opacity: 0;
   overflow: hidden;
-  transition:
-    width 400ms ease-in-out,
-    margin 400ms ease-in-out,
-    opacity 400ms ease-in-out;
 }
 .nav-link-arrow img {
+  width: 8px;
+  height: 8px;
   max-width: none;
   transform: rotate(90deg);
 }
@@ -431,8 +431,8 @@ img {
   color: #232625;
 }
 .nav-item.is-open .nav-link-arrow {
-  width: 18px;
-  height: 18px;
+  width: 8px;
+  height: 8px;
   margin-left: 6px;
   opacity: 1;
 }
@@ -450,14 +450,11 @@ img {
   background-image:
     linear-gradient(180deg, #00000005, #0000001a),
     linear-gradient(115deg, #64736299 7.861%, #bdd9b900 61.32%),
-    linear-gradient(90deg, #232625e6, #232625e6);
+    linear-gradient(90deg, #232625, #232625);
   backdrop-filter: blur(7.5px);
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition:
-    opacity 400ms ease-in-out,
-    visibility 400ms;
 }
 .nav-panel:before {
   content: "";
@@ -477,7 +474,7 @@ img {
   background-image:
     linear-gradient(140deg, #00000008 1.7143%, #0000004d 52.471%),
     linear-gradient(129.865deg, #64736299 7.861%, #bdd9b900 61.32%),
-    linear-gradient(90deg, #232625e6, #232625e6);
+    linear-gradient(90deg, #232625, #232625);
 }
 .nav-item.is-open .nav-panel {
   visibility: visible;
@@ -1047,7 +1044,7 @@ details[open] > summary > .faq-plus:after {
   }
   .desktop-nav {
     gap: 16px;
-    padding-inline: 12px;
+    padding-inline: 24px;
   }
   .site-logo {
     width: 140px;
@@ -1073,6 +1070,7 @@ details[open] > summary > .faq-plus:after {
     display: block;
   }
   .site-nav {
+    top: 12px;
     margin: 12px 20px 0;
     padding: 16px 20px;
     min-height: 76px;
@@ -1368,10 +1366,10 @@ details[open] > summary > .faq-plus:after {
 .hero-lettering {
   opacity: var(--hero-lettering-opacity);
   position: absolute;
-  left: 50%;
+  left: 0;
   top: auto;
   bottom: -0.165em;
-  transform: translateX(-50%);
+  width: max-content;
   font: 400 460px/0.95 var(--font-lettering);
   letter-spacing: -0.08em;
   text-transform: uppercase;
@@ -5335,4 +5333,27 @@ body {
 .home-bio > :not(.bio-portrait) {
   position: relative;
   z-index: 2;
+}
+
+/* Original 40s marquee at 70% speed: 40 / 0.7 = 57.142857 seconds. */
+.hero-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 57.142857s linear infinite;
+}
+.hero-lettering-track > span {
+  flex-shrink: 0;
+}
+@keyframes hero-lettering-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-lettering-track {
+    animation: none;
+  }
 }
