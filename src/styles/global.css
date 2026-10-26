@@ -2155,12 +2155,6 @@ details[open] > summary > .faq-plus:after {
   .problem-top > span {
     font-size: 42px;
   }
-  .problem-start {
-    background: transparent !important;
-    padding: 20px 0 0 !important;
-    border-top: 1px solid var(--border) !important;
-    border-radius: 0 !important;
-  }
   .problem-card .problem-art {
     top: 0;
     left: -20px;
@@ -5371,70 +5365,6 @@ body {
   
 }
 
-/* Original 40s marquee at 70% speed: 40 / 0.7 = 57.142857 seconds. */
-.hero-lettering-track {
-  display: flex;
-  width: max-content;
-  animation: hero-lettering-left 57.142857s linear infinite;
-}
-.hero-lettering-track > span {
-  flex-shrink: 0;
-}
-@keyframes hero-lettering-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-lettering-track {
-    animation: none;
-  }
-}
-
-/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
-.footer-lettering {
-  position: relative;
-  width: 100vw;
-  max-width: none;
-  margin-inline: calc(50% - 50vw);
-  overflow: hidden;
-  overflow: clip;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.footer-lettering-track {
-  display: flex;
-  width: max-content;
-  animation: hero-lettering-left 40s linear infinite;
-}
-.footer-lettering-track > span {
-  flex-shrink: 0;
-}
-@media (max-width: 1024px) {
-  .footer-lettering {
-    max-width: none;
-    white-space: nowrap;
-    margin-inline: calc(50% - 50vw);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .footer-lettering-track {
-    animation: none;
-  }
-}
-
-/* Mid-width desktops/tablets: the About eyebrow sits closer to the hero,
-   so lift the hero portrait to keep a clear gap between them. */
-@media (min-width: 769px) and (max-width: 1439px) {
-  .home-portrait {
-    top: 355px;
-  }
-}
-
 /* Card states share geometry so pointer and keyboard interaction never reflows. */
 .problem-card {
   --card-ink: #232625;
@@ -5534,3 +5464,87 @@ body {
 @media (hover: hover) and (pointer: fine) { .problem-card:hover { --card-dark: 1; } }
 @media (hover: none) { .problem-card:focus-within:not(:has(:focus-visible)) { --card-dark: 0; } }
 @media (prefers-reduced-motion: reduce) { .problem-card::before { transition: none; } }
+
+.problems-section .section-heading > p { max-width: 400px; font-size: 16px; line-height: 1.6; }
+.problem-card h3 { white-space: pre-line; }
+.problem-card:last-child .problem-top { justify-content: flex-start; }
+.problem-start .tool-chip { padding: 6px 12px; line-height: 1.2; letter-spacing: 0.06em; }
+.problem-card:first-child .problem-start .tool-chip:first-child { font-size: 10px; }
+.problem-card { border-color: #e6e2da; }
+
+/* Preserve the square illustration slots used by the Figma masks. */
+.problem-art img { object-fit: contain; }
+@media (min-width: 769px) {
+  .problem-art img { height: 412px; }
+  .problem-card:first-child .problem-art { top: 39px; left: -88px; }
+  .problem-card:first-child .problem-art img { width: 374px; height: 374px; }
+  .problem-card:nth-child(2) .problem-art { top: 7px; left: -79px; }
+  .problem-card:nth-child(3) .problem-art { top: 15px; left: -99px; }
+  .problem-card:nth-child(3) .problem-art img { top: -63px; width: 360px; height: 360px; }
+}
+@media (max-width: 768px) { .problem-art img { height: 350px; } }
+
+/* Original 40s marquee at 70% speed: 40 / 0.7 = 57.142857 seconds. */
+.hero-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 57.142857s linear infinite;
+}
+.hero-lettering-track > span {
+  flex-shrink: 0;
+}
+@keyframes hero-lettering-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-lettering-track {
+    animation: none;
+  }
+}
+
+/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
+.footer-lettering {
+  position: relative;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  overflow: clip;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.footer-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 40s linear infinite;
+}
+.footer-lettering-track > span {
+  flex-shrink: 0;
+}
+@media (max-width: 1024px) {
+  .footer-lettering {
+    max-width: none;
+    white-space: nowrap;
+    margin-inline: calc(50% - 50vw);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-lettering-track {
+    animation: none;
+  }
+}
+
+/* Mid-width desktops/tablets: the About eyebrow sits closer to the hero,
+   so lift the hero portrait to keep a clear gap between them. */
+@media (min-width: 769px) and (max-width: 1439px) {
+  .home-portrait {
+    top: 355px;
+  }
+}
+

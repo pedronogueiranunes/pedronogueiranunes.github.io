@@ -196,11 +196,11 @@ const posts = (await getCollection("posts")).sort(
           <div class="problem-top">
             <span>{String(i + 1).padStart(2, "0")}</span>
             <a href="/services" aria-label={`Services for: ${problem.title}`}>
-              <Icon name="arrow-up-right" size={20} />
+              <Icon name="arrow-up-right" size={14} />
             </a>
           </div>
           <div class="problem-copy">
-          <h3>{i === 0 ? <>{problem.title.slice(0, 14)}<br />{problem.title.slice(14)}</> : problem.title}</h3>
+          <h3>{i === 0 ? problem.title.replace(", ", ",\n") : i === 1 ? problem.title.replace(" and ", "\nand ") : problem.title}</h3>
           <p>{problem.body}</p>
           </div>
           <div class="problem-start">
