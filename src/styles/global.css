@@ -5508,8 +5508,8 @@ body {
 .mini-wireframe b { padding: 2px 6px; top: -18px; }
 .design-selection { position: relative; background: #424242; outline: none; }
 .design-selection::before, .design-selection::after { content: ""; position: absolute; width: 4px; height: 4px; background: white; outline: 1px solid var(--accent); top: -2px; }
-.design-selection::before { left: -2px; box-shadow: 0 49px white; }
-.design-selection::after { right: -2px; box-shadow: 0 49px white; }
+.design-selection::before { left: -2px; box-shadow: 0 41px white; }
+.design-selection::after { right: -2px; box-shadow: 0 41px white; }
 .design-selection i { background: #999; }
 .design-blocks i { background: #383838; }
 .build-visual pre { color: #aaa; }
@@ -5546,3 +5546,4 @@ body {
   .toolkit .tool-chip { flex-direction: row; padding: 5px 8px; gap: 6px; border: 0; border-radius: 999px; background: #f3f3f3; }
   .toolkit .tool-chip img { width: 14px; height: 14px; }
 }
+.process-visual .research-bar:not(:first-of-type) small { color: #999; }
