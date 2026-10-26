@@ -1,0 +1,42 @@
+{
+  "themes": [
+    {
+      "body": "rgb(30, 30, 30)",
+      "cta": "rgb(255, 90, 31)",
+      "formCTA": "rgb(255, 90, 31)",
+      "logo": "rgb(255, 90, 31)",
+      "mode": "dark"
+    },
+    {
+      "body": "rgb(30, 30, 30)",
+      "cta": "rgb(255, 90, 31)",
+      "formCTA": "rgb(255, 90, 31)",
+      "logo": "rgb(255, 90, 31)",
+      "mode": "auto"
+    },
+    {
+      "body": "rgb(255, 255, 255)",
+      "cta": "rgb(255, 90, 31)",
+      "formCTA": "rgb(255, 90, 31)",
+      "logo": "rgb(255, 90, 31)",
+      "mode": "light"
+    }
+  ],
+  "pressed": [
+    {
+      "active": false,
+      "bg": "rgb(255, 90, 31)",
+      "hover": false
+    },
+    {
+      "active": false,
+      "bg": "oklab(0.682917 0.166364 0.128692)",
+      "hover": true
+    },
+    {
+      "active": true,
+      "bg": "oklab(0.681736 0.165961 0.128422)",
+      "hover": true
+    }
+  ]
+}

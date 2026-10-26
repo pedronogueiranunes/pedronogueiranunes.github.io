@@ -51,3 +51,5 @@ Home uses one portrait canvas travelling from a left-facing hero profile into th
 Decorative lettering touches the hero panel's bottom, stays behind the model and uses 10% opacity in Dark. Content headings, paragraphs and actions remain in front of the portrait.
 
 Validation: 14-route build; Astro check: 35 files with 0 errors/warnings/hints; measured Figma panel dimensions; visible theme-label clicks and reload; sampled desktop/mobile forward and return states preserve aspect and buffer dimensions; scoped independent visual reviews. Evidence: docs/corrections-verification.md and docs/portrait-motion-review.md. Static captures verify composition and sampled persistence, not frame pacing on every device.
+
+Color fidelity: orange UI roles now use the exact Figma primary #FF5A1F in Light/Dark/Auto, replacing rust/peach overrides. Shared hover/active tokens preserve interaction states; secondary and dark buttons retain their intended fills. Prior contrast scores are historical, not a certification of the replacement colors. Evidence:docs/orange-theme-verification.md.

@@ -3,10 +3,10 @@ name: Pedro Nogueira Portfolio 2026
 description: An expressive work-led portfolio with pixel details and warm editorial typography.
 colors:
   accent: "#FF5A1F"
-  accent-ink: "#B6360A"
-  action-bg: "#C74316"
-  action-deep: "#B73B10"
-  action-hover: "#CF3E0B"
+  accent-ink: "#FF5A1F"
+  action-bg: "#FF5A1F"
+  action-hover: "color-mix(in srgb, var(--accent) 88%, white)"
+  action-active: "color-mix(in srgb, var(--accent) 88%, #232625)"
   accent-secondary: "#D4FF4F"
   bg: "#F5F1EA"
   bg-secondary: "#EDE7DC"
@@ -15,7 +15,6 @@ colors:
   text-secondary: "#6B6660"
   border: "#DDD6C8"
   chip-bg: "#F6EAE6"
-  chip-ink: "#93330E"
   dark: "#232625"
   green: "#647362"
   olive: "#D2D9B8"
@@ -29,7 +28,6 @@ colors:
   dark-text: "#F5F3EF"
   dark-text-secondary: "#9C9890"
   dark-border: "#2A2A2A"
-  dark-accent-ink: "#FF956F"
   dark-section-tint: "#172017"
   dark-positive-ink: "#AFC2A8"
 typography:
@@ -95,6 +93,9 @@ components:
   button-primary-hover:
     backgroundColor: "{colors.action-hover}"
     textColor: "{colors.surface}"
+  button-primary-active:
+    backgroundColor: "{colors.action-active}"
+    textColor: "{colors.surface}"
   button-secondary:
     backgroundColor: "transparent"
     textColor: "{colors.text}"
@@ -103,7 +104,7 @@ components:
     typography: "{typography.label}"
   tool-chip:
     backgroundColor: "{colors.chip-bg}"
-    textColor: "{colors.chip-ink}"
+    textColor: "{colors.accent-ink}"
     rounded: "{rounded.pill}"
     padding: "6px 10px"
     typography: "{typography.mono}"
@@ -151,10 +152,10 @@ Warm orange and restrained green accents sit against light editorial surfaces. F
 
 ### Primary
 
-- **Brand orange** (`accent`): exact identity color for decoration, selection, focus and small visual accents.
-- **Readable orange ink** (`accent-ink`): orange text, links and section labels adapted for AA contrast on light surfaces.
-- **Action orange** (`action-bg`): white-label primary buttons. **Deep action orange** (`action-deep`) supports card overlays, featured labels and orange CTA panels. **Hover orange** (`action-hover`) is the implemented button hover shade.
-- **Bright pink wash** (`chip-bg`) and **chip ink** (`chip-ink`): warm tool-label surfaces and readable labels.
+- **Brand orange** (`accent`): exact identity color for primary CTA fills, logo, interface accents, decoration, selection and focus in both themes. Fresh Figma Foundations evidence identifies `color/accent/primary`, VariableID `2:7`, with the same value in Dark (`2:0`) and Light (`2:1`). The user's explicit exact-orange instruction supersedes the previous contrast-derived rust policy.
+- **Orange ink** (`accent-ink`) and **action orange** (`action-bg`): source aliases of `--accent`, not separate contrast shades. Frontmatter repeats the resolved base value so its primitives remain independently readable. Dark and Auto must not replace these with rust or peach.
+- **Hover orange** (`action-hover`) and **pressed orange** (`action-active`): implementation state derivations. Hover mixes primary orange (88%) with white (12%); pressed mixes primary orange (88%) with charcoal (12%). These are CSS behavior, not Figma-authored variant values.
+- **Bright pink wash** (`chip-bg`): warm tool-label surfaces with the shared orange ink.
 
 ### Secondary
 
@@ -169,9 +170,11 @@ Warm orange and restrained green accents sit against light editorial surfaces. F
 - **Near-black** (`text`), **warm muted ink** (`text-secondary`) and **warm rule** (`border`): primary copy, supporting copy and dividers.
 - **Charcoal** (`dark`): featured service cards and inverse treatments.
 - **Pale section green** (`section-tint`), **footer green** (`footer-bg`) and **specimen gray** (`specimen-bg`): large supporting areas, footer and case specimen backdrops.
-- **Dark counterparts** (`dark-*`): map background, secondary background, surface, text, secondary text, border, orange ink, section tint and positive ink to dark mode. Dark action buttons use deep action orange; dark footer uses dark section tint; dark specimen backgrounds use dark secondary background. Shared brand orange, lime, chip colors and identity greens remain available.
+- **Dark counterparts** (`dark-*`): map background, secondary background, surface, text, secondary text, border, section tint and positive ink to dark mode. Dark footer uses dark section tint; dark specimen backgrounds use dark secondary background. Exact brand orange and its ink/action aliases stay shared in Light, Dark and Auto, alongside lime, chip surfaces and identity greens.
 
-**The Brand and Contrast Rule.** Preserve exact brand orange. Use the existing readable ink and action shades when text contrast requires them; do not collapse the separate roles into one orange.
+**The Exact Orange Rule.** Keep the Figma-pinned primary orange and its ink/action aliases identical in Light, Dark and Auto. Do not restore the user-rejected rust or peach UI accent substitutes.
+
+The supplied computed-style evidence confirms the exact base orange for header CTA, logo and Contact CTA across Light, Dark and Auto; Auto followed system Dark in that run, and mobile Light also matched. Real native hover and pressed activation were recorded, but the pressed samples were taken during transition and do not establish a final settled active RGB. This is a fidelity correction, not a new AA certification; historical accessibility audit scores do not validate this changed palette.
 
 **The Surface Rule.** The page canvas uses surface in both themes. Cream background tokens remain for secondary surfaces and controls.
 
@@ -227,7 +230,7 @@ Clipped project media contains a browser image anchored near its top. Portrait m
 
 ### Buttons
 
-Confident pill actions with pixel labels and SVG arrows. Primary uses action orange and white; secondary uses a transparent fill, warm border and theme text. Padding is in frontmatter, minimum height is (44px), gap is (10px), and the label uses (14px/16px). Primary hover shifts to hover orange with a small upward move (2px); secondary hover uses secondary background. Global focus uses a (3px) brand-orange outline with (4px) offset. Reduced motion removes the movement. Preserve real disabled/busy semantics where a control cannot act.
+Confident pill actions with pixel labels and SVG arrows. Primary uses action orange and white; secondary uses a transparent fill, warm border and theme text. Padding is in frontmatter, minimum height is (44px), gap is (10px), and the label uses (14px/16px). Primary hover shifts to the shared hover mix with a small upward move (2px); active uses the shared pressed mix and returns the lift to zero. Hover and active selectors exclude disabled buttons. Local `--button-fill`, `--button-hover-fill` and `--button-active-fill` preserve non-orange roles: secondary actions use transparent/resting and secondary-background interaction fills; the case-sidebar action stays charcoal with its own darker interaction fills. Global focus uses a (3px) brand-orange outline with (4px) offset. Reduced motion removes the movement. Preserve real disabled/busy semantics where a control cannot act.
 
 ### Chips
 
@@ -249,9 +252,9 @@ The Contact form has two steps, a progress indicator, back control and polite st
 
 A light rounded outer shell contains the pixel logo, green central link pill, preferences and Book a call. The desktop green pill has (12px) padding and (32px) gaps, reduced to (16px) gaps at the intermediate breakpoint. Resting Silkscreen links retain a compact (14px/16px) visual line; an invisible (44px) hit region extends around each link without enlarging the resting pill. The active link gains a white pill, charcoal text and the authored pixel arrow, with (6px 14px 6px 16px) padding. Link padding, color, arrow reveal and panel opacity use (400ms ease-in-out); reduced motion disables these transitions.
 
-Desktop megamenus preserve the approved Current Figma geometry: Projects is (760px × 480px), split into a (460px) link region and a (300px) featured region. The compact panels are (453px) wide, with reviewed heights of (527px) About, (503px) Experiments and (478px) Thoughts. Panels begin (98px) below the shell's top and use rounded (16px) corners, layered charcoal/sage gradients and backdrop blur. Projects row labels use Manrope bold (24px/30px), compact row labels use Manrope bold (20px/28px), and numbered indexes use Silkscreen (12px/16px). Supporting olive text and contrast-adjusted peach accents remain readable on dark panels in both themes. The panel contents and placeholders remain editorial data, not verified claims.
+Desktop megamenus preserve the approved Current Figma geometry: Projects is (760px × 480px), split into a (460px) link region and a (300px) featured region. The compact panels are (453px) wide, with reviewed heights of (527px) About, (503px) Experiments and (478px) Thoughts. Panels begin (98px) below the shell's top and use rounded (16px) corners, layered charcoal/sage gradients and backdrop blur. Projects row labels use Manrope bold (24px/30px), compact row labels use Manrope bold (20px/28px), and numbered indexes use Silkscreen (12px/16px). Supporting olive text remains distinct from the shared exact-orange UI accents on dark panels in both themes. The panel contents and placeholders remain editorial data, not verified claims.
 
-Hover and keyboard access share one mutually exclusive open state. Closed panels are inert and cannot receive focus; opening updates aria-expanded, ArrowDown enters the rows, Escape returns to the link, and outside click or focus departure closes the panel. Keep visible keyboard focus. At mobile the full-screen dialog uses Manrope bold section headings (32px/38px), row links (18px/27px), grouped links and inline preferences, with focus management, Escape dismissal and return to the opener. Mobile row hover/focus uses readable accent ink on the light surface.
+Hover and keyboard access share one mutually exclusive open state. Closed panels are inert and cannot receive focus; opening updates aria-expanded, ArrowDown enters the rows, Escape returns to the link, and outside click or focus departure closes the panel. Keep visible keyboard focus. At mobile the full-screen dialog uses Manrope bold section headings (32px/38px), row links (18px/27px), grouped links and inline preferences, with focus management, Escape dismissal and return to the opener. Mobile row hover/focus uses the same exact-orange accent ink.
 
 Preferences combine language radios with Light/Dark/Auto segments in a floating panel. Opening focuses the checked option; Escape returns focus, and outside click or a real focus destination outside the panel closes it. A temporary body focus during a label click must not dismiss the popover before its radio activates: the visible Light label must select Light. Theme choice synchronizes both preference instances and persists with try/catch. Auto follows prefers-color-scheme. Untranslated language choices currently route to English Home.
 
@@ -261,7 +264,7 @@ An orange pixel chevron and uppercase Silkscreen label introduce sections, with 
 
 ### FAQ
 
-Native details/summary rows live in a bordered, rounded (20px) container with a maximum width of (820px). The first item starts open. Closed rows show a plus inside a pale circular state marker; open rows show minus on a deep-orange circle and gain a pale section-green fill. Labels and answers use Hanken (16px). Preserve the state-specific icon visibility selectors.
+Native details/summary rows live in a bordered, rounded (20px) container with a maximum width of (820px). The first item starts open. Closed rows show a plus inside a pale circular state marker; open rows show minus on a primary-orange circle and gain a pale section-green fill. Labels and answers use Hanken (16px). Preserve the state-specific icon visibility selectors.
 
 ### Portrait and Footer
 
@@ -288,7 +291,7 @@ The footer combines an illustrated CTA, navigation/platform columns, a lime avai
 - **Do** cap the desktop portrait at 640px × 480px, fit narrower destinations with uniform scale, and keep decorative lettering behind the model and actual hero/About copy above it.
 - **Do** keep the drawing buffer tied to the static origin and preserve the fallback until the first rendered frame.
 - **Do** keep closed desktop menus inert and make the visible Light label activate its theme radio.
-- **Do** separate exact brand orange from readable ink and action shades.
+- **Do** keep primary orange and its ink/action aliases identical in Light, Dark and Auto, with implementation-derived hover and pressed states.
 - **Do** use white page surfaces and reserve cream for secondary surfaces and controls.
 - **Do** keep all five type families in their established roles and self-host their files.
 - **Do** provide visible keyboard focus, accessible native controls and reduced-motion fallbacks.
@@ -296,6 +299,7 @@ The footer combines an illustrated CTA, navigation/platform columns, a lime avai
 
 ### Don't:
 - **Don't** substitute Unicode arrows or checks for exported SVG icons.
+- **Don't** restore rejected rust or peach UI accents or treat historical accessibility scores as validation of the new orange palette.
 - **Don't** turn unconfirmed metrics, quotes, prices or availability into verified product claims.
 - **Don't** fill missing case narratives or gallery assets with invented content.
 - **Don't** canonize legacy CSS aliases, duplicated cascade rules or hidden old sections as new design patterns.
