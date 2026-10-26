@@ -104,8 +104,22 @@ export function initSplat() {
       const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
       const radius = aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
-      camera.setPosition(0, 0, radius * 1.66);
+      // Slight camera dolly-in as the portrait lands in the About section.
+      // Done in 3D (not CSS scale) so the drawing buffer never resizes.
+      const ZOOM_AT_BIO = 0.1; // 10% closer at pose 1
+      // Pans the framing so the beanie is not clipped by the canvas top
+      // once zoomed (fraction of the model radius).
+      const PAN_UP_AT_BIO = 0.06;
+      const baseDistance = radius * 1.66;
+      const applyZoom = (pose) => {
+        const y = radius * PAN_UP_AT_BIO * pose;
+        camera.setPosition(0, y, baseDistance * (1 - ZOOM_AT_BIO * pose));
+        camera.lookAt(0, y, 0);
+        app.renderNextFrame = true;
+      };
+      applyZoom(Number(viewport.dataset.scrollPose || 0));
       camera.lookAt(0, 0, 0);
+      viewport.addEventListener("portraitpose", (e) => applyZoom(e.detail));
       // The gsplat sort runs in a worker, so the first frames can be empty.
       // With on-demand rendering nothing redraws when the sort lands, which
       // left the canvas blank until the user scrolled. Render continuously
