@@ -77,6 +77,18 @@ export function initSplat() {
   });
   app.assets.load(sogAsset);
 
+  function reveal() {
+    viewport.dataset.ready = "true";
+    canvas.removeAttribute("aria-hidden");
+    const silhouette = viewport.querySelector(".portrait-silhouette");
+    if (silhouette) {
+      setTimeout(() => {
+        silhouette.style.visibility = "hidden";
+      }, 600);
+    }
+    document.getElementById("splat-fallback")?.setAttribute("aria-hidden", "true");
+  }
+
   function attachSplat(asset) {
     const rig = new pc.Entity("splat-rig");
     const splat = new pc.Entity("splat");
@@ -94,28 +106,40 @@ export function initSplat() {
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       camera.setPosition(0, 0, radius * 1.66);
       camera.lookAt(0, 0, 0);
-      // Keep the fallback until the first rendered frame has reached the canvas.
-      app.once("postrender", () => {
-        viewport.dataset.ready = "true";
-        canvas.removeAttribute("aria-hidden");
-        const silhouette = viewport.querySelector(".portrait-silhouette");
-        if (silhouette) {
-          silhouette.setAttribute("aria-hidden", "true");
-          silhouette.addEventListener(
-            "transitionend",
-            () => {
-              silhouette.style.visibility = "hidden";
-            },
-            { once: true },
-          );
-          setTimeout(() => {
-            silhouette.style.visibility = "hidden";
-          }, 600);
+      // The gsplat sort runs in a worker, so the first frames can be empty.
+      // With on-demand rendering nothing redraws when the sort lands, which
+      // left the canvas blank until the user scrolled. Render continuously
+      // until splat pixels actually reach the canvas, then reveal.
+      app.autoRender = true;
+      const gl = app.graphicsDevice.gl;
+      const px = new Uint8Array(4);
+      const started = performance.now();
+      let revealed = false;
+      const hasPixels = () => {
+        if (!gl) return true;
+        const w = gl.drawingBufferWidth;
+        const h = gl.drawingBufferHeight;
+        for (let i = 1; i < 6; i++) {
+          for (let j = 1; j < 6; j++) {
+            gl.readPixels(Math.floor((w * i) / 6), Math.floor((h * j) / 6), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            if (px[3] > 0) return true;
+          }
         }
-        document
-          .getElementById("splat-fallback")
-          ?.setAttribute("aria-hidden", "true");
-      });
+        return false;
+      };
+      const onPostRender = () => {
+        if (revealed) return;
+        if (!hasPixels() && performance.now() - started < 10000) return;
+        revealed = true;
+        app.off("postrender", onPostRender);
+        reveal();
+        // A few more frames so late sort updates land, then back to on-demand.
+        setTimeout(() => {
+          app.autoRender = false;
+          app.renderNextFrame = true;
+        }, 800);
+      };
+      app.on("postrender", onPostRender);
       app.renderNextFrame = true;
     });
 
