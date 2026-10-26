@@ -1,11 +1,43 @@
 // A single canvas (or its fallback) travels between two stable layout slots.
+let currentGeometry = null;
+let currentPose = 0;
+
+export function getPortraitGeometry() {
+  const stage = document.getElementById("splat-viewport");
+  return {
+    geometry: currentGeometry || stage?._portraitGeometry || null,
+    pose: currentPose,
+  };
+}
+
+export function getPortraitCenter(offset = { x: 0, y: 0 }) {
+  const stage = document.getElementById("splat-viewport");
+  if (!stage) return null;
+  const geom = currentGeometry || stage._portraitGeometry;
+  if (!geom) {
+    const rect = stage.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width * (0.5 + offset.x),
+      y: rect.top + rect.height * (0.5 + offset.y),
+    };
+  }
+  const scale = 1 + (geom.targetScale - 1) * currentPose;
+  const stageWidth = geom.fromWidth * scale;
+  const stageHeight = geom.fromHeight * scale;
+  const screenLeft = geom.fromPageX + geom.dx * currentPose - window.scrollX;
+  const screenTop = geom.fromPageY + geom.dy * currentPose - window.scrollY;
+  return {
+    x: screenLeft + stageWidth * (0.5 + offset.x),
+    y: screenTop + stageHeight * (0.5 + offset.y),
+  };
+}
+
 export function initPortraitTravel() {
   const origin = document.getElementById("portrait-origin");
   const stage = document.getElementById("splat-viewport");
   const destination = document.getElementById("portrait-destination");
   if (!origin || !stage || !destination) return;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  let geometry;
   let frame = 0;
   function measure() {
     const from = origin.getBoundingClientRect();
@@ -21,7 +53,11 @@ export function initPortraitTravel() {
     const targetHeight = from.height * targetScale;
     stage.style.setProperty("--portrait-width", `${from.width}px`);
     stage.style.setProperty("--portrait-height", `${from.height}px`);
-    geometry = {
+    currentGeometry = {
+      fromPageX: from.left + window.scrollX,
+      fromPageY: from.top + window.scrollY,
+      fromWidth: from.width,
+      fromHeight: from.height,
       dx: to.left + (to.width - targetWidth) / 2 - from.left,
       dy: to.top + (to.height - targetHeight) / 2 - from.top,
       targetScale,
@@ -31,12 +67,13 @@ export function initPortraitTravel() {
         to.top + scrollY - Math.max(80, (innerHeight - to.height) / 2),
       ),
     };
+    stage._portraitGeometry = currentGeometry;
     update();
   }
   function update() {
     frame = 0;
-    if (!geometry) return;
-    const g = geometry;
+    if (!currentGeometry) return;
+    const g = currentGeometry;
     const progress = Math.max(
       0,
       Math.min(1, (scrollY - g.start) / (g.end - g.start)),
@@ -45,6 +82,7 @@ export function initPortraitTravel() {
     const pose = reducedMotion.matches
       ? Number(progress >= 0.5)
       : progress * progress * (3 - 2 * progress);
+    currentPose = pose;
     stage.style.setProperty("--portrait-x", `${g.dx * pose}px`);
     stage.style.setProperty("--portrait-y", `${g.dy * pose}px`);
     stage.style.setProperty(
@@ -52,6 +90,7 @@ export function initPortraitTravel() {
       String(1 + (g.targetScale - 1) * pose),
     );
     stage.dataset.scrollPose = String(pose);
+    stage._portraitPose = pose;
     stage.dispatchEvent(new CustomEvent("portraitpose", { detail: pose }));
   }
   function schedule() {

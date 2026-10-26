@@ -1397,15 +1397,34 @@ details[open] > summary > .faq-plus:after {
   height: 100%;
   object-fit: contain;
 }
+.home-portrait #splat-fallback {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
 .home-portrait canvas {
   opacity: 0;
+  transition: opacity 500ms ease;
   touch-action: pan-y;
+  pointer-events: none;
 }
-.home-portrait[data-ready="true"] canvas {
+.home-portrait[data-ready="true"] canvas,
+.portrait-stage[data-ready="true"] canvas {
   opacity: 1;
+  pointer-events: auto;
 }
-.home-portrait[data-ready="true"] img {
+.home-portrait[data-ready="true"] #splat-fallback,
+.portrait-stage[data-ready="true"] #splat-fallback {
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.home-portrait[data-failed="true"] #splat-fallback,
+.portrait-stage[data-failed="true"] #splat-fallback {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .home-bio {
   display: grid;
@@ -1678,11 +1697,10 @@ details[open] > summary > .faq-plus:after {
   color: var(--text-secondary);
 }
 .process-section {
-  border: 30px solid var(--bg);
-  border-radius: 80px;
-  background: #f4f7f4;
-  padding: 60px 34px;
-  color: #232625;
+    border-radius: 80px;
+    background: #f4f7f4;
+    padding: 60px 34px;
+    color: #232625;
 }
 .process-section .section-heading > p {
   max-width: 540px;
@@ -4730,6 +4748,7 @@ body {
   position: relative;
   overflow: hidden;
   height: 634px;
+  pointer-events: none;
 }
 .bio-portrait img {
   position: absolute;
@@ -5308,12 +5327,73 @@ body {
 }
 .portrait-stage[data-ready="true"] canvas {
   opacity: 1;
+  pointer-events: auto;
 }
-.portrait-stage[data-ready="true"] img {
+.portrait-stage[data-ready="true"] img,
+.portrait-stage[data-ready="true"] #splat-fallback {
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.portrait-stage[data-failed="true"] #splat-fallback {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .portrait-stage[data-ready="true"] .portrait-activate,
 .portrait-stage[data-failed="true"] .portrait-activate {
+  display: none;
+}
+
+.portrait-silhouette {
+  --silhouette-scale: 1;
+  --silhouette-x: 0px;
+  --silhouette-y: 0px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  transform-origin: center bottom;
+  transform: translate3d(var(--silhouette-x), var(--silhouette-y), 0)
+    scale(var(--silhouette-scale));
+  animation: portrait-silhouette-pulse 1.6s ease-in-out infinite;
+  transition: opacity 500ms ease, visibility 0s 500ms;
+}
+
+@keyframes portrait-silhouette-pulse {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait-silhouette {
+    animation: none;
+    opacity: 1;
+  }
+  .portrait-silhouette,
+  .portrait-stage canvas,
+  .home-portrait canvas,
+  #splat-fallback {
+    transition: none !important;
+  }
+}
+
+.portrait-stage[data-ready="true"] .portrait-silhouette,
+.home-portrait[data-ready="true"] .portrait-silhouette {
+  animation: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.portrait-stage[data-failed="true"] .portrait-silhouette,
+.home-portrait[data-failed="true"] .portrait-silhouette {
   display: none;
 }
 @media (max-width: 1024px) {
@@ -5357,6 +5437,39 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-lettering-track {
+    animation: none;
+  }
+}
+
+/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
+.footer-lettering {
+  position: relative;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  overflow: clip;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.footer-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 40s linear infinite;
+}
+.footer-lettering-track > span {
+  flex-shrink: 0;
+}
+@media (max-width: 1024px) {
+  .footer-lettering {
+    max-width: none;
+    white-space: nowrap;
+    margin-inline: calc(50% - 50vw);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-lettering-track {
     animation: none;
   }
 }
