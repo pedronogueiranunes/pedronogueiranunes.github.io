@@ -6,11 +6,24 @@ import { setupModelInteractions } from "./model-interaction.js";
 export function initSplat() {
   const canvas = document.getElementById("splat-canvas");
   const viewport = document.getElementById("splat-viewport");
-  if (!canvas || !window.pc) return;
+  if (!canvas || !window.pc) {
+    if (viewport) viewport.dataset.failed = "true";
+    return;
+  }
 
-  const app = new pc.Application(canvas, {
-    graphicsDeviceOptions: { alpha: true, antialias: true },
-  });
+  let app;
+  try {
+    app = new pc.Application(canvas, {
+      graphicsDeviceOptions: { alpha: true, antialias: true },
+    });
+    if (!app.graphicsDevice) {
+      viewport.dataset.failed = "true";
+      return;
+    }
+  } catch {
+    viewport.dataset.failed = "true";
+    return;
+  }
   app.graphicsDevice.maxPixelRatio = Math.min(
     window.devicePixelRatio || 1,
     1.5,
@@ -85,6 +98,20 @@ export function initSplat() {
       app.once("postrender", () => {
         viewport.dataset.ready = "true";
         canvas.removeAttribute("aria-hidden");
+        const silhouette = viewport.querySelector(".portrait-silhouette");
+        if (silhouette) {
+          silhouette.setAttribute("aria-hidden", "true");
+          silhouette.addEventListener(
+            "transitionend",
+            () => {
+              silhouette.style.visibility = "hidden";
+            },
+            { once: true },
+          );
+          setTimeout(() => {
+            silhouette.style.visibility = "hidden";
+          }, 600);
+        }
         document
           .getElementById("splat-fallback")
           ?.setAttribute("aria-hidden", "true");
