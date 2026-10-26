@@ -5440,3 +5440,35 @@ body {
     animation: none;
   }
 }
+
+/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
+.footer-lettering {
+  position: relative;
+  max-width: 100%;
+  margin-inline: 0;
+  overflow: hidden;
+  overflow: clip;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.footer-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 40s linear infinite;
+}
+.footer-lettering-track > span {
+  flex-shrink: 0;
+}
+@media (max-width: 1024px) {
+  .footer-lettering {
+    max-width: none;
+    white-space: nowrap;
+    margin-inline: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-lettering-track {
+    animation: none;
+  }
+}
