@@ -179,7 +179,7 @@ const posts = (await getCollection("posts")).sort(
     <div class="problem-grid">
       {problems.map((problem, i) => (
         <article
-          class:list={["problem-card", { "problem-card--active": i === 0 }]}
+          class="problem-card"
         >
           <div
             class="problem-art"
@@ -219,11 +219,13 @@ const posts = (await getCollection("posts")).sort(
         </article>
       ))}
     </div>
+    <div class="problem-followup">
     <p class="problem-note">Sounds like more than one?</p>
     <a class="text-link" href="/contact">
       That's normal. Book a call and we'll rank them together{" "}
       <Icon name="arrow-right" />
     </a>
+    </div>
   </section>
   <Comparison />
   <Process />
