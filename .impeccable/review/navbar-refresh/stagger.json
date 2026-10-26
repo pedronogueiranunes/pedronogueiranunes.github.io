@@ -1,0 +1,43 @@
+{
+  "actions": {
+    "bottom": 81,
+    "height": 44,
+    "left": 712.5078125,
+    "right": 972,
+    "top": 37,
+    "width": 259.4921875,
+    "x": 712.5078125,
+    "y": 37
+  },
+  "arrow": {
+    "bottom": 63,
+    "height": 8,
+    "left": 313.03125,
+    "right": 321.03125,
+    "top": 55,
+    "width": 8,
+    "x": 313.03125,
+    "y": 55
+  },
+  "children": [
+    "0.2861",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0"
+  ],
+  "panelOpacity": "1",
+  "panelTransition": "0s",
+  "pill": {
+    "bottom": 85,
+    "height": 52,
+    "left": 198,
+    "right": 696.5078125,
+    "top": 33,
+    "width": 498.5078125,
+    "x": 198,
+    "y": 33
+  }
+}

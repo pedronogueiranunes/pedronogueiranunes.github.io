@@ -111,8 +111,8 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
           <span class="nav-link-arrow" aria-hidden="true">
             <img
               src="/assets/figma/31-59-imgIconPixelArrowDownRight.svg"
-              width="18"
-              height="18"
+              width="8"
+              height="8"
               alt=""
             />
           </span>
@@ -234,6 +234,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   <Button href="/contact">Book a call</Button>
 </dialog>
 <script>
+  import { gsap } from "gsap";
   const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
   const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
   const close = () => dialog.close();
@@ -255,21 +256,62 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     if (e.matches && dialog.open) close();
   });
   const items = [...document.querySelectorAll<HTMLElement>(".nav-item")];
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let openItem: HTMLElement | null = null;
+  let closeTimer: ReturnType<typeof setTimeout> | undefined;
+  const children = (item: HTMLElement) => [
+    ...item.querySelectorAll<HTMLElement>(
+      ".nav-heading, .nav-row, .nav-feature",
+    ),
+  ];
   const setOpen = (active: HTMLElement | null) => {
+    clearTimeout(closeTimer);
+    if (active === openItem) return;
+    openItem = active;
     items.forEach((item) => {
       const open = item === active;
+      const wasOpen = item.classList.contains("is-open");
       item.classList.toggle("is-open", open);
       item
         .querySelector(".nav-link")!
         .setAttribute("aria-expanded", String(open));
       item.querySelector<HTMLElement>(".nav-panel")!.inert = !open;
+      const content = children(item);
+      gsap.killTweensOf(content);
+      if (open && !wasOpen && !reducedMotion.matches) {
+        gsap.fromTo(
+          content,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.32,
+            stagger: 0.045,
+            ease: "power2.out",
+            clearProps: "transform,opacity",
+          },
+        );
+      } else {
+        gsap.set(content, { clearProps: "transform,opacity" });
+      }
     });
   };
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches)
+      items.forEach((item) => {
+        gsap.killTweensOf(children(item));
+        gsap.set(children(item), { clearProps: "transform,opacity" });
+      });
+  });
   items.forEach((item) => {
     const link = item.querySelector<HTMLAnchorElement>(".nav-link")!;
     item.addEventListener("mouseenter", () => setOpen(item));
     item.addEventListener("mouseleave", () => {
-      if (!item.contains(document.activeElement)) setOpen(null);
+      if (!item.contains(document.activeElement)) {
+        closeTimer = setTimeout(() => {
+          if (openItem === item) setOpen(null);
+        }, 5000);
+      }
     });
     item.addEventListener("focusin", () => setOpen(item));
     item.addEventListener("focusout", (event) => {
