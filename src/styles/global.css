@@ -5507,7 +5507,8 @@ body {
   position: absolute;
   animation: eyebrow-cursor 500ms step-end infinite;
 }
-.eyebrow-typed.is-complete::after { animation-iteration-count: 3; animation-fill-mode: forwards; }
+.eyebrow-typed.is-complete::after { animation: eyebrow-finish 500ms step-end 3 forwards; }
+@keyframes eyebrow-finish { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @keyframes eyebrow-cursor { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .home-reveal-ready [data-reveal] { opacity: 1; translate: none; transition: none; }

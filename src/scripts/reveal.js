@@ -1,7 +1,7 @@
 // Home-only progressive enhancement. The hero and portrait remain untouched.
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
 const targets = new Set();
-const groups = document.querySelectorAll("main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .bio-facts, .toolkit > .chips");
+const groups = document.querySelectorAll("main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .project-rail, .bio-facts, .toolkit > .chips");
 for (const group of groups) {
   [...group.children].forEach((element, index) => {
     if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip")) {
