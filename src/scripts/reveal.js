@@ -19,7 +19,10 @@ const typing = new Map();
 function typeLabel(element) {
   if (!element.matches(".section-eyebrow") || motion.matches) return;
   const full = document.createElement("span");
-  while (element.childNodes.length > 1) full.append(element.childNodes[1]);
+  const icon = element.querySelector("svg");
+  for (const node of [...element.childNodes]) {
+    if (node !== icon) full.append(node);
+  }
   full.className = "eyebrow-reserved";
   const visual = document.createElement("span");
   visual.className = "eyebrow-typed";
