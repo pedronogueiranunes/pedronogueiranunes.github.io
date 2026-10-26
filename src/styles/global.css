@@ -5444,47 +5444,6 @@ body {
   }
 }
 
-/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
-.footer-lettering {
-  position: relative;
-  width: 100vw;
-  max-width: none;
-  margin-inline: calc(50% - 50vw);
-  overflow: hidden;
-  overflow: clip;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.footer-lettering-track {
-  display: flex;
-  width: max-content;
-  animation: hero-lettering-left 40s linear infinite;
-}
-.footer-lettering-track > span {
-  flex-shrink: 0;
-}
-@media (max-width: 1024px) {
-  .footer-lettering {
-    max-width: none;
-    white-space: nowrap;
-    margin-inline: calc(50% - 50vw);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .footer-lettering-track {
-    animation: none;
-  }
-}
-
-/* Mid-width desktops/tablets: the About eyebrow sits closer to the hero,
-   so lift the hero portrait to keep a clear gap between them. */
-@media (min-width: 769px) and (max-width: 1439px) {
-  .home-portrait {
-    top: 355px;
-  }
-}
-
 /* Current Figma workflow: dark specimens and divided toolkit cells. */
 .process-section .section-heading h2 { font-size: 48px; line-height: 1.1; }
 .process-section .section-heading > p { max-width: 440px; font-size: 17px; font-weight: 500; line-height: 1.55; }
@@ -5547,3 +5506,71 @@ body {
   .toolkit .tool-chip img { width: 14px; height: 14px; }
 }
 .process-visual .research-bar:not(:first-of-type) small { color: #999; }
+
+
+.process-section { border: 30px solid var(--surface); padding: 60px 64px; }
+.process-card > .mono { font-size: 12px; }
+.process-card .tool-chip { font-size: 11px; padding: 5px 10px 5px 8px; }
+.process-visual--0 > .mono { font-size: 9px; color: #ffffff73; }
+.research-bar:not(:first-of-type) i { opacity: 0.55; }
+.process-visual--1 { padding: 10px 13px; }
+.experiment-visual .mono { font-size: 10px; line-height: 12px; }
+.mini-wireframe { margin-top: 3px; }
+.mini-wireframe i:nth-of-type(n+3) { height: 4px; background: #ffffff2e; }
+.mini-wireframe i:nth-of-type(4) { width: 85%; }
+.mini-wireframe em { width: 44px; height: 16px; margin-top: 10px; }
+.design-visual { padding-top: 18px; }
+.design-visual::before { content: ""; position: absolute; top: 2px; left: 0; right: 0; height: 12px; background: #ffffff26; border-radius: 4px; }
+.design-visual > small { top: 0; z-index: 1; }
+.design-selection { height: 50px; }
+.design-selection::before, .design-selection::after { box-shadow: 0 49px white; }
+.design-blocks { margin-top: 6px; }
+.design-blocks i { height: 32px; }
+.build-visual pre { font-size: 10px; line-height: 17px; }
+.build-visual > div { margin-top: 10px; padding: 12px 13px; font-size: 11px; }
+.build-visual > div::before { width: 7px; height: 7px; }
+.build-visual > div small { font: 10px var(--font-mono); }
+@media (min-width: 769px) and (max-width: 1280px) { .process-section { border-width: 20px; padding: 40px 20px; } }
+@media (max-width: 768px) { .process-section { border: 0; padding: 40px 20px; } }
+
+/* Footer lettering: clipped to the footer bounds, marquee like the hero. */
+.footer-lettering {
+  position: relative;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  overflow: clip;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.footer-lettering-track {
+  display: flex;
+  width: max-content;
+  animation: hero-lettering-left 40s linear infinite;
+}
+.footer-lettering-track > span {
+  flex-shrink: 0;
+}
+@media (max-width: 1024px) {
+  .footer-lettering {
+    max-width: none;
+    white-space: nowrap;
+    margin-inline: calc(50% - 50vw);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-lettering-track {
+    animation: none;
+  }
+}
+
+/* Mid-width desktops/tablets: the About eyebrow sits closer to the hero,
+   so lift the hero portrait to keep a clear gap between them. */
+@media (min-width: 769px) and (max-width: 1439px) {
+  .home-portrait {
+    top: 355px;
+  }
+}
+
