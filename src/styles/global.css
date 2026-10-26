@@ -5533,6 +5533,11 @@ body {
 @media (min-width: 769px) and (max-width: 1280px) { .process-section { border-width: 20px; padding: 40px 20px; } }
 @media (max-width: 768px) { .process-section { border: 0; padding: 40px 20px; } }
 
+.build-visual pre .build-code-line { display: flex; gap: 12px; margin: 0; color: #ffffff99; }
+.build-code-line > span { width: 10px; margin: 0; color: #ffffff40; }
+.build-code-line code { font: inherit; color: #ffffff99; }
+.build-code-line:first-child code { color: var(--accent); }
+
 /* Footer lettering: clipped to the footer bounds, marquee like the hero. */
 .footer-lettering {
   position: relative;
