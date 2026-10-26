@@ -2,6 +2,11 @@
 let currentGeometry = null;
 let currentPose = 0;
 
+// Tunables for the scroll travel feel.
+// POSE_FOLLOW: how fast the portrait catches up with the scroll position each
+// frame (0..1). Lower = softer, more trailing ease. 1 = locked to scroll.
+const POSE_FOLLOW = 0.12;
+
 export function getPortraitGeometry() {
   const stage = document.getElementById("splat-viewport");
   return {
@@ -68,20 +73,25 @@ export function initPortraitTravel() {
       ),
     };
     stage._portraitGeometry = currentGeometry;
-    update();
+    update(true);
   }
-  function update() {
-    frame = 0;
-    if (!currentGeometry) return;
+  let targetPose = 0;
+  let displayPose = 0;
+  function computeTarget() {
     const g = currentGeometry;
     const progress = Math.max(
       0,
       Math.min(1, (scrollY - g.start) / (g.end - g.start)),
     );
     // Reduced motion uses two still placements instead of interpolated travel.
-    const pose = reducedMotion.matches
-      ? Number(progress >= 0.5)
-      : progress * progress * (3 - 2 * progress);
+    if (reducedMotion.matches) return Number(progress >= 0.5);
+    // easeInOutCubic: softer start and landing than smoothstep.
+    return progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+  }
+  function apply(pose) {
+    const g = currentGeometry;
     currentPose = pose;
     stage.style.setProperty("--portrait-x", `${g.dx * pose}px`);
     stage.style.setProperty("--portrait-y", `${g.dy * pose}px`);
@@ -93,8 +103,19 @@ export function initPortraitTravel() {
     stage._portraitPose = pose;
     stage.dispatchEvent(new CustomEvent("portraitpose", { detail: pose }));
   }
+  function update(instant = false) {
+    frame = 0;
+    if (!currentGeometry) return;
+    targetPose = computeTarget();
+    const follow = instant || reducedMotion.matches ? 1 : POSE_FOLLOW;
+    displayPose += (targetPose - displayPose) * follow;
+    if (Math.abs(targetPose - displayPose) < 0.0005) displayPose = targetPose;
+    apply(displayPose);
+    // Keep easing toward the scroll position after scrolling stops.
+    if (displayPose !== targetPose) frame = requestAnimationFrame(() => update());
+  }
   function schedule() {
-    if (!frame) frame = requestAnimationFrame(update);
+    if (!frame) frame = requestAnimationFrame(() => update());
   }
   addEventListener("scroll", schedule, { passive: true });
   addEventListener("resize", measure);
