@@ -918,13 +918,14 @@ details[open] > summary > .faq-plus:after {
   max-width: 900px;
   margin: 0 auto;
   padding-top: 40px;
+  text-align: center;
 }
 .footer-cta h2 {
   font: 700 64px/1.1 var(--font-display);
   letter-spacing: -0.04em;
   max-width: 800px;
   text-align: center;
-  margin: 0 0 17px;
+  margin: 0 auto 17px;
   color: #253324;
 }
 .footer-cta h2 span {
