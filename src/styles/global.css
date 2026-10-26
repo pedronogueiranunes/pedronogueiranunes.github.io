@@ -5479,6 +5479,6 @@ body {
    so lift the hero portrait to keep a clear gap between them. */
 @media (min-width: 769px) and (max-width: 1439px) {
   .home-portrait {
-    top: 350px;
+    top: 355px;
   }
 }
