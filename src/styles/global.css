@@ -5516,3 +5516,21 @@ body {
 .problem-start .tool-chip { font-size: 9px; }
 .problem-outcome { justify-content: flex-start; gap: 6px; }
 .problem-outcome .pixel-icon { order: -1; }
+
+.problem-card { padding-top: 199px; }
+.problem-copy { display: grid; gap: 12px; }
+.problem-copy p { margin: 0; color: var(--card-muted); font-size: 14px; line-height: 1.6; transition: color 350ms ease-out; }
+@media (max-width: 1280px) { .problem-card { padding-top: 190px; } }
+@media (max-width: 768px) {
+  .problem-card { padding-top: 190px; }
+  .problem-copy p { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .problem-copy p { transition: none; } }
+
+.problem-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, #2f382e, #000); opacity: var(--card-dark, 0); transition: opacity 350ms ease-out; pointer-events: none; }
+.problem-card > :not(.problem-art) { position: relative; z-index: 1; }
+.problem-art { z-index: 1; }
+.problem-card:focus-within { --card-dark: 1; }
+@media (hover: hover) and (pointer: fine) { .problem-card:hover { --card-dark: 1; } }
+@media (hover: none) { .problem-card:focus-within:not(:has(:focus-visible)) { --card-dark: 0; } }
+@media (prefers-reduced-motion: reduce) { .problem-card::before { transition: none; } }

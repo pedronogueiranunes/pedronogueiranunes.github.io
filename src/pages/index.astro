@@ -199,8 +199,10 @@ const posts = (await getCollection("posts")).sort(
               <Icon name="arrow-up-right" size={20} />
             </a>
           </div>
-          <h3>{problem.title}</h3>
+          <div class="problem-copy">
+          <h3>{i === 0 ? <>{problem.title.slice(0, 14)}<br />{problem.title.slice(14)}</> : problem.title}</h3>
           <p>{problem.body}</p>
+          </div>
           <div class="problem-start">
             <p class="mono">I start with</p>
             <div class="chips">
