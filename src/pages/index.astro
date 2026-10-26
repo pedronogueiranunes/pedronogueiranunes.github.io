@@ -281,6 +281,7 @@ const posts = (await getCollection("posts")).sort(
   </section>
   <!-- Hidden/OLD Figma sections retained in docs/legacy/home-before-redesign.astro.txt. -->
   <script>
+    import "../scripts/reveal.js";
     import { initPortraitTravel } from "../scripts/portrait-travel.js";
     initPortraitTravel();
     // Keep mobile's first view light. The original splat is activated on portrait interaction.
