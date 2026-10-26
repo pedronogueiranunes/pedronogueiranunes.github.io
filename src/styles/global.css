@@ -1383,7 +1383,7 @@ details[open] > summary > .faq-plus:after {
 }
 .home-portrait {
   position: absolute;
-  top: 430px;
+  top: 410px;
   left: 50%;
   transform: translateX(-50%);
   width: 640px;
@@ -2087,7 +2087,7 @@ details[open] > summary > .faq-plus:after {
     letter-spacing: -0.02em;
   }
   .home-portrait {
-    top: 488px;
+    top: 468px;
     width: min(350px, calc(100vw - 40px));
     height: 325px;
   }
