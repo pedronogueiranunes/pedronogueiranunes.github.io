@@ -120,7 +120,7 @@ components:
     backgroundColor: "{colors.green}"
     textColor: "{colors.surface}"
     rounded: "{rounded.pill}"
-    padding: "0 24px"
+    padding: "12px"
     typography: "{typography.label}"
   project-media:
     backgroundColor: "{colors.olive}"
@@ -210,7 +210,7 @@ The system combines tonal layers with selective, soft shadows. It is not flat-on
 ### Shadow Vocabulary
 
 - **Navigation inset:** `inset -2px -2px 12px #6473620f` on the desktop shell; the green inner pill uses `inset -2px -2px 8px #84a480`.
-- **Menu float:** `0 14px 32px #2326251a` for the desktop megamenu.
+- **Megamenu layer:** layered charcoal/sage gradients and backdrop blur (7.5px) separate the desktop panels from the page. The final menu does not use the earlier floating-panel shadow.
 - **Preferences float:** `0 12px 30px #23262512` for the preferences popover.
 - **Project screenshot:** `0 10px 28px -6px #1f1a1429` for the inset project image.
 - **Contact form:** `0 20px 48px #66331a1f` on the outer form wrapper; the nested form has no extra shadow.
@@ -247,9 +247,13 @@ The Contact form has two steps, a progress indicator, back control and polite st
 
 ### Navigation
 
-A light rounded outer shell contains the pixel logo, green central link pill, preferences and Book a call. Silkscreen links are white on green; megamenus pair linked rows with a supporting feature panel. Hover and keyboard access must both work. The mobile full-screen dialog includes grouped links and inline preferences, with focus management, Escape dismissal and return to the opener.
+A light rounded outer shell contains the pixel logo, green central link pill, preferences and Book a call. The desktop green pill has (12px) padding and (32px) gaps, reduced to (16px) gaps at the intermediate breakpoint. Resting Silkscreen links retain a compact (14px/16px) visual line; an invisible (44px) hit region extends around each link without enlarging the resting pill. The active link gains a white pill, charcoal text and the authored pixel arrow, with (6px 14px 6px 16px) padding. Link padding, color, arrow reveal and panel opacity use (400ms ease-in-out); reduced motion disables these transitions.
 
-Preferences combine language radios with Light/Dark/Auto segments in a floating panel. Opening focuses the checked option; Escape returns focus, and outside click or focus departure closes it. Theme choice synchronizes both preference instances and persists with try/catch. Auto follows prefers-color-scheme. Untranslated language choices currently route to English Home.
+Desktop megamenus preserve the approved Current Figma geometry: Projects is (760px × 480px), split into a (460px) link region and a (300px) featured region. The compact panels are (453px) wide, with reviewed heights of (527px) About, (503px) Experiments and (478px) Thoughts. Panels begin (98px) below the shell's top and use rounded (16px) corners, layered charcoal/sage gradients and backdrop blur. Projects row labels use Manrope bold (24px/30px), compact row labels use Manrope bold (20px/28px), and numbered indexes use Silkscreen (12px/16px). Supporting olive text and contrast-adjusted peach accents remain readable on dark panels in both themes. The panel contents and placeholders remain editorial data, not verified claims.
+
+Hover and keyboard access share one mutually exclusive open state. Closed panels are inert and cannot receive focus; opening updates aria-expanded, ArrowDown enters the rows, Escape returns to the link, and outside click or focus departure closes the panel. Keep visible keyboard focus. At mobile the full-screen dialog uses Manrope bold section headings (32px/38px), row links (18px/27px), grouped links and inline preferences, with focus management, Escape dismissal and return to the opener. Mobile row hover/focus uses readable accent ink on the light surface.
+
+Preferences combine language radios with Light/Dark/Auto segments in a floating panel. Opening focuses the checked option; Escape returns focus, and outside click or a real focus destination outside the panel closes it. A temporary body focus during a label click must not dismiss the popover before its radio activates: the visible Light label must select Light. Theme choice synchronizes both preference instances and persists with try/catch. Auto follows prefers-color-scheme. Untranslated language choices currently route to English Home.
 
 ### Section Eyebrow
 
@@ -261,7 +265,11 @@ Native details/summary rows live in a bordered, rounded (20px) container with a 
 
 ### Portrait and Footer
 
-Keep the original 3D head with its static image fallback. Large screens load after paint/idle when appropriate; mobile/tablet loads on portrait engagement. Reduced motion keeps the still image. Once active, dragging and keyboard controls provide access to the model; movement pauses when offscreen or hidden. Home's separate bio portrait is mirrored, slightly rotated and faded at the bottom to match its approved composition.
+Keep the original 3D head and its static image fallback in one travelling stage. The user's explicit motion request overrides the static Figma bio photograph: Home no longer has a separate bio image. The same canvas/fallback stage moves from its stable hero origin into the empty bio portrait slot. Scroll progress controls its translation and interpolates both width and height, using smoothstep easing (`p² × (3 − 2p)`). Geometry is remeasured after fonts load, on resize and when the destination resizes. Reverse scrolling returns the same stage to the origin.
+
+The model's baseline yaw moves from (0°) to (30°), ending in the fixed three-quarter pose facing the bio copy. Dragging and keyboard rotation are available while it remains in the hero/travel phase; their offset fades out with travel progress. At arrival the pose stays fixed, the drag cursor disappears and the canvas leaves the tab order. Reversing travel restores the hero interaction. The canvas has a soft bottom fade with the solid region ending at (88%) of its height. Do not reintroduce a separate mirrored photograph or independent bio canvas.
+
+Large screens retain loading after paint/idle when appropriate; mobile/tablet loads on portrait engagement. The unactivated or failed model retains the same stage's static fallback. Reduced motion uses two still placements, switching at the travel midpoint without interpolated movement or 3D loading. The scripts defining this shared-stage behavior are `src/scripts/portrait-travel.js` and `src/scripts/splat-hero.js`. The scoped corrections review passed; its captures establish composition and final pose, not frame pacing on every device.
 
 The footer combines an illustrated CTA, navigation/platform columns, a lime availability pill, legal links and oversized Pixelify lettering. At mobile the lettering becomes smaller, wrapping and left-aligned. Missing URLs and download assets must remain honest unavailable states.
 
@@ -270,6 +278,8 @@ The footer combines an illustrated CTA, navigation/platform columns, a lime avai
 ### Do:
 - **Do** use the approved Current desktop/mobile Figma frames as visual authority.
 - **Do** preserve pixel orange eyebrows, image-led project cards and the original splat portrait.
+- **Do** keep the single portrait stage reversible between hero and bio, with a fixed copy-facing destination pose.
+- **Do** keep closed desktop menus inert and make the visible Light label activate its theme radio.
 - **Do** separate exact brand orange from readable ink and action shades.
 - **Do** use white page surfaces and reserve cream for secondary surfaces and controls.
 - **Do** keep all five type families in their established roles and self-host their files.
@@ -283,4 +293,5 @@ The footer combines an illustrated CTA, navigation/platform columns, a lime avai
 - **Don't** canonize legacy CSS aliases, duplicated cascade rules or hidden old sections as new design patterns.
 - **Don't** apply decorative pixel fonts to long body copy or replace established font roles.
 - **Don't** remove the static portrait fallback or force motion when reduced motion is requested.
+- **Don't** restore a separate Home bio photograph or allow manual rotation to override the final portrait pose.
 - **Don't** present unavailable links, downloads or an unconfigured form as working destinations.

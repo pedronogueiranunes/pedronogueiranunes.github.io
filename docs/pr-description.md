@@ -40,3 +40,12 @@ This is a **draft for Pedro’s review**. Content/activation items below remain 
 | BSA case | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/work-bsa-legal-desktop.png) | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/work-bsa-legal-mobile.png) |
 | About | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/about-desktop.png) | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/about-mobile.png) |
 | Contact | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/contact-desktop.png) | [Image](https://github.com/pedronogueiranunes/pedronogueiranunes.github.io/blob/redesign-2026/docs/screenshots/contact-mobile.png) |
+
+
+### Follow-up browser corrections
+
+Restore the four Figma megamenu compositions, fonts, active pills and 400ms hover transitions. Fix visible Light-label clicks so focus dismissal cannot hide the radio before activation. Keep keyboard access, 44px hit targets and readable mobile focus states.
+
+Replace Home's separate About photograph with the same hero 3D model: it travels and turns with scrolling, settles facing the copy and returns on reverse scrolling. Preserve mobile lazy loading and static/reduced-motion alternatives.
+
+Validation: 14-route build; Astro check: 35 files, 0 errors, 0 warnings, 0 hints; measured Figma panel dimensions; visible theme label clicks and reload; portrait destination geometry and return path on desktop/mobile; independent scoped visual review. Evidence in docs/corrections-verification.md.

@@ -100,16 +100,38 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   </a>
   <nav class="desktop-nav" aria-label="Main navigation">
     {menu.map((item) => (
-      <div class="nav-item">
-        <a href={item.href} class="nav-link" aria-expanded="false">
+      <div class="nav-item" data-menu={item.key}>
+        <a
+          href={item.href}
+          class="nav-link"
+          aria-expanded="false"
+          aria-controls={`nav-${item.key}`}
+        >
           {item.label}
+          <span class="nav-link-arrow" aria-hidden="true">
+            <img
+              src="/assets/figma/31-59-imgIconPixelArrowDownRight.svg"
+              width="18"
+              height="18"
+              alt=""
+            />
+          </span>
         </a>
-        <div class:list={["nav-panel", { "nav-panel--wide": item.wide }]}>
-          <div>
-            <p class="mono">{item.heading || "the works"}</p>
+        <div
+          id={`nav-${item.key}`}
+          class:list={["nav-panel", { "nav-panel--wide": item.wide }]}
+          inert
+        >
+          <div class="nav-list">
+            <p class="nav-heading">{item.heading || "the works"}</p>
             {item.rows.map((row, index) => (
               <a href={rowHref(item, index)} class="nav-row">
-                <span>{clean(row.title)}</span>
+                <span>
+                  {clean(row.title)}
+                  {item.key === "projects" && index === 4 && (
+                    <Icon name="arrow-right" size={18} />
+                  )}
+                </span>
                 <small>{row.num}</small>
               </a>
             ))}
@@ -128,10 +150,10 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
             class="nav-feature"
           >
             <div class="nav-feature-thumb"></div>
-            <small class="mono">{item.feature.eyebrow}</small>
+            <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
             {item.feature.meta && <small>{item.feature.meta}</small>}
-            <span class="label">
+            <span class="nav-feature-cta">
               {clean(item.feature.cta)} <Icon name="arrow-right" />
             </span>
           </a>
@@ -176,13 +198,31 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
           <Icon name="chevron-right" />
         </summary>
         <div class="mobile-submenu">
+          <p class="nav-heading">{item.heading || "the works"}</p>
           {item.rows.map((row, index) => (
-            <a href={rowHref(item, index)}>{clean(row.title)}</a>
+            <a class="nav-row" href={rowHref(item, index)}>
+              <span>{clean(row.title)}</span>
+              <small>{row.num}</small>
+            </a>
           ))}
-          <a class="nav-feature" href={item.href}>
-            <small>{item.feature.eyebrow}</small>
+          <a
+            class="nav-feature"
+            href={
+              item.key === "about"
+                ? site.cvUrl || undefined
+                : item.key === "projects"
+                  ? "/work/green-nation-collective"
+                  : item.href
+            }
+            aria-disabled={
+              item.key === "about" && !site.cvUrl ? "true" : undefined
+            }
+          >
+            <div class="nav-feature-thumb"></div>
+            <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
-            <span>
+            {item.feature.meta && <small>{item.feature.meta}</small>}
+            <span class="nav-feature-cta">
               {clean(item.feature.cta)} <Icon name="arrow-right" />
             </span>
           </a>
@@ -214,43 +254,51 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   matchMedia("(min-width:1025px)").addEventListener("change", (e) => {
     if (e.matches && dialog.open) close();
   });
-  document.querySelectorAll<HTMLElement>(".nav-item").forEach((item) => {
-    const a = item.querySelector("a")!;
-    const set = (open: boolean) => {
+  const items = [...document.querySelectorAll<HTMLElement>(".nav-item")];
+  const setOpen = (active: HTMLElement | null) => {
+    items.forEach((item) => {
+      const open = item === active;
       item.classList.toggle("is-open", open);
-      a.setAttribute("aria-expanded", String(open));
-      if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        import("gsap").then(({ gsap }) => {
-          if (!item.classList.contains("is-open")) return;
-          const panel = item.querySelector(".nav-panel");
-          if (panel)
-            gsap.fromTo(
-              panel.children,
-              { y: 6, opacity: 0.75 },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.18,
-                ease: "power2.out",
-                clearProps: "transform,opacity",
-              },
-            );
-        });
+      item
+        .querySelector(".nav-link")!
+        .setAttribute("aria-expanded", String(open));
+      item.querySelector<HTMLElement>(".nav-panel")!.inert = !open;
+    });
+  };
+  items.forEach((item) => {
+    const link = item.querySelector<HTMLAnchorElement>(".nav-link")!;
+    item.addEventListener("mouseenter", () => setOpen(item));
+    item.addEventListener("mouseleave", () => {
+      if (!item.contains(document.activeElement)) setOpen(null);
+    });
+    item.addEventListener("focusin", () => setOpen(item));
+    item.addEventListener("focusout", (event) => {
+      if (
+        event.relatedTarget instanceof Node &&
+        !item.contains(event.relatedTarget)
+      )
+        setOpen(null);
+    });
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        link.focus();
+        setOpen(null);
       }
-    };
-    item.addEventListener("mouseenter", () => set(true));
-    item.addEventListener("mouseleave", () => set(false));
-    item.addEventListener("focusin", () => set(true));
-    item.addEventListener("focusout", () =>
-      setTimeout(() => {
-        if (!item.contains(document.activeElement)) set(false);
-      }, 0),
-    );
-    item.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        a.focus();
-        set(false);
+      if (event.key === "ArrowDown" && event.target === link) {
+        event.preventDefault();
+        setOpen(item);
+        // Wait for the visibility transition to enter its visible state.
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            if (item.classList.contains("is-open"))
+              item.querySelector<HTMLAnchorElement>(".nav-row")?.focus();
+          }),
+        );
       }
     });
+  });
+  document.addEventListener("click", (event) => {
+    if (!items.some((item) => item.contains(event.target as Node)))
+      setOpen(null);
   });
 </script>

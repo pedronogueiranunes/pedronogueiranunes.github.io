@@ -98,10 +98,14 @@ const { id = "preferences", inline = false } = Astro.props;
         close(true);
       }
     });
-    root.addEventListener("focusout", () => {
-      setTimeout(() => {
-        if (!root.contains(document.activeElement)) close();
-      }, 0);
+    root.addEventListener("focusout", (event) => {
+      // A label click may briefly focus the body before activating its radio.
+      // Only a real focus destination outside the popover should dismiss it.
+      if (
+        event.relatedTarget instanceof Node &&
+        !root.contains(event.relatedTarget)
+      )
+        close();
     });
     root
       .querySelectorAll<HTMLInputElement>(".theme-segments input")

@@ -41,42 +41,40 @@ const posts = (await getCollection("posts")).sort(
         figma + ux design + web development
       </div>
     </div>
-    <div class="home-portrait" id="splat-viewport">
-      <ResponsiveImage
-        id="splat-fallback"
-        src="/assets/head-hero.webp"
-        width="700"
-        height="910"
-        alt="Pedro Nogueira"
-        fetchpriority="high"
-        loading="eager"
-        sizes="(max-width: 768px) 304px, 560px"
-      />
-      <button
-        class="portrait-activate"
-        type="button"
-        aria-label="Play 3D portrait"
-      >
-        Play 3D
-      </button>
-      <canvas
-        id="splat-canvas"
-        aria-label="Interactive portrait of Pedro. Drag to rotate."
-        aria-hidden="true"
-        role="img"
-      ></canvas>
+    <div class="home-portrait" id="portrait-origin">
+      <div class="portrait-stage" id="splat-viewport">
+        <ResponsiveImage
+          id="splat-fallback"
+          src="/assets/head-hero.webp"
+          width="700"
+          height="910"
+          alt="Pedro Nogueira"
+          fetchpriority="high"
+          loading="eager"
+          sizes="(max-width: 768px) 304px, 560px"
+        />
+        <button
+          class="portrait-activate"
+          type="button"
+          aria-label="Play 3D portrait"
+        >
+          Play 3D
+        </button>
+        <canvas
+          id="splat-canvas"
+          aria-label="Interactive portrait of Pedro. Drag to rotate."
+          aria-hidden="true"
+          role="img"
+        ></canvas>
+      </div>
     </div>
   </section>
   <section class="home-bio page-section">
-    <div class="bio-portrait">
-      <ResponsiveImage
-        src="/assets/figma/488-6649-imgHead.webp"
-        width="659"
-        height="631"
-        alt="Pedro Nogueira"
-        loading="lazy"
-      />
-    </div>
+    <div
+      class="bio-portrait"
+      id="portrait-destination"
+      aria-hidden="true"
+    ></div>
     <div>
       <Eyebrow>About me</Eyebrow>
       <h2>
@@ -243,6 +241,8 @@ const posts = (await getCollection("posts")).sort(
   </section>
   <!-- Hidden/OLD Figma sections retained in docs/legacy/home-before-redesign.astro.txt. -->
   <script>
+    import { initPortraitTravel } from "../scripts/portrait-travel.js";
+    initPortraitTravel();
     // Keep mobile's first view light. The original splat is activated on portrait interaction.
     const viewport = document.getElementById("splat-viewport");
     if (viewport) {
