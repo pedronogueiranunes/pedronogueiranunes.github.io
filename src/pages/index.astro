@@ -179,7 +179,7 @@ const posts = (await getCollection("posts")).sort(
     <div class="problem-grid">
       {problems.map((problem, i) => (
         <article
-          class:list={["problem-card", { "problem-card--active": i === 0 }]}
+          class="problem-card"
         >
           <div
             class="problem-art"
@@ -196,11 +196,13 @@ const posts = (await getCollection("posts")).sort(
           <div class="problem-top">
             <span>{String(i + 1).padStart(2, "0")}</span>
             <a href="/services" aria-label={`Services for: ${problem.title}`}>
-              <Icon name="arrow-up-right" size={20} />
+              <Icon name="arrow-up-right" size={14} />
             </a>
           </div>
-          <h3>{problem.title}</h3>
+          <div class="problem-copy">
+          <h3>{i === 0 ? problem.title.replace(", ", ",\n") : i === 1 ? problem.title.replace(" and ", "\nand ") : problem.title}</h3>
           <p>{problem.body}</p>
+          </div>
           <div class="problem-start">
             <p class="mono">I start with</p>
             <div class="chips">
@@ -219,11 +221,13 @@ const posts = (await getCollection("posts")).sort(
         </article>
       ))}
     </div>
+    <div class="problem-followup">
     <p class="problem-note">Sounds like more than one?</p>
     <a class="text-link" href="/contact">
       That's normal. Book a call and we'll rank them together{" "}
       <Icon name="arrow-right" />
     </a>
+    </div>
   </section>
   <Comparison />
   <Process />
