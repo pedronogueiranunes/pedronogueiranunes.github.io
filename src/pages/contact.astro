@@ -1,0 +1,98 @@
+---
+import Base from "../layouts/Base.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import ContactForm from "../components/ContactForm.astro";
+import CheckList from "../components/CheckList.astro";
+import FAQ from "../components/FAQ.astro";
+import Icon from "../components/Icon.astro";
+import { nextSteps, testimonial } from "../data/contact";
+import { faq } from "../data/services";
+import { site } from "../data/site";
+---
+
+<Base title="Contact | Pedro Nogueira">
+  <section class="contact-hero page-section">
+    <div class="contact-intro">
+      <Eyebrow>Contact</Eyebrow>
+      <h1>
+        Tell me about your site.
+        <br />
+        <span>I'll come back with a plan.</span>
+      </h1>
+      <div class="first-call">
+        <h2>What you get from the first call, free</h2>
+        <CheckList
+          items={[
+            "A quick review of your site before we talk",
+            "The three fixes I would ship first, with rough effort",
+            "A clear scope and price range. Yours to keep, even if you do not hire me",
+          ]}
+        />
+      </div>
+      <div class="next-steps">
+        <h2 class="mono accent">What happens next</h2>
+        <ol>
+          {nextSteps.map(([title, body]) => (
+            <li>
+              <div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <blockquote class="contact-testimonial">
+        <span class="testimonial-avatar" aria-hidden="true"></span>
+        <div>
+          <p>
+            {testimonial.quote}{" "}
+            <small aria-label="5 out of 5 stars">{testimonial.rating}</small>
+          </p>
+          <cite>{testimonial.attribution}</cite>
+        </div>
+      </blockquote>
+      <dl class="contact-details">
+        <div>
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt>Time zone</dt>
+          <dd>GMT-3, overlaps US and Canada</dd>
+        </div>
+        <div>
+          <dt>Reply time</dt>
+          <dd>Within 24 hours</dd>
+        </div>
+      </dl>
+    </div>
+    <ContactForm />
+  </section>
+  <section class="faq-section page-section">
+    <Eyebrow>Before you hit send</Eyebrow>
+    <h2>Fair questions.</h2>
+    <FAQ
+      items={faq.filter(
+        (item) => item.question !== "Which platforms do you work with?",
+      )}
+    />
+  </section>
+  <div class="social-links page-section">
+    {Object.entries(site.socials).map(([name, url]) =>
+      url ? (
+        <a class="text-link" href={url}>
+          {name}
+          <Icon name="arrow-up-right" />
+        </a>
+      ) : (
+        <span class="text-link social-unavailable">
+          {name}
+          <Icon name="arrow-up-right" />
+        </span>
+      ),
+    )}
+  </div>
+</Base>

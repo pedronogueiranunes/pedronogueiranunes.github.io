@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon &#226;&#128;&#148; Sun">
+<path id="Core" d="M11.4 8C11.4 9.87777 9.87777 11.4 8 11.4C6.12223 11.4 4.6 9.87777 4.6 8C4.6 6.12223 6.12223 4.6 8 4.6C9.87777 4.6 11.4 6.12223 11.4 8Z" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 0" d="M8.6 0V2" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 1" d="M8.6 14V16" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 2" d="M0 7.4H2" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 3" d="M14 7.4H16" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 4" d="M2.76426 1.91574L4.17426 3.32574" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 5" d="M12.6743 1.91574L14.0843 3.32574" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 6" d="M1.91574 13.2357L3.32574 11.8257" stroke-width="1.2" stroke="#6B6660"/>
+<path id="Ray 7" d="M11.8257 13.2357L13.2357 11.8257" stroke-width="1.2" stroke="#6B6660"/>
+</g>
+</svg>

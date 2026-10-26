@@ -4,12 +4,13 @@
 export function initSplat() {
   const canvas = document.getElementById('splat-canvas');
   const viewport = document.getElementById('splat-viewport');
+  let viewportVisible = true;
   if (!canvas || !window.pc) return;
 
   const app = new pc.Application(canvas, {
     graphicsDeviceOptions: { alpha: true, antialias: true }
   });
-  app.graphicsDevice.maxPixelRatio = window.devicePixelRatio || 1;
+  app.graphicsDevice.maxPixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
   // Application defaults to filling the whole window — opt out so resizeCanvas below actually controls the size.
   app.setCanvasFillMode(pc.FILLMODE_NONE);
   app.setCanvasResolution(pc.RESOLUTION_AUTO);
@@ -35,6 +36,7 @@ export function initSplat() {
     const plyAsset = new pc.Asset('pedro-head-ply', 'gsplat', { url: '/assets/pedro-head.splat.ply' });
     app.assets.add(plyAsset);
     plyAsset.on('load', () => attachSplat(plyAsset));
+    plyAsset.on('error', () => { viewport.dataset.failed = 'true'; app.destroy(); });
     app.assets.load(plyAsset);
   });
   app.assets.load(sogAsset);
@@ -56,7 +58,9 @@ export function initSplat() {
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       camera.setPosition(0, 0, radius * 1.66);
       camera.lookAt(0, 0, 0);
-      document.getElementById('splat-loader')?.classList.add('is-hidden');
+      viewport.dataset.ready = 'true';
+      canvas.removeAttribute('aria-hidden');
+      document.getElementById('splat-fallback')?.setAttribute('aria-hidden', 'true');
     });
 
     // Drag to rotate — model stays put otherwise. Horizontal drag only: yaw is the only axis the
@@ -70,7 +74,7 @@ export function initSplat() {
     // so a first-time visitor notices this is a real 3D model and not a static photo. sin() gives
     // a free ease-in/out at both ends of the swing — no tween library needed. Stops for good the
     // moment the user drags, handing off from wherever the swing was to avoid a visual jump.
-    let autoPlaying = true;
+    let autoPlaying = !matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Verified directly (froze rotation at fixed yaw values and screenshotted each) rather than
     // guessed: yaw=0 is close to front-facing and yaw=60 is genuine profile — the old 0-30 range
     // never swung far enough to read as "profile" at either end.
@@ -83,7 +87,7 @@ export function initSplat() {
     let time = Math.PI / 2 / AUTO_SPEED;
 
     app.on('update', (dt) => {
-      if (!autoPlaying) return;
+      if (!autoPlaying || !viewportVisible || document.hidden) return;
       time += dt;
       yaw = AUTO_CENTER + Math.sin(time * AUTO_SPEED) * AUTO_AMPLITUDE;
       rig.setLocalEulerAngles(180, yaw, 0);
@@ -97,6 +101,20 @@ export function initSplat() {
     const bubble = document.getElementById('splat-bubble');
 
     canvas.style.cursor = 'none';
+    canvas.tabIndex = 0;
+    canvas.setAttribute('aria-label', '3D portrait of Pedro. Drag or use the left and right arrow keys to rotate.');
+    canvas.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home'].includes(event.key)) return;
+      event.preventDefault();
+      autoPlaying = false;
+      yaw = event.key === 'Home' ? 0 : yaw + (event.key === 'ArrowLeft' ? -10 : 10);
+      rig.setLocalEulerAngles(180, yaw, 0);
+    });
+    canvas.addEventListener('pointercancel', () => {
+      dragging = false;
+      dragCursor.textContent = 'drag me';
+      dragCursor.classList.remove('is-visible');
+    });
     canvas.addEventListener('pointerenter', () => dragCursor.classList.add('is-visible'));
     canvas.addEventListener('pointerleave', () => dragCursor.classList.remove('is-visible'));
     canvas.addEventListener('pointermove', (e) => {
@@ -124,6 +142,9 @@ export function initSplat() {
     });
   }
 
+  const visibility = new IntersectionObserver(([entry]) => { viewportVisible = entry.isIntersecting; app.autoRender = entry.isIntersecting && !document.hidden; });
+  visibility.observe(viewport);
+  document.addEventListener('visibilitychange', () => { app.autoRender = !document.hidden && viewportVisible; });
   app.start();
   resize();
 }

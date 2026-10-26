@@ -1,0 +1,36 @@
+---
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+}
+const { name, size = 16, class: className = "" } = Astro.props;
+const icons = import.meta.glob("../assets/icons/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+const svg = icons[`../assets/icons/${name}.svg`];
+---
+
+<span
+  class:list={["pixel-icon", className]}
+  style={`--icon-size:${size}px`}
+  aria-hidden="true"
+  set:html={svg}
+/>
+<style>
+  .pixel-icon {
+    display: inline-flex;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pixel-icon :global(svg) {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+  }
+</style>

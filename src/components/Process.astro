@@ -1,0 +1,118 @@
+---
+import {
+  process,
+  researchIllustration,
+  toolkit,
+  logoFor,
+  buildIllustration,
+} from "../data/home";
+import Eyebrow from "./Eyebrow.astro";
+import ToolChip from "./ToolChip.astro";
+---
+
+<section class="process-section page-section" id="process">
+  <div class="section-heading">
+    <div>
+      <Eyebrow>AI ASSISTED WORKFLOW</Eyebrow>
+      <h2>
+        Each step has its tool.
+        <br />
+        Every call is mine.
+      </h2>
+    </div>
+    <p>
+      I move between Figma, Webflow, WordPress, React and whatever stack your
+      project already runs on, with Claude built into each stage. AI takes the
+      repetitive work off my plate, so more of your budget goes into decisions,
+      design quality and clean code. You get one person owning the work from
+      first insight to launch.
+    </p>
+  </div>
+  <div class="process-grid">
+    {process.map((step, i) => (
+      <article class="process-card">
+        <div
+          class:list={["process-visual", `process-visual--${i}`]}
+          aria-hidden="true"
+        >
+          {i === 0 && (
+            <>
+              <small class="mono">What buyers keep asking</small>
+              {researchIllustration.map((item) => (
+                <div class="research-bar">
+                  <span>{item.label}</span>
+                  <small>{item.value}%</small>
+                  <div>
+                    <i style={`width:${item.value}%`}></i>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+          {i === 1 && (
+            <div class="experiment-visual">
+              {["A", "B"].map((v, i) => (
+                <div>
+                  <small class="mono">{v}</small>
+                  <div class:list={["mini-wireframe", { winner: i === 1 }]}>
+                    {i === 1 && <b>Winner</b>}
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <em></em>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {i === 2 && (
+            <div class="design-visual">
+              <small>Hero · v3</small>
+              <div class="design-selection">
+                <i></i>
+                <i></i>
+              </div>
+              <div class="design-blocks">
+                <i></i>
+                <i></i>
+                <i></i>
+              </div>
+            </div>
+          )}
+          {i === 3 && (
+            <div class="build-visual">
+              <pre
+                set:text={
+                  '12  <ProductGrid\n13    collection={handle}\n14    sort="best-selling"\n15    lazy />'
+                }
+              />
+              <div>
+                {buildIllustration.status}{" "}
+                <small>{buildIllustration.score}</small>
+              </div>
+            </div>
+          )}
+        </div>
+        <p class="mono accent">{step.label}</p>
+        <h3>{step.title}</h3>
+        <p class="process-body">{step.body}</p>
+        <div class="chips">
+          {step.tools.map((tool) => (
+            <ToolChip label={tool} logo={logoFor(tool)} />
+          ))}
+        </div>
+      </article>
+    ))}
+  </div>
+  <div class="toolkit">
+    <div>
+      <p class="mono muted">In the toolkit</p>
+      <p class="mono accent">9 TOOLS, 1 WORKFLOW</p>
+    </div>
+    <div class="chips">
+      {toolkit.map((tool) => (
+        <ToolChip label={tool} logo={logoFor(tool)} size="m" />
+      ))}
+    </div>
+  </div>
+</section>

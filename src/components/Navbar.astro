@@ -1,228 +1,256 @@
 ---
-// Menu content is data-driven so the 4 megamenu columns share one markup block
-// instead of 4 hand-copied ones. "Projects" is the wide two-column layout from
-// Figma (32:263 -> 31:59); the other three are the narrow single-column layout
-// (32:132 / 32:198 / 32:262).
+import Preferences from "./Preferences.astro";
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+import { site } from "../data/site";
 const menu = [
   {
-    key: 'projects',
-    label: 'Projects',
-    href: '#work',
+    key: "projects",
+    label: "Projects",
+    href: "/projects",
     wide: true,
     rows: [
-      { title: 'Web Design & Dev', num: '01' },
-      { title: 'Branding & Graphic Design', num: '02' },
-      { title: 'Digital Art & Illustration', num: '03' },
-      { title: 'Music & Audiovisual', num: '04' },
-      { title: 'See all projects →', num: '05', href: '#work' },
+      { title: "Web Design & Dev", num: "01" },
+      { title: "Branding & Graphic Design", num: "02" },
+      { title: "Digital Art & Illustration", num: "03" },
+      { title: "Music & Audiovisual", num: "04" },
+      { title: "See all projects", num: "05", href: "/projects" },
     ],
     feature: {
-      eyebrow: 'FEATURED CASE',
-      title: 'Green Nation Collective',
-      meta: 'Web Design & Dev · 2025–26',
-      cta: 'See case →',
+      eyebrow: "FEATURED CASE",
+      title: "Green Nation Collective",
+      meta: "Web Design & Dev · 2025–26",
+      cta: "See case",
     },
   },
   {
-    key: 'about',
-    label: 'About',
-    href: '#about',
-    heading: 'ABOUT',
+    key: "about",
+    label: "About",
+    href: "/about",
+    heading: "ABOUT",
     rows: [
-      { title: 'My story', num: '01' },
-      { title: 'Career timeline', num: '02' },
-      { title: 'Skills & Stack', num: '03' },
-      { title: 'How I work', num: '04' },
+      { title: "My story", num: "01" },
+      { title: "Career timeline", num: "02" },
+      { title: "Skills & Stack", num: "03" },
+      { title: "How I work", num: "04" },
     ],
     feature: {
-      eyebrow: 'ABOUT ME',
-      title: '10+ years creating for international agencies and brands',
-      cta: 'Download CV →',
+      eyebrow: "ABOUT ME",
+      title: "10+ years creating for international agencies and brands",
+      cta: "Download CV",
     },
   },
   {
-    key: 'experiments',
-    label: 'Experiments',
-    href: '#experiments',
-    heading: 'EXPERIMENTS',
+    key: "experiments",
+    label: "Experiments",
+    href: "/projects?category=experiments",
+    heading: "EXPERIMENTS",
     rows: [
-      { title: 'Code', num: '01' },
-      { title: 'Generative art', num: '02' },
-      { title: 'Prototypes', num: '03' },
-      { title: 'Music', num: '04' },
+      { title: "Code", num: "01" },
+      { title: "Generative art", num: "02" },
+      { title: "Prototypes", num: "03" },
+      { title: "Music", num: "04" },
     ],
     feature: {
-      eyebrow: 'RECENT EXPERIMENT',
-      title: '[placeholder title]',
-      cta: 'See experiment →',
+      eyebrow: "RECENT EXPERIMENT",
+      title: "[placeholder title]",
+      cta: "See experiment",
     },
   },
   {
-    key: 'thoughts',
-    label: 'Thoughts',
-    href: '#thoughts',
-    heading: 'THOUGHTS',
+    key: "thoughts",
+    label: "Thoughts",
+    href: "/#thoughts",
+    heading: "THOUGHTS",
     rows: [
-      { title: 'Latest posts', num: '01' },
-      { title: 'Categories', num: '02' },
-      { title: 'Archive', num: '03' },
+      { title: "Latest posts", num: "01" },
+      { title: "Categories", num: "02" },
+      { title: "Archive", num: "03" },
     ],
     feature: {
-      eyebrow: 'RECENT POST',
-      title: '[placeholder title]',
-      meta: '[placeholder date]',
-      cta: 'Read →',
+      eyebrow: "RECENT POST",
+      title: "[placeholder title]",
+      meta: "[placeholder date]",
+      cta: "Read",
     },
   },
 ];
+
+const rowHref = (item: any, index: number) =>
+  item.key === "about"
+    ? ["/about", "/about#timeline", "/about#skills", "/#process"][index]
+    : item.key === "projects"
+      ? index === 4
+        ? "/projects"
+        : `/projects?category=${index}`
+      : item.key === "thoughts"
+        ? "/#thoughts"
+        : "/projects?category=experiments";
+const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
 ---
 
-<header class="mega-navbar">
-  <div class="mega-navbar__logo">its pedro!</div>
-
-  <nav class="mega-navbar__pill">
+<a class="skip-link" href="#main">
+  Skip to content
+</a>
+<header class="site-nav">
+  <a class="site-logo" href="/" aria-label="Pedr0 Nogueira home">
+    Pedr0
+    <br />
+    Nogueira
+  </a>
+  <nav class="desktop-nav" aria-label="Main navigation">
     {menu.map((item) => (
-      <div class="mega-navbar__item">
-        <a class="mega-navbar__link" href={item.href}>
+      <div class="nav-item">
+        <a href={item.href} class="nav-link" aria-expanded="false">
           {item.label}
-          <span class="mega-navbar__arrow" aria-hidden="true">→</span>
         </a>
-        <div class={`mega-navbar__panel ${item.wide ? 'mega-navbar__panel--wide' : ''}`}>
-          <div class="mega-navbar__col">
-            {item.heading && <p class="mega-navbar__heading">{item.heading}</p>}
-            <div class="mega-navbar__rows">
-              {item.rows.map((row) => (
-                <a class="mega-navbar__row" href={row.href ?? '#'}>
-                  <span class="mega-navbar__row-title">{row.title}</span>
-                  <span class="mega-navbar__row-num">{row.num}</span>
-                </a>
-              ))}
-            </div>
+        <div class:list={["nav-panel", { "nav-panel--wide": item.wide }]}>
+          <div>
+            <p class="mono">{item.heading || "the works"}</p>
+            {item.rows.map((row, index) => (
+              <a href={rowHref(item, index)} class="nav-row">
+                <span>{clean(row.title)}</span>
+                <small>{row.num}</small>
+              </a>
+            ))}
           </div>
-          <a class="mega-navbar__feature" href="#">
-            <div class="mega-navbar__feature-thumb"></div>
-            <p class="mega-navbar__feature-eyebrow">{item.feature.eyebrow}</p>
-            <p class="mega-navbar__feature-title">{item.feature.title}</p>
-            {item.feature.meta && <p class="mega-navbar__feature-meta">{item.feature.meta}</p>}
-            <p class="mega-navbar__feature-cta">{item.feature.cta}</p>
+          <a
+            href={
+              item.key === "about"
+                ? site.cvUrl || undefined
+                : item.key === "projects"
+                  ? "/work/green-nation-collective"
+                  : item.href
+            }
+            aria-disabled={
+              item.key === "about" && !site.cvUrl ? "true" : undefined
+            }
+            class="nav-feature"
+          >
+            <div class="nav-feature-thumb"></div>
+            <small class="mono">{item.feature.eyebrow}</small>
+            <p>{item.feature.title}</p>
+            {item.feature.meta && <small>{item.feature.meta}</small>}
+            <span class="label">
+              {clean(item.feature.cta)} <Icon name="arrow-right" />
+            </span>
           </a>
         </div>
       </div>
     ))}
   </nav>
-
-  <div class="mega-navbar__actions">
-    <button class="pill-toggle" id="lang-toggle" type="button" aria-label="Toggle language">
-      <img src="/assets/icon-globe.svg" alt="" width="14" height="14">
-      <span id="lang-toggle-label">US</span>
+  <div class="site-nav-actions">
+    <div class="desktop-preferences">
+      <Preferences />
+    </div>
+    <Button href="/contact">Book a call</Button>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
-    <button class="pill-toggle pill-toggle--grow" id="theme-toggle" type="button" aria-label="Toggle theme">
-      <img src="/assets/icon-moon.svg" alt="" width="14" height="14">
-    </button>
-    <button class="btn-primary" type="button">Book a call</button>
   </div>
-
-  <button class="mega-navbar__burger" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-    <span></span><span></span><span></span>
-  </button>
 </header>
-
-<div class="mobile-menu" id="mobile-menu">
-  <nav class="mobile-menu__links">
-    {menu.map((item) => <a href={item.href}>{item.label}</a>)}
+<dialog id="mobile-menu" class="mobile-dialog" aria-label="Main navigation">
+  <div class="mobile-menu-header">
+    <a class="site-logo" href="/">
+      Pedr0
+      <br />
+      Nogueira
+    </a>
+    <button class="menu-close" aria-label="Close menu">
+      <Icon name="close" size={24} />
+    </button>
+  </div>
+  <nav aria-label="Mobile navigation">
+    {menu.map((item) => (
+      <details>
+        <summary>
+          {item.label}
+          <Icon name="chevron-right" />
+        </summary>
+        <div class="mobile-submenu">
+          {item.rows.map((row, index) => (
+            <a href={rowHref(item, index)}>{clean(row.title)}</a>
+          ))}
+          <a class="nav-feature" href={item.href}>
+            <small>{item.feature.eyebrow}</small>
+            <p>{item.feature.title}</p>
+            <span>
+              {clean(item.feature.cta)} <Icon name="arrow-right" />
+            </span>
+          </a>
+        </div>
+      </details>
+    ))}
   </nav>
-  <button class="btn-primary" type="button">Book a call</button>
-</div>
-
+  <Preferences id="mobile-preferences" inline />
+  <Button href="/contact">Book a call</Button>
+</dialog>
 <script>
-  import { gsap } from 'gsap';
-
-  const CLOSE_DELAY_MS = 5000;
-  const items = document.querySelectorAll<HTMLElement>('.mega-navbar__item');
-  let openItem: HTMLElement | null = null;
-  let closeTimer: ReturnType<typeof setTimeout> | undefined;
-
-  // Panels are centered with GSAP's xPercent instead of a CSS transform,
-  // since GSAP tracks x/y/scale as separate components internally and
-  // recomposes them on every tween — a plain CSS `transform` would get
-  // clobbered the moment we animate y/scale for the open/close motion.
-  document.querySelectorAll<HTMLElement>('.mega-navbar__panel').forEach((panel) => {
-    gsap.set(panel, { xPercent: -50 });
+  const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
+  const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
+  const close = () => dialog.close();
+  trigger.addEventListener("click", () => {
+    dialog.showModal();
+    trigger.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
   });
-
-  function animatedChildren(panel: HTMLElement) {
-    return panel.querySelectorAll('.mega-navbar__heading, .mega-navbar__row, .mega-navbar__feature');
-  }
-
-  function openPanel(item: HTMLElement) {
-    clearTimeout(closeTimer);
-    if (openItem === item) return;
-    if (openItem) closePanel(openItem, true);
-
-    openItem = item;
-    item.classList.add('is-open');
-    const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
-    const children = animatedChildren(panel);
-
-    gsap.killTweensOf([panel, ...children]);
-    gsap.set(panel, { display: 'flex' });
-    gsap.timeline()
-      .fromTo(panel, { opacity: 0, y: -14, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.38, ease: 'power3.out' })
-      .fromTo(children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out', stagger: 0.045 }, '-=0.22');
-  }
-
-  function closePanel(item: HTMLElement, immediate = false) {
-    item.classList.remove('is-open');
-    if (openItem === item) openItem = null;
-    const panel = item.querySelector<HTMLElement>('.mega-navbar__panel')!;
-    const children = animatedChildren(panel);
-
-    gsap.killTweensOf([panel, ...children]);
-    gsap.to(panel, {
-      opacity: 0,
-      y: -10,
-      scale: 0.97,
-      duration: immediate ? 0.16 : 0.24,
-      ease: 'power2.in',
-      onComplete: () => gsap.set(panel, { display: 'none' }),
-    });
-  }
-
-  function scheduleClose(item: HTMLElement) {
-    clearTimeout(closeTimer);
-    closeTimer = setTimeout(() => {
-      if (openItem === item) closePanel(item);
-    }, CLOSE_DELAY_MS);
-  }
-
-  items.forEach((item) => {
-    item.addEventListener('mouseenter', () => openPanel(item));
-    item.addEventListener('mouseleave', () => scheduleClose(item));
-    item.addEventListener('focusin', () => openPanel(item));
-    item.addEventListener('focusout', (e) => {
-      const next = (e as FocusEvent).relatedTarget as Node | null;
-      if (!next || !item.contains(next)) scheduleClose(item);
-    });
+  dialog.querySelector(".menu-close")?.addEventListener("click", close);
+  dialog.addEventListener("close", () => {
+    trigger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+    trigger.focus();
   });
-
-  document.addEventListener('click', (e) => {
-    if (openItem && !openItem.contains(e.target as Node)) {
-      closePanel(openItem, true);
-    }
+  dialog
+    .querySelectorAll("a")
+    .forEach((a) => a.addEventListener("click", close));
+  matchMedia("(min-width:1025px)").addEventListener("change", (e) => {
+    if (e.matches && dialog.open) close();
   });
-
-  const burger = document.getElementById('mobile-menu-toggle')!;
-  const mobileMenu = document.getElementById('mobile-menu')!;
-  burger.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('is-open');
-    burger.classList.toggle('is-open', open);
-    burger.setAttribute('aria-expanded', String(open));
-  });
-  mobileMenu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('is-open');
-      burger.classList.remove('is-open');
-      burger.setAttribute('aria-expanded', 'false');
+  document.querySelectorAll<HTMLElement>(".nav-item").forEach((item) => {
+    const a = item.querySelector("a")!;
+    const set = (open: boolean) => {
+      item.classList.toggle("is-open", open);
+      a.setAttribute("aria-expanded", String(open));
+      if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        import("gsap").then(({ gsap }) => {
+          if (!item.classList.contains("is-open")) return;
+          const panel = item.querySelector(".nav-panel");
+          if (panel)
+            gsap.fromTo(
+              panel.children,
+              { y: 6, opacity: 0.75 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.18,
+                ease: "power2.out",
+                clearProps: "transform,opacity",
+              },
+            );
+        });
+      }
+    };
+    item.addEventListener("mouseenter", () => set(true));
+    item.addEventListener("mouseleave", () => set(false));
+    item.addEventListener("focusin", () => set(true));
+    item.addEventListener("focusout", () =>
+      setTimeout(() => {
+        if (!item.contains(document.activeElement)) set(false);
+      }, 0),
+    );
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        a.focus();
+        set(false);
+      }
     });
   });
 </script>

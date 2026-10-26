@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from "astro:content";
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  title?: string;
+  eyebrow?: string;
+}
+import ProjectCard from "./ProjectCard.astro";
+import Icon from "./Icon.astro";
+import Eyebrow from "./Eyebrow.astro";
+const {
+  projects,
+  title = "Selected work, with the numbers.",
+  eyebrow = "latest projects",
+} = Astro.props;
+---
+
+<section class="project-section page-section" data-rail>
+  <div class="section-heading">
+    <div>
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2>{title}</h2>
+    </div>
+    <div class="rail-controls">
+      <a class="text-link" href="/projects">
+        See all projects <Icon name="arrow-right" />
+      </a>
+      <div class="rail-arrows">
+        <button type="button" data-prev aria-label="Previous projects" disabled>
+          <Icon name="arrow-left" size={20} />
+        </button>
+        <button type="button" data-next aria-label="Next projects">
+          <Icon name="arrow-right" size={20} />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="project-rail" tabindex="0" aria-label="Selected projects">
+    {projects.map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </div>
+  <div class="rail-progress" aria-hidden="true">
+    <span></span>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-rail]").forEach((root) => {
+    const rail = root.querySelector<HTMLElement>(".project-rail")!;
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]")!;
+    const next = root.querySelector<HTMLButtonElement>("[data-next]")!;
+    const thumb = root.querySelector<HTMLElement>(".rail-progress span")!;
+    const update = () => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      prev.disabled = rail.scrollLeft <= 1;
+      next.disabled = rail.scrollLeft >= max - 1;
+      thumb.style.width = `${Math.min(100, (rail.clientWidth / rail.scrollWidth) * 100)}%`;
+      thumb.style.transform = `translateX(${max > 0 ? ((rail.scrollLeft / rail.scrollWidth) * 100) / (rail.clientWidth / rail.scrollWidth) : 0}%)`;
+    };
+    const move = (sign: number) =>
+      rail.scrollBy({
+        left:
+          sign *
+          (rail.querySelector<HTMLElement>(".project-card")!.offsetWidth + 24),
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
+    prev.addEventListener("click", () => move(-1));
+    next.addEventListener("click", () => move(1));
+    rail.addEventListener("scroll", update, { passive: true });
+    new ResizeObserver(update).observe(rail);
+    update();
+  });
+</script>

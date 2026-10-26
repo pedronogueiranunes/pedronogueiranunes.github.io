@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+  logo?: string;
+  size?: "s" | "m";
+}
+const { label, logo, size = "s" } = Astro.props;
+---
+
+<span class:list={["tool-chip", `tool-chip--${size}`]}>
+  {logo && (
+    <img
+      src={`/assets/logos/${logo}.svg`}
+      width={size === "s" ? 12 : 16}
+      height={size === "s" ? 12 : 16}
+      alt=""
+      loading="lazy"
+    />
+  )}
+  {label}
+</span>

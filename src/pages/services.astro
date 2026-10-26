@@ -1,0 +1,268 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
+import Button from "../components/Button.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import ToolChip from "../components/ToolChip.astro";
+import CheckList from "../components/CheckList.astro";
+import Comparison from "../components/Comparison.astro";
+import RelatedProjects from "../components/RelatedProjects.astro";
+import FAQ from "../components/FAQ.astro";
+import {
+  offers,
+  capabilities,
+  deliverables,
+  schedule,
+  sampleResults,
+  faq,
+  resultHeadline,
+} from "../data/services";
+import { logoFor } from "../data/home";
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<Base title="Services | Pedro Nogueira">
+  <section class="service-hero page-section">
+    <div>
+      <Eyebrow>Services</Eyebrow>
+      <h1>
+        Websites that sell,
+        <br />
+        on the stack that fits.
+      </h1>
+      <p>
+        Design, development and CRO for companies and agencies. 12+ years
+        shipping on WordPress, Webflow, Framer, Shopify and React, plus the
+        illustration and motion that make a brand feel like nobody else.
+      </p>
+      <CheckList
+        items={[
+          "Conversion audit before any redesign",
+          "Built on the platform your team can actually run",
+          "White-label design and dev for agencies",
+        ]}
+      />
+      <div class="actions">
+        <Button href="/contact">Book a call</Button>
+        <Button href="#results" secondary>
+          See the results
+        </Button>
+      </div>
+      <div class="builds-on">
+        <span class="mono">Builds on</span>
+        {["WordPress", "Webflow", "Framer", "Shopify Hydrogen", "React"].map(
+          (tool) => (
+            <img
+              src={`/assets/logos/${logoFor(tool)}.svg`}
+              alt={tool}
+              width="24"
+              height="24"
+            />
+          ),
+        )}
+      </div>
+      <p class="mono muted">
+        5 platforms · Clients in the US, Canada and Germany · Replies within 24
+        hours
+      </p>
+    </div>
+    <div class="service-result">
+      <div class="service-result-image">
+        <ResponsiveImage
+          src="/assets/figma/488-10049-imgImageBsaLegal.webp"
+          width="900"
+          height="600"
+          alt="BSA Legal website"
+        />
+      </div>
+      <div class="service-result-body">
+        <p class="mono accent">Client result · Web build</p>
+        <h2>{resultHeadline}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Before</th>
+              <th>After</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sampleResults.map((row) => (
+              <tr>
+                {row.map((cell, i) =>
+                  i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>,
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Button secondary href="/work/bsa-legal">
+          See the full case study
+        </Button>
+      </div>
+    </div>
+  </section>
+  <section class="offers-section page-section">
+    <div class="section-heading">
+      <div>
+        <Eyebrow>Engagements</Eyebrow>
+        <h2>Three ways to work together.</h2>
+      </div>
+      <p>
+        Not sure which one fits? <strong>The first call sorts that out.</strong>
+      </p>
+    </div>
+    <div class="offer-grid">
+      {offers.map((offer, index) => (
+        <article
+          class:list={[
+            "offer-card",
+            { "offer-card--featured": offer.featured },
+          ]}
+        >
+          <div class:list={["offer-art", `offer-art--${index}`]}>
+            <ResponsiveImage
+              src={`/assets/figma/488-10107-imgImage${index || ""}.webp`}
+              width="254"
+              height="254"
+              sizes="254px"
+              alt=""
+            />
+          </div>
+          <h3>{offer.title}</h3>
+          <p>{offer.description}</p>
+          <CheckList items={offer.items} />
+          <div class="offer-price">
+            <p class="mono">{offer.duration}</p>
+            <p>{offer.price}</p>
+          </div>
+          <a
+            class="text-link"
+            href={`/contact?service=${encodeURIComponent(offer.title)}`}
+          >
+            Start with this <Icon name="arrow-right" />
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="capabilities page-section" id="stacks">
+    <div class="section-heading">
+      <div>
+        <Eyebrow>Stacks &amp; skills</Eyebrow>
+        <h2>One partner, the whole stack.</h2>
+      </div>
+      <p>
+        Twelve years of client work means I have shipped on most of the tools
+        your team already uses. I pick the stack for how you run the site after
+        launch, and I bring the design, illustration and motion skills most
+        developers outsource.
+      </p>
+    </div>
+    <div class="capability-grid">
+      {capabilities.map((cap) => (
+        <article>
+          <h3>{cap.title}</h3>
+          <p>{cap.body}</p>
+          <div class="chips">
+            {cap.tools.map((tool) => (
+              <ToolChip label={tool} logo={logoFor(tool)} />
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="ai-note">
+      AI-assisted on every step: Claude and Claude Code speed up research,
+      drafts and builds. Every decision, pixel and line of code still goes
+      through me.
+    </p>
+  </section>
+  <section class="deliverables-section page-section">
+    <div>
+      <Eyebrow>What you get</Eyebrow>
+      <h2>You will know exactly what you are paying for.</h2>
+      <p>
+        This list goes into your proposal before we start. If something is not
+        on it, you do not pay for it. If you want something added, we talk about
+        it first.
+      </p>
+      <dl class="deliverable-stats">
+        <div>
+          <dt>things you get, in writing</dt>
+          <dd>6</dd>
+        </div>
+        <div>
+          <dt>a short call or Loom update</dt>
+          <dd>Weekly</dd>
+        </div>
+        <div>
+          <dt>of fixes after launch, free</dt>
+          <dd>30 days</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="deliverable-table">
+      <div class="deliverable-table-head">
+        <div>
+          <small class="mono">Your proposal · Website build</small>
+          <h3>What is included</h3>
+        </div>
+        <span class="tool-chip">In your proposal</span>
+      </div>
+      <ol>
+        {deliverables.map((row) => (
+          <li>
+            <div>
+              <h4>{row[0]}</h4>
+              <p>{row[1]}</p>
+            </div>
+            <span class="mono">{row[2]}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="deliverable-foot">
+        We agree on this together before I build anything{" "}
+        <a href="/contact" class="text-link">
+          See a sample proposal
+        </a>
+      </p>
+    </div>
+  </section>
+  <section class="schedule-section page-section">
+    <Eyebrow>How it works</Eyebrow>
+    <h2>From first call to a site that sells.</h2>
+    <div class="schedule-grid">
+      <div class="schedule-intro">
+        <span>
+          2 <small>weeks</small>
+        </span>
+        <p>
+          From yes to first designs.
+          <br />
+          You see the plan before you pay for the build.
+        </p>
+      </div>
+      {schedule.map((row) => (
+        <article>
+          <p class="mono accent">{row[0]}</p>
+          <h3>{row[1]}</h3>
+          <p>{row[2]}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <Comparison />
+  <div id="results">
+    <RelatedProjects projects={projects} />
+  </div>
+  <section class="faq-section page-section">
+    <Eyebrow>Before you hit send</Eyebrow>
+    <h2>Fair questions.</h2>
+    <FAQ items={faq} />
+  </section>
+</Base>

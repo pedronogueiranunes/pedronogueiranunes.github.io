@@ -1,0 +1,37 @@
+[
+  {
+    "route": "/",
+    "performance": 99,
+    "accessibility": 100
+  },
+  {
+    "route": "/services",
+    "performance": 100,
+    "accessibility": 100
+  },
+  {
+    "route": "/projects",
+    "performance": 100,
+    "accessibility": 100
+  },
+  {
+    "route": "/work/bsa-legal",
+    "performance": 99,
+    "accessibility": 100
+  },
+  {
+    "route": "/about",
+    "performance": 97,
+    "accessibility": 100
+  },
+  {
+    "route": "/contact",
+    "performance": 100,
+    "accessibility": 100
+  },
+  {
+    "route": "/thoughts/design-system-without-overdoing-it",
+    "performance": 99,
+    "accessibility": 100
+  }
+]

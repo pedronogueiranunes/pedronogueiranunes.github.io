@@ -1,214 +1,286 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
-
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
+import Button from "../components/Button.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Icon from "../components/Icon.astro";
+import ToolChip from "../components/ToolChip.astro";
+import ProjectRail from "../components/ProjectRail.astro";
+import Comparison from "../components/Comparison.astro";
+import Process from "../components/Process.astro";
+import { problems } from "../data/home";
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 ---
-<Base title="Pedro Nogueira — Portfolio">
 
-  <section class="hero">
-    <div class="hero__pill">
-      <div class="hero__lettering" aria-hidden="true">
-        <div class="hero__lettering-track">
-          <span>figma&nbsp;+&nbsp;ux&nbsp;design&nbsp;+&nbsp;web&nbsp;development&nbsp;+&nbsp;</span>
-          <span>figma&nbsp;+&nbsp;ux&nbsp;design&nbsp;+&nbsp;web&nbsp;development&nbsp;+&nbsp;</span>
-        </div>
+<Base title="Pedro Nogueira | Web designer and developer">
+  <section class="home-hero">
+    <div class="home-hero-panel">
+      <h1>
+        Your next website,
+        <br />
+        from design to launch.
+      </h1>
+      <p>
+        I help businesses build their websites and agencies deliver for their
+        clients, bringing design and development together across WordPress,
+        Webflow, Framer, and React.
+      </p>
+      <div class="actions">
+        <Button href="/contact">Book a call</Button>
+        <a class="text-link" href="#work">
+          See the work <Icon name="arrow-right" />
+        </a>
       </div>
-      <div class="hero__globe">
-        <img src="/assets/brazil-globe.svg" alt="" width="96" height="58">
-        <p class="label-mono accent">made in brazil</p>
+      <div class="hero-lettering" aria-hidden="true">
+        figma + ux design + web development
       </div>
-      <h1 class="hero__headline">I build digital experiences that bring together design, code, and motion.</h1>
-      <p class="hero__subhead">Web developer + UI/UX and motion designer. 10+ years, clients in the US, Germany, and Canada.</p>
-      <span class="hero__est label-mono accent">est 1991</span>
-      <div class="hero__head" id="splat-viewport">
-        <canvas id="splat-canvas"></canvas>
-        <svg class="splat-loader" id="splat-loader" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true">
-          <circle cx="24" cy="24" r="20" fill="none" stroke-width="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray="90 40" />
-        </svg>
-        <div class="hero__bubble" id="splat-bubble">play with me</div>
-      </div>
+    </div>
+    <div class="home-portrait" id="splat-viewport">
+      <ResponsiveImage
+        id="splat-fallback"
+        src="/assets/head-hero.webp"
+        width="700"
+        height="910"
+        alt="Pedro Nogueira"
+        fetchpriority="high"
+        loading="eager"
+        sizes="(max-width: 768px) 304px, 560px"
+      />
+      <button
+        class="portrait-activate"
+        type="button"
+        aria-label="Play 3D portrait"
+      >
+        Play 3D
+      </button>
+      <canvas
+        id="splat-canvas"
+        aria-label="Interactive portrait of Pedro. Drag to rotate."
+        aria-hidden="true"
+        role="img"
+      ></canvas>
     </div>
   </section>
-
-  <section class="work" id="work">
-    <h2 class="section-title">Selected work</h2>
-    <div class="work__grid">
-      {projects.map((project) => (
-        <article
-          class={`card ${project.data.featured ? 'card--featured' : ''}`}
-          style={project.data.color ? `--card-tint:${project.data.color}` : undefined}
-        >
-          <div class={`card__shot ${project.data.featured ? 'card__shot--tall' : ''}`}>
-            <img src={project.data.image} alt={`${project.data.title} preview`} />
-            <span class="card__cta label-mono accent">Learn more</span>
-          </div>
-          <div class="card__body">
-            <p class="card__meta">
-              <span class="label-mono accent">{project.data.category}</span>
-              <span class="label-mono accent">·</span>
-              <span class="label-mono green">{project.data.year}</span>
-              {project.data.country && (
-                <>
-                  <span class="label-mono accent">·</span>
-                  <span class="label-mono green">{project.data.country}</span>
-                </>
-              )}
-            </p>
-            <h3>{project.data.title}</h3>
-          </div>
-          {project.data.trail && (
-            <div class="card__trail">
-              <div class="card__trail-track label-mono accent">
-                <span>{project.data.trail}</span>
-                <span aria-hidden="true">{project.data.trail}</span>
-              </div>
-            </div>
-          )}
-        </article>
-      ))}
+  <section class="home-bio page-section">
+    <div class="bio-portrait">
+      <ResponsiveImage
+        src="/assets/figma/488-6649-imgHead.webp"
+        width="659"
+        height="631"
+        alt="Pedro Nogueira"
+        loading="lazy"
+      />
+    </div>
+    <div>
+      <Eyebrow>About me</Eyebrow>
+      <h2>
+        Hi, I'm Pedro. Developer, designer and illustrator, start to finish.
+      </h2>
+      <p>
+        For 12+ years I've built websites for companies and agencies in the US,
+        Canada and Germany. I work across WordPress, Webflow, Framer, Shopify
+        and React, and I draw and art direct the visuals myself, so nothing gets
+        lost between strategy, design and code. I work remotely from Vitória da
+        Conquista, Brazil, on hours that overlap with North America. Off the
+        clock, I make electronic music and study languages.
+      </p>
+      <div class="bio-facts">
+        <span>
+          <img
+            src="/assets/figma/488-6649-imgIconExperience.svg"
+            width="14"
+            height="14"
+            alt=""
+          />
+          12+ years
+        </span>
+        <span>
+          <img
+            src="/assets/figma/488-6649-imgIconInternationalMarkets.svg"
+            width="14"
+            height="14"
+            alt=""
+          />
+          US · Canada · Germany
+        </span>
+        <span>
+          <img
+            src="/assets/figma/488-6649-imgIconRemoteLocation.svg"
+            width="14"
+            height="14"
+            alt=""
+          />
+          Remote from Brazil, UTC-3
+        </span>
+      </div>
+      <a class="text-link" href="/about">
+        More about me <Icon name="arrow-right" />
+      </a>
     </div>
   </section>
-
-  <section class="method">
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">method</span>
-        <h2 class="display-l">The method works. <span class="accent">Always.</span></h2>
-      </div>
-      <div class="counter">
-        <p class="counter__num">07</p>
-        <p class="label-mono accent">Steps</p>
-      </div>
-    </div>
-
-    <div class="method__circle">
-      <img class="method__ring" src="/assets/ellipse-big.svg" alt="">
-      <img class="method__dot method__dot--mid" src="/assets/ellipse-mid.svg" alt="">
-      <img class="method__dot method__dot--small" src="/assets/ellipse-small.svg" alt="">
-      <p class="method__center">I think in product.<br>I design the experience.<br>I build with code and motion.</p>
-
-      <div class="method__step" style="--x:400; --y:64;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">01</span><strong>Discover</strong>
-      </div>
-      <div class="method__step" style="--x:650; --y:220;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">02</span><strong>Structure</strong>
-      </div>
-      <div class="method__step" style="--x:712; --y:490;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">03</span><strong>Design</strong>
-      </div>
-      <div class="method__step" style="--x:539; --y:707;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">04</span><strong>Build</strong>
-      </div>
-      <div class="method__step" style="--x:261; --y:707;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">05</span><strong>Animate</strong>
-      </div>
-      <div class="method__step" style="--x:88; --y:490;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">06</span><strong>Test</strong>
-      </div>
-      <div class="method__step" style="--x:150; --y:220;">
-        <img class="method__marker" src="/assets/marker.svg" alt="">
-        <span class="label-mono accent">07</span><strong>Evolve</strong>
-      </div>
-    </div>
-
-    <a class="see-more label-mono accent" href="#">→ See the full method</a>
-  </section>
-
-  <section class="thoughts" id="thoughts">
-    <div class="section-header">
-      <div>
-        <span class="eyebrow">blog</span>
-        <h2 class="section-title">Notes from the field.</h2>
-      </div>
-      <div class="counter">
-        <p class="counter__num">{String(posts.length).padStart(2, '0')}</p>
-        <p class="label-mono accent">Posts</p>
-      </div>
-    </div>
-
-    <div class="thoughts__row">
-      {posts.map((post) => (
-        <article class="post">
-          <div class="post__visual"><img src={post.data.image} alt="" /></div>
-          <div class="post__body">
-            <p class="post__meta label-mono">
-              <span class="muted">{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-              <span class="muted">·</span>
-              <span class="accent">{post.data.tag}</span>
-            </p>
-            <h3>{post.data.title}</h3>
-            <p class="post__excerpt">{post.data.excerpt}</p>
-            <a class="label-mono accent" href={`/thoughts/${post.slug}`}>Read more →</a>
-          </div>
-        </article>
-      ))}
-    </div>
-
-    <a class="see-more label-mono accent" href="#">→ See all posts</a>
-  </section>
-
-  <section class="audiovisual" id="experiments">
-    <div class="marquee marquee--top"><div class="marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div></div>
-
-    <div class="audiovisual__side audiovisual__side--left">
-      <div class="audiovisual__side-track">
-        <div class="audiovisual__side-track-inner marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div>
-      </div>
-    </div>
-    <div class="audiovisual__side audiovisual__side--right">
-      <div class="audiovisual__side-track">
-        <div class="audiovisual__side-track-inner marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div>
-      </div>
-    </div>
-
-    <div class="audiovisual__video">
-      <video class="audiovisual__bg" autoplay muted loop playsinline>
-        <source src="/assets/audiovisual-reel.webm" type="video/webm" />
-        <source src="/assets/audiovisual-reel.mp4" type="video/mp4" />
-      </video>
-      <div class="audiovisual__scrim"></div>
-      <div class="audiovisual__title">
-        <span class="eyebrow">bonus stuff</span>
-        <h2 class="display-l light">Audiovisual Work</h2>
-        <p class="body-l light">Motion, editing, and audiovisual production</p>
-      </div>
-      <button class="btn-watch label-mono" type="button">Watch ↗</button>
-      <div class="audiovisual__controls">
-        <button class="pill-cta label-mono" type="button">See full category →</button>
-        <button class="round-btn" type="button" aria-label="Previous">←</button>
-        <button class="round-btn" type="button" aria-label="Next">→</button>
-      </div>
-    </div>
-    <div class="marquee marquee--bottom"><div class="marquee__track">Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual • Audiovisual •</div></div>
-  </section>
-
-  <div class="trust-strip label-mono accent">
-    <span>10+ years of experience</span>
-    <span>3 continents served</span>
-    <span>Qodeture · Molina Chambô · BSA Legal · Green Nation</span>
+  <div id="work">
+    <ProjectRail projects={projects} />
   </div>
-
-  <section class="about-teaser" id="about">
-    <img class="about-teaser__head" src="/assets/head-about.png" alt="Photo of Pedro Nogueira">
-    <div class="about-teaser__content">
-      <span class="eyebrow">About me</span>
-      <h2 class="hero__headline" style="width:auto">I build digital experiences that bring together design, code, and motion.</h2>
-      <p class="body-l">I'm Pedro. Brazilian, 35 years old, and I split my career between code and design, helping brands and agencies communicate better through well thought out digital products.</p>
-      <a class="label-mono accent" href="#">→ Read my story</a>
+  <section class="problems-section page-section">
+    <div class="section-heading">
+      <div>
+        <Eyebrow>Where to start</Eyebrow>
+        <h2>What is getting in the way?</h2>
+      </div>
+      <p>
+        Pick the one that sounds like your last month. Each one points to where
+        I'd start. Not sure? That is what the first call is for.
+      </p>
+    </div>
+    <div class="problem-grid">
+      {problems.map((problem, i) => (
+        <article
+          class:list={["problem-card", { "problem-card--active": i === 0 }]}
+        >
+          <div
+            class="problem-art"
+            style={`--art-mask:url('/assets/figma/488-6789-${problem.mask}.svg')`}
+          >
+            <ResponsiveImage
+              src={`/assets/figma/488-6789-${problem.image}.webp`}
+              width="412"
+              height="412"
+              loading="lazy"
+              alt=""
+            />
+          </div>
+          <div class="problem-top">
+            <span>{String(i + 1).padStart(2, "0")}</span>
+            <a href="/services" aria-label={`Services for: ${problem.title}`}>
+              <Icon name="arrow-up-right" size={20} />
+            </a>
+          </div>
+          <h3>{problem.title}</h3>
+          <p>{problem.body}</p>
+          <div class="problem-start">
+            <p class="mono">I start with</p>
+            <div class="chips">
+              {problem.tools.map((tool, j) => (
+                <>
+                  {j > 0 && <span>+</span>}
+                  <ToolChip label={tool} />
+                </>
+              ))}
+            </div>
+            <p class="problem-outcome">
+              {problem.outcome}
+              <Icon name="arrow-right" />
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="problem-note">Sounds like more than one?</p>
+    <a class="text-link" href="/contact">
+      That's normal. Book a call and we'll rank them together{" "}
+      <Icon name="arrow-right" />
+    </a>
+  </section>
+  <Comparison />
+  <Process />
+  <section class="blog-section page-section" id="thoughts">
+    <div class="section-heading">
+      <div>
+        <Eyebrow>blog</Eyebrow>
+        <h2>Notes from the field.</h2>
+        <p>Hot takes, creative ramblings and other thoughts about life.</p>
+      </div>
+      <a class="text-link" href="#articles">
+        See all posts <Icon name="arrow-right" />
+      </a>
+    </div>
+    <div class="article-grid" id="articles">
+      {posts.map((post, i) => (
+        <article
+          class:list={["article-card", { "article-card--latest": i === 0 }]}
+        >
+          <a
+            href={`/thoughts/${post.slug}`}
+            class="article-cover"
+            aria-label={`Read ${post.data.title}`}
+          >
+            <ResponsiveImage
+              src={`/assets/figma/488-7471-imgCover${i || ""}.webp`}
+              width="630"
+              height="420"
+              loading="lazy"
+              alt=""
+            />
+          </a>
+          <div class="article-copy">
+            <p class="mono">
+              <span class="accent">{post.data.tag}</span> ·{" "}
+              <time datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
+            </p>
+            <h3>
+              <a href={`/thoughts/${post.slug}`}>{post.data.title}</a>
+            </h3>
+            <p>{post.data.excerpt}</p>
+            <a class="text-link" href={`/thoughts/${post.slug}`}>
+              Read more <Icon name="arrow-right" />
+            </a>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
-
-  <script src="https://cdn.jsdelivr.net/npm/playcanvas/build/playcanvas.min.js" is:inline></script>
+  <!-- Hidden/OLD Figma sections retained in docs/legacy/home-before-redesign.astro.txt. -->
   <script>
-    import { initSplat } from '../scripts/splat-hero.js';
-    initSplat();
+    // Keep mobile's first view light. The original splat is activated on portrait interaction.
+    const viewport = document.getElementById("splat-viewport");
+    if (viewport) {
+      let loaded = false;
+      const load = () => {
+        if (loaded || matchMedia("(prefers-reduced-motion: reduce)").matches)
+          return;
+        loaded = true;
+        const script = document.createElement("script");
+        script.src = "/assets/vendor/playcanvas.min.js";
+        script.onload = () =>
+          import("../scripts/splat-hero.js").then(({ initSplat }) => {
+            try {
+              initSplat();
+            } catch {
+              viewport.dataset.failed = "true";
+            }
+          });
+        script.onerror = () => {
+          viewport.dataset.failed = "true";
+        };
+        document.head.appendChild(script);
+      };
+      viewport.querySelector("button")?.addEventListener("click", load);
+      viewport.addEventListener("pointerdown", load, { once: true });
+      if (
+        !matchMedia("(max-width: 1024px)").matches &&
+        !(navigator as Navigator & { connection?: { saveData?: boolean } })
+          .connection?.saveData
+      ) {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            if ("requestIdleCallback" in window)
+              window.requestIdleCallback(load, { timeout: 4000 });
+            else setTimeout(load, 1000);
+          }),
+        );
+      }
+    }
   </script>
 </Base>

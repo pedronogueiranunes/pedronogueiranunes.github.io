@@ -1,0 +1,58 @@
+---
+import Icon from "./Icon.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import type { CollectionEntry } from "astro:content";
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { project } = Astro.props;
+const p = project.data;
+---
+
+<article class="project-card" data-category={p.category}>
+  <a
+    class="project-media"
+    href={`/work/${p.caseSlug || project.slug}`}
+    style={`--project-tint:${p.tint || p.color}`}
+    aria-label={`View case study: ${p.title}`}
+  >
+    <ResponsiveImage
+      src={p.cover || p.image}
+      sizes="(max-width: 768px) 310px, 380px"
+      width="648"
+      height="428"
+      loading="lazy"
+      alt={`${p.title} website preview`}
+    />
+    <span class="project-hover label">
+      View case study <Icon name="arrow-up-right" />
+    </span>
+  </a>
+  <div class="project-body">
+    <div class="project-heading">
+      <p class="project-meta">
+        <span>{p.category}</span>
+        <span>
+          · {p.year} · {p.location || p.country}
+        </span>
+      </p>
+      <h3>
+        <a href={`/work/${p.caseSlug || project.slug}`}>{p.title}</a>
+      </h3>
+      <p class="project-summary">{p.summary}</p>
+    </div>
+    {p.metrics?.length > 0 && (
+      <dl class="project-metrics">
+        {p.metrics.map((metric) => (
+          <div>
+            <dt>{metric.label}</dt>
+            <dd>{metric.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+    <p class="project-tools mono" title={p.tools?.join(" · ")}>
+      {p.tools?.join(" · ")}
+    </p>
+  </div>
+</article>

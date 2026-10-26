@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon &#226;&#128;&#148; Globe">
+<path id="Outer" d="M15.4 8C15.4 12.0869 12.0869 15.4 8 15.4C3.91309 15.4 0.6 12.0869 0.6 8C0.6 3.91309 3.91309 0.6 8 0.6C12.0869 0.6 15.4 3.91309 15.4 8Z" stroke-width="1.2" stroke="#FF5A1F"/>
+<path id="Equator" d="M0 7.4H16" stroke-width="1.2" stroke="#FF5A1F"/>
+<mask id="stroke0_0_17" fill="white">
+<path d="M11.5 8C11.5 12.4183 9.933 16 8 16C6.067 16 4.5 12.4183 4.5 8C4.5 3.58172 6.067 0 8 0C9.933 0 11.5 3.58172 11.5 8Z"/>
+</mask>
+<path id="Meridian" d="M11.5 8C11.5 12.4183 9.933 16 8 16C6.067 16 4.5 12.4183 4.5 8C4.5 3.58172 6.067 0 8 0C9.933 0 11.5 3.58172 11.5 8Z" stroke-width="2.4" stroke="#FF5A1F" mask="url(#stroke0_0_17)"/>
+</g>
+</svg>

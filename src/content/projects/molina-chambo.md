@@ -1,10 +1,18 @@
 ---
-title: "Molina Chambô, Law Firm, São Paulo"
+title: "Molina Chambô: law firm website"
 order: 3
-category: "BRANDING & WEBDEV & UI/UX DESIGN"
+category: "Web design & dev"
 year: "2025"
-country: "Brasil"
+country: "Brazil"
+location: "Brazil"
 image: "/assets/project-3.png"
-color: "#dae1ed"
-trail: "Figma · Webflow · JavaScript · GSAP · Google Analytics"
+color: "#dde2ec"
+tint: "#dde2ec"
+cover: "/assets/figma/497-2984-imgCover.webp"
+summary: "Bilingual site for a São Paulo law firm, with practice area pages written to turn local searches into consultations."
+tools: ["WordPress", "ACF Pro", "Rank Math", "GA4"]
+caseSlug: "molina-chambo"
+featured: false
+# TODO: confirm real number. These metrics are Figma mock content.
+metrics: [{"value": "+61%", "label": "consultation requests"}, {"value": "9", "label": "practice area pages"}]
 ---

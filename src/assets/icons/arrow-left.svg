@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon / Pixel / Arrow left">
+<g id="Glyph">
+<path d="M18 42V36H12V42H18Z" fill="currentColor"/>
+<path d="M24 48V42H18V48H24Z" fill="currentColor"/>
+<path d="M30 54V48H24V54H30Z" fill="currentColor"/>
+<path d="M6 24H0V30H6V36H12V30C26 30 40 30 54 30V24C40 24 26 24 12 24V18H6V24Z" fill="currentColor"/>
+<path d="M12 18H18V12H12V18Z" fill="currentColor"/>
+<path d="M18 12H24V6H18V12Z" fill="currentColor"/>
+<path d="M24 6H30V0H24V6Z" fill="currentColor"/>
+</g>
+</g>
+</svg>
