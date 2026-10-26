@@ -25,3 +25,7 @@ None remain. The prior review's two issues are resolved: mobile Light hover/focu
 ## keep
 
 Keep the exact menu geometry, font roles, authored arrow, contrast-adjusted peach on dark panels, visible keyboard focus, mutually exclusive open panels and inert closed content. Keep guarded theme persistence, the single travelling canvas, fixed final pose, reverse-scroll return, static failure fallback, mobile lazy activation and reduced-motion handling. No further design changes are needed for this correction.
+
+## Hero refinement addendum
+
+Disposition: **ship** for the two additional requests. Source and `hero-profile-dark.png` confirm the hero begins in the requested left-facing profile (`HERO_YAW = -60`), while the interpolation retains the existing 30-degree About destination and fades manual offset out on arrival. Dark lettering opacity is 0.1, a 90% reduction, in both explicit Dark and Auto Dark; Light retains opacity 1. The rendered Dark capture shows the quieter lettering and correct profile without disturbing copy hierarchy. No material fix is needed. The supplied 14-route build passes; no additional browser review was performed.

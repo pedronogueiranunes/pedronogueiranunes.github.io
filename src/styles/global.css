@@ -84,6 +84,7 @@
   --font-label: "Silkscreen", monospace;
   --font-mono: "Geist Mono", monospace;
   --font-lettering: "Pixelify Sans", sans-serif;
+  --hero-lettering-opacity: 1;
   /* Compatibility aliases while existing sections migrate. */
   --black: var(--text);
   --font-grout: var(--font-lettering);
@@ -111,6 +112,7 @@
   --text-secondary: #9c9890;
   --border: #2a2a2a;
   --surface: #1e1e1e;
+  --hero-lettering-opacity: 0.1;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
@@ -121,6 +123,7 @@
     --text-secondary: #9c9890;
     --border: #2a2a2a;
     --surface: #1e1e1e;
+  --hero-lettering-opacity: 0.1;
   }
 }
 * {
@@ -1357,6 +1360,7 @@ details[open] > summary > .faq-plus:after {
   color: var(--text);
 }
 .hero-lettering {
+  opacity: var(--hero-lettering-opacity);
   position: absolute;
   left: 50%;
   top: 510px;

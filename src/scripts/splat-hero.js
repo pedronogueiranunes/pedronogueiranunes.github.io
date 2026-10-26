@@ -84,12 +84,13 @@ export function initSplat() {
 
     // The final three-quarter pose faces the bio copy. Scrolling owns the
     // baseline; drag/keyboard offset fades out as the portrait reaches its slot.
+    const HERO_YAW = -60;
     const BIO_YAW = 30;
     let pose = Number(viewport.dataset.scrollPose || 0);
     let manualYaw = 0;
     let dragCursor;
     function applyPose() {
-      yaw = BIO_YAW * pose + manualYaw * (1 - pose);
+      yaw = HERO_YAW + (BIO_YAW - HERO_YAW) * pose + manualYaw * (1 - pose);
       rig.setLocalEulerAngles(180, yaw, 0);
       const settled = pose >= 0.999;
       canvas.style.cursor = settled ? "default" : "none";

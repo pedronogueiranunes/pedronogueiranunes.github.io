@@ -525,7 +525,7 @@
       },
       {
         "name": "portrait-bio-yaw",
-        "value": "0deg to 30deg",
+        "value": "-60deg to 30deg",
         "purpose": "Final three-quarter pose faces bio copy; manual offset fades with travel and is unavailable at arrival."
       },
       {
@@ -551,7 +551,11 @@
         "name": "wide-centering",
         "value": "1441px"
       }
-    ]
+    ],
+    "heroLetteringOpacity": {
+      "light": 1,
+      "dark": 0.1
+    }
   },
   "components": [
     {

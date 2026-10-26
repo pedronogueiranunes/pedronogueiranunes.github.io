@@ -49,3 +49,5 @@ Restore the four Figma megamenu compositions, fonts, active pills and 400ms hove
 Replace Home's separate About photograph with the same hero 3D model: it travels and turns with scrolling, settles facing the copy and returns on reverse scrolling. Preserve mobile lazy loading and static/reduced-motion alternatives.
 
 Validation: 14-route build; Astro check: 35 files, 0 errors, 0 warnings, 0 hints; measured Figma panel dimensions; visible theme label clicks and reload; portrait destination geometry and return path on desktop/mobile; independent scoped visual review. Evidence in docs/corrections-verification.md.
+
+Hero refinements: start the portrait in the supplied left-facing profile and use 10% opacity for background lettering in Dark (including Auto-dark).

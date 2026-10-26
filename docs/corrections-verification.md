@@ -13,7 +13,7 @@
 ## Single travelling portrait
 
 - One existing PlayCanvas canvas moves from the hero into the About slot. The separate About image is removed. No duplicate renderer, asset or portrait image is introduced.
-- Scroll movement interpolates position, width and height from stable layout slots. The model rotates from yaw0 to yaw30, then remains fixed facing the copy. Drag and keyboard offsets fade away on arrival.
+- Scroll movement interpolates position, width and height from stable layout slots. The model rotates from yaw−60 (left-facing profile) to yaw30, then remains fixed facing the copy. Drag and keyboard offsets fade away on arrival.
 - Actual desktop final stage equals destination: x40/y25, 663×634; pose1 and renderer ready. Reverse scrolling changes pose1→0.4269→0; stage at0 equals origin (560×720).
 - At390px, final stage equals destination (339×395), pose1, with no horizontal page overflow. The loaded 3D model reflows correctly.
 - Desktop Light/Dark and mobile rendered screenshots verified. Mobile engagement-based loading is preserved. Source inspection confirms reduced motion uses two still placements and the existing fallback remains available on load failure; those environment variants were not re-emulated during this follow-up.
@@ -25,3 +25,7 @@
 - Navigation detector:0findings; git diff --check passes.
 - Captures: `.impeccable/review/nav/` and `.impeccable/review/portrait/`.
 - Independent scoped review: `docs/corrections-review.md`; prior navbar findings retained in `docs/nav-review.md`, both resolved by the final review.
+
+## Later hero refinements
+
+User requested the supplied left-facing profile as the starting pose and a 90% reduction of Dark hero lettering opacity. HERO_YAW is −60°, BIO_YAW remains30°. Actual initial capture confirms renderer ready/scrollPose0 and lettering computed opacity0.1. Light remains1; Auto-dark uses0.1 through its theme media query. Build14routes passes; scoped independent review:ship. Capture: `.impeccable/review/portrait/hero-profile-dark.png`.
