@@ -1678,11 +1678,10 @@ details[open] > summary > .faq-plus:after {
   color: var(--text-secondary);
 }
 .process-section {
-  border: 30px solid var(--bg);
-  border-radius: 80px;
-  background: #f4f7f4;
-  padding: 60px 34px;
-  color: #232625;
+    border-radius: 80px;
+    background: #f4f7f4;
+    padding: 60px 34px;
+    color: #232625;
 }
 .process-section .section-heading > p {
   max-width: 540px;
@@ -4730,6 +4729,7 @@ body {
   position: relative;
   overflow: hidden;
   height: 634px;
+  pointer-events: none;
 }
 .bio-portrait img {
   position: absolute;
@@ -5308,9 +5308,11 @@ body {
 }
 .portrait-stage[data-ready="true"] canvas {
   opacity: 1;
+  pointer-events: auto;
 }
 .portrait-stage[data-ready="true"] img {
   opacity: 0;
+  pointer-events: none;
 }
 .portrait-stage[data-ready="true"] .portrait-activate,
 .portrait-stage[data-failed="true"] .portrait-activate {
