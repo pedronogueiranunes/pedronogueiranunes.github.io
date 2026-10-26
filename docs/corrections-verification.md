@@ -29,3 +29,11 @@
 ## Later hero refinements
 
 User requested the supplied left-facing profile as the starting pose and a 90% reduction of Dark hero lettering opacity. HERO_YAW is −60°, BIO_YAW remains30°. Actual initial capture confirms renderer ready/scrollPose0 and lettering computed opacity0.1. Light remains1; Auto-dark uses0.1 through its theme media query. Build14routes passes; scoped independent review:ship. Capture: `.impeccable/review/portrait/hero-profile-dark.png`.
+
+## Portrait size and foreground text — supersedes earlier stage dimensions
+
+User reported that the travelling model covered the About heading and requested the published site's scale. Read the actual public page with the browser: at1280×720 its viewport/canvas are640×480; at390 its transformed mobile bounds are416×324.67. The local desktop origin now matches640×480. Its destination is capped at640×480 (or narrower column width), centered within the existing portrait slot. Mobile uses a width that fits the viewport and325pxheight.
+
+Actual ready3D destination: desktop640×480 atx51.5/y104 in663×634slot; at1135 width498×480; at390 width339×325. Captures show readable separate copy and no horizontal overflow. Text stacking: portrait1, hero heading/body/actions2, background lettering2, Aboutcopy2. Pose−60→30, reverse movement andDarklettering10% remain intact. Browser errors:none; production build14routespasses.
+
+Evidence: `.impeccable/review/portrait/smaller-bio-desktop.png`, `smaller-travel-desktop.png`, `smaller-bio-1135.png`, `smaller-bio-mobile.png`. User issue image: `/Users/apple/Desktop/Screenshot 2026-10-26 at 12.41.44.png`.

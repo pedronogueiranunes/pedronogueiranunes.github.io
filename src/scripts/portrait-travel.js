@@ -11,13 +11,16 @@ export function initPortraitTravel() {
     const from = origin.getBoundingClientRect();
     const to = destination.getBoundingClientRect();
     const start = Math.max(0, from.top + scrollY - innerHeight * 0.35);
+    // Match the published portrait's 640×480 desktop stage, fitting narrow columns.
+    const targetWidth = Math.min(from.width, to.width);
+    const targetHeight = Math.min(from.height, to.height);
     geometry = {
-      dx: to.left - from.left,
-      dy: to.top - from.top,
+      dx: to.left + (to.width - targetWidth) / 2 - from.left,
+      dy: to.top + (to.height - targetHeight) / 2 - from.top,
       width: from.width,
       height: from.height,
-      targetWidth: to.width,
-      targetHeight: to.height,
+      targetWidth,
+      targetHeight,
       start,
       end: Math.max(
         start + 1,

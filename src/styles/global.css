@@ -1377,9 +1377,9 @@ details[open] > summary > .faq-plus:after {
   top: 430px;
   left: 50%;
   transform: translateX(-50%);
-  width: 560px;
-  height: 720px;
-  z-index: 3;
+  width: 640px;
+  height: 480px;
+  z-index: 1;
 }
 .home-portrait img,
 .home-portrait canvas {
@@ -2062,8 +2062,8 @@ details[open] > summary > .faq-plus:after {
   }
   .home-portrait {
     top: 488px;
-    width: 304px;
-    height: 395px;
+    width: min(350px, calc(100vw - 40px));
+    height: 325px;
   }
   .home-bio {
     grid-template-columns: 1fr;
@@ -5320,3 +5320,7 @@ body {
 .portrait-stage canvas {
   mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
 }
+
+/* Foreground copy remains readable while the shared portrait travels. */
+.hero-lettering { z-index: 2; }
+.home-bio > :not(.bio-portrait) { position: relative; z-index: 2; }

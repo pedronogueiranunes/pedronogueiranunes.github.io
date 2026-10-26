@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T15:29:29.823845+00:00",
+  "generatedAt": "2026-10-26T15:49:15.585940+00:00",
   "title": "Design System: Pedro Nogueira Portfolio 2026",
   "extensions": {
     "colorMeta": {
@@ -521,7 +521,7 @@
       {
         "name": "portrait-travel-easing",
         "value": "p * p * (3 - 2 * p)",
-        "purpose": "Reversible scroll progress controlling shared-stage position, width, height and model baseline."
+        "purpose": "Reversible scroll progress controlling shared-stage position, width, height and model baseline. Destination dimensions are capped by origin and slot bounds, then centered; never grow to fill the larger bio slot."
       },
       {
         "name": "portrait-bio-yaw",
@@ -532,6 +532,11 @@
         "name": "portrait-reduced-motion",
         "value": "progress >= 0.5 ? 1 : 0",
         "purpose": "Two still placements with no interpolated movement; static fallback replaces 3D loading."
+      },
+      {
+        "name": "portrait-stage-geometry",
+        "value": "targetWidth = min(origin.width, slot.width); targetHeight = min(origin.height, slot.height)",
+        "purpose": "Published-size reference: desktop origin 640px × 480px; mobile origin min(350px, viewport width minus 40px) × 325px. Center within the destination. Reviewed destinations: 640px × 480px desktop, 498px × 480px at 1135px, 339px × 325px mobile. Portrait z-index 1 stays below hero heading, body, actions, lettering and relatively positioned About copy at z-index 2."
       }
     ],
     "breakpoints": [
@@ -672,6 +677,7 @@
       "**Do** use the approved Current desktop/mobile Figma frames as visual authority.",
       "**Do** preserve pixel orange eyebrows, image-led project cards and the original splat portrait.",
       "**Do** keep the single portrait stage reversible between hero and bio, with a fixed copy-facing destination pose.",
+      "**Do** cap the desktop portrait at 640px × 480px, fit narrower destination columns, and keep all hero/About copy above the travelling model.",
       "**Do** keep closed desktop menus inert and make the visible Light label activate its theme radio.",
       "**Do** separate exact brand orange from readable ink and action shades.",
       "**Do** use white page surfaces and reserve cream for secondary surfaces and controls.",
@@ -687,6 +693,7 @@
       "**Don't** apply decorative pixel fonts to long body copy or replace established font roles.",
       "**Don't** remove the static portrait fallback or force motion when reduced motion is requested.",
       "**Don't** restore a separate Home bio photograph or allow manual rotation to override the final portrait pose.",
+      "**Don't** grow the portrait to fill the larger bio slot or let it obscure text during travel.",
       "**Don't** present unavailable links, downloads or an unconfigured form as working destinations."
     ]
   }

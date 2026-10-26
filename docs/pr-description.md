@@ -51,3 +51,5 @@ Replace Home's separate About photograph with the same hero 3D model: it travels
 Validation: 14-route build; Astro check: 35 files, 0 errors, 0 warnings, 0 hints; measured Figma panel dimensions; visible theme label clicks and reload; portrait destination geometry and return path on desktop/mobile; independent scoped visual review. Evidence in docs/corrections-verification.md.
 
 Hero refinements: start the portrait in the supplied left-facing profile and use 10% opacity for background lettering in Dark (including Auto-dark).
+
+Portrait sizing: match the published desktop 640×480 stage, cap and center it in the About column, fit mobile, and keep hero/About text above the travelling model.
