@@ -5484,3 +5484,159 @@ body {
     top: 355px;
   }
 }
+
+
+/* Pixel interaction controls. All timing and travel values are tunable here. */
+:root {
+  --motion-in: 420ms;
+  --motion-out: 250ms;
+  --motion-steps: 5;
+  --link-steps: 3;
+  --link-travel: 5px;
+  --arrow-travel: 200%;
+  --press-scale: 0.97;
+  --press-arrow: 2px;
+}
+
+.action {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 100ms steps(2), color var(--motion-out), border-color var(--motion-out);
+}
+.action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--action-hover);
+  clip-path: polygon(0 0, 0 0, 0 25%, 0 25%, 0 50%, 0 50%, 0 75%, 0 75%, 0 100%, 0 100%);
+  transition: clip-path var(--motion-out) steps(var(--motion-steps));
+}
+.action:is(:hover, :focus-visible):not(:disabled) {
+  background: var(--button-fill, var(--action-bg));
+  transform: none;
+}
+.action:is(:hover, :focus-visible):not(:disabled)::before {
+  clip-path: polygon(0 0, 100% 0, 100% 25%, 106% 25%, 106% 50%, 112% 50%, 112% 75%, 118% 75%, 118% 100%, 0 100%);
+  transition-duration: var(--motion-in);
+}
+.action--secondary::before {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg));
+}
+.action.action--secondary:is(:hover, :focus-visible):not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.action-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.action-icon > .pixel-icon {
+  grid-area: 1 / 1;
+  transition: transform var(--motion-out) steps(var(--motion-steps));
+}
+.action-icon > .action-arrow-copy {
+  transform: translateX(calc(-1 * var(--arrow-travel)));
+}
+.action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .pixel-icon {
+  transform: translateX(var(--arrow-travel));
+  transition-duration: var(--motion-in);
+}
+.action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .action-arrow-copy {
+  transform: translateX(0);
+}
+.action:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+.action:active:not(:disabled) .action-icon {
+  transform: translateX(var(--press-arrow));
+}
+.action:focus-visible,
+.text-link:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+.text-link,
+:where(p, li, blockquote) > a:not([class]) {
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  /* Transparent half slides away in pixel steps without changing layout. */
+  background-size: 210% 2px;
+  background-image: linear-gradient(to right, transparent 0 52.4%, currentColor 52.4% 100%);
+  transition: background-position var(--motion-out) steps(var(--motion-steps));
+}
+.text-link:is(:hover, :focus-visible),
+:where(p, li, blockquote) > a:not([class]):is(:hover, :focus-visible) {
+  text-decoration: none;
+  background-position: 100% 100%;
+  transition-duration: var(--motion-in);
+}
+/* Dashed pixel blocks reveal from the left on arrow links. */
+.text-link {
+  position: relative;
+  background-image: none;
+}
+.text-link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 6px);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-out) steps(var(--motion-steps));
+}
+.text-link:is(:hover, :focus-visible)::after {
+  transform: scaleX(1);
+  transition-duration: var(--motion-in);
+}
+.text-link > .pixel-icon {
+  transition: transform var(--motion-out) steps(var(--link-steps));
+}
+.text-link:is(:hover, :focus-visible) > .pixel-icon {
+  transform: translateX(var(--link-travel));
+  transition-duration: var(--motion-in);
+}
+
+/* Native cursors: the portrait canvas retains its inline cursor:none behavior. */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: url("/assets/cursors/arrow.svg") 3 2, url("/assets/cursors/arrow.png") 3 2, auto;
+  }
+  :is(a, button, [role="button"], label[for], summary) {
+    cursor: url("/assets/cursors/hand.svg") 10 2, url("/assets/cursors/hand.png") 10 2, pointer;
+  }
+  :is(input, textarea, [contenteditable]:not([contenteditable="false"])) {
+    cursor: url("/assets/cursors/text.svg") 12 12, url("/assets/cursors/text.png") 12 12, text;
+  }
+  .action:disabled {
+    cursor: wait;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action,
+  .action::before,
+  .action-label,
+  .action-icon > .pixel-icon,
+  .text-link,
+  .text-link > .pixel-icon,
+  .text-link::after,
+  :where(p, li, blockquote) > a:not([class]) {
+    animation: none !important;
+    transition: none !important;
+  }
+  .action:is(:hover, :focus-visible, :active):not(:disabled),
+  .action:is(:hover, :focus-visible, :active):not(:disabled) .action-icon,
+  .action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .pixel-icon,
+  .text-link:is(:hover, :focus-visible) > .pixel-icon {
+    transform: none;
+  }
+  .action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .action-arrow-copy {
+    transform: translateX(calc(-1 * var(--arrow-travel)));
+  }
+}

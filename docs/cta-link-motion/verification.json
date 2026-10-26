@@ -1,0 +1,185 @@
+{
+  "results": [
+    {
+      "width": 1440,
+      "route": "/",
+      "theme": "light",
+      "controls": 13
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "theme": "dark",
+      "controls": 13
+    },
+    {
+      "width": 1440,
+      "route": "/about",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 1440,
+      "route": "/about",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 1440,
+      "route": "/projects",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 1440,
+      "route": "/projects",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 1440,
+      "route": "/contact",
+      "theme": "light",
+      "controls": 8
+    },
+    {
+      "width": 1440,
+      "route": "/contact",
+      "theme": "dark",
+      "controls": 8
+    },
+    {
+      "width": 1440,
+      "route": "/services",
+      "theme": "light",
+      "controls": 11
+    },
+    {
+      "width": 1440,
+      "route": "/services",
+      "theme": "dark",
+      "controls": 11
+    },
+    {
+      "width": 1024,
+      "route": "/",
+      "theme": "light",
+      "controls": 13
+    },
+    {
+      "width": 1024,
+      "route": "/",
+      "theme": "dark",
+      "controls": 13
+    },
+    {
+      "width": 1024,
+      "route": "/about",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 1024,
+      "route": "/about",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 1024,
+      "route": "/projects",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 1024,
+      "route": "/projects",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 1024,
+      "route": "/contact",
+      "theme": "light",
+      "controls": 8
+    },
+    {
+      "width": 1024,
+      "route": "/contact",
+      "theme": "dark",
+      "controls": 8
+    },
+    {
+      "width": 1024,
+      "route": "/services",
+      "theme": "light",
+      "controls": 11
+    },
+    {
+      "width": 1024,
+      "route": "/services",
+      "theme": "dark",
+      "controls": 11
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "theme": "light",
+      "controls": 13
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "theme": "dark",
+      "controls": 13
+    },
+    {
+      "width": 390,
+      "route": "/about",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 390,
+      "route": "/about",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 390,
+      "route": "/projects",
+      "theme": "light",
+      "controls": 5
+    },
+    {
+      "width": 390,
+      "route": "/projects",
+      "theme": "dark",
+      "controls": 5
+    },
+    {
+      "width": 390,
+      "route": "/contact",
+      "theme": "light",
+      "controls": 8
+    },
+    {
+      "width": 390,
+      "route": "/contact",
+      "theme": "dark",
+      "controls": 8
+    },
+    {
+      "width": 390,
+      "route": "/services",
+      "theme": "light",
+      "controls": 11
+    },
+    {
+      "width": 390,
+      "route": "/services",
+      "theme": "dark",
+      "controls": 11
+    }
+  ],
+  "errors": []
+}

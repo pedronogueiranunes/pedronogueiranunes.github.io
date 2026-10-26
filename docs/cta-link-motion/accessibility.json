@@ -1,0 +1,17 @@
+{
+  "focus": {
+    "visible": true,
+    "outline": "solid"
+  },
+  "reduced": {
+    "transform": "none",
+    "arrow": "none",
+    "wipeTransition": "0s"
+  },
+  "cursors": {
+    "body": "url(\"http://127.0.0.1:4337/assets/cursors/arrow.svg\") 3 2, url(\"http://127.0.0.1:4337/assets/cursors/arrow.png\") 3 2, auto",
+    "link": "url(\"http://127.0.0.1:4337/assets/cursors/hand.svg\") 10 2, url(\"http://127.0.0.1:4337/assets/cursors/hand.png\") 10 2, pointer",
+    "canvas": "none"
+  },
+  "inputCursor": "url(\"http://127.0.0.1:4337/assets/cursors/text.svg\") 12 12, url(\"http://127.0.0.1:4337/assets/cursors/text.png\") 12 12, text"
+}
