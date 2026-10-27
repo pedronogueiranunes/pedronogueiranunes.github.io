@@ -58,7 +58,10 @@ export function initSplat() {
   }
   app.graphicsDevice.maxPixelRatio = Math.min(
     window.devicePixelRatio || 1,
-    1.5,
+    // High-density desktops can afford the sharper bevels; constrain touch/mobile
+    // GPUs and Save-Data clients to the previous budget.
+    matchMedia("(pointer: fine) and (min-width: 1025px)").matches &&
+      (navigator.hardwareConcurrency || 0) >= 8 && !navigator.connection?.saveData ? 2 : 1.5,
   );
   // Render on demand to prevent battery/GPU drain when idle
   app.autoRender = false;
