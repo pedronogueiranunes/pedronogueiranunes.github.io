@@ -15,6 +15,7 @@ const menu = [
       { title: "Digital Art & Illustration", num: "03" },
       { title: "Music & Audiovisual", num: "04" },
       { title: "See all projects", num: "05", href: "/projects" },
+      { title: "Services", num: "06", href: "/services" },
     ],
     feature: {
       eyebrow: "FEATURED CASE",
@@ -77,15 +78,15 @@ const menu = [
 ];
 
 const rowHref = (item: any, index: number) =>
-  item.key === "about"
-    ? ["/about", "/about#timeline", "/about#skills", "/#process"][index]
+  item.rows[index]?.href || (item.key === "about"
+    ? ["/about", "/about#timeline", "/about#skills", "/about#how-i-work"][index]
     : item.key === "projects"
       ? index === 4
         ? "/projects"
         : `/projects?category=${index}`
       : item.key === "thoughts"
         ? "/#thoughts"
-        : "/projects?category=experiments";
+        : "/projects?category=experiments");
 const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
 ---
 

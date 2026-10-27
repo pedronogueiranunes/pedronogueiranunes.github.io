@@ -1,4 +1,5 @@
 ---
+import "../styles/page-fidelity.css";
 import Base from "../layouts/Base.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
 import Eyebrow from "../components/Eyebrow.astro";
@@ -8,7 +9,7 @@ import { stats, promises, timeline, skills } from "../data/about";
 import { logoFor } from "../data/home";
 ---
 
-<Base title="About | Pedro Nogueira">
+<Base title="About | Pedro Nogueira" pageClass="about-page">
   <section class="about-hero page-section">
     <div class="about-portrait">
       <ResponsiveImage
@@ -32,22 +33,24 @@ import { logoFor } from "../data/home";
     </div>
   </section>
   <section class="about-stats page-section">
-    <dl>
-      {stats.map(([value, label]) => (
-        <div>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
-        </div>
-      ))}
-    </dl>
-    <div>
-      <p>Numbers updated from client analytics</p>
-      <a class="text-link" href="/projects">
-        See the case studies <Icon name="arrow-right" />
-      </a>
+    <div class="about-stats-card">
+      <dl>
+        {stats.map(([value, label]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div>
+        <p>Numbers updated from client analytics</p>
+        <a class="text-link" href="/projects">
+          See the case studies <Icon name="arrow-right" />
+        </a>
+      </div>
     </div>
   </section>
-  <section class="promises-section page-section">
+  <section class="promises-section page-section" id="how-i-work">
     <Eyebrow>How I work</Eyebrow>
     <h2>Four things I put in writing.</h2>
     <p>
