@@ -3,6 +3,7 @@ import { comparison } from "../data/home";
 import Eyebrow from "./Eyebrow.astro";
 import Icon from "./Icon.astro";
 import Button from "./Button.astro";
+const comparisonIcons = ["work", "focus", "platforms", "time", "communication", "ownership", "next"];
 const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 ---
 
@@ -58,6 +59,10 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
             )}
           </div>
         ))}
+        <picture class="comparison-illustration" aria-hidden="true">
+          <source media="(max-width: 768px)" srcset={`/assets/comparison/${comparisonIcons[i]}.webp`} />
+          <img width="160" height="160" alt="" loading="lazy" decoding="async" />
+        </picture>
       </div>
     ))}
   </div>
@@ -68,3 +73,38 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
     </a>
   </p>
 </section>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  onPageLoad((scope) => {
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    const mobile = matchMedia("(max-width: 768px)");
+    if (!("IntersectionObserver" in window)) return;
+    const animations = new Set<Animation>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting || !mobile.matches) continue;
+        observer.unobserve(entry.target);
+        if (motion.matches) continue;
+        const animation = entry.target.animate(
+          [
+            { opacity: 0, transform: "scale(0.94)", offset: 0 },
+            { opacity: 0.35, transform: "scale(0.97)", offset: 0.45 },
+            { opacity: 1, transform: "scale(1)", offset: 1 },
+          ],
+          { duration: 1600, easing: "cubic-bezier(0.4, 0, 0.2, 1)" },
+        );
+        animations.add(animation);
+        animation.onfinish = () => animations.delete(animation);
+      }
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".comparison-illustration").forEach((icon) => observer.observe(icon));
+    motion.addEventListener("change", () => {
+      if (motion.matches) animations.forEach((animation) => animation.finish());
+    }, { signal: scope.signal });
+    scope.cleanup(() => {
+      observer.disconnect();
+      animations.forEach((animation) => animation.cancel());
+    });
+  });
+</script>

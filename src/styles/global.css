@@ -637,7 +637,7 @@ img {
   padding: 12px 18px;
   min-height: 44px;
   border-radius: 999px;
-  background: linear-gradient(120deg, transparent, color-mix(in srgb, var(--chip-bg) 11%, transparent));
+  background: linear-gradient(120deg, transparent, color-mix(in srgb, var(--preferences-toggle-tint, var(--chip-bg)) 11%, transparent));
   color: var(--accent-ink);
   font: 14px var(--font-label);
 }
@@ -5580,7 +5580,7 @@ body {
 .process-body { font-size: 15px; line-height: 1.5; }
 .process-card > .mono { padding-top: 10px; font-size: 11px; }
 .process-card .chips { margin-top: 0; gap: 6px; }
-.process-card .tool-chip { padding: 4px 8px; font-size: 10px; background: #f3f3f3; color: #232625; }
+.process-card .tool-chip { padding: 4px 8px; font-size: 10px; background: var(--process-chip-bg, #f3f3f3); color: var(--process-chip-text, #232625); }
 .process-visual { background: #212020; color: #aaa; }
 .process-visual .research-bar { color: #ccc; }
 .research-bar > div { background: #ffffff14; }
@@ -5604,12 +5604,12 @@ body {
 .build-visual > div { border-color: #ffffff14; color: #32a34a; }
 .build-visual > div::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #32a34a; margin-right: 6px; }
 .build-visual > div small { color: #999; }
-.toolkit { padding: 0; gap: 0; min-height: 104px; margin-top: 48px; overflow: hidden; background: #ffffff80; }
+.toolkit { padding: 0; gap: 0; min-height: 104px; margin-top: 48px; overflow: hidden; background: var(--toolkit-bg, #ffffff80); }
 .toolkit > div:first-child { flex: 0 0 171px; padding: 20px 24px; }
 .toolkit p { font-size: 11px; margin: 0; }
 .toolkit p + p { margin-top: 4px; }
 .toolkit > .chips { flex: 1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0; align-self: stretch; }
-.toolkit .tool-chip { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 12px 8px; border-radius: 0; border-left: 1px solid #2326250d; background: transparent; color: #454545; font-size: 10px; white-space: normal; text-align: center; }
+.toolkit .tool-chip { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 12px 8px; border-radius: 0; border-left: 1px solid #2326250d; background: transparent; color: var(--toolkit-text, #454545); font-size: 10px; letter-spacing: var(--toolkit-tracking, normal); white-space: normal; text-align: center; }
 .toolkit .tool-chip img { width: 26px; height: 26px; }
 @media (min-width: 769px) and (max-width: 1280px) {
   .process-section { padding: 60px 40px; }
@@ -5677,7 +5677,7 @@ body {
   text-align: left;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #1e1e1e;
+  color: var(--footer-lettering-color, #dee4dc);
 }
 .footer-lettering-track {
   position: relative;
@@ -6128,4 +6128,181 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
     width: calc(100% + 20px);
     margin-inline: -10px;
   }
+}
+
+.process-section .muted { color: var(--process-muted, var(--text-secondary)); }
+
+:root[data-theme="dark"] {
+  --footer-lettering-color: #1e1e1e;
+  --process-chip-bg: #000000;
+  --process-chip-text: #ffffff;
+  --toolkit-bg: #00000080;
+  --toolkit-text: #c5c5c5;
+  --toolkit-tracking: 2px;
+  --process-muted: #bababa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --footer-lettering-color: #1e1e1e;
+    --process-chip-bg: #000000;
+    --process-chip-text: #ffffff;
+    --toolkit-bg: #00000080;
+    --toolkit-text: #c5c5c5;
+    --toolkit-tracking: 2px;
+    --process-muted: #bababa;
+  }
+}
+
+:root[data-theme="dark"] {
+  --preferences-toggle-tint: #ffffff5c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --preferences-toggle-tint: #ffffff5c;
+  }
+}
+
+/* Keep About below the opening viewport on large, tall desktop screens. */
+@media (min-width: 1440px) and (min-height: 800px) {
+  .home-hero {
+    min-height: calc(100svh + 48px);
+  }
+}
+
+/* Bring the desktop About copy closer to the portrait. */
+@media (min-width: 1025px) {
+  .home-bio {
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    gap: 48px;
+  }
+}
+
+/* Give the toolkit grid its own full row before the mobile chip layout. */
+@media (min-width: 769px) and (max-width: 1280px) {
+  .toolkit > .chips {
+    flex: 1 0 100%;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+  .toolkit .tool-chip { min-width: 0; letter-spacing: 1px; }
+}
+@media (max-width: 768px) {
+  .toolkit > .chips { width: 100%; min-width: 0; }
+  .toolkit .tool-chip {
+    max-width: 100%;
+    color: var(--toolkit-text, #454545);
+    background: var(--process-chip-bg, #f3f3f3);
+    letter-spacing: normal;
+  }
+}
+
+/* Compact mobile project controls and clearer comparison grouping. */
+@media (max-width: 768px) {
+  .project-section .rail-controls { flex-wrap: nowrap; gap: 12px; width: 100%; }
+  .project-section .rail-controls > .text-link { width: auto; font-size: 10px; gap: 8px; }
+  .project-section .rail-arrows { flex-shrink: 0; gap: 8px; }
+  .comparison-row { margin-bottom: 20px; padding: 20px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg); }
+  .comparison-row > h3 { padding-bottom: 18px; }
+  .comparison-row .comparison-pedro { padding: 16px; margin-bottom: 20px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+  .comparison-mobile-label { margin-bottom: 10px; }
+  .comparison-cell:not(.comparison-pedro) { padding: 0 0 18px; }
+  .comparison-cell:not(.comparison-pedro) p { color: var(--text-secondary); }
+  .comparison-cell:last-child { padding-bottom: 0; }
+}
+
+:root[data-theme="dark"] .problem-card {
+  --card-ink: #f5f3ef; --card-muted: #bababa; --card-fill: #161616;
+  --start-fill: #242424; --start-label: var(--accent); --pill-fill: #333;
+  --arrow-fill: transparent; border-color: #333;
+}
+:root[data-theme="dark"] .problem-card .tool-chip { color: var(--card-ink); }
+:root[data-theme="dark"] .problem-card::before { background: #f7f8f6; }
+:root[data-theme="dark"] .problem-card:focus-within {
+  --card-ink: #232625; --card-muted: #697365; --card-fill: #f7f8f6;
+  --start-fill: #e9ece7; --start-label: var(--accent); --pill-fill: #fff;
+  --arrow-fill: var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .problem-card:hover {
+    --card-ink: #232625; --card-muted: #697365; --card-fill: #f7f8f6;
+    --start-fill: #e9ece7; --start-label: var(--accent); --pill-fill: #fff;
+    --arrow-fill: var(--accent);
+  }
+}
+@media (hover: none) {
+  :root[data-theme="dark"] .problem-card:focus-within:not(:has(:focus-visible)) {
+    --card-ink: #f5f3ef; --card-muted: #bababa; --card-fill: #161616;
+    --start-fill: #242424; --start-label: var(--accent); --pill-fill: #333;
+    --arrow-fill: transparent;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card {
+  --card-ink: #f5f3ef; --card-muted: #bababa; --card-fill: #161616;
+  --start-fill: #242424; --start-label: var(--accent); --pill-fill: #333;
+  --arrow-fill: transparent; border-color: #333;
+}
+:root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card .tool-chip { color: var(--card-ink); }
+:root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card::before { background: #f7f8f6; }
+:root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card:focus-within {
+  --card-ink: #232625; --card-muted: #697365; --card-fill: #f7f8f6;
+  --start-fill: #e9ece7; --start-label: var(--accent); --pill-fill: #fff;
+  --arrow-fill: var(--accent);
+}
+@media (hover: hover) and (pointer: fine) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card:hover {
+    --card-ink: #232625; --card-muted: #697365; --card-fill: #f7f8f6;
+    --start-fill: #e9ece7; --start-label: var(--accent); --pill-fill: #fff;
+    --arrow-fill: var(--accent);
+  }
+}
+@media (hover: none) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .problem-card:focus-within:not(:has(:focus-visible)) {
+    --card-ink: #f5f3ef; --card-muted: #bababa; --card-fill: #161616;
+    --start-fill: #242424; --start-label: var(--accent); --pill-fill: #333;
+    --arrow-fill: transparent;
+  }
+}
+}
+
+/* Mobile navigation spans the viewport, including its backdrop. */
+@media (max-width: 768px) {
+  .site-nav {
+    top: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 12px max(20px, env(safe-area-inset-left)) 12px max(20px, env(safe-area-inset-right));
+    border-radius: 0;
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+  }
+}
+
+/* Match the desktop illustration placement inside mobile problem cards. */
+@media (max-width: 768px) {
+  .problem-card .problem-art { width: 412px; height: 280px; }
+  .problem-card .problem-art img { width: 412px; height: 412px; top: -80px; }
+  .problem-card:first-child .problem-art { top: 39px; left: -88px; }
+  .problem-card:first-child .problem-art img { width: 374px; height: 374px; }
+  .problem-card:nth-child(2) .problem-art { top: 7px; left: -79px; }
+  .problem-card:nth-child(3) .problem-art { top: 15px; left: -99px; }
+  .problem-card:nth-child(3) .problem-art img { top: -63px; width: 360px; height: 360px; }
+}
+
+/* Decorative comparison illustrations are downloaded and displayed on mobile only. */
+.comparison-illustration { display: none; }
+@media (max-width: 768px) {
+  .comparison-row { position: relative; overflow: hidden; padding-bottom: 100px; }
+  .comparison-illustration {
+    display: block;
+    position: absolute;
+    width: 163.2px;
+    height: 163.2px;
+    right: -24px;
+    bottom: -4.4px;
+    pointer-events: none;
+  }
+  .comparison-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
 }
