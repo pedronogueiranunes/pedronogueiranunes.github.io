@@ -1712,10 +1712,10 @@ details[open] > summary > .faq-plus:after {
   color: var(--text-secondary);
 }
 .process-section {
-    border-radius: 80px;
-    background: #f4f7f4;
-    padding: 60px 34px;
-    color: #232625;
+  border-radius: 80px;
+  background: #f4f7f4;
+  padding: 90px 94px;
+  color: #232625;
 }
 .process-section .section-heading > p {
   max-width: 540px;
@@ -5461,6 +5461,100 @@ body {
     animation: none;
   }
 }
+
+/* Current Figma workflow: dark specimens and divided toolkit cells. */
+.process-section .section-heading h2 { font-size: 48px; line-height: 1.1; }
+.process-section .section-heading > p { max-width: 440px; font-size: 17px; font-weight: 500; line-height: 1.55; }
+.process-card { padding: 20px 20px 28px; border: 1px solid #23262512; }
+.process-card h3 { font-size: 22px; line-height: 1.25; }
+.process-body { font-size: 15px; line-height: 1.5; }
+.process-card > .mono { padding-top: 10px; font-size: 11px; }
+.process-card .chips { margin-top: 0; gap: 6px; }
+.process-card .tool-chip { padding: 4px 8px; font-size: 10px; background: #f3f3f3; color: #232625; }
+.process-visual { background: #212020; color: #aaa; }
+.process-visual .research-bar { color: #ccc; }
+.research-bar > div { background: #ffffff14; }
+.research-bar small { color: #999; }
+.research-bar:first-of-type small { color: var(--accent); }
+.mini-wireframe { background: #2b2b2b; border-color: #414141; height: 96px; }
+.mini-wireframe i { background: #777; }
+.mini-wireframe em { background: #606060; }
+.mini-wireframe.winner { background: #35302d; box-shadow: inset 0 0 14px #ff5a1f66; }
+.experiment-visual { color: #aaa; }
+.experiment-visual > div:last-child > small { color: var(--accent); }
+.mini-wireframe b { padding: 2px 6px; top: -18px; }
+.design-selection { position: relative; background: #424242; outline: none; }
+.design-selection::before, .design-selection::after { content: ""; position: absolute; width: 4px; height: 4px; background: white; outline: 1px solid var(--accent); top: -2px; }
+.design-selection::before { left: -2px; box-shadow: 0 41px white; }
+.design-selection::after { right: -2px; box-shadow: 0 41px white; }
+.design-selection i { background: #999; }
+.design-blocks i { background: #383838; }
+.build-visual pre { color: #aaa; }
+.build-visual pre::first-line { color: var(--accent); }
+.build-visual > div { border-color: #ffffff14; color: #32a34a; }
+.build-visual > div::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #32a34a; margin-right: 6px; }
+.build-visual > div small { color: #999; }
+.toolkit { padding: 0; gap: 0; min-height: 104px; margin-top: 48px; overflow: hidden; background: #ffffff80; }
+.toolkit > div:first-child { flex: 0 0 171px; padding: 20px 24px; }
+.toolkit p { font-size: 11px; margin: 0; }
+.toolkit p + p { margin-top: 4px; }
+.toolkit > .chips { flex: 1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0; align-self: stretch; }
+.toolkit .tool-chip { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 12px 8px; border-radius: 0; border-left: 1px solid #2326250d; background: transparent; color: #454545; font-size: 10px; white-space: normal; text-align: center; }
+.toolkit .tool-chip img { width: 26px; height: 26px; }
+@media (min-width: 769px) and (max-width: 1280px) {
+  .process-section { padding: 60px 40px; }
+  .process-section .section-heading { gap: 32px; }
+  .process-section .section-heading h2 { font-size: 40px; }
+  .toolkit { flex-wrap: wrap; }
+  .toolkit > div:first-child { flex-basis: 100%; }
+  .toolkit > .chips { min-height: 104px; }
+}
+@media (max-width: 768px) {
+  .process-section { margin: 0; padding: 40px 20px; }
+  .process-section .section-heading { gap: 16px; }
+  .process-section .section-heading h2 { font-size: 28px; }
+  .process-section .section-heading > p { font-size: 16px; font-weight: 400; }
+  .process-body { font-size: 16px; }
+  .process-visual--0 { background: #212020; color: #aaa; }
+  .process-visual .research-bar { color: #ccc; }
+  .toolkit { display: block; padding: 20px; margin-top: 40px; }
+  .toolkit > div:first-child { padding: 0 0 16px; }
+  .toolkit > .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .toolkit .tool-chip { flex-direction: row; padding: 5px 8px; gap: 6px; border: 0; border-radius: 999px; background: #f3f3f3; }
+  .toolkit .tool-chip img { width: 14px; height: 14px; }
+}
+.process-visual .research-bar:not(:first-of-type) small { color: #999; }
+
+
+.process-section { border: 30px solid var(--surface); padding: 60px 64px; }
+.process-card > .mono { font-size: 12px; }
+.process-card .tool-chip { font-size: 11px; padding: 5px 10px 5px 8px; }
+.process-visual--0 > .mono { font-size: 9px; color: #ffffff73; }
+.research-bar:not(:first-of-type) i { opacity: 0.55; }
+.process-visual--1 { padding: 10px 13px; }
+.experiment-visual .mono { font-size: 10px; line-height: 12px; }
+.mini-wireframe { margin-top: 3px; }
+.mini-wireframe i:nth-of-type(n+3) { height: 4px; background: #ffffff2e; }
+.mini-wireframe i:nth-of-type(4) { width: 85%; }
+.mini-wireframe em { width: 44px; height: 16px; margin-top: 10px; }
+.design-visual { padding-top: 18px; }
+.design-visual::before { content: ""; position: absolute; top: 2px; left: 0; right: 0; height: 12px; background: #ffffff26; border-radius: 4px; }
+.design-visual > small { top: 0; z-index: 1; }
+.design-selection { height: 50px; }
+.design-selection::before, .design-selection::after { box-shadow: 0 49px white; }
+.design-blocks { margin-top: 6px; }
+.design-blocks i { height: 32px; }
+.build-visual pre { font-size: 10px; line-height: 17px; }
+.build-visual > div { margin-top: 10px; padding: 12px 13px; font-size: 11px; }
+.build-visual > div::before { width: 7px; height: 7px; }
+.build-visual > div small { font: 10px var(--font-mono); }
+@media (min-width: 769px) and (max-width: 1280px) { .process-section { border-width: 20px; padding: 40px 20px; } }
+@media (max-width: 768px) { .process-section { border: 0; padding: 40px 20px; } }
+
+.build-visual pre .build-code-line { display: flex; gap: 12px; margin: 0; color: #ffffff99; }
+.build-code-line > span { width: 10px; margin: 0; color: #ffffff40; }
+.build-code-line code { font: inherit; color: #ffffff99; }
+.build-code-line:first-child code { color: var(--accent); }
 
 /* Footer lettering: clipped to the footer bounds, marquee like the hero. */
 .footer-lettering {
