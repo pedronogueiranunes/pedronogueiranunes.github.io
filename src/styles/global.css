@@ -926,6 +926,22 @@ details[open] > summary > .faq-plus:after {
   height: 285px;
   object-fit: contain;
 }
+/* Exact ground-shadow shape exported from Current Figma, node 488:7905. */
+.footer-art-ground {
+  position: absolute;
+  top: -12px;
+  left: calc(50% + 58px);
+  transform: translateX(-50%);
+  width: 247px;
+  height: 105px;
+  background: url("/assets/figma/cta-ground-shadow.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+.footer-cta { overflow: visible; }
+@media (max-width: 768px) {
+  .footer-art-ground { top: -7px; left: calc(50% + 48px); width: 204px; height: 87px; }
+}
+
 .footer-cta-copy {
   position: relative;
   max-width: 900px;
