@@ -6599,3 +6599,31 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .mobile-dialog { height: 100dvh; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
   .site-nav { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
 }
+
+@media (max-width: 1024px) {
+  .mobile-dialog .preferences-panel--inline {
+    background: transparent;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mobile-dialog[open],
+  .mobile-menu-header { background: var(--mobile-menu-bg, #ffffff); }
+}
+:root[data-theme="dark"] { --mobile-menu-bg: var(--bg); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) { --mobile-menu-bg: var(--bg); }
+}
+
+/* Mobile menu trigger morphs into a close mark while the dialog is open. */
+.menu-toggle span { transform-origin: center; transition: transform 200ms ease, opacity 150ms ease; }
+.menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0.4); }
+.menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.menu-toggle, .menu-close { transition: scale 140ms ease; }
+.menu-toggle:active, .menu-close:active { scale: 0.92; }
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle, .menu-close, .menu-toggle span { transition: none; }
+  .menu-toggle:active, .menu-close:active { scale: 1; }
+}
