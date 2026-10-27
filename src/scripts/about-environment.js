@@ -66,13 +66,13 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
   const ring = new pc.Entity("shoulder-ring");
   root.addChild(ring);
-  const RING_Y = -0.22, RING_R = 0.58, DOTS = 48;
+  const RING_Y = -0.22, RING_R = 0.58, DOTS = 96;
   for (let i = 0; i < DOTS; i++) {
     const a = (i / DOTS) * Math.PI * 2;
     const dot = new pc.Entity("ring-dot");
     dot.addComponent("render", { type: "box" });
     dot.render.material = ringGray;
-    dot.setLocalScale(0.018 * radius, 0.003 * radius, 0.003 * radius);
+    dot.setLocalScale(0.006 * radius, 0.006 * radius, 0.006 * radius); // round-ish dots, not dashes
     dot.setLocalPosition(Math.cos(a) * RING_R * radius, 0, Math.sin(a) * RING_R * radius);
     dot.setLocalEulerAngles(0, -a * 180 / Math.PI + 90, 0);
     ring.addChild(dot);
