@@ -12,16 +12,45 @@ export function initSplat() {
   }
 
   let app;
+  let disposed = false;
+  let stopInteractions;
+  let observer;
+  const controller = new AbortController();
+  const timers = new Set();
+  const later = (fn, delay) => {
+    const id = setTimeout(() => { timers.delete(id); if (!disposed) fn(); }, delay);
+    timers.add(id);
+  };
+  const destroy = () => {
+    if (disposed) return;
+    disposed = true;
+    controller.abort();
+    observer?.disconnect();
+    timers.forEach(clearTimeout);
+    stopInteractions?.();
+    app?.assets.list().forEach((asset) => { asset.off(); asset.unload(); });
+    const gl = app?.graphicsDevice?.gl;
+    app?.destroy();
+    // Release the native context too; app.destroy() releases GPU resources but
+    // browsers may otherwise keep its context alive until a later GC cycle.
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    if (import.meta.env.DEV) {
+      window.__portraitApps = Math.max(0, (window.__portraitApps || 1) - 1);
+      console.debug("[portrait] active apps", window.__portraitApps);
+    }
+  };
   try {
     app = new pc.Application(canvas, {
       graphicsDeviceOptions: { alpha: true, antialias: true },
     });
     if (!app.graphicsDevice) {
       viewport.dataset.failed = "true";
+      destroy();
       return;
     }
   } catch {
     viewport.dataset.failed = "true";
+    destroy();
     return;
   }
   app.graphicsDevice.maxPixelRatio = Math.min(
@@ -46,7 +75,8 @@ export function initSplat() {
     app.setCanvasResolution(pc.RESOLUTION_FIXED, width, height);
     app.renderNextFrame = true;
   }
-  new ResizeObserver(resize).observe(origin);
+  observer = new ResizeObserver(resize);
+  observer.observe(origin);
   resize();
 
   const camera = new pc.Entity("camera");
@@ -71,7 +101,7 @@ export function initSplat() {
     plyAsset.on("load", () => attachSplat(plyAsset));
     plyAsset.on("error", () => {
       viewport.dataset.failed = "true";
-      app.destroy();
+      destroy();
     });
     app.assets.load(plyAsset);
   });
@@ -82,7 +112,7 @@ export function initSplat() {
     canvas.removeAttribute("aria-hidden");
     const silhouette = viewport.querySelector(".portrait-silhouette");
     if (silhouette) {
-      setTimeout(() => {
+      later(() => {
         silhouette.style.visibility = "hidden";
       }, 600);
     }
@@ -90,6 +120,7 @@ export function initSplat() {
   }
 
   function attachSplat(asset) {
+    if (disposed) return;
     const rig = new pc.Entity("splat-rig");
     const splat = new pc.Entity("splat");
     splat.addComponent("gsplat", { asset });
@@ -119,7 +150,7 @@ export function initSplat() {
       };
       applyZoom(Number(viewport.dataset.scrollPose || 0));
       camera.lookAt(0, 0, 0);
-      viewport.addEventListener("portraitpose", (e) => applyZoom(e.detail));
+      viewport.addEventListener("portraitpose", (e) => applyZoom(e.detail), { signal: controller.signal });
       // The gsplat sort runs in a worker, so the first frames can be empty.
       // With on-demand rendering nothing redraws when the sort lands, which
       // left the canvas blank until the user scrolled. Render continuously
@@ -154,7 +185,7 @@ export function initSplat() {
         app.off("postrender", onPostRender);
         reveal();
         // A few more frames so late sort updates land, then back to on-demand.
-        setTimeout(() => {
+        later(() => {
           app.autoRender = false;
           app.renderNextFrame = true;
         }, 800);
@@ -163,11 +194,16 @@ export function initSplat() {
       app.renderNextFrame = true;
     });
 
-    setupModelInteractions({ app, rig, canvas, viewport });
+    stopInteractions = setupModelInteractions({ app, rig, canvas, viewport });
     app.renderNextFrame = true;
   }
 
+  if (import.meta.env.DEV) {
+    window.__portraitApps = (window.__portraitApps || 0) + 1;
+    console.debug("[portrait] active apps", window.__portraitApps);
+  }
   app.start();
   app.renderNextFrame = true;
   resize();
+  return destroy;
 }

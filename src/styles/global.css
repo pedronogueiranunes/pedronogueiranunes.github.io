@@ -57,13 +57,26 @@
   --bg-secondary: #ede7dc;
   --text: #111111;
   --text-secondary: #6b6660;
+  /* Pixel transitions: milliseconds and pixel sizes are read by transitions.ts. */
+  --theme-duration: 550;
+  --theme-steps: 12;
+  --theme-cell-size: 24;
+  --page-exit-duration: 160ms;
+  --page-enter-duration: 240ms;
+  --page-enter-delay: 160ms;
+  --page-transition-duration: 400ms;
+  --curtain-duration: 300;
+  --curtain-delay: 80;
+  --curtain-steps: 18;
+  --curtain-cell-size: 48;
+  --curtain-color: #FF5A1F;
   --accent: #ff5a1f;
   --accent-ink: var(--accent);
   --action-bg: var(--accent);
   --action-hover: color-mix(in srgb, var(--accent) 88%, white);
   --action-active: color-mix(in srgb, var(--accent) 88%, #232625);
   --accent-secondary: #d4ff4f;
-  --border: #ddd6c8;
+  --border: #e3e3e3;
   --surface: #ffffff;
   --chip-bg: #f6eae6;
   --dark: #232625;
@@ -1349,6 +1362,7 @@ details[open] > summary > .faq-plus:after {
   border-radius: 42px;
   overflow: hidden;
   height: 80vh;
+  max-height: 770px;
   position: relative;
   padding: 30px 30px;
   text-align: center;
@@ -5698,6 +5712,225 @@ body {
   }
 }
 
+#pixel-curtain {
+  position: fixed;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--curtain-color);
+  view-transition-name: pixel-curtain;
+}
+::view-transition { pointer-events: none; }
+::view-transition-group(*) { animation: none; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(page-content) {
+  animation: page-exit var(--page-exit-duration) ease-out both;
+}
+::view-transition-new(page-content) {
+  animation: page-enter var(--page-enter-duration) var(--page-enter-delay) ease-out both;
+}
+::view-transition-group(pixel-curtain) { z-index: 10; }
+::view-transition-group(site-header),
+::view-transition-group(site-footer),
+::view-transition-group(mobile-menu) { z-index: 20; }
+::view-transition-group(site-logo),
+::view-transition-group(site-navigation) { z-index: 21; }
+::view-transition-old(pixel-curtain) { display: none; }
+::view-transition-new(pixel-curtain) {
+  animation: curtain-hold var(--page-transition-duration) linear both;
+  mix-blend-mode: normal;
+  clip-path: inset(0 100% 0 0);
+}
+@keyframes curtain-hold { from, to { opacity: 1; } }
+@keyframes page-exit { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes page-enter { from { opacity: 0; transform: translateY(8px); } }
+/* Theme snapshots include the complete page, including persisted chrome and canvas. */
+html[data-transition="theme"] * { view-transition-name: none !important; }
+html[data-transition="theme"]::view-transition-new(root) {
+  animation: curtain-hold calc(var(--theme-duration) * 1ms) linear both;
+  z-index: 1;
+}
+html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
+.theme-segments input:checked + span .theme-icon {
+  animation: theme-label-swap 90ms steps(3, end);
+}
+@keyframes theme-label-swap {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+  .theme-segments input:checked + span .theme-icon { animation: none; }
+}
+
+.theme-segments .theme-icon {
+  display: inline-block;
+  margin-inline-end: 4px;
+  vertical-align: -1px;
+}
+
+/* Pixel cursors: preserve native touch behavior and the portrait overlay. */
+@media (hover: hover) and (pointer: fine) {
+  html, body {
+    cursor: url("/assets/cursors/arrow.svg") 1 1, auto;
+    cursor: url("/assets/cursors/arrow.svg") 1 1, image-set(url("/assets/cursors/arrow@2x.png") 2x) 1 1, auto;
+  }
+  a, button, [role="button"], label[for], summary, select, .action, .text-link, input[type="checkbox"], input[type="radio"], input[type="range"], input[type="button"], input[type="submit"], input[type="reset"], .language-option, .theme-segments label, .choice-pill {
+    cursor: url("/assets/cursors/hand.svg") 6 1, pointer;
+    cursor: url("/assets/cursors/hand.svg") 6 1, image-set(url("/assets/cursors/hand@2x.png") 2x) 6 1, pointer;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]), textarea, [contenteditable="true"] {
+    cursor: url("/assets/cursors/text.svg") 5 11, text;
+    cursor: url("/assets/cursors/text.svg") 5 11, image-set(url("/assets/cursors/text@2x.png") 2x) 5 11, text;
+  }
+  p, li, h1, h2, h3, h4, blockquote {
+    cursor: inherit;
+  }
+  button:disabled, input:disabled, select:disabled, textarea:disabled,
+  [role="button"][aria-disabled="true"], .action:disabled, .rail-arrows button:disabled {
+    cursor: url("/assets/cursors/arrow.svg") 1 1, image-set(url("/assets/cursors/arrow@2x.png") 2x) 1 1, auto;
+  }
+}
+
+/* Primary CTA: warm edge light and a quiet directional response.
+   Glow layers only transition on interaction; nothing runs while idle. */
+.action:not(.action--secondary):not(.case-sidebar-cta .action) {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  transition: background 180ms ease-out, transform 180ms ease-out;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::before,
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 280ms ease-out, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::before {
+  z-index: -1;
+  box-shadow: -8px 3px 22px -6px rgb(255 90 31 / 55%),
+    9px 4px 24px -7px rgb(255 166 64 / 48%);
+  transform: scale(0.97);
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
+  padding: 1.5px;
+  background: linear-gradient(115deg, #ffb36a 0%, #fff0d4 24%, #ff782f 52%, #ffd29a 76%, #ff5a1f 100%);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"]) {
+  background: var(--button-fill, var(--action-bg));
+  transform: none;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::before,
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::after {
+  opacity: 1;
+  transform: none;
+}
+.action:not(.action--secondary) > .pixel-icon {
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action:not(.action--secondary):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"]) > .pixel-icon {
+  transform: translateX(3px);
+}
+.action:not(.action--secondary):active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--button-active-fill, var(--action-active));
+  transform: scale(0.985);
+}
+.action:not(.action--secondary):active:not(:disabled) > .pixel-icon {
+  transform: translateX(2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .action:not(.action--secondary),
+  .action:not(.action--secondary)::before,
+  .action:not(.action--secondary)::after,
+  .action:not(.action--secondary) > .pixel-icon {
+    transition: none;
+  }
+  .action:not(.action--secondary):is(:hover, :focus-visible, :active):not(:disabled),
+  .action:not(.action--secondary):is(:hover, :focus-visible, :active):not(:disabled) > .pixel-icon {
+    transform: none;
+  }
+}
+
+/* Projects palette from Current Figma: 488:8113 and 488:8154. */
+:root {
+  --projects-header-bg: linear-gradient(135deg, #f2f6f1 0%, #ffffff 78%);
+  --projects-heading: #232625;
+  --projects-control-bg: #f3f6f2;
+  --projects-control-ink: #647362;
+}
+:root[data-theme="dark"] {
+  --projects-header-bg: linear-gradient(135deg, #172017, #1e1e1e 78%);
+  --projects-heading: var(--text);
+  --projects-control-bg: #263026;
+  --projects-control-ink: #afc2a8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --projects-header-bg: linear-gradient(135deg, #172017, #1e1e1e 78%);
+    --projects-heading: var(--text);
+    --projects-control-bg: #263026;
+    --projects-control-ink: #afc2a8;
+  }
+}
+.projects-header {
+  --projects-nav-space: 103px;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  color: var(--projects-heading);
+}
+.projects-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--projects-nav-space)) 0 0;
+  background: var(--projects-header-bg);
+  pointer-events: none;
+}
+@media (max-width: 1024px) {
+  .projects-header { --projects-nav-space: 88px; }
+}
+.projects-header > p:not(.section-eyebrow) {
+  color: var(--projects-heading);
+}
+.projects-header > .section-eyebrow {
+  color: var(--accent);
+}
+.projects-filters {
+  background: var(--surface);
+}
+.projects-filters .category-filters button:not([aria-pressed="true"]),
+.projects-filters .view-controls,
+.projects-filters .filter-options summary {
+  background: var(--projects-control-bg);
+  color: var(--projects-control-ink);
+}
+.projects-filters .view-controls button:not([aria-pressed="true"]) {
+  color: var(--projects-control-ink);
+}
+.projects-filters .filter-options summary {
+  padding: 8px 16px;
+  border-radius: 999px;
+  flex-direction: row-reverse;
+  gap: 8px;
+}
+/* The category rail is scrollable without introducing an orange scrollbar. */
+.projects-filters .category-filters {
+  scrollbar-width: none;
+}
+.projects-filters .category-filters::-webkit-scrollbar {
+  display: none;
+}
+
 /* Home entrances: only enabled by the home script after successful setup. */
 .home-reveal-ready [data-reveal] {
   opacity: 0;
@@ -5728,4 +5961,147 @@ body {
   .home-reveal-ready .eyebrow-reserved { opacity: 1; }
   .home-reveal-ready .eyebrow-typed { visibility: hidden; }
   .eyebrow-typed::after { content: none; animation: none; }
+}
+
+/* Pixel interaction controls. All timing and travel values are tunable here. */
+:root {
+  --motion-in: 420ms;
+  --motion-out: 250ms;
+  --motion-steps: 5;
+  --link-steps: 3;
+  --link-travel: 5px;
+  --arrow-travel: 200%;
+  --press-scale: 0.97;
+  --press-arrow: 2px;
+}
+
+.action {
+  position: relative;
+  isolation: isolate;
+  transition: transform 100ms steps(2), color var(--motion-out), border-color var(--motion-out);
+}
+/* Stepped fill wipe on the secondary button only; the primary keeps the
+   warm glow layers (::before/::after) from the orange CTA glow block. */
+.action--secondary {
+  overflow: hidden;
+}
+.action--secondary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--action-hover);
+  clip-path: polygon(0 0, 0 0, 0 25%, 0 25%, 0 50%, 0 50%, 0 75%, 0 75%, 0 100%, 0 100%);
+  transition: clip-path var(--motion-out) steps(var(--motion-steps));
+}
+.action:is(:hover, :focus-visible):not(:disabled) {
+  background: var(--button-fill, var(--action-bg));
+  transform: none;
+}
+.action--secondary:is(:hover, :focus-visible):not(:disabled)::before {
+  clip-path: polygon(0 0, 100% 0, 100% 25%, 106% 25%, 106% 50%, 112% 50%, 112% 75%, 118% 75%, 118% 100%, 0 100%);
+  transition-duration: var(--motion-in);
+}
+.action--secondary::before {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg));
+}
+.action.action--secondary:is(:hover, :focus-visible):not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.action-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.action-icon > .pixel-icon {
+  grid-area: 1 / 1;
+  transition: transform var(--motion-out) steps(var(--motion-steps));
+}
+.action-icon > .action-arrow-copy {
+  transform: translateX(calc(-1 * var(--arrow-travel)));
+}
+.action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .pixel-icon {
+  transform: translateX(var(--arrow-travel));
+  transition-duration: var(--motion-in);
+}
+.action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .action-arrow-copy {
+  transform: translateX(0);
+}
+.action:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+.action:active:not(:disabled) .action-icon {
+  transform: translateX(var(--press-arrow));
+}
+.action:focus-visible,
+.text-link:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+.text-link,
+:where(p, li, blockquote) > a:not([class]) {
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  /* Transparent half slides away in pixel steps without changing layout. */
+  background-size: 210% 2px;
+  background-image: linear-gradient(to right, transparent 0 52.4%, currentColor 52.4% 100%);
+  transition: background-position var(--motion-out) steps(var(--motion-steps));
+}
+.text-link:is(:hover, :focus-visible),
+:where(p, li, blockquote) > a:not([class]):is(:hover, :focus-visible) {
+  text-decoration: none;
+  background-position: 100% 100%;
+  transition-duration: var(--motion-in);
+}
+/* Dashed pixel blocks reveal from the left on arrow links. */
+.text-link {
+  position: relative;
+  background-image: none;
+}
+.text-link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 6px);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-out) steps(var(--motion-steps));
+}
+.text-link:is(:hover, :focus-visible)::after {
+  transform: scaleX(1);
+  transition-duration: var(--motion-in);
+}
+.text-link > .pixel-icon {
+  transition: transform var(--motion-out) steps(var(--link-steps));
+}
+.text-link:is(:hover, :focus-visible) > .pixel-icon {
+  transform: translateX(var(--link-travel));
+  transition-duration: var(--motion-in);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action,
+  .action::before,
+  .action-label,
+  .action-icon > .pixel-icon,
+  .text-link,
+  .text-link > .pixel-icon,
+  .text-link::after,
+  :where(p, li, blockquote) > a:not([class]) {
+    animation: none !important;
+    transition: none !important;
+  }
+  .action:is(:hover, :focus-visible, :active):not(:disabled),
+  .action:is(:hover, :focus-visible, :active):not(:disabled) .action-icon,
+  .action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .pixel-icon,
+  .text-link:is(:hover, :focus-visible) > .pixel-icon {
+    transform: none;
+  }
+  .action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .action-arrow-copy {
+    transform: translateX(calc(-1 * var(--arrow-travel)));
+  }
 }

@@ -44,7 +44,9 @@ export function initPortraitTravel() {
   if (!origin || !stage || !destination) return;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
+  let disposed = false;
   function measure() {
+    if (disposed) return;
     const from = origin.getBoundingClientRect();
     const to = destination.getBoundingClientRect();
     const start = Math.max(0, from.top + scrollY - innerHeight * 0.35);
@@ -120,7 +122,18 @@ export function initPortraitTravel() {
   addEventListener("scroll", schedule, { passive: true });
   addEventListener("resize", measure);
   reducedMotion.addEventListener("change", measure);
-  new ResizeObserver(measure).observe(destination);
+  const observer = new ResizeObserver(measure);
+  observer.observe(destination);
   document.fonts.ready.then(measure);
   measure();
+  return () => {
+    disposed = true;
+    cancelAnimationFrame(frame);
+    observer.disconnect();
+    removeEventListener("scroll", schedule);
+    removeEventListener("resize", measure);
+    reducedMotion.removeEventListener("change", measure);
+    currentGeometry = null;
+    currentPose = 0;
+  };
 }

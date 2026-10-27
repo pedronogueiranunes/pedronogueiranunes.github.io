@@ -1,0 +1,16 @@
+{
+  "scroll": 700,
+  "restored": 700,
+  "prefetch": [
+    "http://127.0.0.1:4342/contact",
+    "http://127.0.0.1:4342/contact",
+    "http://127.0.0.1:4342/contact"
+  ],
+  "contactRoundTrips": 2,
+  "filter": "true",
+  "firstVisit": {
+    "theme": "auto",
+    "scheme": "dark"
+  },
+  "errors": []
+}

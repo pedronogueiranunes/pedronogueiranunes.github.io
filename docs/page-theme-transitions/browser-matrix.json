@@ -1,0 +1,1683 @@
+{
+  "results": [
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 97,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 343,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 121,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Chrome",
+      "width": 390,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 81,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 4833,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "Firefox",
+      "width": 390,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 5692,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 4409,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 1440,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 4095,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "light",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 7326,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/about",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/contact",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/services",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/work/green-nation-collective",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/thoughts/design-system-without-overdoing-it",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/projects?category=experiments",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 0
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/",
+      "support": true,
+      "persist": true,
+      "scroll": 0,
+      "focus": "H1",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    },
+    {
+      "name": "WebKit",
+      "width": 390,
+      "theme": "dark",
+      "route": "/#thoughts",
+      "support": true,
+      "persist": true,
+      "scroll": 7893,
+      "focus": "BODY",
+      "overflow": false,
+      "curtain": "hidden",
+      "canvas": 1
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.\" {file: \"http://127.0.0.1:4342/assets/vendor/playcanvas.min.js\" line: 412}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/splat-hero.Bkflz3Lt.js\" line: 1}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.\" {file: \"http://127.0.0.1:4342/assets/vendor/playcanvas.min.js\" line: 412}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.\" {file: \"http://127.0.0.1:4342/assets/vendor/playcanvas.min.js\" line: 412}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/splat-hero.Bkflz3Lt.js\" line: 1}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.\" {file: \"http://127.0.0.1:4342/assets/vendor/playcanvas.min.js\" line: 412}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL warning: texSubImage: Uploads from a buffer with a final row with a byte count smaller than the row stride can incur extra overhead.\"]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    },
+    {
+      "name": "Firefox",
+      "message": "[JavaScript Warning: \"WebGL context was lost.\" {file: \"http://127.0.0.1:4342/_astro/index.astro_astro_type_script_index_0_lang.CmnBDuAS.js\" line: 2}]"
+    }
+  ]
+}

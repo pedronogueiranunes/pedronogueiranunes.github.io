@@ -45,6 +45,9 @@ const {
   </div>
 </section>
 <script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+
+  onPageLoad((scope) => {
   document.querySelectorAll<HTMLElement>("[data-rail]").forEach((root) => {
     const rail = root.querySelector<HTMLElement>(".project-rail")!;
     const prev = root.querySelector<HTMLButtonElement>("[data-prev]")!;
@@ -68,10 +71,13 @@ const {
           ? "instant"
           : "smooth",
       });
-    prev.addEventListener("click", () => move(-1));
-    next.addEventListener("click", () => move(1));
-    rail.addEventListener("scroll", update, { passive: true });
-    new ResizeObserver(update).observe(rail);
+    prev.addEventListener("click", () => move(-1), { signal: scope.signal });
+    next.addEventListener("click", () => move(1), { signal: scope.signal });
+    rail.addEventListener("scroll", update, { passive: true, signal: scope.signal });
+    const observer = new ResizeObserver(update);
+    observer.observe(rail);
+    scope.cleanup(() => observer.disconnect());
     update();
+  });
   });
 </script>
