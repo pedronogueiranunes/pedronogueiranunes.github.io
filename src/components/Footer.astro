@@ -103,15 +103,11 @@ const platforms = [
     </div>
   </div>
   <div class="footer-legal mono">
-    <span>© 2026 Pedro Nunes</span>
+    <span>© 2026 PEDRO JOSÉ NOGUEIRA NUNES</span>
     <span class="legal-items">
-      {[
-        ["Legal", site.legal.notice],
-        ["Privacy", site.legal.privacy],
-        ["Cookie choices", site.legal.cookies],
-      ].map(([label, url]) =>
-        url ? <a href={url}>{label}</a> : <span>{label}</span>,
-      )}
+      <button type="button" data-open-legal="legal-notice" aria-haspopup="dialog" aria-controls="legal-notice">Legal</button>
+      <button type="button" data-open-legal="privacy-notice" aria-haspopup="dialog" aria-controls="privacy-notice">Privacy</button>
+      <button type="button" data-open-cookies aria-haspopup="dialog">Cookie choices</button>
     </span>
   </div>
   <div class="footer-lettering" aria-hidden="true">

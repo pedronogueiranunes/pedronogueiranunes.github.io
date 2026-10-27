@@ -1,0 +1,47 @@
+---
+import { site } from "../data/site";
+---
+
+<div id="legal-ui" transition:persist="legal-ui">
+  <dialog id="legal-notice" class="legal-dialog" aria-labelledby="legal-notice-title">
+    <div class="legal-dialog-heading">
+      <h2 id="legal-notice-title">Legal notice</h2>
+      <button class="legal-close" type="button" data-close-legal aria-label="Close legal notice"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg></button>
+    </div>
+    <div class="legal-dialog-body">
+      <h3>About this website</h3>
+      <p>This portfolio is operated by Pedro José Nogueira Nunes, an independent designer and developer based in Vitória da Conquista, Brazil.</p>
+      <p>Contact: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <h3>Portfolio work and credits</h3>
+      <p>This site presents selected work and information about services. Client names, trademarks and third-party materials belong to their respective owners. Displaying a project does not imply ownership of the client's brand or an ongoing endorsement.</p>
+      <h3>Project agreements</h3>
+      <p>Information on this site is for initial discussion. Scope, pricing, availability, delivery dates and rights for a project are agreed separately in writing.</p>
+      <h3>External links</h3>
+      <p>Links may lead to websites operated by others. Their content and privacy practices are governed by their own policies.</p>
+    </div>
+  </dialog>
+  <dialog id="privacy-notice" class="legal-dialog" aria-labelledby="privacy-notice-title">
+    <div class="legal-dialog-heading">
+      <h2 id="privacy-notice-title">Privacy</h2>
+      <button class="legal-close" type="button" data-close-legal aria-label="Close privacy notice"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg></button>
+    </div>
+    <div class="legal-dialog-body">
+      <h3>Who to contact</h3>
+      <p>Pedro José Nogueira Nunes operates this portfolio. For questions about personal information, contact <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <h3>Information you send</h3>
+      <p>If you send an email or submit a project inquiry, the information you provide is used to respond and discuss your project. The contact form asks for contact and project details and is configured to send submissions through <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms</a> when the form is enabled.</p>
+      <h3>Hosting and external services</h3>
+      <p>The website is hosted on GitHub Pages. The hosting provider receives technical request information when you visit. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub's privacy statement</a> for its practices. Opening an external website or using your email provider is subject to that provider's policies.</p>
+      <h3>Cookies and browser storage</h3>
+      <p>The site currently has no analytics or advertising trackers. Your selected color theme is saved in this browser's local storage. If you save cookie choices, a first-party cookie remembers that choice for up to 182 days. Fonts, illustrations and the 3D portrait are served with the website.</p>
+      <p>You can inspect the current storage details using <button class="legal-inline-button" type="button" data-open-cookies>Cookie choices</button>, or clear stored settings through your browser.</p>
+      <h3>Your information</h3>
+      <p>To ask about, correct or request deletion of personal information you have sent, email <a href={`mailto:${site.email}`}>{site.email}</a>. Please include enough context to identify your inquiry.</p>
+    </div>
+  </dialog>
+  <div id="cookie-consent-root"></div>
+</div>
+
+<script>
+  import "../scripts/legal-modals";
+</script>
