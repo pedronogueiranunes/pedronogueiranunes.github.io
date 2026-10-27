@@ -59,6 +59,7 @@ import ToolChip from "./ToolChip.astro";
                     <i></i>
                     <i></i>
                     <i></i>
+                    <i></i>
                     <em></em>
                   </div>
                 </div>
@@ -81,11 +82,9 @@ import ToolChip from "./ToolChip.astro";
           )}
           {i === 3 && (
             <div class="build-visual">
-              <pre
-                set:text={
-                  '12  <ProductGrid\n13    collection={handle}\n14    sort="best-selling"\n15    lazy />'
-                }
-              />
+              <pre>{['<ProductGrid', '  collection={handle}', '  sort="best-selling"', '  lazy />'].map((line, index) => (
+                <span class="build-code-line"><span>{12 + index}</span><code>{line}</code></span>
+              ))}</pre>
               <div>
                 {buildIllustration.status}{" "}
                 <small>{buildIllustration.score}</small>
