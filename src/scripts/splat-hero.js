@@ -152,10 +152,10 @@ export function initSplat() {
         const canvasHeadroom = isMobile ? origin.clientHeight / 325 : 1;
         camera.camera.fov = 2 * Math.atan(Math.tan(portraitFov * Math.PI / 360) * canvasHeadroom / sizeMultiplier) * 180 / Math.PI;
         const distance = baseDistance * (1 - ZOOM_AT_BIO * pose);
-        // About page box: sit the portrait (and its orbit) 16% of the frame lower,
+        // About page box: sit the portrait (and its orbit) 14% of the frame lower,
         // so the bottom edge of the model is cropped by the box.
         const frameHeight = 2 * distance * Math.tan(camera.camera.fov * Math.PI / 360);
-        const lower = viewport.dataset.autoRotate === "true" ? frameHeight * 0.16 : 0;
+        const lower = viewport.dataset.autoRotate === "true" ? frameHeight * 0.14 : 0;
         const y = radius * PAN_UP_AT_BIO * pose + lower;
         camera.setPosition(0, y, distance);
         camera.lookAt(0, y, 0);
