@@ -137,21 +137,33 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
           </div>
         ))}
         <article class="your-turn-card">
-          <ResponsiveImage
-            src="/assets/figma/488-8180-img3DResultsGrowthBlack.webp"
-            width="300"
-            height="300"
-            alt=""
-            loading="lazy"
-          />
-          <Eyebrow>Your turn</Eyebrow>
-          <h2>Want numbers like these on your site?</h2>
-          <p>
-            Book a 30 minute call. I will review your site first and bring the
-            three fixes I would ship this month.
-          </p>
-          <Button href="/contact">Book a call</Button>
-          <small>Reply within 24 hours. No pitch deck.</small>
+          <div class="your-turn-graphics" aria-hidden="true">
+            <picture class="your-turn-orbit">
+              <source media="(max-width: 768px)" srcset="/assets/figma/projects-cta-ellipse-mobile.svg" />
+              <img src="/assets/figma/projects-cta-ellipse-desktop.svg" width="536" height="536" alt="" loading="lazy" />
+            </picture>
+            <ResponsiveImage
+              class="your-turn-growth"
+              src="/assets/figma/488-8180-img3DResultsGrowthBlack.webp"
+              width="300"
+              height="300"
+              sizes="(max-width: 768px) 194px, 270px"
+              alt=""
+              loading="lazy"
+            />
+            <p class="your-turn-label">Your<br />turn</p>
+          </div>
+          <div class="your-turn-copy">
+            <h2>Want numbers like these on your site?</h2>
+            <p>
+              Book a 30 minute call. I will review your site first and bring the
+              three fixes I would ship this month.
+            </p>
+          </div>
+          <div class="your-turn-actions">
+            <Button href="/contact">Book a call</Button>
+            <small>Reply within 24 hours. No pitch deck.</small>
+          </div>
         </article>
       </div>
       <p data-empty hidden>
@@ -167,6 +179,44 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
     if (!document.querySelector("[data-projects-filter]")) return;
 
     const root = document.querySelector<HTMLElement>("[data-projects-filter]")!;
+    const categoryRail = root.querySelector<HTMLElement>(".category-filters")!;
+    const updateCategoryEdges = () => {
+      const max = categoryRail.scrollWidth - categoryRail.clientWidth;
+      categoryRail.toggleAttribute("data-more-before", categoryRail.scrollLeft > 1);
+      categoryRail.toggleAttribute("data-more-after", categoryRail.scrollLeft < max - 1);
+    };
+    categoryRail.addEventListener("scroll", updateCategoryEdges, { passive: true, signal: scope.signal });
+    const categoryObserver = new ResizeObserver(updateCategoryEdges);
+    categoryObserver.observe(categoryRail);
+    categoryRail.querySelectorAll("button").forEach((button) => categoryObserver.observe(button));
+    scope.cleanup(() => categoryObserver.disconnect());
+    document.fonts.ready.then(() => { if (!scope.signal.aborted) updateCategoryEdges(); });
+    updateCategoryEdges();
+    const banner = root.querySelector<HTMLElement>(".your-turn-card");
+    const introAnimations = new Set<Animation>();
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    if (banner && "IntersectionObserver" in window) {
+      const introObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        introObserver.disconnect();
+        if (reducedMotion.matches) return;
+        [".your-turn-growth", ".your-turn-label"].forEach((selector, index) => {
+          const element = banner.querySelector(selector);
+          if (!element) return;
+          const animation = element.animate([
+            { opacity: 0, transform: `translateY(${index ? 6 : 16}px) scale(0.97)` },
+            { opacity: 1, transform: "translateY(0) scale(1)" },
+          ], { duration: 1400, delay: index * 120, fill: "backwards", easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+          introAnimations.add(animation);
+          animation.onfinish = () => introAnimations.delete(animation);
+        });
+      }, { threshold: 0.2 });
+      introObserver.observe(banner);
+      reducedMotion.addEventListener("change", () => {
+        if (reducedMotion.matches) introAnimations.forEach((animation) => animation.finish());
+      }, { signal: scope.signal });
+      scope.cleanup(() => { introObserver.disconnect(); introAnimations.forEach((animation) => animation.cancel()); });
+    }
     let category = "0";
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       "button[data-category]",

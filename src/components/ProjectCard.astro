@@ -40,6 +40,11 @@ const p = project.data;
         <a href={`/work/${p.caseSlug || project.slug}`}>{p.title}</a>
       </h3>
       <p class="project-summary">{p.summary}</p>
+    {p.tools?.length > 0 && (
+      <ul class="project-tools mono" aria-label="Project tools" role="list">
+        {p.tools.map((tool) => <li>{tool}</li>)}
+      </ul>
+    )}
     </div>
     {p.metrics?.length > 0 && (
       <dl class="project-metrics">
@@ -51,8 +56,6 @@ const p = project.data;
         ))}
       </dl>
     )}
-    <p class="project-tools mono" title={p.tools?.join(" · ")}>
-      {p.tools?.join(" · ")}
-    </p>
+
   </div>
 </article>
