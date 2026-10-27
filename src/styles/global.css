@@ -5581,3 +5581,68 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
     cursor: url("/assets/cursors/arrow.svg") 1 1, image-set(url("/assets/cursors/arrow@2x.png") 2x) 1 1, auto;
   }
 }
+
+/* Primary CTA: warm edge light and a quiet directional response.
+   Glow layers only transition on interaction; nothing runs while idle. */
+.action:not(.action--secondary):not(.case-sidebar-cta .action) {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  transition: background 180ms ease-out, transform 180ms ease-out;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::before,
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 280ms ease-out, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::before {
+  z-index: -1;
+  box-shadow: -8px 3px 22px -6px rgb(255 90 31 / 55%),
+    9px 4px 24px -7px rgb(255 166 64 / 48%);
+  transform: scale(0.97);
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
+  padding: 1.5px;
+  background: linear-gradient(115deg, #ffb36a 0%, #fff0d4 24%, #ff782f 52%, #ffd29a 76%, #ff5a1f 100%);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"]) {
+  background: var(--button-fill, var(--action-bg));
+  transform: none;
+}
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::before,
+.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::after {
+  opacity: 1;
+  transform: none;
+}
+.action:not(.action--secondary) > .pixel-icon {
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action:not(.action--secondary):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"]) > .pixel-icon {
+  transform: translateX(3px);
+}
+.action:not(.action--secondary):active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--button-active-fill, var(--action-active));
+  transform: scale(0.985);
+}
+.action:not(.action--secondary):active:not(:disabled) > .pixel-icon {
+  transform: translateX(2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .action:not(.action--secondary),
+  .action:not(.action--secondary)::before,
+  .action:not(.action--secondary)::after,
+  .action:not(.action--secondary) > .pixel-icon {
+    transition: none;
+  }
+  .action:not(.action--secondary):is(:hover, :focus-visible, :active):not(:disabled),
+  .action:not(.action--secondary):is(:hover, :focus-visible, :active):not(:disabled) > .pixel-icon {
+    transform: none;
+  }
+}
