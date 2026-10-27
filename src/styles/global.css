@@ -5484,3 +5484,26 @@ body {
     top: 355px;
   }
 }
+
+/* Pixel cursors: preserve native touch behavior and the portrait overlay. */
+@media (hover: hover) and (pointer: fine) {
+  html, body {
+    cursor: url("/assets/cursors/arrow.svg") 1 1, auto;
+    cursor: url("/assets/cursors/arrow.svg") 1 1, image-set(url("/assets/cursors/arrow@2x.png") 2x) 1 1, auto;
+  }
+  a, button, [role="button"], label[for], summary, select, .action, .text-link, input[type="checkbox"], input[type="radio"], input[type="range"], input[type="button"], input[type="submit"], input[type="reset"], .language-option, .theme-segments label, .choice-pill {
+    cursor: url("/assets/cursors/hand.svg") 6 1, pointer;
+    cursor: url("/assets/cursors/hand.svg") 6 1, image-set(url("/assets/cursors/hand@2x.png") 2x) 6 1, pointer;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]), textarea, [contenteditable="true"] {
+    cursor: url("/assets/cursors/text.svg") 5 11, text;
+    cursor: url("/assets/cursors/text.svg") 5 11, image-set(url("/assets/cursors/text@2x.png") 2x) 5 11, text;
+  }
+  p, li, h1, h2, h3, h4, blockquote {
+    cursor: inherit;
+  }
+  button:disabled, input:disabled, select:disabled, textarea:disabled,
+  [role="button"][aria-disabled="true"], .action:disabled, .rail-arrows button:disabled {
+    cursor: url("/assets/cursors/arrow.svg") 1 1, image-set(url("/assets/cursors/arrow@2x.png") 2x) 1 1, auto;
+  }
+}
