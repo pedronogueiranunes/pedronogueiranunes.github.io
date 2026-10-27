@@ -1,7 +1,7 @@
 // Gaussian splat hero portrait — scrolls into the bio, drag with the mouse to rotate. Self-illuminated so no lights needed.
 // Loaded only on the page that has #splat-canvas, via a dynamic import (see hero markup) so PlayCanvas
 // never ships to pages without it.
-import { setupAboutEnvironment } from "./about-environment.js";
+import { ABOUT_MOBILE_SCALE, setupAboutEnvironment } from "./about-environment.js";
 import { setupModelInteractions } from "./model-interaction.js";
 
 export function initSplat() {
@@ -58,7 +58,10 @@ export function initSplat() {
   }
   app.graphicsDevice.maxPixelRatio = Math.min(
     window.devicePixelRatio || 1,
-    1.5,
+    // High-density desktops can afford the sharper bevels; constrain touch/mobile
+    // GPUs and Save-Data clients to the previous budget.
+    matchMedia("(pointer: fine) and (min-width: 1025px)").matches &&
+      (navigator.hardwareConcurrency || 0) >= 8 && !navigator.connection?.saveData ? 2 : 1.5,
   );
   // Render on demand to prevent battery/GPU drain when idle
   app.autoRender = false;
@@ -69,6 +72,7 @@ export function initSplat() {
   const origin = document.getElementById("portrait-origin") || viewport;
   let renderWidth = 0;
   let renderHeight = 0;
+  let updateFraming;
   function resize() {
     const width = Math.round(origin.clientWidth);
     const height = Math.round(origin.clientHeight);
@@ -76,6 +80,7 @@ export function initSplat() {
     renderWidth = width;
     renderHeight = height;
     app.setCanvasResolution(pc.RESOLUTION_FIXED, width, height);
+    updateFraming?.();
     app.renderNextFrame = true;
   }
   observer = new ResizeObserver(resize);
@@ -148,6 +153,10 @@ export function initSplat() {
       const portraitFov = camera.camera.fov;
       const applyZoom = (pose) => {
         const isMobile = matchMedia("(max-width: 768px)").matches;
+        // Mobile About review: enlarge the scene inside its square canvas.
+        // The environment shares this factor; desktop/Home keep their framing.
+        const modelScale = isMobile && viewport.dataset.autoRotate === "true" ? ABOUT_MOBILE_SCALE : 1;
+        rig.setLocalScale(modelScale, modelScale, modelScale);
         const sizeMultiplier = isMobile ? 1.15 : 1;
         const canvasHeadroom = isMobile ? origin.clientHeight / 325 : 1;
         camera.camera.fov = 2 * Math.atan(Math.tan(portraitFov * Math.PI / 360) * canvasHeadroom / sizeMultiplier) * 180 / Math.PI;
@@ -161,7 +170,8 @@ export function initSplat() {
         camera.lookAt(0, y, 0);
         app.renderNextFrame = true;
       };
-      applyZoom(Number(viewport.dataset.scrollPose || 0));
+      updateFraming = () => applyZoom(Number(viewport.dataset.scrollPose || 0));
+      updateFraming();
       viewport.addEventListener("portraitpose", (e) => applyZoom(e.detail), { signal: controller.signal });
       // The gsplat sort runs in a worker, so the first frames can be empty.
       // With on-demand rendering nothing redraws when the sort lands, which

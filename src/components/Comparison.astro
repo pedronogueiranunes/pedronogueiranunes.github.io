@@ -73,3 +73,9 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
     </a>
   </p>
 </section>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  import { initComparisonParallax } from "../scripts/comparison-parallax.js";
+  onPageLoad((scope) => scope.cleanup(initComparisonParallax()));
+</script>

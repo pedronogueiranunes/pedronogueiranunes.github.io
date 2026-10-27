@@ -1,28 +1,168 @@
-// Local 3D accents; only the About portrait creates these entities.
+// Local 3D accents shared by About and the home portrait reveal.
 // revealOnPose: on the home page the accents appear only once the portrait has fully
 // landed in the About section (pose 1) and shrink away when scrolling back up.
+export const ABOUT_MOBILE_SCALE = 1.2;
+
 export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = false } = {}) {
   const pc = window.pc;
   const root = new pc.Entity("about-digital-environment");
   app.root.addChild(root);
+  // Icon-only lighting layer: the self-illuminated splat and quiet ring stay in World.
+  const iconLayer = new pc.Layer({ name: "Satin orbit" });
+  const worldIndex = app.scene.layers.getOpaqueIndex(app.scene.layers.getLayerById(pc.LAYERID_WORLD));
+  app.scene.layers.insertOpaque(iconLayer, worldIndex + 1);
+  const camera = app.root.findByName("camera").camera;
+  camera.layers = [...camera.layers, iconLayer.id];
+  const lights = new pc.Entity("orbit-lights");
+  app.root.addChild(lights);
+  const light = (name, color, intensity, angles) => {
+    const entity = new pc.Entity(name);
+    entity.addComponent("light", { type: "directional", color: new pc.Color(...color), intensity,
+      castShadows: false, layers: [iconLayer.id] });
+    entity.setLocalEulerAngles(...angles);
+    lights.addChild(entity);
+  };
+  light("soft upper-left key", [1, 0.94, 0.86], 1.05, [55, -35, 0]);
+  light("broad cool fill", [0.86, 0.92, 1], 0.35, [15, 140, 0]);
+  const meshes = [];
+  // Rounded cuboid: project a subdivided box onto a smaller box plus a small
+  // sphere. Analytic normals keep the broad faces flat and the edge highlights soft.
+  const roundedStroke = (size) => {
+    const half = size.map(v => v * radius / 2);
+    const bevel = Math.min(...half) * 0.38;
+    const core = half.map(v => v - bevel);
+    const positions = [], normals = [], indices = [];
+    for (let axis = 0; axis < 3; axis++) for (const sign of [-1, 1]) {
+      const u = (axis + 1) % 3, v = (axis + 2) % 3;
+      const start = positions.length / 3;
+      const coordinates = a => [-half[a], -core[a], 0, core[a], half[a]];
+      const us = coordinates(u), vs = coordinates(v);
+      for (const y of vs) for (const x of us) {
+        const point = [0, 0, 0];
+        point[axis] = sign * half[axis]; point[u] = x; point[v] = y;
+        const center = point.map((n, i) => Math.max(-core[i], Math.min(core[i], n)));
+        const normal = point.map((n, i) => n - center[i]);
+        const length = Math.hypot(...normal);
+        normals.push(...normal.map(n => n / length));
+        positions.push(...center.map((n, i) => n + normal[i] / length * bevel));
+      }
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+        const a = start + y * 5 + x, b = a + 1, c = a + 5, d = c + 1;
+        indices.push(...(sign > 0 ? [a, b, c, b, d, c] : [a, c, b, b, c, d]));
+      }
+    }
+    const mesh = new pc.Mesh(app.graphicsDevice);
+    mesh.setPositions(positions); mesh.setNormals(normals); mesh.setIndices(indices); mesh.update();
+    meshes.push(mesh);
+    return mesh;
+  };
+  // Continuous extrusions remove overlapping-stroke seams from the cursor,
+  // brackets and chevrons. Contours run counterclockwise.
+  const beveledIcon = (corners, depth, bevel) => {
+    // Keep the pixel silhouette, but ease each contour corner with a short
+    // quadratic arc. The corner radius stays below a quarter of a pixel step.
+    const outline = corners.flatMap((p, i) => {
+      const prev = corners[(i + corners.length - 1) % corners.length], next = corners[(i + 1) % corners.length];
+      const a = [prev[0] - p[0], prev[1] - p[1]], b = [next[0] - p[0], next[1] - p[1]];
+      const trim = Math.min(bevel * 1.8, Math.hypot(...a) * 0.24, Math.hypot(...b) * 0.24);
+      const start = p.map((n, j) => n + a[j] / Math.hypot(...a) * trim);
+      const end = p.map((n, j) => n + b[j] / Math.hypot(...b) * trim);
+      return Array.from({ length: 5 }, (_, step) => {
+        const t = step / 4;
+        return p.map((n, j) => (1 - t) ** 2 * start[j] + 2 * (1 - t) * t * n + t ** 2 * end[j]);
+      });
+    });
+    const cross = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+    const inset = outline.map((p, i) => {
+      const a = outline[(i + outline.length - 1) % outline.length], b = outline[(i + 1) % outline.length];
+      const edgeA = [p[0] - a[0], p[1] - a[1]], edgeB = [b[0] - p[0], b[1] - p[1]];
+      const na = [-edgeA[1] / Math.hypot(...edgeA), edgeA[0] / Math.hypot(...edgeA)];
+      const nb = [-edgeB[1] / Math.hypot(...edgeB), edgeB[0] / Math.hypot(...edgeB)];
+      const divisor = 1 + na[0] * nb[0] + na[1] * nb[1];
+      return [p[0] + bevel * (na[0] + nb[0]) / divisor, p[1] + bevel * (na[1] + nb[1]) / divisor];
+    });
+    const positions = [], indices = [];
+    const triangle = (a, b, c) => {
+      const offset = positions.length / 3;
+      positions.push(...a.map(v => v * radius), ...b.map(v => v * radius), ...c.map(v => v * radius));
+      indices.push(offset, offset + 1, offset + 2);
+    };
+    // Ear clipping handles the concave pixel steps without a triangulation dependency.
+    const remaining = inset.map((_, i) => i);
+    while (remaining.length > 2) {
+      let clipped = false;
+      for (let i = 0; i < remaining.length; i++) {
+        const ids = [remaining[(i + remaining.length - 1) % remaining.length], remaining[i], remaining[(i + 1) % remaining.length]];
+        const [a, b, c] = ids.map(id => inset[id]);
+        if (cross(a, b, c) <= 1e-10) continue;
+        if (remaining.some(id => !ids.includes(id) && cross(a, b, inset[id]) >= 0 && cross(b, c, inset[id]) >= 0 && cross(c, a, inset[id]) >= 0)) continue;
+        triangle([...a, depth / 2], [...b, depth / 2], [...c, depth / 2]);
+        triangle([...c, -depth / 2], [...b, -depth / 2], [...a, -depth / 2]);
+        remaining.splice(i, 1); clipped = true; break;
+      }
+      if (!clipped) throw new Error("Invalid orbit glyph outline");
+    }
+    // Three bevel bands spread a soft highlight across the face/edge transition.
+    const profiles = [];
+    for (const sign of [-1, 1]) {
+      const angles = sign < 0 ? [0, Math.PI / 6, Math.PI / 3, Math.PI / 2] : [Math.PI / 2, Math.PI / 3, Math.PI / 6, 0];
+      for (const angle of angles) {
+        const contour = inset.map((p, i) => p.map((n, j) => n + (outline[i][j] - n) * Math.sin(angle)));
+        profiles.push([contour, sign * (depth / 2 - bevel + Math.cos(angle) * bevel)]);
+      }
+    }
+    for (let band = 0; band < profiles.length - 1; band++) {
+      for (let i = 0; i < outline.length; i++) {
+        const j = (i + 1) % outline.length;
+        const [lo, z0] = profiles[band], [hi, z1] = profiles[band + 1];
+        const a = [...lo[i], z0], b = [...lo[j], z0], c = [...hi[i], z1], d = [...hi[j], z1];
+        triangle(a, b, c); triangle(b, d, c);
+      }
+    }
+    const mesh = new pc.Mesh(app.graphicsDevice);
+    mesh.setPositions(positions); mesh.setNormals(pc.calculateNormals(positions, indices)); mesh.setIndices(indices); mesh.update();
+    meshes.push(mesh);
+    return mesh;
+  };
   const materials = [];
   const material = (color, opacity = 1, lit = false) => {
     const value = new pc.StandardMaterial();
     value.diffuse = new pc.Color(...color);
-    value.emissive = new pc.Color(...color.map(v => v * (lit ? 0.18 : 1)));
+    value.emissive = new pc.Color(...color.map(v => v * (lit ? 0.08 : 1)));
+    // Constant spherical-harmonic ambient is local to this material, not the scene.
+    if (lit) {
+      value.ambientSH = new Float32Array(27);
+      value.ambientSH.set([0.35, 0.35, 0.35]);
+    }
     value.useLighting = lit;
-    value.shininess = 65;
-    // Blended so the whole orbit can fade in and out.
+    value.useMetalness = true;
+    value.metalness = 0;
+    value.shininess = 38;
+    value.specular = new pc.Color(0.28, 0.28, 0.28);
+    // Opacity is shared by the icon coverage fade and the unlit ring.
     value.opacity = opacity;
-    value.blendType = pc.BLEND_NORMAL;
+    // Screen-door opacity keeps the icons in the opaque depth pass. Splats then
+    // composite in front/behind per pixel, rather than sorting a whole glyph over a head.
+    value.blendType = pc.BLEND_NONE;
+    value.opacityDither = pc.DITHER_BAYER;
+    // Stable screen-space coverage needs no frame jitter or noise texture. An
+    // explicit uniform also keeps opacity available in this engine's opaque pass.
+    value.getShaderChunks(pc.SHADERLANGUAGE_GLSL).set("opacityDitherPS", `
+      uniform float orbitOpacity;
+      void opacityDither(float alpha, float id) {
+        float noise = fract(52.9829189 * fract(dot(floor(gl_FragCoord.xy), vec2(0.06711056, 0.00583715))));
+        if (orbitOpacity < noise) discard;
+      }
+    `);
+    value.setParameter("orbitOpacity", opacity);
     value.depthWrite = opacity >= 1;
     value.update();
     materials.push({ value, opacity });
     return value;
   };
   // Small code/design glyphs made from actual 3D strokes and pixel blocks.
-  const glyphOrange = material([1, 0.353, 0.122]);
-  const glyphGreen = material([0.39, 0.45, 0.38]);
+  const glyphOrange = material([1, 90 / 255, 31 / 255], 1, true);
+  const glyphGreen = material([0.39, 0.45, 0.38], 1, true);
   const ringGray = material([0.82, 0.82, 0.8]);
   const glyphs = [];
   const glyph = (name, phase) => {
@@ -33,24 +173,31 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   };
   const stroke = (group, size, position, mat, angle = 0) => {
     const part = new pc.Entity("glyph-stroke");
-    part.addComponent("render", { type: "box" });
-    part.render.material = mat;
-    part.setLocalScale(...size.map(v => v * radius));
+    part.addComponent("render", { meshInstances: [new pc.MeshInstance(roundedStroke(size), mat, part)],
+      layers: [iconLayer.id], castShadows: false, receiveShadows: false });
     part.setLocalPosition(...position.map(v => v * radius));
     part.setLocalEulerAngles(0, 0, angle);
     group.addChild(part);
   };
+  const solidGlyph = (group, name, outline, depth, bevel, mat) => {
+    const part = new pc.Entity(name);
+    part.addComponent("render", { meshInstances: [new pc.MeshInstance(beveledIcon(outline, depth, bevel), mat, part)],
+      layers: [iconLayer.id], castShadows: false, receiveShadows: false });
+    group.addChild(part);
+  };
   const brackets = glyph("code-brackets", 0);
-  for (const side of [-1, 1]) {
-    stroke(brackets, [0.012, 0.13, 0.018], [side * 0.065, 0, 0], glyphOrange);
-    for (const y of [-1, 1]) stroke(brackets, [0.045, 0.012, 0.018], [side * 0.048, y * 0.06, 0], glyphOrange);
-  }
+  const bracketOutline = [[-0.071, -0.066], [-0.025, -0.066], [-0.025, -0.054], [-0.059, -0.054],
+    [-0.059, 0.054], [-0.025, 0.054], [-0.025, 0.066], [-0.071, 0.066]];
+  solidGlyph(brackets, "left-bracket", bracketOutline, 0.022, 0.002, glyphOrange);
+  solidGlyph(brackets, "right-bracket", bracketOutline.map(([x, y]) => [-x, y]).reverse(), 0.022, 0.002, glyphOrange);
   const cursor = glyph("pixel-cursor", Math.PI / 2);
-  // A stepped pointer silhouette, with a separate diagonal stem.
-  [1, 2, 3, 4, 5, 6, 3, 2].forEach((length, row) => {
-    stroke(cursor, [length * 0.016, 0.016, 0.022], [length * 0.008 - 0.045, 0.064 - row * 0.016, 0], glyphOrange);
-  });
-  stroke(cursor, [0.022, 0.07, 0.022], [0.022, -0.07, 0], glyphOrange, 28);
+  // One connected pointer and stem, with slightly deeper satin acrylic edges.
+  const outline = [[-0.045, -0.056], [-0.013, -0.056], [-0.004, -0.04],
+    [0.025, -0.092], [0.045, -0.08], [0.015, -0.028], [0.051, -0.024], [0.051, -0.008],
+    [0.035, -0.008], [0.035, 0.008], [0.019, 0.008], [0.019, 0.024],
+    [0.003, 0.024], [0.003, 0.04], [-0.013, 0.04], [-0.013, 0.056],
+    [-0.029, 0.056], [-0.029, 0.072], [-0.045, 0.072]];
+  solidGlyph(cursor, "beveled-pixel-pointer", outline, 0.03, 0.0025, glyphOrange);
   const design = glyph("design-selection-frame", Math.PI);
   for (const side of [-1, 1]) {
     stroke(design, [0.15, 0.006, 0.012], [0, side * 0.055, 0], glyphGreen);
@@ -59,10 +206,9 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   }
   const slash = glyph("code-slash", Math.PI * 1.5);
   stroke(slash, [0.012, 0.13, 0.016], [0, 0, 0], glyphGreen, -25);
-  for (const side of [-1, 1]) {
-    stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, 0.022, 0], glyphOrange, side * -40);
-    stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, -0.022, 0], glyphOrange, side * 40);
-  }
+  const chevron = [[-0.09, 0], [-0.043, -0.046], [-0.036, -0.039], [-0.076, 0], [-0.036, 0.039], [-0.043, 0.046]];
+  solidGlyph(slash, "left-chevron", chevron, 0.02, 0.0015, glyphOrange);
+  solidGlyph(slash, "right-chevron", chevron.map(([x, y]) => [-x, y]).reverse(), 0.02, 0.0015, glyphOrange);
   // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
   const ring = new pc.Entity("shoulder-ring");
   root.addChild(ring);
@@ -82,6 +228,7 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   let time = 0;
   let visible = true;
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  const compact = matchMedia("(max-width: 768px)");
   const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
   observer.observe(viewport);
   const positionGlyphs = () => {
@@ -111,11 +258,15 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     root.enabled = shown > 0.001;
     // Smoothstep fade with a slight settle in scale, so the orbit eases in rather than popping.
     const k = shown * shown * (3 - 2 * shown);
-    const scale = 0.9 + 0.1 * k;
+    // Follow the enlarged mobile About portrait without changing relative orbit
+    // dimensions, the individual 0.91 glyph scale, or the Home reveal scale.
+    const mobileScale = compact.matches && viewport.dataset.autoRotate === "true" ? ABOUT_MOBILE_SCALE : 1;
+    const scale = (0.9 + 0.1 * k) * mobileScale;
     root.setLocalScale(scale, scale, scale);
     materials.forEach(({ value, opacity }) => {
       value.opacity = opacity * k;
-      value.depthWrite = k >= 0.999 && opacity >= 1;
+      value.setParameter("orbitOpacity", opacity * k);
+      value.depthWrite = true;
       value.update();
     });
   };
@@ -127,8 +278,9 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   if (revealOnPose) {
     target = Number(viewport.dataset.scrollPose || 0) >= REVEAL_AT ? 1 : 0;
     viewport.addEventListener("portraitpose", onPose);
-    applyReveal();
   }
+  applyReveal();
+  compact.addEventListener("change", applyReveal);
   const update = (dt) => {
     if (!visible || document.hidden) return;
     if (shown !== target) {
@@ -148,9 +300,14 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   app.on("update", update);
   return () => {
     observer.disconnect();
+    compact.removeEventListener("change", applyReveal);
     viewport.removeEventListener("portraitpose", onPose);
     app.off("update", update);
     root.destroy();
+    lights.destroy();
+    camera.layers = camera.layers.filter(id => id !== iconLayer.id);
+    app.scene.layers.remove(iconLayer);
+    meshes.forEach(mesh => mesh.destroy());
     materials.forEach(({ value }) => value.destroy());
   };
 }
