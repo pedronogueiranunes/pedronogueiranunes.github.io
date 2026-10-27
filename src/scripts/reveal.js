@@ -3,10 +3,10 @@
 export function initReveal() {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const targets = new Set();
-  const groups = document.querySelectorAll("main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .project-rail, .bio-facts, .toolkit > .chips");
+  const groups = document.querySelectorAll("main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .project-rail, .bio-facts, .toolkit > .chips, .about-page > section:not(.about-hero), .about-page .about-stats dl, .about-page .promises-grid, .about-page .career-timeline, .about-page .skills-grid, .about-page .skills-grid .chips");
   for (const group of groups) {
     [...group.children].forEach((element, index) => {
-      if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip")) {
+      if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip, .about-stats-card, .promises-grid, .promise-facts, .career-timeline, .skills-grid, li, div")) {
         element.dataset.reveal = "";
         element.style.setProperty("--reveal-delay", `${Math.min(index * 70, 400)}ms`);
         targets.add(element);

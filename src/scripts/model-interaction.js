@@ -42,6 +42,8 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   // State
   let pose = Number(viewport.dataset.scrollPose || 0);
   let lastAppliedPose = -1;
+  const autoRotate = viewport.dataset.autoRotate === "true";
+  let orbitYaw = 0;
   let viewportVisible = true;
 
   // Drag state
@@ -94,7 +96,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
 
   // Calculate base yaw for current scroll pose
   function getBaseYaw() {
-    return HERO_YAW + (BIO_YAW - HERO_YAW) * pose;
+    return HERO_YAW + (BIO_YAW - HERO_YAW) * pose + orbitYaw;
   }
 
   // Orientation apply function
@@ -232,8 +234,13 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   }
 
   // Animation frame physics update
-  function updatePhysics() {
+  function updatePhysics(dt) {
+    if (!viewportVisible || document.hidden) return;
     let active = false;
+    if (autoRotate && !isDragging && !motionQuery.matches) {
+      orbitYaw = (orbitYaw + Math.min(dt || 0, 0.05) * 12) % 360;
+      active = true;
+    }
 
     // 1. Check pose change
     if (pose !== lastAppliedPose) {
@@ -256,7 +263,8 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
       !motionQuery.matches;
 
     if (canMagnet && !isDragging) {
-      const center = getPortraitCenter(MAGNETIC_CENTER_OFFSET);
+      const rect = autoRotate ? viewport.getBoundingClientRect() : null;
+      const center = rect ? { x: rect.left + rect.width * (0.5 + MAGNETIC_CENTER_OFFSET.x), y: rect.top + rect.height * (0.5 + MAGNETIC_CENTER_OFFSET.y) } : getPortraitCenter(MAGNETIC_CENTER_OFFSET);
       if (center) {
         const dx = pointerX - center.x;
         const dy = pointerY - center.y;
