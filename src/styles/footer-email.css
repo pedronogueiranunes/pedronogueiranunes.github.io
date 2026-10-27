@@ -1,0 +1,17 @@
+/* The envelope joins the label on hover/focus without changing button geometry. */
+.footer-email .action-label { transition:translate 250ms steps(4); }
+.footer-email .action-icon {
+  position:absolute;
+  right:12px;
+  width:18px;
+  height:18px;
+  opacity:0;
+  translate:-4px 0;
+  transition:opacity 180ms steps(3), translate 250ms steps(4);
+}
+.footer-email .action-icon > .pixel-icon { --icon-size:18px !important; }
+.footer-email:is(:hover,:focus-visible) .action-label { translate:-8px 0; }
+.footer-email:is(:hover,:focus-visible) .action-icon { opacity:1; translate:0 0; }
+@media (prefers-reduced-motion:reduce) {
+  .footer-email .action-label, .footer-email .action-icon { transition:none; }
+}

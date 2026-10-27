@@ -1,0 +1,89 @@
+/* Each specimen rehearses its workflow while visible; the card itself stays quiet. */
+.process-card { transition: transform 220ms ease-out, box-shadow 220ms ease-out, border-color 220ms ease-out; }
+@media (hover:hover) and (pointer:fine) {
+  .process-card:hover { transform:translateY(-4px); border-color:color-mix(in srgb,var(--accent) 30%,var(--border)); box-shadow:0 12px 26px -14px #23262535; }
+}
+.process-card:focus-within { border-color:var(--accent); }
+@media (prefers-reduced-motion:no-preference) {
+  .process-visual--0 .research-bar i { transform-origin:left; animation:process-research 6.8s ease-in-out infinite; }
+  .process-visual--0 .research-bar:nth-of-type(2) i { animation-delay:250ms; }
+  .process-visual--0 .research-bar:nth-of-type(3) i { animation-delay:500ms; }
+  .experiment-visual > div:first-child .mini-wireframe { animation:process-control 7.2s ease-in-out infinite; }
+  .experiment-visual .winner { animation:process-winner 7.2s ease-in-out infinite; transform-origin:center; }
+  .experiment-visual .winner b { animation:process-verdict 7.2s ease-in-out infinite; transform-origin:right center; }
+  .experiment-visual .winner em { animation:process-conversion 7.2s ease-in-out infinite; transform-origin:left; }
+  .design-selection { animation:process-align 7s ease-in-out infinite; transform-origin:left top; }
+  .design-selection i { animation:process-typeset 7s ease-in-out infinite; transform-origin:left; }
+  .design-selection i + i { animation-delay:180ms; }
+  .design-blocks i { animation:process-layout 7s ease-in-out infinite; }
+  .design-blocks i:nth-child(2) { animation-delay:160ms; }
+  .design-blocks i:nth-child(3) { animation-delay:320ms; }
+  .build-code-line code { display:block; animation:process-type 7.2s steps(20,end) infinite; }
+  .build-code-line:nth-child(2) code { animation-name:process-type-2; }
+  .build-code-line:nth-child(3) code { animation-name:process-type-3; }
+  .build-code-line:nth-child(4) code { animation-name:process-type-4; }
+  .build-visual > div { animation:process-build 7.2s ease-in-out infinite; }
+  .build-visual > div::before { animation:process-build-dot 7.2s ease-in-out infinite; }
+  .process-card .process-visual *, .process-card .process-visual *::before { animation-play-state:paused; }
+  .process-card.is-motion-running .process-visual *, .process-card.is-motion-running .process-visual *::before { animation-play-state:running; }
+}
+@keyframes process-research {
+  0%,8%,100% { transform:scaleX(.18); }
+  34%,83% { transform:scaleX(1); }
+}
+@keyframes process-control {
+  0%,25%,100% { opacity:1; }
+  45%,85% { opacity:.55; }
+}
+@keyframes process-winner {
+  0%,25%,100% { transform:scale(.97); }
+  45%,85% { transform:scale(1.02); }
+}
+@keyframes process-verdict {
+  0%,28%,100% { opacity:0; transform:translateY(3px) scale(.92); }
+  45%,85% { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes process-conversion {
+  0%,25%,100% { transform:scaleX(.65); }
+  45%,85% { transform:scaleX(1); }
+}
+@keyframes process-align {
+  0%,10%,100% { transform:translate(3px,3px) scaleX(.95); }
+  38%,84% { transform:translate(0,0) scaleX(1); }
+}
+@keyframes process-typeset {
+  0%,10%,100% { transform:scaleX(.82); }
+  38%,84% { transform:scaleX(1); }
+}
+@keyframes process-layout {
+  0%,14%,100% { transform:translateY(6px); opacity:.55; }
+  40%,84% { transform:translateY(0); opacity:1; }
+}
+@keyframes process-type {
+  0%,100% { clip-path:inset(0 100% 0 0); }
+  10%,86% { clip-path:inset(0); }
+}
+@keyframes process-type-2 {
+  0%,10%,100% { clip-path:inset(0 100% 0 0); }
+  20%,86% { clip-path:inset(0); }
+}
+@keyframes process-type-3 {
+  0%,20%,100% { clip-path:inset(0 100% 0 0); }
+  30%,86% { clip-path:inset(0); }
+}
+@keyframes process-type-4 {
+  0%,30%,100% { clip-path:inset(0 100% 0 0); }
+  40%,86% { clip-path:inset(0); }
+}
+@keyframes process-build {
+  0%,30%,100% { opacity:.35; }
+  46%,86% { opacity:1; }
+}
+@keyframes process-build-dot {
+  0%,30%,100% { transform:scale(.65); }
+  46%,86% { transform:scale(1); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .process-card { transition:none; }
+  .process-card:hover { transform:none; }
+}

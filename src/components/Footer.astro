@@ -1,4 +1,5 @@
 ---
+import "../styles/footer-email.css";
 import Button from "./Button.astro";
 import ResponsiveImage from "./ResponsiveImage.astro";
 import { site } from "../data/site";
@@ -34,7 +35,7 @@ const platforms = [
       </p>
       <div class="actions">
         <Button href="/contact">Book a call</Button>
-        <Button secondary href="mailto:pedronogueiranunes@gmail.com" icon="">
+        <Button secondary href="mailto:pedronogueiranunes@gmail.com" icon="email" class="footer-email">
           Send an email
         </Button>
       </div>

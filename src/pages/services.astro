@@ -268,3 +268,12 @@ const projects = (await getCollection("projects")).sort(
     <FAQ items={faq} />
   </section>
 </Base>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  import { initReveal } from "../scripts/reveal.js";
+  onPageLoad((scope) => {
+    if (!document.querySelector(".services-page")) return;
+    scope.cleanup(initReveal({ stagger: 60, maxDelay: 240 }));
+  });
+</script>

@@ -365,3 +365,43 @@
   top:0;
  }
 }
+
+/* Thoughts cards keep readable copy columns on tablet and consistent covers on mobile. */
+.home-page .article-card { transition: background-color 180ms ease-out; }
+.home-page .article-card:focus-within { background: color-mix(in srgb, var(--surface) 97%, var(--text)); }
+@media (hover: hover) and (pointer: fine) {
+ .home-page .article-card:hover { background: color-mix(in srgb, var(--surface) 97%, var(--text)); }
+}
+@media (max-width:1100px) {
+ .home-page .article-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:auto; gap:24px; }
+ .home-page .article-card { display:flex; flex-direction:column; min-width:0; grid-row:auto; }
+ .home-page .article-card .article-cover { height:auto; aspect-ratio:3 / 2; flex-shrink:0; }
+ .home-page .article-copy { flex:1; min-width:0; padding:24px; gap:16px; }
+ .home-page .article-copy h3 { font-size:24px; line-height:1.25; overflow-wrap:break-word; }
+ .home-page .article-copy .mono { font-size:11px; line-height:1.5; }
+ .home-page .article-copy .text-link { align-self:flex-start; margin-top:auto; min-height:44px; }
+ .home-page .article-card--latest { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-column:1 / -1; }
+ .home-page .article-card--latest .article-cover { aspect-ratio:auto; min-height:280px; }
+}
+@media (max-width:768px) {
+ .home-page .article-grid { grid-template-columns:minmax(0,1fr); gap:20px; }
+ .home-page .article-card--latest { display:flex; grid-column:auto; }
+ .home-page .article-card--latest .article-cover { aspect-ratio:3 / 2; min-height:0; }
+ .home-page .article-copy { padding:20px; }
+ .home-page .article-copy h3 { font-size:22px; }
+ .home-page .article-copy .text-link { margin-top:8px; }
+}
+@media (prefers-reduced-motion:reduce) {
+ .home-page .article-card { transition:none; }
+}
+
+/* A small cover zoom supports the article hover without moving the card's copy. */
+.home-page .article-cover img { transition:transform 400ms cubic-bezier(0.22,1,0.36,1); transform-origin:center; }
+@media (hover:hover) and (pointer:fine) {
+ .home-page .article-card:hover .article-cover img { transform:scale(1.04); }
+}
+.home-page .article-card:focus-within .article-cover img { transform:scale(1.04); }
+@media (prefers-reduced-motion:reduce) {
+ .home-page .article-cover img { transition:none; }
+ .home-page .article-card:is(:hover,:focus-within) .article-cover img { transform:none; }
+}

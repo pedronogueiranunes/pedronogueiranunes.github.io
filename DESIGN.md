@@ -204,7 +204,7 @@ Design and verification widths are (1440px), (1024px), (768px) and (390px). A (1
 
 At desktop the project archive defaults to three columns, with explicit two-column, three-column and list view controls. At mobile all archive views resolve to one column. Category filters become a vertical set of wrapping labels on mobile. Home project rails remain horizontal scroll areas with scroll snapping, (24px) gaps and (224px) mobile cards so a following card peeks into view. Desktop rail cards use (380px). Comparison tables become stacked criterion cards. Long case pages use a desktop sticky snapshot sidebar and collapse it into document flow on mobile.
 
-Navigation changes to a full-screen menu at or below (1024px). At or below (768px), mobile keeps the pixel logo and joins Book a call with the menu in one rounded capsule (Figma `641:24179`). The CTA is (132px × 44px), with no arrow; an (8px) gap separates the (44px) pure-black (`#000`) menu button with three white lines, per user review. Narrow screens and translated labels use a compact fit while preserving both touch targets. Primary actions in mobile page flows fill their available width; the compact header action is intentionally smaller. Minimum interactive targets are (44px).
+Navigation changes to a full-screen menu at or below (1024px). At or below (768px), mobile keeps the pixel logo and joins Book a call with the menu in one rounded capsule (Figma `641:24179`). The CTA is (132px × 44px), with no arrow; an (8px) gap separates the (44px) menu button, pale green with sage lines in Light (matching Figma), and pure-black (`#000`) with white lines in Dark, per user review. Auto follows the system theme. Narrow screens and translated labels use a compact fit while preserving both touch targets. Primary actions in mobile page flows fill their available width; the compact header action is intentionally smaller. Minimum interactive targets are (44px).
 
 ## Elevation & Depth
 
@@ -241,6 +241,12 @@ Small technical pills use the frontmatter tool-chip treatment. The medium varian
 Project cards are a media-first pattern: tinted landscape cover, category/year/location, title, two-line summary, divider, two metric blocks and an uppercase tools line truncated with an ellipsis. Default media height is (236px). The inset screenshot has rounded upper corners and rises (8px) on hover or keyboard focus while the View case study pill appears. Reduced motion suppresses that rise. Tints belong to project data.
 
 Offer cards have illustrated tops; the middle offer is charcoal. The project archive includes the authored orange Your turn card. These are specific approved variants, not a reason to use orange or dark cards indiscriminately. Card data may contain mock metrics and prices; visual documentation does not verify them.
+
+Thoughts previews keep the desktop editorial arrangement above (1100px). Tablet uses one full-width featured card with image and copy side by side, followed by two equal vertical cards. At or below (768px), all three stack with (3:2) covers and (20px) copy padding. Hover and keyboard focus use a subtle neutral surface tint, with a dark-theme counterpart.
+
+Workflow specimens use distinct visible-only loops: research bar fills, an A/B winner reveal, layout alignment, and sequential code typing followed by build confirmation. Cards lift slightly on hover. Offscreen/hidden-page loops pause; reduced motion renders the complete static specimens. The footer email action reveals a local pixel envelope on hover and keyboard focus without changing button dimensions.
+
+Services reuses the shared scroll reveal: a (16px) upward settle with a (600ms) fade, staggered by (60ms) within content groups and capped at (240ms). Content already in view skips the entrance. Offers, capabilities, deliverables, schedule, comparison, related projects and FAQ reveal once; reduced motion and script-free rendering keep content visible.
 
 ### Inputs / Fields
 
