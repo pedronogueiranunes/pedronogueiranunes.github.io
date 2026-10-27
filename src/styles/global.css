@@ -6627,3 +6627,7 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .menu-toggle, .menu-close, .menu-toggle span { transition: none; }
   .menu-toggle:active, .menu-close:active { scale: 1; }
 }
+
+/* Anchor filter popover to its trigger, including full-width desktop toolbars. */
+.filter-options { position: relative; }
+.filter-options > div { right: 0; top: calc(100% + 12px); }
