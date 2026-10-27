@@ -6733,3 +6733,81 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 @media (prefers-reduced-motion: reduce) {
   .preferences-toggle:is(:hover, :focus-visible) > img { animation: none; }
 }
+
+/* Showcase values use the same pixel lettering in resting and hover states. */
+:root body :is(
+  .project-metrics dd,
+  .featured-metrics dd,
+  .case-result-card dd,
+  .about-stats dd,
+  .deliverable-stats dd,
+  .results-table td,
+  .service-result td,
+  .offer-price > p
+) {
+  font-family: var(--font-label);
+  font-weight: 400;
+  font-synthesis: none;
+}
+
+/* Keep the halo outside the clipped image surface. */
+.project-media-frame {
+  position: relative;
+  isolation: isolate;
+  border-radius: 20px;
+}
+.project-media-halo {
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(7px);
+  opacity: 0;
+  transition: opacity 280ms ease-out;
+}
+.project-media-halo > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 4px;
+  background: conic-gradient(from var(--cta-orbit), transparent 0deg, #ff7a36 45deg, #ff5a1f 85deg, transparent 125deg, #e64b13 190deg, #ffad66 225deg, transparent 260deg, #ff873f 310deg, transparent 360deg);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.project-media::before {
+  border: 0;
+  padding: 3px;
+  background:
+    radial-gradient(ellipse 110px 90px at var(--glow-x, 50%) var(--glow-y, 50%), rgb(255 255 255 / var(--glow-strength, 0)), transparent 75%),
+    conic-gradient(from var(--cta-orbit), #ff5a1f, #ffad66 85deg, #ff7a36 140deg, #e64b13 205deg, #ff873f 285deg, #ff5a1f);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.project-media-frame:hover .project-media-halo { opacity: 1; }
+.project-media-frame:hover .project-media-halo > span,
+.project-media-frame:hover .project-media::before { animation: cta-light-orbit 6s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .project-media-frame:hover .project-media-halo > span,
+  .project-media-frame:hover .project-media::before { animation: none; }
+  .project-media-halo { transition: none; }
+}
+
+/* Permanent compact featured case. */
+.featured-project .featured-project-card { grid-template-columns: 30% minmax(0, 1fr); }
+.featured-project .featured-project-card > img { min-height: 0; height: 100%; max-height: 260px; object-position: top; }
+.featured-project .featured-project-copy { padding: 20px 28px; gap: 12px; }
+.featured-project .featured-project-copy h2 { font-size: 26px; line-height: 1.2; }
+.featured-project .featured-metrics > div { padding: 10px 12px; }
+.featured-project .featured-metrics dd { font-size: 22px; }
+.featured-project .featured-metrics dt { font-size: 12px; }
+.featured-project .text-link { min-height: 44px; align-self: flex-start; }
+@media (max-width: 768px) {
+  .featured-project .featured-project-card { grid-template-columns: 1fr; }
+  .featured-project .featured-project-card > img { display: none; }
+  .featured-project .featured-project-copy { padding: 20px; }
+  .featured-project .featured-project-copy h2 { font-size: 24px; }
+  .featured-project .featured-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .featured-project .featured-metrics > div { padding: 10px 6px; }
+  .featured-project .featured-metrics dd { font-size: 20px; }
+}
