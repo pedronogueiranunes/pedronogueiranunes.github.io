@@ -10,6 +10,8 @@ const p = project.data;
 ---
 
 <article class="project-card" data-category={p.category}>
+  <div class="project-media-frame">
+  <span class="project-media-halo" aria-hidden="true"><span></span></span>
   <a
     class="project-media"
     href={`/work/${p.caseSlug || project.slug}`}
@@ -28,6 +30,7 @@ const p = project.data;
       View case study <Icon name="arrow-up-right" />
     </span>
   </a>
+  </div>
   <div class="project-body">
     <div class="project-heading">
       <p class="project-meta">
