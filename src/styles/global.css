@@ -5646,3 +5646,74 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
     transform: none;
   }
 }
+
+/* Projects palette from Current Figma: 488:8113 and 488:8154. */
+:root {
+  --projects-header-bg: linear-gradient(135deg, #f2f6f1 0%, #ffffff 78%);
+  --projects-heading: #232625;
+  --projects-control-bg: #f3f6f2;
+  --projects-control-ink: #647362;
+}
+:root[data-theme="dark"] {
+  --projects-header-bg: linear-gradient(135deg, #172017, #1e1e1e 78%);
+  --projects-heading: var(--text);
+  --projects-control-bg: #263026;
+  --projects-control-ink: #afc2a8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --projects-header-bg: linear-gradient(135deg, #172017, #1e1e1e 78%);
+    --projects-heading: var(--text);
+    --projects-control-bg: #263026;
+    --projects-control-ink: #afc2a8;
+  }
+}
+.projects-header {
+  --projects-nav-space: 103px;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  color: var(--projects-heading);
+}
+.projects-header::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--projects-nav-space)) 0 0;
+  background: var(--projects-header-bg);
+  pointer-events: none;
+}
+@media (max-width: 1024px) {
+  .projects-header { --projects-nav-space: 88px; }
+}
+.projects-header > p:not(.section-eyebrow) {
+  color: var(--projects-heading);
+}
+.projects-header > .section-eyebrow {
+  color: var(--accent);
+}
+.projects-filters {
+  background: var(--surface);
+}
+.projects-filters .category-filters button:not([aria-pressed="true"]),
+.projects-filters .view-controls,
+.projects-filters .filter-options summary {
+  background: var(--projects-control-bg);
+  color: var(--projects-control-ink);
+}
+.projects-filters .view-controls button:not([aria-pressed="true"]) {
+  color: var(--projects-control-ink);
+}
+.projects-filters .filter-options summary {
+  padding: 8px 16px;
+  border-radius: 999px;
+  flex-direction: row-reverse;
+  gap: 8px;
+}
+/* The category rail is scrollable without introducing an orange scrollbar. */
+.projects-filters .category-filters {
+  scrollbar-width: none;
+}
+.projects-filters .category-filters::-webkit-scrollbar {
+  display: none;
+}
