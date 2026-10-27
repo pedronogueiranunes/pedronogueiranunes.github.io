@@ -2219,6 +2219,10 @@ details[open] > summary > .faq-plus:after {
     width: 350px;
     top: -60px;
   }
+  /* Stacked cards need the full icon below the clipped card edge. */
+  .problem-card:not(.problem-card--active) .problem-art img {
+    top: 0;
+  }
   .problem-card--active .problem-art {
     left: -72px;
     top: 50px;
