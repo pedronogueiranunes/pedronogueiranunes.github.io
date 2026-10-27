@@ -6809,3 +6809,57 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .featured-project .featured-metrics > div { padding: 10px 6px; }
   .featured-project .featured-metrics dd { font-size: 20px; }
 }
+
+/* Figma 641:24179: mobile CTA and menu share one capsule. */
+@media (max-width: 768px) {
+  .site-nav .site-nav-actions {
+    flex-shrink: 0;
+    gap: 8px;
+    border-radius: 90px;
+    background: var(--footer-bg);
+  }
+  .site-nav .site-nav-actions > .action {
+    width: clamp(100px, calc(100vw - 214px), 132px);
+    height: 44px;
+    min-height: 44px;
+    padding: 12px;
+    gap: 0;
+    font-size: 14px;
+    line-height: 13px;
+    letter-spacing: -1.82px;
+    box-shadow: inset -2px -2px 8.2px #0000001a;
+  }
+  .site-nav .site-nav-actions > .action .action-icon { display: none; }
+  .site-nav .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 5px;
+    border-radius: 60px;
+    color: #fff;
+    background: #000;
+  }
+  .site-nav .menu-toggle span {
+    flex-shrink: 0;
+    width: 20px;
+    height: 2px;
+    margin: 0;
+    border-radius: 9px;
+    background: currentColor;
+  }
+  .site-nav .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .site-nav .menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  html:not([lang="en"]) .site-nav .site-nav-actions > .action {
+    font-size: 10px;
+    letter-spacing: -1.5px;
+    padding-inline: 8px;
+  }
+}
+@media (max-width: 345px) {
+  .site-nav .site-nav-actions > .action { font-size: 12px; letter-spacing: -1.5px; }
+  html:not([lang="en"]) .site-nav .site-nav-actions > .action { font-size: 8px; letter-spacing: -1.3px; }
+}

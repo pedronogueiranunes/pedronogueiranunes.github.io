@@ -204,7 +204,7 @@ Design and verification widths are (1440px), (1024px), (768px) and (390px). A (1
 
 At desktop the project archive defaults to three columns, with explicit two-column, three-column and list view controls. At mobile all archive views resolve to one column. Category filters become a vertical set of wrapping labels on mobile. Home project rails remain horizontal scroll areas with scroll snapping, (24px) gaps and (224px) mobile cards so a following card peeks into view. Desktop rail cards use (380px). Comparison tables become stacked criterion cards. Long case pages use a desktop sticky snapshot sidebar and collapse it into document flow on mobile.
 
-Navigation changes to a full-screen menu at or below (1024px). Mobile keeps the pixel logo, compact Book a call and menu control. Primary actions in mobile page flows fill their available width; the compact header action is intentionally smaller. Minimum interactive targets are (44px).
+Navigation changes to a full-screen menu at or below (1024px). At or below (768px), mobile keeps the pixel logo and joins Book a call with the menu in one rounded capsule (Figma `641:24179`). The CTA is (132px × 44px), with no arrow; an (8px) gap separates the (44px) pure-black (`#000`) menu button with three white lines, per user review. Narrow screens and translated labels use a compact fit while preserving both touch targets. Primary actions in mobile page flows fill their available width; the compact header action is intentionally smaller. Minimum interactive targets are (44px).
 
 ## Elevation & Depth
 
