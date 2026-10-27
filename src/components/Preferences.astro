@@ -56,7 +56,16 @@ const { id = "preferences", inline = false } = Astro.props;
               value={label.toLowerCase()}
               checked={label === "Auto"}
             />
-            <span>{label}</span>
+            <span>
+              <svg class="theme-icon" viewBox="0 0 8 8" width="12" height="12" aria-hidden="true">
+                <path fill="currentColor" d={label === "Light"
+                  ? "M3 0h2v1H3zM0 3h1v2H0zM7 3h1v2H7zM3 7h2v1H3zM2 2h4v4H2z"
+                  : label === "Dark"
+                    ? "M2 0h3v1H3v4h4v1H6v1H2V6H1V1h1z"
+                    : "M2 0h4v1h1v1h1v4H7v1H6v1H2V7H1V6H0V2h1V1h1zm2 1v6h2V6h1V2H6V1z"} />
+              </svg>
+              {label}
+            </span>
           </label>
         ))}
       </div>
@@ -64,6 +73,10 @@ const { id = "preferences", inline = false } = Astro.props;
   </div>
 </div>
 <script>
+  import { changeTheme } from "../scripts/transitions";
+  import { onPageLoad } from "../scripts/page-lifecycle";
+
+  onPageLoad((scope) => {
   const roots = document.querySelectorAll<HTMLElement>("[data-preferences]");
   const sync = () => {
     const theme = document.documentElement.dataset.theme || "auto";
@@ -88,16 +101,16 @@ const { id = "preferences", inline = false } = Astro.props;
       panel.hidden = !open;
       toggle.setAttribute("aria-expanded", String(open));
       if (open) panel.querySelector<HTMLInputElement>("input:checked")?.focus();
-    });
+    }, { signal: scope.signal });
     document.addEventListener("click", (event) => {
       if (!root.contains(event.target as Node)) close();
-    });
+    }, { signal: scope.signal });
     root.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && toggle && !panel.hidden) {
         event.stopPropagation();
         close(true);
       }
-    });
+    }, { signal: scope.signal });
     root.addEventListener("focusout", (event) => {
       // A label click may briefly focus the body before activating its radio.
       // Only a real focus destination outside the popover should dismiss it.
@@ -106,24 +119,21 @@ const { id = "preferences", inline = false } = Astro.props;
         !root.contains(event.relatedTarget)
       )
         close();
-    });
+    }, { signal: scope.signal });
     root
       .querySelectorAll<HTMLInputElement>(".theme-segments input")
       .forEach((input) =>
         input.addEventListener("change", () => {
-          document.documentElement.dataset.theme = input.value;
-          try {
-            localStorage.setItem("theme", input.value);
-          } catch {}
-          sync();
-        }),
+          changeTheme(input.value, input.closest("label")!, sync);
+        }, { signal: scope.signal }),
       );
     root
       .querySelectorAll<HTMLInputElement>(".language-option input")
       .forEach((input) =>
         input.addEventListener("change", () => {
           window.location.assign("/");
-        }),
+        }, { signal: scope.signal }),
       );
+  });
   });
 </script>

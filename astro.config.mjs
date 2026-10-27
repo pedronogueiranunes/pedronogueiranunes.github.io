@@ -5,6 +5,7 @@ import devtoolsJson from "vite-plugin-devtools-json";
 // English content exists — add pt-br/es content under src/content when it's ready.
 export default defineConfig({
   vite: { plugins: [devtoolsJson()] },
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   site: "https://pedronogueiranunes.github.io",
   build: { inlineStylesheets: "always" },
   i18n: {
