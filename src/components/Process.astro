@@ -6,6 +6,7 @@ import {
   logoFor,
   buildIllustration,
 } from "../data/home";
+import "../styles/process-motion.css";
 import Eyebrow from "./Eyebrow.astro";
 import ToolChip from "./ToolChip.astro";
 ---
@@ -115,3 +116,9 @@ import ToolChip from "./ToolChip.astro";
     </div>
   </div>
 </section>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  import { initProcessMotion } from "../scripts/process-motion.js";
+  onPageLoad((scope) => scope.cleanup(initProcessMotion()));
+</script>

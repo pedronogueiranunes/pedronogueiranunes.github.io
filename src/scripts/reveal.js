@@ -1,19 +1,22 @@
-// Home-only progressive enhancement. The hero and portrait remain untouched.
+// Progressive scroll reveals shared by Home, About and Services.
 // Runs on every astro:page-load (ClientRouter); returns a cleanup for before-swap.
-export function initReveal() {
+export function initReveal({ stagger = 70, maxDelay = 400 } = {}) {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const targets = new Set();
-  const groups = document.querySelectorAll("main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .project-rail, .bio-facts, .toolkit > .chips, .about-page > section:not(.about-hero), .about-page .about-stats dl, .about-page .promises-grid, .about-page .career-timeline, .about-page .skills-grid, .about-page .skills-grid .chips");
+  const groups = document.querySelectorAll([
+    "main > section:not(.home-hero) .section-heading > div, .home-bio > div:last-child, .section-heading, .problem-grid, .process-grid, .article-grid, .project-rail, .bio-facts, .toolkit > .chips, .about-page > section:not(.about-hero), .about-page .about-stats dl, .about-page .promises-grid, .about-page .career-timeline, .about-page .skills-grid, .about-page .skills-grid .chips",
+    ".services-page .service-hero > div:first-child, .services-page .offer-grid, .services-page .capability-grid, .services-page .deliverables-section > div:first-child, .services-page .deliverable-table, .services-page .deliverable-table ol, .services-page .schedule-grid, .services-page .comparison-table, .services-page .related-projects .project-grid, .services-page .faq-list",
+  ].join(", "));
   for (const group of groups) {
     [...group.children].forEach((element, index) => {
-      if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip, .about-stats-card, .promises-grid, .promise-facts, .career-timeline, .skills-grid, li, div")) {
+      if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip, .about-stats-card, .promises-grid, .promise-facts, .career-timeline, .skills-grid, li, div") || (element.closest(".services-page") && element.matches("h1, ul, dl, details"))) {
         element.dataset.reveal = "";
-        element.style.setProperty("--reveal-delay", `${Math.min(index * 70, 400)}ms`);
+        element.style.setProperty("--reveal-delay", `${Math.min(index * stagger, maxDelay)}ms`);
         targets.add(element);
       }
     });
   }
-  for (const element of document.querySelectorAll("main .section-eyebrow, main .toolkit")) {
+  for (const element of document.querySelectorAll("main .section-eyebrow, main .toolkit, .services-page .service-result, .services-page .ai-note, .services-page .related-projects > h2, .services-page .faq-section > h2")) {
     element.dataset.reveal = "";
     targets.add(element);
   }

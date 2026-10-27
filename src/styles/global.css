@@ -6298,9 +6298,11 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   }
 }
 
-/* Match the desktop illustration placement inside mobile problem cards. */
+/* Give mobile problem copy breathing room below the illustrations. */
 @media (max-width: 768px) {
+  .problem-card { min-height: 660px; padding-top: 240px; }
   .problem-card .problem-art { width: 412px; height: 280px; }
+  .problem-card .problem-art img { scale: 0.9; transform-origin: center top; }
   .problem-card .problem-art img { width: 412px; height: 412px; top: -80px; }
   .problem-card:first-child .problem-art { top: 39px; left: -88px; }
   .problem-card:first-child .problem-art img { width: 374px; height: 374px; }
@@ -6840,8 +6842,8 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
     height: 44px;
     padding: 5px;
     border-radius: 60px;
-    color: #fff;
-    background: #000;
+    color: var(--mobile-menu-ink, var(--green));
+    background: var(--mobile-menu-fill, #eef2ed);
   }
   .site-nav .menu-toggle span {
     flex-shrink: 0;
@@ -6862,4 +6864,10 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 @media (max-width: 345px) {
   .site-nav .site-nav-actions > .action { font-size: 12px; letter-spacing: -1.5px; }
   html:not([lang="en"]) .site-nav .site-nav-actions > .action { font-size: 8px; letter-spacing: -1.3px; }
+}
+
+/* Keep the Figma light capsule; black/white belongs to Dark and system Dark. */
+:root[data-theme="dark"] { --mobile-menu-fill: #000; --mobile-menu-ink: #fff; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) { --mobile-menu-fill: #000; --mobile-menu-ink: #fff; }
 }
