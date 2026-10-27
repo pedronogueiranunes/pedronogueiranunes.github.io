@@ -142,14 +142,18 @@ export function initSplat() {
       // once zoomed (fraction of the model radius).
       const PAN_UP_AT_BIO = 0.06;
       const baseDistance = radius * 1.66;
+      const portraitFov = camera.camera.fov;
       const applyZoom = (pose) => {
+        const isMobile = matchMedia("(max-width: 768px)").matches;
+        const sizeMultiplier = isMobile ? 1.15 : 1;
+        const canvasHeadroom = isMobile ? origin.clientHeight / 325 : 1;
+        camera.camera.fov = 2 * Math.atan(Math.tan(portraitFov * Math.PI / 360) * canvasHeadroom / sizeMultiplier) * 180 / Math.PI;
         const y = radius * PAN_UP_AT_BIO * pose;
         camera.setPosition(0, y, baseDistance * (1 - ZOOM_AT_BIO * pose));
         camera.lookAt(0, y, 0);
         app.renderNextFrame = true;
       };
       applyZoom(Number(viewport.dataset.scrollPose || 0));
-      camera.lookAt(0, 0, 0);
       viewport.addEventListener("portraitpose", (e) => applyZoom(e.detail), { signal: controller.signal });
       // The gsplat sort runs in a worker, so the first frames can be empty.
       // With on-demand rendering nothing redraws when the sort lands, which

@@ -100,6 +100,7 @@
   --font-mono: "Geist Mono", monospace;
   --font-lettering: "Pixelify Sans", sans-serif;
   --hero-lettering-opacity: 1;
+  --hero-lettering-color: #fff;
   /* Compatibility aliases while existing sections migrate. */
   --black: var(--text);
   --font-grout: var(--font-lettering);
@@ -128,6 +129,7 @@
   --border: #2a2a2a;
   --surface: #1e1e1e;
   --hero-lettering-opacity: 0.9;
+  --hero-lettering-color: #1e1e1e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
@@ -139,6 +141,7 @@
     --border: #2a2a2a;
     --surface: #1e1e1e;
     --hero-lettering-opacity: 0.9;
+    --hero-lettering-color: #1e1e1e;
   }
 }
 * {
@@ -1408,7 +1411,7 @@ details[open] > summary > .faq-plus:after {
   letter-spacing: -0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: white;
+  color: var(--hero-lettering-color);
   pointer-events: none;
 }
 .home-portrait {
@@ -6103,5 +6106,26 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   }
   .action:is(:hover, :focus-visible):not(:disabled) .action-icon--travel > .action-arrow-copy {
     transform: translateX(calc(-1 * var(--arrow-travel)));
+  }
+}
+
+/* Mobile About: keep the portrait and introduction grouped together. */
+@media (max-width: 768px) {
+  .home-bio { gap: 12px; }
+  .home-bio .bio-portrait { height: 365px; }
+  .home-bio > :not(.bio-portrait) { padding-top: 0; }
+  .home-bio h2 { font-size: 33px; }
+}
+
+/* Extra canvas headroom for the enlarged mobile portrait. */
+@media (max-width: 768px) {
+  #portrait-origin {
+    width: min(390px, calc(100vw - 20px));
+    height: 365px;
+    margin-top: -20px;
+  }
+  .home-bio .bio-portrait {
+    width: calc(100% + 20px);
+    margin-inline: -10px;
   }
 }
