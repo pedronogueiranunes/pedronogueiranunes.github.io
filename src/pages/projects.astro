@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import PixelTrail from "../components/PixelTrail.astro";
 import Base from "../layouts/Base.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
 import Eyebrow from "../components/Eyebrow.astro";
@@ -22,6 +23,7 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
 
 <Base title="Projects | Pedro Nogueira" pageClass="projects-page">
   <header class="projects-header page-section">
+    <PixelTrail tone="green" />
     <Eyebrow>Projects</Eyebrow>
     <h1>
       Real sites.

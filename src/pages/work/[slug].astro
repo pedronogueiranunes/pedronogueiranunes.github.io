@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import PixelTrail from "../../components/PixelTrail.astro";
 import Base from "../../layouts/Base.astro";
 import { site } from "../../data/site";
 import ResponsiveImage from "../../components/ResponsiveImage.astro";
@@ -30,6 +31,7 @@ const metrics = isBsa
 
 <Base title={`${p.title} | Pedro Nogueira`} pageClass="case-page">
   <section class="case-hero page-section">
+    <PixelTrail tone="green" />
     <div class="case-hero-top">
       <div>
         <nav class="case-breadcrumb mono" aria-label="Breadcrumb">

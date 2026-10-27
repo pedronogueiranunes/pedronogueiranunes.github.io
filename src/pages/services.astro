@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import "../styles/page-fidelity.css";
+import PixelTrail from "../components/PixelTrail.astro";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
@@ -28,6 +29,7 @@ const projects = (await getCollection("projects")).sort(
 
 <Base title="Services | Pedro Nogueira" pageClass="services-page">
   <section class="service-hero page-section">
+    <PixelTrail tone="green" />
     <div>
       <Eyebrow>Services</Eyebrow>
       <h1>
