@@ -79,6 +79,7 @@
   --border: #e5ebe4;
   --surface: #ffffff;
   --chip-bg: #f6eae6;
+  --tool-tag-bg: color-mix(in srgb, var(--text) 2.5%, var(--surface));
   --dark: #232625;
   --green: #647362;
   --olive: #d2d9b8;
@@ -322,8 +323,8 @@ img {
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  background: var(--chip-bg);
-  color: var(--accent-ink);
+  background: var(--tool-tag-bg);
+  color: var(--text);
   border-radius: 999px;
   font: 500 11px/1.2 var(--font-mono);
   text-transform: uppercase;
@@ -2299,10 +2300,7 @@ details[open] > summary > .faq-plus:after {
     overflow-wrap: anywhere;
   }
   .process-section {
-    border: 0;
-    border-radius: 60px;
-    padding: 40px 20px;
-    margin: 0 10px;
+    border-radius: 30px;
   }
   .process-section .section-heading {
     gap: 64px;
@@ -5001,7 +4999,7 @@ body {
   margin: 0;
 }
 .skills-grid .tool-chip {
-  background: var(--bg);
+  background: var(--tool-tag-bg);
   color: var(--text);
   padding: 8px 14px;
   font-size: 12px;
@@ -5659,7 +5657,7 @@ body {
 .build-visual > div::before { width: 7px; height: 7px; }
 .build-visual > div small { font: 10px var(--font-mono); }
 @media (min-width: 769px) and (max-width: 1280px) { .process-section { border-width: 20px; padding: 40px 20px; } }
-@media (max-width: 768px) { .process-section { border: 0; padding: 40px 20px; } }
+
 
 .build-visual pre .build-code-line { display: flex; gap: 12px; margin: 0; color: #ffffff99; }
 .build-code-line > span { width: 10px; margin: 0; color: #ffffff40; }

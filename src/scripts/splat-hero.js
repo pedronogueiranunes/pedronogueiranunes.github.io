@@ -1,6 +1,7 @@
 // Gaussian splat hero portrait — scrolls into the bio, drag with the mouse to rotate. Self-illuminated so no lights needed.
 // Loaded only on the page that has #splat-canvas, via a dynamic import (see hero markup) so PlayCanvas
 // never ships to pages without it.
+import { setupAboutEnvironment } from "./about-environment.js";
 import { setupModelInteractions } from "./model-interaction.js";
 
 export function initSplat() {
@@ -14,6 +15,7 @@ export function initSplat() {
   let app;
   let disposed = false;
   let stopInteractions;
+  let stopEnvironment;
   let observer;
   const controller = new AbortController();
   const timers = new Set();
@@ -28,6 +30,7 @@ export function initSplat() {
     observer?.disconnect();
     timers.forEach(clearTimeout);
     stopInteractions?.();
+    stopEnvironment?.();
     app?.assets.list().forEach((asset) => { asset.off(); asset.unload(); });
     const gl = app?.graphicsDevice?.gl;
     app?.destroy();
@@ -135,6 +138,7 @@ export function initSplat() {
       const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
       const radius = aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
+      if (viewport.dataset.autoRotate === "true") stopEnvironment = setupAboutEnvironment(app, viewport, radius);
       // Slight camera dolly-in as the portrait lands in the About section.
       // Done in 3D (not CSS scale) so the drawing buffer never resizes.
       const ZOOM_AT_BIO = 0.1; // 10% closer at pose 1
