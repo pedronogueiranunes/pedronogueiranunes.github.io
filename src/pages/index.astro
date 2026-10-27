@@ -284,9 +284,11 @@ const posts = (await getCollection("posts")).sort(
   import { onPageLoad } from "../scripts/page-lifecycle";
   import { loadPlayCanvas } from "../scripts/playcanvas-loader";
   import { initPortraitTravel } from "../scripts/portrait-travel.js";
+  import { initReveal } from "../scripts/reveal.js";
   onPageLoad((scope) => {
     const stopTravel = initPortraitTravel();
     if (stopTravel) scope.cleanup(stopTravel);
+    scope.cleanup(initReveal());
     // Keep mobile's first view light. The original splat is activated on portrait interaction.
     const viewport = document.getElementById("splat-viewport");
     if (viewport) {
