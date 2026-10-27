@@ -239,8 +239,41 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   onPageLoad((scope) => {
   const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
   const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
-  const close = () => dialog.close();
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const mobileAnimations = new Set<Animation>();
+  let closing = false;
+  const stopMobileAnimations = () => {
+    mobileAnimations.forEach(animation => animation.cancel());
+    mobileAnimations.clear();
+  };
+  const animateMobile = (element: Element, frames: Keyframe[], options: KeyframeAnimationOptions) => {
+    const animation = element.animate(frames, options);
+    mobileAnimations.add(animation);
+    animation.onfinish = () => {
+      // Remove filled exit effects so reopening cannot fall back to opacity: 0.
+      animation.cancel();
+      mobileAnimations.delete(animation);
+    };
+    return animation;
+  };
+  const close = (immediate = false) => {
+    if (!dialog.open || closing) return;
+    stopMobileAnimations();
+    if (immediate || reducedMotion.matches) { dialog.close(); return; }
+    closing = true;
+    const icon = dialog.querySelector(".menu-close .pixel-icon")!;
+    const animation = animateMobile(icon,
+      [{ opacity: 1, transform: "rotate(0) scale(1)" }, { opacity: 0, transform: "rotate(70deg) scale(0.8)" }],
+      { duration: 130, easing: "ease-in", fill: "forwards" });
+    animation.finished.catch(() => {}).then(() => {
+      if (!scope.signal.aborted && dialog.open) dialog.close();
+      closing = false;
+    });
+  };
   trigger.addEventListener("click", (event) => {
+    if (dialog.open) return;
+    stopMobileAnimations();
+    closing = false;
     dialog.showModal();
     // Safari focuses the first link when opening a dialog. Keep touch openings
     // on the dialog itself; keyboard openings retain a visible actionable focus.
@@ -249,21 +282,35 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     else dialog.querySelector<HTMLButtonElement>(".menu-close")?.focus({ preventScroll: true });
     trigger.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
+    if (!reducedMotion.matches) {
+      const entries = dialog.querySelectorAll(".mobile-menu-header .site-logo, :scope > nav > details, .preferences-panel--inline > fieldset, :scope > .action");
+      entries.forEach((element, index) => animateMobile(element,
+        [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 280, delay: index * 28, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" }));
+      const icon = dialog.querySelector(".menu-close .pixel-icon")!;
+      animateMobile(icon,
+        [{ opacity: 0, transform: "rotate(-70deg) scale(0.8)" }, { opacity: 1, transform: "rotate(0) scale(1)" }],
+        { duration: 260, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    }
   }, { signal: scope.signal });
-  dialog.querySelector(".menu-close")?.addEventListener("click", close, { signal: scope.signal });
+  dialog.querySelector(".menu-close")?.addEventListener("click", () => close(), { signal: scope.signal });
+  dialog.addEventListener("cancel", (event) => { event.preventDefault(); close(); }, { signal: scope.signal });
+  reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) stopMobileAnimations(); }, { signal: scope.signal });
+  scope.cleanup(() => { stopMobileAnimations(); if (dialog.open) dialog.close(); });
   dialog.addEventListener("close", () => {
+    stopMobileAnimations();
+    closing = false;
     trigger.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
     trigger.focus({ preventScroll: true });
   }, { signal: scope.signal });
   dialog
     .querySelectorAll("a")
-    .forEach((a) => a.addEventListener("click", close, { signal: scope.signal }));
+    .forEach((a) => a.addEventListener("click", () => close(true), { signal: scope.signal }));
   matchMedia("(min-width:1025px)").addEventListener("change", (e) => {
-    if (e.matches && dialog.open) close();
+    if (e.matches && dialog.open) close(true);
   }, { signal: scope.signal });
   const items = [...document.querySelectorAll<HTMLElement>(".nav-item")];
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let openItem: HTMLElement | null = null;
   let closeTimer: ReturnType<typeof setTimeout> | undefined;
   const children = (item: HTMLElement) => [
