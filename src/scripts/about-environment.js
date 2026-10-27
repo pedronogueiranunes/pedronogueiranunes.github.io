@@ -65,7 +65,7 @@ export function setupAboutEnvironment(app, viewport, radius) {
   // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
   const ring = new pc.Entity("shoulder-ring");
   root.addChild(ring);
-  const RING_Y = -0.12, RING_R = 0.58, DOTS = 48;
+  const RING_Y = -0.22, RING_R = 0.58, DOTS = 48;
   for (let i = 0; i < DOTS; i++) {
     const a = (i / DOTS) * Math.PI * 2;
     const dot = new pc.Entity("ring-dot");
@@ -85,7 +85,7 @@ export function setupAboutEnvironment(app, viewport, radius) {
   observer.observe(viewport);
   const positionGlyphs = () => {
     glyphs.forEach(({ group, phase }, index) => {
-      group.setLocalScale(1.3, 1.3, 1.3);
+      group.setLocalScale(0.91, 0.91, 0.91);
       // Counter-rotate around the head, at chin height.
       // A deep orbit keeps front/back passes clear of the rotating splat.
       const angle = time * 0.35 + phase; // portrait yaw is +Y; +angle traces the opposite way
