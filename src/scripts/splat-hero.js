@@ -138,7 +138,7 @@ export function initSplat() {
       const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
       const radius = aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
-      if (viewport.dataset.autoRotate === "true") stopEnvironment = setupAboutEnvironment(app, viewport, radius);
+      stopEnvironment = setupAboutEnvironment(app, viewport, radius, { revealOnPose: viewport.dataset.autoRotate !== "true" });
       // Slight camera dolly-in as the portrait lands in the About section.
       // Done in 3D (not CSS scale) so the drawing buffer never resizes.
       const ZOOM_AT_BIO = 0.1; // 10% closer at pose 1

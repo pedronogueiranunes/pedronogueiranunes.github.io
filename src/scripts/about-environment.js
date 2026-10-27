@@ -1,5 +1,7 @@
 // Local 3D accents; only the About portrait creates these entities.
-export function setupAboutEnvironment(app, viewport, radius) {
+// revealOnPose: on the home page the accents appear only once the portrait has fully
+// landed in the About section (pose 1) and shrink away when scrolling back up.
+export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = false } = {}) {
   const pc = window.pc;
   const root = new pc.Entity("about-digital-environment");
   app.root.addChild(root);
@@ -10,18 +12,18 @@ export function setupAboutEnvironment(app, viewport, radius) {
     value.emissive = new pc.Color(...color.map(v => v * (lit ? 0.18 : 1)));
     value.useLighting = lit;
     value.shininess = 65;
-    if (opacity < 1) {
-      value.opacity = opacity;
-      value.blendType = pc.BLEND_NORMAL;
-      value.depthWrite = false;
-    }
+    // Blended so the whole orbit can fade in and out.
+    value.opacity = opacity;
+    value.blendType = pc.BLEND_NORMAL;
+    value.depthWrite = opacity >= 1;
     value.update();
-    materials.push(value);
+    materials.push({ value, opacity });
     return value;
   };
   // Small code/design glyphs made from actual 3D strokes and pixel blocks.
   const glyphOrange = material([1, 0.353, 0.122]);
   const glyphGreen = material([0.39, 0.45, 0.38]);
+  const ringGray = material([0.82, 0.82, 0.8]);
   const glyphs = [];
   const glyph = (name, phase) => {
     const group = new pc.Entity(name);
@@ -61,6 +63,22 @@ export function setupAboutEnvironment(app, viewport, radius) {
     stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, 0.022, 0], glyphOrange, side * -40);
     stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, -0.022, 0], glyphOrange, side * 40);
   }
+  // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
+  const ring = new pc.Entity("shoulder-ring");
+  root.addChild(ring);
+  const RING_Y = -0.22, RING_R = 0.58, DOTS = 96;
+  for (let i = 0; i < DOTS; i++) {
+    const a = (i / DOTS) * Math.PI * 2;
+    const dot = new pc.Entity("ring-dot");
+    dot.addComponent("render", { type: "box" });
+    dot.render.material = ringGray;
+    dot.setLocalScale(0.006 * radius, 0.006 * radius, 0.006 * radius); // round-ish dots, not dashes
+    dot.setLocalPosition(Math.cos(a) * RING_R * radius, 0, Math.sin(a) * RING_R * radius);
+    dot.setLocalEulerAngles(0, -a * 180 / Math.PI + 90, 0);
+    ring.addChild(dot);
+  }
+  ring.setLocalPosition(0, RING_Y * radius, 0);
+  let ringYaw = 0;
   let time = 0;
   let visible = true;
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -68,12 +86,13 @@ export function setupAboutEnvironment(app, viewport, radius) {
   observer.observe(viewport);
   const positionGlyphs = () => {
     glyphs.forEach(({ group, phase }, index) => {
-      // Counter-rotate around the full torso envelope, below the shoulders.
+      group.setLocalScale(0.91, 0.91, 0.91);
+      // Counter-rotate around the head, at chin height.
       // A deep orbit keeps front/back passes clear of the rotating splat.
       const angle = time * 0.35 + phase; // portrait yaw is +Y; +angle traces the opposite way
       group.setLocalPosition(
         Math.cos(angle) * radius * 0.52,
-        ([-0.16, -0.25, -0.36, -0.3][index] + Math.sin(time * (0.45 + index * 0.06) + phase) * 0.018) * radius,
+        ([0.13, -0.04, 0.22, 0.04][index] + Math.sin(time * (0.18 + index * 0.05) + phase * 1.7) * 0.05) * radius, // staggered heights, slow drift
         Math.sin(angle) * radius * 0.65,
       );
       // Face the viewer while gently tilting, so glyphs stay readable.
@@ -85,17 +104,53 @@ export function setupAboutEnvironment(app, viewport, radius) {
     });
   };
   positionGlyphs();
+  const REVEAL_AT = 0.7; // reveal as the portrait is settling into About, not after it lands
+  let shown = revealOnPose ? 0 : 1;
+  let target = shown;
+  const applyReveal = () => {
+    root.enabled = shown > 0.001;
+    // Smoothstep fade with a slight settle in scale, so the orbit eases in rather than popping.
+    const k = shown * shown * (3 - 2 * shown);
+    const scale = 0.9 + 0.1 * k;
+    root.setLocalScale(scale, scale, scale);
+    materials.forEach(({ value, opacity }) => {
+      value.opacity = opacity * k;
+      value.depthWrite = k >= 0.999 && opacity >= 1;
+      value.update();
+    });
+  };
+  const onPose = (e) => {
+    target = e.detail >= REVEAL_AT ? 1 : 0;
+    if (motion.matches) { shown = target; applyReveal(); }
+    app.renderNextFrame = true;
+  };
+  if (revealOnPose) {
+    target = Number(viewport.dataset.scrollPose || 0) >= REVEAL_AT ? 1 : 0;
+    viewport.addEventListener("portraitpose", onPose);
+    applyReveal();
+  }
   const update = (dt) => {
-    if (!visible || document.hidden || motion.matches) return;
-    time += Math.min(dt, 0.05);
+    if (!visible || document.hidden) return;
+    if (shown !== target) {
+      const delta = Math.min(dt, 0.05) / 0.9; // ~0.9s fade
+      shown = motion.matches ? target : target > shown ? Math.min(target, shown + delta) : Math.max(target, shown - delta);
+      applyReveal();
+      app.renderNextFrame = true;
+    }
+    if (motion.matches || !root.enabled) return;
+    const step = Math.min(dt, 0.05);
+    time += step;
+    ringYaw = (ringYaw + step * 12) % 360;
+    ring.setLocalEulerAngles(0, ringYaw, 0);
     positionGlyphs();
     app.renderNextFrame = true;
   };
   app.on("update", update);
   return () => {
     observer.disconnect();
+    viewport.removeEventListener("portraitpose", onPose);
     app.off("update", update);
     root.destroy();
-    materials.forEach(value => value.destroy());
+    materials.forEach(({ value }) => value.destroy());
   };
 }
