@@ -1,0 +1,89 @@
+---
+interface Props { tone?: 'orange' | 'green' }
+const { tone = 'orange' } = Astro.props;
+---
+<canvas class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} aria-hidden="true"></canvas>
+
+<style>
+  .pixel-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .pixel-trail--green { inset: auto; top: calc(-1 * var(--opening-nav-height, var(--projects-nav-space, 103px))); left: 50%; transform: translateX(-50%); width: 100vw; height: calc(100% + var(--opening-nav-height, var(--projects-nav-space, 103px))); z-index: -1; mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); }
+  @media (hover: none), (prefers-reduced-motion: reduce) { .pixel-trail { display: none; } }
+</style>
+
+<script>
+  import { onPageLoad } from '../scripts/page-lifecycle';
+  onPageLoad((scope) => {
+    document.querySelectorAll<HTMLCanvasElement>('.pixel-trail').forEach((canvas) => {
+    const panel = canvas?.parentElement;
+    const hero = panel?.closest<HTMLElement>('.home-hero') || panel;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !panel || !hero || !ctx) return;
+    const media = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    const step = 28;
+    const cells = new Map<string, { x: number; y: number; at: number; strength: number }>();
+    let width = 0, height = 0, frame = 0, visible = true;
+    let previous: { x: number; y: number } | undefined;
+    const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); previous = undefined; };
+    const paint = (now: number) => {
+      frame = 0;
+      ctx.clearRect(0, 0, width, height);
+      if (!media.matches || !visible || document.hidden) return;
+      ctx.fillStyle = canvas.dataset.tone === 'green' ? '#BDD4B5' : '#FF5A1F';
+      // Sparse, quiet resting marks keep the field lighter than the content.
+      for (let x = 14; x < width; x += step) for (let y = 14; y < height; y += step) {
+        if ((Math.floor(x / step) * 7 + Math.floor(y / step) * 11) % 5 === 0) continue;
+        ctx.globalAlpha = 0.055;
+        ctx.fillRect(x, y, 2, 2);
+      }
+      for (const [key, cell] of cells) {
+        const life = 1 - (now - cell.at) / 1050;
+        if (life <= 0) { cells.delete(key); continue; }
+        ctx.globalAlpha = cell.strength * life * life;
+        ctx.fillRect(cell.x - 4, cell.y - 4, 8, 8);
+      }
+      ctx.globalAlpha = 1;
+      if (cells.size) frame = requestAnimationFrame(paint);
+    };
+    const requestPaint = () => { if (!frame) frame = requestAnimationFrame(paint); };
+    const resize = new ResizeObserver(() => {
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width; height = rect.height;
+      const ratio = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      cells.clear(); previous = undefined; requestPaint();
+    });
+    resize.observe(panel);
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (!visible) stop(); else requestPaint();
+    });
+    observer.observe(hero);
+    hero.addEventListener('pointermove', (event) => {
+      if (!media.matches || !visible || event.pointerType !== 'mouse') return;
+      const rect = canvas.getBoundingClientRect();
+      const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      if (point.x < 0 || point.y < 0 || point.x > width || point.y > height) { previous = undefined; return; }
+      const start = previous || point;
+      const count = Math.min(32, Math.max(1, Math.ceil(Math.hypot(point.x - start.x, point.y - start.y) / 14)));
+      const now = performance.now();
+      for (let i = 1; i <= count; i++) {
+        const px = start.x + (point.x - start.x) * i / count;
+        const py = start.y + (point.y - start.y) * i / count;
+        const col = Math.round((px - 14) / step), row = Math.round((py - 14) / step);
+        for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++) {
+          const distance = Math.hypot(dx, dy);
+          const x = (col + dx) * step + 14, y = (row + dy) * step + 14;
+          if (distance > 2.3 || x < 0 || y < 0 || x > width || y > height || ((col + dx) * 7 + (row + dy) * 11) % 5 === 0) continue;
+          cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: 0.42 * (1 - distance / 3) });
+        }
+      }
+      previous = point; requestPaint();
+    }, { signal: scope.signal, passive: true });
+    hero.addEventListener('pointerleave', () => { previous = undefined; }, { signal: scope.signal });
+    document.addEventListener('visibilitychange', () => { stop(); requestPaint(); }, { signal: scope.signal });
+    media.addEventListener('change', () => { stop(); requestPaint(); }, { signal: scope.signal });
+    scope.cleanup(() => { stop(); resize.disconnect(); observer.disconnect(); });
+    });
+  });
+</script>
