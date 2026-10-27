@@ -1,5 +1,7 @@
 // Local 3D accents; only the About portrait creates these entities.
-export function setupAboutEnvironment(app, viewport, radius) {
+// revealOnPose: on the home page the accents appear only once the portrait has fully
+// landed in the About section (pose 1) and shrink away when scrolling back up.
+export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = false } = {}) {
   const pc = window.pc;
   const root = new pc.Entity("about-digital-environment");
   app.root.addChild(root);
@@ -103,8 +105,33 @@ export function setupAboutEnvironment(app, viewport, radius) {
     });
   };
   positionGlyphs();
+  let shown = revealOnPose ? 0 : 1;
+  let target = shown;
+  const applyReveal = () => {
+    root.enabled = shown > 0.001;
+    // Ease-out scale so the orbit grows from the portrait instead of popping in.
+    const k = 1 - Math.pow(1 - shown, 3);
+    root.setLocalScale(k, k, k);
+  };
+  const onPose = (e) => {
+    target = e.detail >= 0.98 ? 1 : 0;
+    if (motion.matches) { shown = target; applyReveal(); }
+    app.renderNextFrame = true;
+  };
+  if (revealOnPose) {
+    target = Number(viewport.dataset.scrollPose || 0) >= 0.98 ? 1 : 0;
+    viewport.addEventListener("portraitpose", onPose);
+    applyReveal();
+  }
   const update = (dt) => {
-    if (!visible || document.hidden || motion.matches) return;
+    if (!visible || document.hidden) return;
+    if (shown !== target) {
+      const delta = Math.min(dt, 0.05) / 0.45;
+      shown = motion.matches ? target : target > shown ? Math.min(target, shown + delta) : Math.max(target, shown - delta);
+      applyReveal();
+      app.renderNextFrame = true;
+    }
+    if (motion.matches || !root.enabled) return;
     const step = Math.min(dt, 0.05);
     time += step;
     ringYaw = (ringYaw + step * 12) % 360;
@@ -115,6 +142,7 @@ export function setupAboutEnvironment(app, viewport, radius) {
   app.on("update", update);
   return () => {
     observer.disconnect();
+    viewport.removeEventListener("portraitpose", onPose);
     app.off("update", update);
     root.destroy();
     materials.forEach(value => value.destroy());
