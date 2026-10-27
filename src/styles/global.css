@@ -57,6 +57,19 @@
   --bg-secondary: #ede7dc;
   --text: #111111;
   --text-secondary: #6b6660;
+  /* Pixel transitions: milliseconds and pixel sizes are read by transitions.ts. */
+  --theme-duration: 550;
+  --theme-steps: 12;
+  --theme-cell-size: 24;
+  --page-exit-duration: 160ms;
+  --page-enter-duration: 240ms;
+  --page-enter-delay: 160ms;
+  --page-transition-duration: 400ms;
+  --curtain-duration: 300;
+  --curtain-delay: 80;
+  --curtain-steps: 18;
+  --curtain-cell-size: 48;
+  --curtain-color: #FF5A1F;
   --accent: #ff5a1f;
   --accent-ink: var(--accent);
   --action-bg: var(--accent);
@@ -5483,4 +5496,64 @@ body {
   .home-portrait {
     top: 355px;
   }
+}
+
+#pixel-curtain {
+  position: fixed;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--curtain-color);
+  view-transition-name: pixel-curtain;
+}
+::view-transition { pointer-events: none; }
+::view-transition-group(*) { animation: none; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(page-content) {
+  animation: page-exit var(--page-exit-duration) ease-out both;
+}
+::view-transition-new(page-content) {
+  animation: page-enter var(--page-enter-duration) var(--page-enter-delay) ease-out both;
+}
+::view-transition-group(pixel-curtain) { z-index: 10; }
+::view-transition-group(site-header),
+::view-transition-group(site-footer),
+::view-transition-group(mobile-menu) { z-index: 20; }
+::view-transition-group(site-logo),
+::view-transition-group(site-navigation) { z-index: 21; }
+::view-transition-old(pixel-curtain) { display: none; }
+::view-transition-new(pixel-curtain) {
+  animation: curtain-hold var(--page-transition-duration) linear both;
+  mix-blend-mode: normal;
+  clip-path: inset(0 100% 0 0);
+}
+@keyframes curtain-hold { from, to { opacity: 1; } }
+@keyframes page-exit { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes page-enter { from { opacity: 0; transform: translateY(8px); } }
+/* Theme snapshots include the complete page, including persisted chrome and canvas. */
+html[data-transition="theme"] * { view-transition-name: none !important; }
+html[data-transition="theme"]::view-transition-new(root) {
+  animation: curtain-hold calc(var(--theme-duration) * 1ms) linear both;
+  z-index: 1;
+}
+html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
+.theme-segments input:checked + span .theme-icon {
+  animation: theme-label-swap 90ms steps(3, end);
+}
+@keyframes theme-label-swap {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+  .theme-segments input:checked + span .theme-icon { animation: none; }
+}
+
+.theme-segments .theme-icon {
+  display: inline-block;
+  margin-inline-end: 4px;
+  vertical-align: -1px;
 }

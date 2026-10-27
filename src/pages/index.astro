@@ -281,8 +281,12 @@ const posts = (await getCollection("posts")).sort(
   </section>
   <!-- Hidden/OLD Figma sections retained in docs/legacy/home-before-redesign.astro.txt. -->
   <script>
-    import { initPortraitTravel } from "../scripts/portrait-travel.js";
-    initPortraitTravel();
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  import { loadPlayCanvas } from "../scripts/playcanvas-loader";
+  import { initPortraitTravel } from "../scripts/portrait-travel.js";
+  onPageLoad((scope) => {
+    const stopTravel = initPortraitTravel();
+    if (stopTravel) scope.cleanup(stopTravel);
     // Keep mobile's first view light. The original splat is activated on portrait interaction.
     const viewport = document.getElementById("splat-viewport");
     if (viewport) {
@@ -290,10 +294,9 @@ const posts = (await getCollection("posts")).sort(
       const isWebGLAvailable = () => {
         try {
           const testCanvas = document.createElement("canvas");
-          return !!(
-            window.WebGLRenderingContext &&
-            (testCanvas.getContext("webgl2") || testCanvas.getContext("webgl"))
-          );
+          const gl = testCanvas.getContext("webgl2") || testCanvas.getContext("webgl");
+          gl?.getExtension("WEBGL_lose_context")?.loseContext();
+          return !!gl;
         } catch {
           return false;
         }
@@ -303,40 +306,35 @@ const posts = (await getCollection("posts")).sort(
         viewport.dataset.failed = "true";
       }
 
+      let stopSplat: (() => void) | undefined;
+      scope.cleanup(() => stopSplat?.());
       const load = () => {
-        if (loaded || viewport.dataset.failed === "true")
+        if (scope.signal.aborted || loaded || viewport.dataset.failed === "true")
           return;
         loaded = true;
-        const script = document.createElement("script");
-        script.src = "/assets/vendor/playcanvas.min.js";
-        script.onload = () =>
-          import("../scripts/splat-hero.js").then(({ initSplat }) => {
-            try {
-              initSplat();
-            } catch {
-              viewport.dataset.failed = "true";
-            }
-          });
-        script.onerror = () => {
-          viewport.dataset.failed = "true";
-        };
-        document.head.appendChild(script);
+        loadPlayCanvas().then(() => import("../scripts/splat-hero.js")).then(({ initSplat }) => {
+          if (!scope.signal.aborted && viewport.isConnected) stopSplat = initSplat();
+        }).catch(() => {
+          if (!scope.signal.aborted) viewport.dataset.failed = "true";
+        });
       };
-      viewport.querySelector("button")?.addEventListener("click", load);
-      viewport.addEventListener("pointerdown", load, { once: true });
+      viewport.querySelector("button")?.addEventListener("click", load, { signal: scope.signal });
+      viewport.addEventListener("pointerdown", load, { once: true, signal: scope.signal });
       if (
         !matchMedia("(max-width: 1024px)").matches &&
         !(navigator as Navigator & { connection?: { saveData?: boolean } })
           .connection?.saveData
       ) {
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => {
+        scope.frame(() =>
+          scope.frame(() => {
             if ("requestIdleCallback" in window)
-              window.requestIdleCallback(load, { timeout: 4000 });
-            else setTimeout(load, 1000);
+              scope.idle(load);
+            else scope.timeout(load, 1000);
           }),
         );
       }
     }
+
+  });
   </script>
 </Base>

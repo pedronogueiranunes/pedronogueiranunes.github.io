@@ -206,6 +206,11 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
   </div>
 </div>
 <script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+
+  onPageLoad((scope) => {
+    if (!document.querySelector("#contact-form")) return;
+
   const form = document.querySelector<HTMLFormElement>("#contact-form")!;
   const steps = [...form.querySelectorAll<HTMLElement>("[data-step]")];
   const status = form.querySelector<HTMLElement>(".form-status")!;
@@ -276,13 +281,13 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
   form.querySelector("[data-continue]")!.addEventListener("click", () => {
     if (validateFirst()) show(1);
     else steps[0].querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
-  });
-  form.querySelector("[data-back]")!.addEventListener("click", () => show(0));
+  }, { signal: scope.signal });
+  form.querySelector("[data-back]")!.addEventListener("click", () => show(0), { signal: scope.signal });
   steps[0].querySelectorAll<HTMLInputElement>("input").forEach((input) =>
     input.addEventListener("blur", () => {
       if (input.value || input.getAttribute("aria-invalid") === "true")
         validateField(input);
-    }),
+    }, { signal: scope.signal }),
   );
   steps[1].querySelectorAll("input").forEach((input) =>
     input.addEventListener("change", () => {
@@ -291,7 +296,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
         group.setAttribute("aria-invalid", "false");
         group.querySelector(".field-error")!.textContent = "";
       }
-    }),
+    }, { signal: scope.signal }),
   );
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -329,7 +334,11 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
     submit.querySelector("span")!.textContent = "Sending...";
     form.setAttribute("aria-busy", "true");
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = scope.timeout(() => controller.abort(), 20000);
+    scope.signal.addEventListener("abort", () => {
+      clearTimeout(timeout);
+      controller.abort();
+    }, { once: true });
     try {
       const payload = Object.fromEntries(data);
       payload.needs = data.getAll("needs").join(", ");
@@ -353,6 +362,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       );
       form.reset();
     } catch {
+      if (scope.signal.aborted) return;
       feedback(
         "Your message could not be sent. Please try again, or email pedronogueiranunes@gmail.com.",
       );
@@ -363,7 +373,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       submit.querySelector("span")!.textContent = "Send and get my plan";
       form.removeAttribute("aria-busy");
     }
-  });
+  }, { signal: scope.signal });
   const service = new URLSearchParams(location.search).get("service");
   const selection =
     service === "CRO audit"
@@ -378,4 +388,5 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       .querySelectorAll<HTMLInputElement>("[name=needs]")
       .forEach((input) => (input.checked = input.value === selection));
   }
+  });
 </script>

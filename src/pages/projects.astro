@@ -161,6 +161,11 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
     </section>
   </div>
   <script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+
+  onPageLoad((scope) => {
+    if (!document.querySelector("[data-projects-filter]")) return;
+
     const root = document.querySelector<HTMLElement>("[data-projects-filter]")!;
     let category = "0";
     const buttons = root.querySelectorAll<HTMLButtonElement>(
@@ -193,16 +198,16 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
       button.addEventListener("click", () => {
         category = button.dataset.category!;
         update();
-      }),
+      }, { signal: scope.signal }),
     );
-    year.addEventListener("change", update);
-    location.addEventListener("change", update);
+    year.addEventListener("change", update, { signal: scope.signal });
+    location.addEventListener("change", update, { signal: scope.signal });
     root.querySelector("[data-reset]")!.addEventListener("click", () => {
       year.value = "";
       location.value = "";
       category = "0";
       update();
-    });
+    }, { signal: scope.signal });
     const param = new URLSearchParams(window.location.search).get("category");
     if (param === "experiments") category = "4";
     else if (param && /^[0-4]$/.test(param)) category = param;
@@ -214,8 +219,10 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
           .forEach((control) =>
             control.setAttribute("aria-pressed", String(control === button)),
           );
-      }),
+      }, { signal: scope.signal }),
     );
     update();
+
+  });
   </script>
 </Base>
