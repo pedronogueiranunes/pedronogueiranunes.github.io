@@ -293,7 +293,7 @@ const posts = (await getCollection("posts")).sort(
     const stopTravel = initPortraitTravel();
     if (stopTravel) scope.cleanup(stopTravel);
     scope.cleanup(initReveal());
-    // Keep mobile's first view light. The original splat is activated on portrait interaction.
+    // Start the portrait after the first paint on every screen size.
     const viewport = document.getElementById("splat-viewport");
     if (viewport) {
       let loaded = false;
@@ -327,7 +327,6 @@ const posts = (await getCollection("posts")).sort(
       viewport.querySelector("button")?.addEventListener("click", load, { signal: scope.signal });
       viewport.addEventListener("pointerdown", load, { once: true, signal: scope.signal });
       if (
-        !matchMedia("(max-width: 1024px)").matches &&
         !(navigator as Navigator & { connection?: { saveData?: boolean } })
           .connection?.saveData
       ) {

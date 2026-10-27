@@ -42,6 +42,7 @@ export function initPortraitTravel() {
   const stage = document.getElementById("splat-viewport");
   const destination = document.getElementById("portrait-destination");
   if (!origin || !stage || !destination) return;
+  const mobile = matchMedia("(max-width: 768px)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let disposed = false;
@@ -87,6 +88,7 @@ export function initPortraitTravel() {
     );
     // Reduced motion uses two still placements instead of interpolated travel.
     if (reducedMotion.matches) return Number(progress >= 0.5);
+    if (mobile.matches) return progress;
     // easeInOutCubic: softer start and landing than smoothstep.
     return progress < 0.5
       ? 4 * progress * progress * progress
@@ -109,7 +111,7 @@ export function initPortraitTravel() {
     frame = 0;
     if (!currentGeometry) return;
     targetPose = computeTarget();
-    const follow = instant || reducedMotion.matches ? 1 : POSE_FOLLOW;
+    const follow = instant || reducedMotion.matches || mobile.matches ? 1 : POSE_FOLLOW;
     displayPose += (targetPose - displayPose) * follow;
     if (Math.abs(targetPose - displayPose) < 0.0005) displayPose = targetPose;
     apply(displayPose);
