@@ -106,6 +106,8 @@ export const logoFor = (tool: string) =>
   (
     ({
       "Shopify Hydrogen": "shopify",
+      "HTML/CSS/JS": "javascript",
+      "AI-assisted workflows": "claude",
       "Claude Code": "claude-code",
       DaVinci: "davinci-resolve",
       "DaVinci Resolve": "davinci-resolve",

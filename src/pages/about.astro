@@ -11,15 +11,18 @@ import { logoFor } from "../data/home";
 
 <Base title="About | Pedro Nogueira" pageClass="about-page">
   <section class="about-hero page-section">
-    <div class="about-portrait">
+    <div class="about-portrait" id="splat-viewport" data-auto-rotate="true">
       <ResponsiveImage
-        src="/assets/figma/488-9498-imgHead.webp"
+        id="splat-fallback"
+        src="/assets/head-hero.webp"
         width="718"
         height="937"
         alt="Pedro Nogueira"
         fetchpriority="high"
         loading="eager"
       />
+      <button class="portrait-activate" type="button" aria-label="Play 3D portrait">Play 3D</button>
+      <canvas id="splat-canvas" role="img" aria-label="3D portrait of Pedro. Drag or use arrow keys to rotate." aria-hidden="true"></canvas>
     </div>
     <div>
       <Eyebrow>About me</Eyebrow>
@@ -119,4 +122,28 @@ import { logoFor } from "../data/home";
       See the full stack <Icon name="arrow-right" />
     </a>
   </section>
+  <script>
+    import { onPageLoad } from "../scripts/page-lifecycle";
+    import { loadPlayCanvas } from "../scripts/playcanvas-loader";
+    import { initReveal } from "../scripts/reveal.js";
+    onPageLoad((scope) => {
+      if (!document.querySelector(".about-page")) return;
+      scope.cleanup(initReveal());
+      const viewport = document.getElementById("splat-viewport")!;
+      let loaded = false;
+      let dispose: (() => void) | undefined;
+      scope.cleanup(() => dispose?.());
+      const load = () => {
+        if (loaded || scope.signal.aborted) return;
+        loaded = true;
+        loadPlayCanvas().then(() => import("../scripts/splat-hero.js")).then(({ initSplat }) => {
+          if (!scope.signal.aborted && viewport.isConnected) dispose = initSplat();
+        }).catch(() => { if (!scope.signal.aborted) viewport.dataset.failed = "true"; });
+      };
+      viewport.querySelector("button")?.addEventListener("click", load, { signal: scope.signal });
+      viewport.addEventListener("pointerdown", load, { once: true, signal: scope.signal });
+      const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !connection?.saveData) scope.idle(load);
+    });
+  </script>
 </Base>
