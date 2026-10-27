@@ -76,7 +76,7 @@
   --action-hover: color-mix(in srgb, var(--accent) 88%, white);
   --action-active: color-mix(in srgb, var(--accent) 88%, #232625);
   --accent-secondary: #d4ff4f;
-  --border: #ddd6c8;
+  --border: #e3e3e3;
   --surface: #ffffff;
   --chip-bg: #f6eae6;
   --dark: #232625;
@@ -1346,6 +1346,7 @@ details[open] > summary > .faq-plus:after {
   border-radius: 42px;
   overflow: hidden;
   height: 80vh;
+  max-height: 770px;
   position: relative;
   padding: 30px 30px;
   text-align: center;
