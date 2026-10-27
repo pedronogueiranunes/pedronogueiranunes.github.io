@@ -14,7 +14,7 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<Base title={`${post.data.title} | Pedro Nogueira`}>
+<Base title={`${post.data.title} | Pedro Nogueira`} pageClass="article-page">
   <article class="post-page">
     <p class="post__meta label-mono">
       <span class="muted">

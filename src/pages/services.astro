@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import "../styles/page-fidelity.css";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
@@ -25,7 +26,7 @@ const projects = (await getCollection("projects")).sort(
 );
 ---
 
-<Base title="Services | Pedro Nogueira">
+<Base title="Services | Pedro Nogueira" pageClass="services-page">
   <section class="service-hero page-section">
     <div>
       <Eyebrow>Services</Eyebrow>
@@ -234,19 +235,20 @@ const projects = (await getCollection("projects")).sort(
     </div>
   </section>
   <section class="schedule-section page-section">
-    <Eyebrow>How it works</Eyebrow>
-    <h2>From first call to a site that sells.</h2>
-    <div class="schedule-grid">
-      <div class="schedule-intro">
-        <span>
-          2 <small>weeks</small>
-        </span>
-        <p>
-          From yes to first designs.
-          <br />
-          You see the plan before you pay for the build.
-        </p>
+    <div class="section-heading schedule-heading">
+      <div>
+        <Eyebrow>How it works</Eyebrow>
+        <h2>From first call to a site that sells.</h2>
       </div>
+      <div class="schedule-intro">
+        <span>2</span>
+        <div>
+          <small class="mono accent">weeks</small>
+          <p>From yes to first designs.<br />You see the plan before you pay for the build.</p>
+        </div>
+      </div>
+    </div>
+    <div class="schedule-grid">
       {schedule.map((row) => (
         <article>
           <p class="mono accent">{row[0]}</p>

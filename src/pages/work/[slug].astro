@@ -28,17 +28,17 @@ const metrics = isBsa
   : p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`}>
+<Base title={`${p.title} | Pedro Nogueira`} pageClass="case-page">
   <section class="case-hero page-section">
-    <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
-      <a href="/projects">Projects</a>
-      <span>/</span>
-      <span>{p.category}</span>
-      <span>/</span>
-      <span>{isBsa ? "BSA Legal" : p.title.split(":")[0]}</span>
-    </nav>
     <div class="case-hero-top">
       <div>
+        <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
+          <a href="/projects">Projects</a>
+          <span>/</span>
+          <span>{p.category}</span>
+          <span>/</span>
+          <span>{isBsa ? "BSA Legal" : p.title.split(":")[0]}</span>
+        </nav>
         <h1>
           {isBsa ? (
             <>
@@ -60,20 +60,27 @@ const metrics = isBsa
           {isBsa && <ToolChip label="CMS + forms" />}
           <ToolChip label={`${p.location} · ${p.year}`} />
         </div>
-        <p class="case-client">
-          {isBsa ? bsaCase.client : p.title.split(":")[0]}
-        </p>
-        <p class="muted">
-          {isBsa ? "UI/UX + Webflow build · [X] weeks" : p.tools.join(" · ")}
-        </p>
-        <Button
-          href={liveUrl || undefined}
-          disabled={!liveUrl}
-          secondary
-          icon="arrow-up-right"
-        >
-          Visit live site
-        </Button>
+        <div class="case-client-row">
+          <div class="case-client-badge">
+            <span class="case-client-avatar" aria-hidden="true"></span>
+            <div>
+              <p class="case-client">
+                {isBsa ? bsaCase.client : p.title.split(":")[0]}
+              </p>
+              <p class="muted">
+                {isBsa ? "UI/UX + Webflow build · [X] weeks" : p.tools.join(" · ")}
+              </p>
+            </div>
+          </div>
+          <Button
+            href={liveUrl || undefined}
+            disabled={!liveUrl}
+            secondary
+            icon="arrow-up-right"
+          >
+            Visit live site
+          </Button>
+        </div>
       </div>
       <div class="case-result-card">
         <p class="mono accent">{isBsa ? "Results in 3 months" : "Results"}</p>

@@ -1,0 +1,155 @@
+/* Current Figma: About 488:9497 / 529:4875; Services 488:10048 / 527:12182.
+   Keep these corrections scoped so other portfolio pages retain their styling. */
+.about-page, .services-page { --text-secondary: #647362; --border: #e6e2da; background: var(--surface); }
+.about-page h1, .services-page h1 { text-wrap: initial; }
+.about-page .about-hero { grid-template-columns: minmax(0,521.52fr) minmax(0,700fr); padding-top:57px; }
+.about-page .about-hero > div > p:not(.section-eyebrow) { font-size:22px; color:var(--text-secondary); margin:16px 0 0; }
+.about-page .about-portrait { height:auto; aspect-ratio:521.52 / 539.387; }
+.about-page .about-portrait img { height:auto; }
+.about-page .about-stats { padding-top:0; padding-bottom:64px; }
+.about-page .about-stats-card { display:block; border:0; padding:28px 32px; border-radius:20px; background:var(--surface); box-shadow:0 16px 40px #64736229; }
+.about-page .about-stats dl { gap:0; margin:0 0 20px; }
+.about-page .about-stats dl > div { padding-inline:24px; gap:8px; border-left:1px solid var(--border); }
+.about-page .about-stats dl > div:first-child { padding-left:0; border:0; }
+.about-page .about-stats dd { color:var(--text); font-size:62px; line-height:1.2; letter-spacing:.04em; }
+.about-page .about-stats-card > div { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:16px; gap:16px; }
+.about-page .about-stats-card > div > p { font-size:14px; color:#9c9890; margin:0; }
+.about-page .about-stats-card > div > p::before { content:'● '; }
+.about-page .about-stats-card .text-link { font-size:18px; }
+.about-page .promises-section { border-color:var(--surface); padding-inline:64px; }
+.about-page .promises-section > h2 { font-size:50px; letter-spacing:-.01em; }
+.about-page .promises-section > p { font-size:28px; line-height:1.4; color:var(--text); }
+.about-page .promises-grid p { font-size:16px; line-height:1.6; letter-spacing:.01em; }
+.about-page .promises-grid h3 { line-height:1.3; }
+.about-page .promise-facts { gap:32px; font-size:14px; color:var(--text); }
+.about-page .promise-facts .mono { font:500 11px/1.2 var(--font-mono); color:var(--text-secondary); margin-bottom:4px; }
+.about-page .career-section { padding-top:40px; padding-bottom:80px; }
+.about-page .career-section > h2 { font-size:24px; line-height:30px; margin-bottom:24px; }
+.about-page .career-timeline { max-width:744px; }
+.about-page .career-timeline li { grid-template-columns:120px minmax(0,1fr); gap:24px; padding:20px 0; min-height:91px; margin-bottom:24px; }
+.about-page .career-timeline li + li { border-top:1px solid var(--border); }
+.about-page .career-timeline li::before, .about-page .career-timeline li::after { display:none; }
+.about-page .career-date { font:22px/1.6 var(--font-lettering); letter-spacing:.05em; padding:0; }
+.about-page .career-timeline h3 { font-size:18px; line-height:26px; margin-bottom:4px; }
+.about-page .career-timeline p { font-size:14px; line-height:1.5; color:#6b6660; }
+.about-page .skills-section { padding-top:20px; padding-bottom:100px; }
+.services-page .service-hero { grid-template-columns:minmax(0,1fr) 480px; padding-top:77px; }
+.services-page .service-hero h1 { font-size:64px; line-height:1.05; letter-spacing:-.02em; color:var(--text); }
+.services-page .service-hero > div > p:not(.mono):not(.section-eyebrow) { font-size:22px; color:var(--text-secondary); }
+.services-page .service-hero .check-list { font-size:16px; font-weight:500; }
+.services-page .service-hero .mono.muted { font:14px/1.5 var(--font-body); letter-spacing:.02em; color:#767675; }
+.services-page .builds-on { gap:14px; margin:24px 0; }
+.services-page .builds-on img { width:20px; height:20px; }
+.services-page .service-result { border-radius:20px; box-shadow:0 20px 48px #66331a1f; }
+.services-page .service-result-image { height:220px; padding:0; position:relative; }
+.services-page .service-result-image img { width:100%; height:106.51%; object-fit:cover; object-position:top; border-radius:0; position:absolute; top:-4.16%; }
+.services-page .service-result-body { padding:24px; }
+.services-page .service-result-body > p { display:inline-block; font:500 11px/1.2 var(--font-mono); letter-spacing:.06em; border-radius:999px; background:var(--chip-bg); padding:6px 12px; }
+.services-page .service-result h2 { font-size:20px; line-height:1.3; margin:12px 0; }
+.services-page .service-result table { margin:0 0 12px; color:var(--text-secondary); }
+.services-page .service-result td, .services-page .service-result th { border:0; padding:8px 0; }
+.services-page .service-result thead th { font:500 11px/1.2 var(--font-mono); text-transform:uppercase; color:#9c9890; }
+.services-page .service-result :is(th,td):not(:first-child) { text-align:right; }
+.services-page .service-result .action { border:0; padding:0; min-height:24px; justify-content:flex-start; color:var(--accent-ink); background:transparent; font:500 13px/1.2 var(--font-mono); }
+.services-page .offer-card { border-radius:24px; background:var(--bg-secondary); }
+.services-page .offer-card:not(.offer-card--featured) { background:color-mix(in srgb,var(--surface) 60%,var(--bg-secondary)); }
+.services-page .offer-card--featured { background:radial-gradient(ellipse at 6% 0%,#ff5a1f66,transparent 50%),#1c1e1d; box-shadow:none; }
+.services-page .offer-card > p { color:var(--text); font-weight:500; }
+.services-page .offer-card--featured > p { color:white; }
+.services-page .offer-card .check-list { font-weight:500; }
+.services-page .offer-card > .text-link { min-height:24px; }
+.services-page .capabilities { padding-top:56px; }
+.services-page .capability-grid { gap:40px 32px; }
+.services-page .capability-grid article { background:transparent; border-radius:0; border-top:1px solid var(--border); padding:20px 0 0; gap:10px; }
+.services-page .capability-grid h3 { font-size:20px; line-height:28px; }
+.services-page .capability-grid p { font-size:14px; line-height:1.5; }
+.services-page .capability-grid .chips { padding-top:6px; gap:6px; }
+.services-page .ai-note { background:none; border-radius:0; padding:0; max-width:820px; color:var(--text-secondary); font-size:14px; line-height:1.5; margin-top:48px; }
+.services-page .deliverables-section { background:var(--section-tint); border-radius:0; grid-template-columns:minmax(0,1fr) minmax(0,640px); }
+.services-page .deliverables-section > div > p { font-size:24px; }
+.services-page .deliverable-stats { display:flex; gap:40px; flex-wrap:wrap; }
+.services-page .deliverable-stats dt { font-size:14px; }
+.services-page .deliverable-table-head h3 { font:600 26px/1.4 var(--font-body); }
+.services-page .deliverable-table-head small { font:500 11px/1.2 var(--font-mono); color:var(--accent); }
+.services-page .deliverable-table h4 { font:500 16px/1.4 var(--font-body); }
+.services-page .deliverable-table li > .mono { font:500 14px/1.4 var(--font-body); color:var(--text); }
+.services-page .deliverable-table li::before { font:500 14px/1.4 var(--font-body); color:var(--accent); }
+.services-page .schedule-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; }
+.services-page .schedule-intro { grid-column:1 / -1; }
+.services-page .faq-section > :is(h2,.section-eyebrow) { text-align:center; justify-content:center; }
+.services-page .faq-section .faq-list { max-width:820px; margin-inline:auto; }
+@media (max-width:1100px) and (min-width:769px) {
+ .services-page .service-hero { grid-template-columns:minmax(0,1fr) minmax(0,.8fr); gap:32px; }
+ .services-page .service-hero h1, .about-page .about-hero h1 { font-size:48px; }
+ .about-page .promises-section { padding-inline:32px; }
+ .about-page .promises-section > h2 { font-size:40px; }
+ .services-page .offer-card { height:auto; min-height:559px; }
+ .services-page .offer-card > .text-link { font-size:15px; }
+}
+@media (max-width:768px) {
+ .about-page .about-hero { grid-template-columns:1fr; padding:98px 20px 30px; gap:40px; }
+ .about-page .about-portrait { width:100%; height:auto; aspect-ratio:350 / 361.99; border-radius:40px; }
+ .about-page .about-hero h1 { font-size:40px; line-height:1.15; letter-spacing:-.02em; }
+ .about-page .about-hero > div > p:not(.section-eyebrow) { font-size:16px; line-height:1.5; }
+ .about-page .about-stats { padding:64px 20px; }
+ .about-page .about-stats-card { padding:24px; }
+ .about-page .about-stats dl { gap:16px; }
+ .about-page .about-stats dl > div { border:0; padding:0; gap:16px; }
+ .about-page .about-stats dd { font-size:52px; line-height:1.1; letter-spacing:-.02em; }
+ .about-page .about-stats-card > div { flex-direction:column; align-items:flex-start; }
+ .about-page .about-stats-card .text-link { font-size:14px; }
+ .about-page .promises-section { padding:40px 10px; }
+ .about-page .promises-section > h2 { font-size:28px; }
+ .about-page .promises-section > p { font-size:16px; line-height:1.5; }
+ .about-page .promise-facts { gap:24px; }
+ .about-page .career-section { padding-block:64px; }
+ .about-page .career-timeline li { grid-template-columns:1fr; gap:8px; margin-bottom:0; padding:20px 0; }
+ .about-page .career-date { font-size:16px; }
+ .about-page .skills-section { padding-block:0 64px; }
+ .services-page .service-hero { grid-template-columns:1fr; padding-top:89px; gap:40px; }
+ .services-page .service-hero h1 { font-size:40px; line-height:1.15; }
+ .services-page .service-hero > div > p:not(.mono):not(.section-eyebrow) { font-size:16px; line-height:1.5; }
+ .services-page .service-hero .check-list { font-size:16px; }
+ .services-page .service-result-image { height:220px; }
+ .services-page .service-result-body { padding:24px; }
+ .services-page .service-result h2 { font-size:20px; }
+ .services-page .offer-card { height:auto; min-height:559px; }
+ .services-page .offer-card > .text-link { min-height:44px; }
+ .services-page .capability-grid { grid-template-columns:1fr; }
+ .services-page .deliverables-section { grid-template-columns:1fr; }
+ .services-page .deliverables-section > div > p { font-size:16px; }
+ .services-page .deliverable-stats { display:grid; gap:24px; }
+ .services-page .deliverable-table-head h3 { font-size:22px; }
+ .services-page .schedule-grid { grid-template-columns:1fr; }
+ .services-page .schedule-intro { grid-column:auto; }
+ .services-page .faq-section > :is(h2,.section-eyebrow) { text-align:left; justify-content:flex-start; }
+}
+:root[data-theme="dark"] :is(.about-page,.services-page) { --text-secondary:#a5b3a1; --border:#2a2a2a; }
+@media (prefers-color-scheme:dark) {
+ :root:not([data-theme="light"]):not([data-theme="dark"]) :is(.about-page,.services-page) { --text-secondary:#a5b3a1; --border:#2a2a2a; }
+}
+/* Figma's portrait transform mirrors the source, and its case cover fills the slot. */
+.about-page .about-portrait img { transform:scaleX(-1); }
+.about-page .promises-section > .section-eyebrow { color:var(--accent-ink); font:18px/16px var(--font-label); margin:0 0 16px; }
+.services-page .service-result-image img { object-fit:fill; }
+.services-page .service-result td:last-child { color:var(--accent-ink); font-weight:500; }
+.services-page .service-hero .mono.muted { text-transform:none; }
+@media (max-width:768px) {
+ .about-page .promises-section > .section-eyebrow { font-size:14px; }
+}
+.services-page .deliverables-section > div > .section-eyebrow { font:14px/16px var(--font-label); color:var(--accent-ink); }
+.services-page .capabilities .section-heading h2 { font-size:32px; line-height:38px; letter-spacing:0; }
+.services-page .section-heading > p { color:var(--text-secondary); }
+.services-page .schedule-heading h2 { margin-bottom:0; }
+.services-page .schedule-heading .schedule-intro { display:flex; align-items:center; gap:16px; max-width:380px; }
+.services-page .schedule-intro > span { font:700 64px/1.05 var(--font-display); letter-spacing:-.02em; }
+.services-page .schedule-intro small { font:500 11px/1.2 var(--font-mono); }
+.services-page .schedule-intro p { color:var(--text-secondary); font-size:14px; line-height:1.5; margin:2px 0 0; }
+.services-page .schedule-grid article:first-child { border-top:3px solid var(--accent); }
+.services-page .schedule-grid h3 { margin:12px 0; }
+.services-page .schedule-grid p.mono { font:500 11px/1.2 var(--font-mono); }
+.services-page .schedule-grid p { line-height:1.5; }
+@media (max-width:768px) {
+ .services-page .capabilities .section-heading h2 { font-size:28px; line-height:1.15; }
+ .services-page .schedule-intro > span { font-size:52px; }
+}

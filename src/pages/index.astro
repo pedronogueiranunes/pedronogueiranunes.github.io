@@ -18,7 +18,7 @@ const posts = (await getCollection("posts")).sort(
 );
 ---
 
-<Base title="Pedro Nogueira | Web designer and developer">
+<Base title="Pedro Nogueira | Web designer and developer" pageClass="home-page">
   <section class="home-hero">
     <div class="home-hero-panel">
       <h1>
@@ -259,6 +259,7 @@ const posts = (await getCollection("posts")).sort(
               loading="lazy"
               alt=""
             />
+            {i === 0 && <span class="article-latest">Latest</span>}
           </a>
           <div class="article-copy">
             <p class="mono">
