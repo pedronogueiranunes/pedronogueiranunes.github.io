@@ -5634,7 +5634,7 @@ body {
 .process-visual .research-bar:not(:first-of-type) small { color: #999; }
 
 
-.process-section { border: 30px solid var(--surface); padding: 60px 64px; }
+@media (min-width: 769px) { .process-section { border: 30px solid var(--surface); padding: 60px 64px; } }
 .process-card > .mono { font-size: 12px; }
 .process-card .tool-chip { font-size: 11px; padding: 5px 10px 5px 8px; }
 .process-visual--0 > .mono { font-size: 9px; color: #ffffff73; }
