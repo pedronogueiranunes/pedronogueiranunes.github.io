@@ -61,6 +61,22 @@ export function setupAboutEnvironment(app, viewport, radius) {
     stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, 0.022, 0], glyphOrange, side * -40);
     stroke(slash, [0.06, 0.01, 0.016], [side * 0.063, -0.022, 0], glyphOrange, side * 40);
   }
+  // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
+  const ring = new pc.Entity("shoulder-ring");
+  root.addChild(ring);
+  const RING_Y = -0.12, RING_R = 0.58, DOTS = 48;
+  for (let i = 0; i < DOTS; i++) {
+    const a = (i / DOTS) * Math.PI * 2;
+    const dot = new pc.Entity("ring-dot");
+    dot.addComponent("render", { type: "box" });
+    dot.render.material = glyphOrange;
+    dot.setLocalScale(0.018 * radius, 0.006 * radius, 0.006 * radius);
+    dot.setLocalPosition(Math.cos(a) * RING_R * radius, 0, Math.sin(a) * RING_R * radius);
+    dot.setLocalEulerAngles(0, -a * 180 / Math.PI + 90, 0);
+    ring.addChild(dot);
+  }
+  ring.setLocalPosition(0, RING_Y * radius, 0);
+  let ringYaw = 0;
   let time = 0;
   let visible = true;
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -68,12 +84,13 @@ export function setupAboutEnvironment(app, viewport, radius) {
   observer.observe(viewport);
   const positionGlyphs = () => {
     glyphs.forEach(({ group, phase }, index) => {
-      // Counter-rotate around the full torso envelope, below the shoulders.
+      group.setLocalScale(1.6, 1.6, 1.6);
+      // Counter-rotate around the head, at chin height.
       // A deep orbit keeps front/back passes clear of the rotating splat.
       const angle = time * 0.35 + phase; // portrait yaw is +Y; +angle traces the opposite way
       group.setLocalPosition(
         Math.cos(angle) * radius * 0.52,
-        ([-0.16, -0.25, -0.36, -0.3][index] + Math.sin(time * (0.45 + index * 0.06) + phase) * 0.018) * radius,
+        ([0.05, 0.0, 0.07, 0.02][index] + Math.sin(time * (0.45 + index * 0.06) + phase) * 0.015) * radius, // chin height
         Math.sin(angle) * radius * 0.65,
       );
       // Face the viewer while gently tilting, so glyphs stay readable.
@@ -87,7 +104,10 @@ export function setupAboutEnvironment(app, viewport, radius) {
   positionGlyphs();
   const update = (dt) => {
     if (!visible || document.hidden || motion.matches) return;
-    time += Math.min(dt, 0.05);
+    const step = Math.min(dt, 0.05);
+    time += step;
+    ringYaw = (ringYaw + step * 12) % 360;
+    ring.setLocalEulerAngles(0, ringYaw, 0);
     positionGlyphs();
     app.renderNextFrame = true;
   };
