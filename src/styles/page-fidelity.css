@@ -88,7 +88,7 @@
 }
 @media (max-width:768px) {
  .about-page .about-hero { grid-template-columns:1fr; padding:20px 20px 30px; gap:40px; }
- .about-page .about-portrait { width:100%; height:auto; aspect-ratio:350 / 361.99; border-radius:40px; }
+ .about-page .about-portrait { width:100%; height:auto; aspect-ratio:1; border-radius:40px; }
  .about-page .about-hero h1 { font-size:40px; line-height:1.15; letter-spacing:-.02em; }
  .about-page .about-hero > div > p:not(.section-eyebrow) { font-size:16px; line-height:1.5; }
  .about-page .about-stats { padding:64px 20px; }
