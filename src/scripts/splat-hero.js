@@ -138,7 +138,6 @@ export function initSplat() {
       const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
       const radius = aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
-      stopEnvironment = setupAboutEnvironment(app, viewport, radius, { revealOnPose: viewport.dataset.autoRotate !== "true" });
       // Slight camera dolly-in as the portrait lands in the About section.
       // Done in 3D (not CSS scale) so the drawing buffer never resizes.
       const ZOOM_AT_BIO = 0.1; // 10% closer at pose 1
@@ -192,6 +191,10 @@ export function initSplat() {
         revealed = true;
         app.off("postrender", onPostRender);
         reveal();
+        // Add the orbit accents only after the splat itself has drawn. Created any
+        // earlier, their opaque pixels satisfied hasPixels() before the splat sort
+        // landed, so the page revealed an empty portrait with just the glyphs.
+        if (!disposed) stopEnvironment = setupAboutEnvironment(app, viewport, radius, { revealOnPose: viewport.dataset.autoRotate !== "true" });
         // A few more frames so late sort updates land, then back to on-demand.
         later(() => {
           app.autoRender = false;
