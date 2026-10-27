@@ -54,6 +54,8 @@ const {
       const max = rail.scrollWidth - rail.clientWidth;
       prev.disabled = rail.scrollLeft <= 1;
       next.disabled = rail.scrollLeft >= max - 1;
+      root.toggleAttribute("data-more-before", !prev.disabled);
+      root.toggleAttribute("data-more-after", !next.disabled);
       thumb.style.width = `${Math.min(100, (rail.clientWidth / rail.scrollWidth) * 100)}%`;
       thumb.style.transform = `translateX(${max > 0 ? ((rail.scrollLeft / rail.scrollWidth) * 100) / (rail.clientWidth / rail.scrollWidth) : 0}%)`;
     };
