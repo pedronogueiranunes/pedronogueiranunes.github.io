@@ -6,6 +6,7 @@ Cookie choices uses the self-hosted `vanilla-cookieconsent` 3.1.0 library (MIT),
 
 Current inventory:
 - `theme`: browser local storage, retained until the browser/user clears it. Used for the user's requested appearance.
+- `language`: browser local storage, retained until the browser/user clears it. Used for the user's explicitly selected language.
 - `portfolio_cookie_choices`: first-party cookie, expires after 182 days. Created when choices are saved.
 - No optional analytics or advertising scripts were found in this implementation. Only the essential category is shown. An automatic consent banner is disabled because no optional categories currently exist.
 - GitHub Pages provides hosting. When enabled, the contact form sends user-supplied inquiry details to Web3Forms. Provider privacy policies are linked in the notice.

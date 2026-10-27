@@ -18,7 +18,8 @@ const { Content } = await post.render();
   <article class="post-page">
     <p class="post__meta label-mono">
       <span class="muted">
-        {post.data.date.toLocaleDateString("en-US", {
+        {post.data.date.toLocaleDateString(Astro.currentLocale || "en", {
+          timeZone: "UTC",
           month: "short",
           day: "numeric",
           year: "numeric",

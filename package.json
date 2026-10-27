@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "prebuild": "node scripts/build-translations.mjs",
+    "i18n:generate": "node scripts/build-translations.mjs",
+    "predev": "node scripts/build-translations.mjs",
+    "i18n:check": "node scripts/check-localized-routes.mjs"
   },
   "dependencies": {
     "@fontsource/geist-mono": "^5.3.0",
@@ -16,6 +20,7 @@
     "@fontsource/silkscreen": "^5.3.0",
     "astro": "^5.2.0",
     "gsap": "^3.15.0",
+    "parse5": "^7.3.0",
     "vanilla-cookieconsent": "^3.1.0"
   },
   "devDependencies": {

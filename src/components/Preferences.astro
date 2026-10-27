@@ -1,4 +1,6 @@
 ---
+import { localeFromPath, languageCodes } from "../i18n/locales";
+const locale = localeFromPath(Astro.url.pathname);
 const { id = "preferences", inline = false } = Astro.props;
 ---
 
@@ -17,7 +19,7 @@ const { id = "preferences", inline = false } = Astro.props;
         height="16"
         alt=""
       />
-      <span data-language-label>EN</span>
+      <span data-language-label>{languageCodes[locale]}</span>
       <span class="preferences-caret" aria-hidden="true"></span>
     </button>
   )}
@@ -32,13 +34,14 @@ const { id = "preferences", inline = false } = Astro.props;
         ["en", "English", "EN"],
         ["pt-br", "Português", "PT"],
         ["es", "Español", "ES"],
+        ["fr", "Français", "FR"],
       ].map(([code, label, short]) => (
         <label class="language-option">
           <input
             type="radio"
             name={`${id}-language`}
             value={code}
-            checked={code === "en"}
+            checked={code === locale}
           />
           <span>{label}</span>
           <small>{short}</small>
@@ -73,6 +76,7 @@ const { id = "preferences", inline = false } = Astro.props;
   </div>
 </div>
 <script>
+  import { localeFromPath, localizePath, languageCodes, type Locale } from "../i18n/locales";
   import { changeTheme } from "../scripts/transitions";
   import { onPageLoad } from "../scripts/page-lifecycle";
 
@@ -87,6 +91,12 @@ const { id = "preferences", inline = false } = Astro.props;
     );
   };
   sync();
+  const language = localeFromPath(location.pathname);
+  roots.forEach(root => {
+    root.querySelectorAll<HTMLInputElement>(".language-option input").forEach(input => input.checked = input.value === language);
+    const label = root.querySelector("[data-language-label]");
+    if (label) label.textContent = languageCodes[language];
+  });
   roots.forEach((root) => {
     const toggle = root.querySelector<HTMLButtonElement>(".preferences-toggle");
     const panel = root.querySelector<HTMLElement>(".preferences-panel")!;
@@ -131,7 +141,9 @@ const { id = "preferences", inline = false } = Astro.props;
       .querySelectorAll<HTMLInputElement>(".language-option input")
       .forEach((input) =>
         input.addEventListener("change", () => {
-          window.location.assign("/");
+          const language = input.value as Locale;
+          try { localStorage.setItem("language", language); } catch {}
+          window.location.assign(localizePath(location.pathname + location.search + location.hash, language));
         }, { signal: scope.signal }),
       );
   });
