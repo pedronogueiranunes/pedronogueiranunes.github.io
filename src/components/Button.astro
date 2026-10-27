@@ -25,6 +25,7 @@ const Tag = href ? "a" : "button";
   type={href ? undefined : type}
   class:list={["action", { "action--secondary": secondary }, className]}
 >
+  {!secondary && <span class="action-halo" aria-hidden="true"><span></span></span>}
   <span class="action-label"><slot /></span>
   {icon && (
     <span class:list={["action-icon", { "action-icon--travel": icon === "arrow-right" }]} aria-hidden="true">
