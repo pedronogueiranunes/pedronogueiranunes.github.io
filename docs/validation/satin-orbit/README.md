@@ -1,10 +1,10 @@
 # Satin orbit refinement · 2026-10-27
 
-Procedural rounded strokes and a continuous beveled cursor replace the flat box glyphs. The exact orange and muted green remain material base colors. An icon-only layer receives a warm upper-left key, soft cool fill and material-local ambient SH; the self-illuminated portrait and unlit dotted ring receive no new lighting. No model, reflection texture, shadow pass or dependency was added.
+Procedural rounded strokes and continuous rounded bevels on the brackets, chevrons and connected cursor/stem replace the flat box glyphs. The exact orange and muted green remain material base colors. An icon-only layer receives a warm upper-left key, soft cool fill and material-local ambient SH; the self-illuminated portrait and unlit dotted ring receive no new lighting. No model, reflection texture, shadow pass or dependency was added.
 
 Icons and ring write depth before splat compositing. Stable screen-space opacity coverage preserves per-pixel occlusion through the home fade, without treating a transparent glyph as one sortable surface. Fade duration, slight scale, counter-orbit, heights, drift, tilt and reduced-motion behavior are preserved. Fine-pointer desktops with at least eight reported hardware threads and no Save-Data can use DPR 2; touch/mobile and other clients retain the 1.5 cap. This is a conservative device heuristic, not a hardware benchmark.
 
-Mobile About top padding is now 20px, matching its side gutters (user review follow-up); desktop stays 57px. The mobile portrait canvas is square, with its width still contained by the 20px side gutters.
+Mobile About top padding is now 20px, matching its side gutters (user review follow-up); desktop stays 57px. The mobile portrait canvas is square, with its width still contained by the 20px side gutters. Mobile About scales the portrait and orbit together by 1.2, following review, preserving their relative proportions; desktop/Home sizes are unchanged.
 
 Verified in local Chrome against the production build:
 
