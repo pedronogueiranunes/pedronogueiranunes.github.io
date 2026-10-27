@@ -22,6 +22,7 @@ export function setupAboutEnvironment(app, viewport, radius) {
   // Small code/design glyphs made from actual 3D strokes and pixel blocks.
   const glyphOrange = material([1, 0.353, 0.122]);
   const glyphGreen = material([0.39, 0.45, 0.38]);
+  const ringGray = material([0.82, 0.82, 0.8]);
   const glyphs = [];
   const glyph = (name, phase) => {
     const group = new pc.Entity(name);
@@ -69,8 +70,8 @@ export function setupAboutEnvironment(app, viewport, radius) {
     const a = (i / DOTS) * Math.PI * 2;
     const dot = new pc.Entity("ring-dot");
     dot.addComponent("render", { type: "box" });
-    dot.render.material = glyphOrange;
-    dot.setLocalScale(0.018 * radius, 0.006 * radius, 0.006 * radius);
+    dot.render.material = ringGray;
+    dot.setLocalScale(0.018 * radius, 0.003 * radius, 0.003 * radius);
     dot.setLocalPosition(Math.cos(a) * RING_R * radius, 0, Math.sin(a) * RING_R * radius);
     dot.setLocalEulerAngles(0, -a * 180 / Math.PI + 90, 0);
     ring.addChild(dot);
@@ -84,13 +85,13 @@ export function setupAboutEnvironment(app, viewport, radius) {
   observer.observe(viewport);
   const positionGlyphs = () => {
     glyphs.forEach(({ group, phase }, index) => {
-      group.setLocalScale(1.6, 1.6, 1.6);
+      group.setLocalScale(1.3, 1.3, 1.3);
       // Counter-rotate around the head, at chin height.
       // A deep orbit keeps front/back passes clear of the rotating splat.
       const angle = time * 0.35 + phase; // portrait yaw is +Y; +angle traces the opposite way
       group.setLocalPosition(
         Math.cos(angle) * radius * 0.52,
-        ([0.05, 0.0, 0.07, 0.02][index] + Math.sin(time * (0.45 + index * 0.06) + phase) * 0.015) * radius, // chin height
+        ([0.13, -0.04, 0.22, 0.04][index] + Math.sin(time * (0.18 + index * 0.05) + phase * 1.7) * 0.05) * radius, // staggered heights, slow drift
         Math.sin(angle) * radius * 0.65,
       );
       // Face the viewer while gently tilting, so glyphs stay readable.
