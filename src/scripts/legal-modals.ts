@@ -43,6 +43,7 @@ function setupCookies() {
                   headers: { name: "Name", purpose: "Purpose", duration: "Duration" },
                   body: [
                     { name: "theme (local storage)", purpose: "Remembers your selected Light, Dark or Auto appearance on this device.", duration: "Until cleared in your browser" },
+                    { name: "language (local storage)", purpose: "Remembers your selected language on this device.", duration: "Until cleared in your browser" },
                     { name: "portfolio_cookie_choices (cookie)", purpose: "Remembers your saved cookie choices on this website.", duration: "182 days" },
                   ],
                 },

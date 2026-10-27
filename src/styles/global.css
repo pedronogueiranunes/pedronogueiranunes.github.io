@@ -6311,7 +6311,7 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
 .site-footer {
   --footer-gutter: 64px;
   padding-inline: var(--footer-gutter);
-  overflow-x: clip;
+  overflow: visible;
 }
 .footer-lettering {
   width: calc(100% + var(--footer-gutter) * 2);
@@ -6562,4 +6562,40 @@ body { overflow-x: clip; }
 .featured-project-copy > .chips > .outline-chip { font-size: 10px; }
 @media (max-width: 768px) {
   .featured-project-copy > .chips > .outline-chip { font-size: 8px; }
+}
+
+/* Keep translated navigation and headings readable on narrow screens. */
+@media (max-width: 380px) {
+  html:not([lang="en"]) .site-nav .site-logo { width: 90px; font-size: 18px; }
+  html:not([lang="en"]) .site-nav .action { font-size: 8px; padding-inline: 10px; gap: 0; }
+  html:not([lang="en"]) .site-nav .action-icon { display: none; }
+}
+@media (max-width: 768px) {
+  html:not([lang="en"]) .home-hero-panel h1 { font-size: clamp(30px, 8.7vw, 36px); }
+  html:not([lang="en"]) .your-turn-label { font-size: 24px; line-height: 1.1; }
+}
+@media (min-width: 1025px) and (max-width: 1200px) {
+  html:not([lang="en"]) .desktop-nav { gap: 8px; padding-inline: 12px; }
+  html:not([lang="en"]) .nav-link { font-size: 11px; padding-inline: 10px; }
+  html:not([lang="en"]) .site-nav .site-logo { width: 120px; }
+  html:not([lang="en"]) .site-nav .action { font-size: 12px; padding-inline: 12px; }
+}
+html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
+@media (max-width: 768px) {
+  html[lang="fr"] .your-turn-label { font-size: 20px; line-height: 1.1; letter-spacing: 0.02em; }
+}
+
+/* In-flow icon space prevents overlap when mobile text wraps or grows. */
+@media (max-width: 768px) {
+  .comparison-row { padding-bottom: 20px; }
+  .comparison-illustration {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    flex-shrink: 0;
+    margin: 12px -44px -24.4px auto;
+  }
+  .mobile-dialog:focus { outline: none; }
+  .mobile-dialog { height: 100dvh; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+  .site-nav { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
 }

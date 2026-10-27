@@ -6,6 +6,8 @@ let currentPose = 0;
 // POSE_FOLLOW: how fast the portrait catches up with the scroll position each
 // frame (0..1). Lower = softer, more trailing ease. 1 = locked to scroll.
 const POSE_FOLLOW = 0.12;
+// A short, time-based catch-up on touch screens, independent of refresh rate.
+const MOBILE_FOLLOW_MS = 70;
 
 export function getPortraitGeometry() {
   const stage = document.getElementById("splat-viewport");
@@ -46,11 +48,15 @@ export function initPortraitTravel() {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let disposed = false;
+  let measuredViewportWidth = innerWidth;
+  let measuredViewportHeight = innerHeight;
+  let lastFrameTime = 0;
   function measure() {
     if (disposed) return;
     const from = origin.getBoundingClientRect();
     const to = destination.getBoundingClientRect();
-    const start = Math.max(0, from.top + scrollY - innerHeight * 0.35);
+    const viewportHeight = mobile.matches ? measuredViewportHeight : innerHeight;
+    const start = Math.max(0, from.top + scrollY - viewportHeight * 0.35);
     // Match the published portrait's 640×480 desktop stage, fitting narrow columns.
     const targetScale = Math.min(
       1,
@@ -72,10 +78,12 @@ export function initPortraitTravel() {
       start,
       end: Math.max(
         start + 1,
-        to.top + scrollY - Math.max(80, (innerHeight - to.height) / 2),
+        to.top + scrollY - Math.max(80, (viewportHeight - to.height) / 2),
       ),
     };
     stage._portraitGeometry = currentGeometry;
+    cancelAnimationFrame(frame);
+    frame = 0;
     update(true);
   }
   let targetPose = 0;
@@ -107,22 +115,35 @@ export function initPortraitTravel() {
     stage._portraitPose = pose;
     stage.dispatchEvent(new CustomEvent("portraitpose", { detail: pose }));
   }
-  function update(instant = false) {
+  function update(instant = false, now = performance.now()) {
     frame = 0;
-    if (!currentGeometry) return;
+    if (disposed || !currentGeometry) return;
     targetPose = computeTarget();
-    const follow = instant || reducedMotion.matches || mobile.matches ? 1 : POSE_FOLLOW;
+    const elapsed = lastFrameTime ? Math.min(32, Math.max(0, now - lastFrameTime)) : 1000 / 60;
+    const follow = instant || reducedMotion.matches
+      ? 1
+      : mobile.matches ? 1 - Math.exp(-elapsed / MOBILE_FOLLOW_MS) : POSE_FOLLOW;
+    lastFrameTime = now;
     displayPose += (targetPose - displayPose) * follow;
     if (Math.abs(targetPose - displayPose) < 0.0005) displayPose = targetPose;
     apply(displayPose);
     // Keep easing toward the scroll position after scrolling stops.
-    if (displayPose !== targetPose) frame = requestAnimationFrame(() => update());
+    if (displayPose !== targetPose) frame = requestAnimationFrame((time) => update(false, time));
+    else lastFrameTime = 0;
   }
   function schedule() {
-    if (!frame) frame = requestAnimationFrame(() => update());
+    if (!disposed && !frame) frame = requestAnimationFrame((time) => update(false, time));
+  }
+  function onResize() {
+    // Mobile browser chrome changes viewport height while scrolling. It must not
+    // change the path or force an instant pose update in the middle of a swipe.
+    if (mobile.matches && innerWidth === measuredViewportWidth) return;
+    measuredViewportWidth = innerWidth;
+    measuredViewportHeight = innerHeight;
+    measure();
   }
   addEventListener("scroll", schedule, { passive: true });
-  addEventListener("resize", measure);
+  addEventListener("resize", onResize);
   reducedMotion.addEventListener("change", measure);
   const observer = new ResizeObserver(measure);
   observer.observe(destination);
@@ -133,7 +154,7 @@ export function initPortraitTravel() {
     cancelAnimationFrame(frame);
     observer.disconnect();
     removeEventListener("scroll", schedule);
-    removeEventListener("resize", measure);
+    removeEventListener("resize", onResize);
     reducedMotion.removeEventListener("change", measure);
     currentGeometry = null;
     currentPose = 0;

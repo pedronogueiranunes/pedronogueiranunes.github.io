@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import Home from "../index.astro";
+import Projects from "../projects.astro";
+import About from "../about.astro";
+import Services from "../services.astro";
+import Contact from "../contact.astro";
+import Work from "../work/[slug].astro";
+import Post from "../thoughts/[slug].astro";
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  const posts = await getCollection("posts");
+  const paths = [
+    ...[undefined, "projects", "about", "services", "contact"].map(path => ({ path, props: {} })),
+    ...projects.map(project => ({ path: `work/${project.data.caseSlug || project.slug}`, props: { project } })),
+    ...posts.map(post => ({ path: `thoughts/${post.slug}`, props: { post } })),
+  ];
+  return ["pt-br", "es", "fr"].flatMap(locale => paths.map(({ path, props }) => ({ params: { locale, path }, props })));
+}
+const path = Astro.params.path || "";
+const pages = { "": Home, projects: Projects, about: About, services: Services, contact: Contact };
+const Page = path.startsWith("work/") ? Work : path.startsWith("thoughts/") ? Post : pages[path as keyof typeof pages];
+---
+<Page {...Astro.props} />

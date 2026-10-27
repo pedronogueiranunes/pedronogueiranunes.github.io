@@ -179,7 +179,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     </button>
   </div>
 </header>
-<dialog transition:name="mobile-menu" transition:persist="mobile-menu" transition:animate="none" id="mobile-menu" class="mobile-dialog" aria-label="Main navigation">
+<dialog transition:name="mobile-menu" transition:persist="mobile-menu" transition:animate="none" id="mobile-menu" class="mobile-dialog" tabindex="-1" aria-label="Main navigation">
   <div class="mobile-menu-header">
     <a class="site-logo" href="/">
       Pedr0
@@ -240,8 +240,13 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
   const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
   const close = () => dialog.close();
-  trigger.addEventListener("click", () => {
+  trigger.addEventListener("click", (event) => {
     dialog.showModal();
+    // Safari focuses the first link when opening a dialog. Keep touch openings
+    // on the dialog itself; keyboard openings retain a visible actionable focus.
+    dialog.scrollTop = 0;
+    if (event.detail > 0) dialog.focus({ preventScroll: true });
+    else dialog.querySelector<HTMLButtonElement>(".menu-close")?.focus({ preventScroll: true });
     trigger.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
   }, { signal: scope.signal });
@@ -249,7 +254,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   dialog.addEventListener("close", () => {
     trigger.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
-    trigger.focus();
+    trigger.focus({ preventScroll: true });
   }, { signal: scope.signal });
   dialog
     .querySelectorAll("a")
