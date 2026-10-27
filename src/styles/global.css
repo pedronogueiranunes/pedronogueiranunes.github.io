@@ -768,9 +768,9 @@ img {
   align-items: center;
   gap: 12px;
   position: absolute;
-  left: 50%;
-  bottom: 24px;
-  transform: translate(-50%, 8px);
+  left: 8px;
+  bottom: 12px;
+  transform: translateY(8px);
   background: var(--action-bg);
   color: white;
   border-radius: 999px;
@@ -789,7 +789,7 @@ img {
 .project-media:hover .project-hover,
 .project-media:focus-visible .project-hover {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translateY(0);
 }
 .project-body {
   padding: 20px 10px 4px;
@@ -5798,15 +5798,22 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   }
 }
 
-/* Primary CTA: warm edge light and a quiet directional response.
-   Glow layers only transition on interaction; nothing runs while idle. */
+/* Hover-only orange perimeter light, plus an independent pointer highlight. */
+@property --cta-orbit {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes cta-light-orbit {
+  to { --cta-orbit: 360deg; }
+}
 .action:not(.action--secondary):not(.case-sidebar-cta .action) {
   position: relative;
   isolation: isolate;
   overflow: visible;
   transition: background 180ms ease-out, transform 180ms ease-out;
 }
-.action:not(.action--secondary):not(.case-sidebar-cta .action)::before,
+.action:not(.action--secondary):not(.case-sidebar-cta .action) > .action-halo,
 .action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
   content: "";
   position: absolute;
@@ -5814,17 +5821,29 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 280ms ease-out, transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: none;
+  transition: opacity 280ms ease-out;
 }
-.action:not(.action--secondary):not(.case-sidebar-cta .action)::before {
+.action:not(.action--secondary):not(.case-sidebar-cta .action) > .action-halo {
   z-index: -1;
-  box-shadow: -8px 3px 22px -6px rgb(255 90 31 / 55%),
-    9px 4px 24px -7px rgb(255 166 64 / 48%);
-  transform: scale(0.97);
+  filter: blur(7px);
+  inset: -5px;
+}
+.action-halo > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  animation: inherit;
+  background: conic-gradient(from var(--cta-orbit), transparent 0deg, #ff7a36 45deg, #ff5a1f 85deg, transparent 125deg, #e64b13 190deg, #ffad66 225deg, transparent 260deg, #ff873f 310deg, transparent 360deg);
+  padding: 4px;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
 .action:not(.action--secondary):not(.case-sidebar-cta .action)::after {
   padding: 1.5px;
-  background: linear-gradient(115deg, #ffb36a 0%, #fff0d4 24%, #ff782f 52%, #ffd29a 76%, #ff5a1f 100%);
+  background:
+    radial-gradient(ellipse 75px 65px at var(--glow-x, 50%) var(--glow-y, 50%), rgb(255 255 255 / var(--glow-strength, 0)), rgb(255 227 190 / 0) 75%),
+    conic-gradient(from var(--cta-orbit), rgb(255 90 31 / 15%), #ff5a1f 65deg, #ff7a36 95deg, rgb(255 90 31 / 12%) 140deg, #e64b13 205deg, #ffad66 235deg, rgb(255 90 31 / 12%) 270deg, #ff873f 315deg, rgb(255 90 31 / 15%));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
@@ -5832,9 +5851,10 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   background: var(--button-fill, var(--action-bg));
   transform: none;
 }
-.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::before,
-.action:not(.action--secondary):not(.case-sidebar-cta .action):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])::after {
+.action:not(.action--secondary):not(.case-sidebar-cta .action):hover:not(:disabled):not([aria-disabled="true"]) > .action-halo,
+.action:not(.action--secondary):not(.case-sidebar-cta .action):hover:not(:disabled):not([aria-disabled="true"])::after {
   opacity: 1;
+  animation: cta-light-orbit 6s linear infinite;
   transform: none;
 }
 .action:not(.action--secondary) > .pixel-icon {
@@ -6631,3 +6651,85 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 /* Anchor filter popover to its trigger, including full-width desktop toolbars. */
 .filter-options { position: relative; }
 .filter-options > div { right: 0; top: calc(100% + 12px); }
+
+/* Case media follows the supplied Figma resting and glass hover states. */
+.project-media {
+  isolation: isolate;
+  transition: box-shadow 240ms ease-out;
+}
+.project-media::before,
+.project-media::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+.project-media::before {
+  z-index: 1;
+  inset: 0;
+  border: 3px solid var(--accent);
+  border-radius: inherit;
+}
+.project-media::after {
+  z-index: 1;
+  inset: auto 0 0;
+  height: 30%;
+  background: linear-gradient(0deg, rgb(255 90 31 / 46%), rgb(255 255 255 / 22%) 65%, transparent);
+  backdrop-filter: blur(8px);
+  mask-image: linear-gradient(0deg, #000 45%, transparent);
+}
+.project-hover {
+  z-index: 2;
+  min-height: 44px;
+  padding: 12px 20px;
+  background: #fff;
+  color: #232625;
+}
+.project-hover .pixel-icon { color: var(--accent); }
+.project-card:is(:hover, :focus-within) .project-media {
+  box-shadow: 0 5px 18px -5px rgb(255 90 31 / 65%);
+}
+.project-card:is(:hover, :focus-within) .project-media::before,
+.project-card:is(:hover, :focus-within) .project-media::after,
+.project-card:is(:hover, :focus-within) .project-hover { opacity: 1; }
+.project-card:is(:hover, :focus-within) .project-hover { transform: translateY(0); }
+.project-card:is(:hover, :focus-within) .project-media > img { transform: translateY(-8px); }
+.project-card:is(:hover, :focus-within) .project-metrics dd {
+  color: var(--accent);
+  font-family: var(--font-label);
+  font-weight: 400;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-media, .project-media::before, .project-media::after,
+  .project-media > img, .project-hover { transition: none; }
+  .project-card:is(:hover, :focus-within) .project-media > img { transform: none; }
+}
+
+.action:not(.action--secondary):is(:disabled, [aria-disabled="true"])::before,
+.action:not(.action--secondary):is(:disabled, [aria-disabled="true"])::after { opacity: 0; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .action:not(.action--secondary)::before,
+  .action:not(.action--secondary)::after { animation: none; }
+}
+
+/* Blur the wrapper after its child has been masked, so the halo can diffuse outward. */
+.action:not(.action--secondary):is(:disabled, [aria-disabled="true"]) > .action-halo { opacity: 0; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .action:not(.action--secondary) > .action-halo { animation: none; transition: none; }
+}
+
+/* One axial turn when entering the language control. */
+.preferences-toggle > img {
+  transform-origin: center;
+}
+.preferences-toggle:is(:hover, :focus-visible) > img {
+  animation: language-globe-turn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes language-globe-turn {
+  from { transform: perspective(80px) rotateY(0deg); }
+  to { transform: perspective(80px) rotateY(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preferences-toggle:is(:hover, :focus-visible) > img { animation: none; }
+}
