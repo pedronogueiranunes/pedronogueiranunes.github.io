@@ -92,13 +92,13 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
 <a class="skip-link" href="#main">
   Skip to content
 </a>
-<header class="site-nav">
-  <a class="site-logo" href="/" aria-label="Pedr0 Nogueira home">
+<header class="site-nav" transition:name="site-header" transition:persist="site-header" transition:animate="none">
+  <a class="site-logo" transition:name="site-logo" transition:animate="none" href="/" aria-label="Pedr0 Nogueira home">
     Pedr0
     <br />
     Nogueira
   </a>
-  <nav class="desktop-nav" aria-label="Main navigation">
+  <nav class="desktop-nav" transition:name="site-navigation" transition:animate="none" aria-label="Main navigation">
     {menu.map((item) => (
       <div class="nav-item" data-menu={item.key}>
         <a
@@ -179,7 +179,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     </button>
   </div>
 </header>
-<dialog id="mobile-menu" class="mobile-dialog" aria-label="Main navigation">
+<dialog transition:name="mobile-menu" transition:persist="mobile-menu" transition:animate="none" id="mobile-menu" class="mobile-dialog" aria-label="Main navigation">
   <div class="mobile-menu-header">
     <a class="site-logo" href="/">
       Pedr0
@@ -234,7 +234,9 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   <Button href="/contact">Book a call</Button>
 </dialog>
 <script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
   import { gsap } from "gsap";
+  onPageLoad((scope) => {
   const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
   const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
   const close = () => dialog.close();
@@ -242,19 +244,19 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     dialog.showModal();
     trigger.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
-  });
-  dialog.querySelector(".menu-close")?.addEventListener("click", close);
+  }, { signal: scope.signal });
+  dialog.querySelector(".menu-close")?.addEventListener("click", close, { signal: scope.signal });
   dialog.addEventListener("close", () => {
     trigger.setAttribute("aria-expanded", "false");
     document.body.style.overflow = "";
     trigger.focus();
-  });
+  }, { signal: scope.signal });
   dialog
     .querySelectorAll("a")
-    .forEach((a) => a.addEventListener("click", close));
+    .forEach((a) => a.addEventListener("click", close, { signal: scope.signal }));
   matchMedia("(min-width:1025px)").addEventListener("change", (e) => {
     if (e.matches && dialog.open) close();
-  });
+  }, { signal: scope.signal });
   const items = [...document.querySelectorAll<HTMLElement>(".nav-item")];
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   let openItem: HTMLElement | null = null;
@@ -302,25 +304,32 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
         gsap.killTweensOf(children(item));
         gsap.set(children(item), { clearProps: "transform,opacity" });
       });
+  }, { signal: scope.signal });
+  scope.cleanup(() => {
+    clearTimeout(closeTimer);
+    setOpen(null);
+    if (dialog.open) dialog.close();
+    document.body.style.overflow = "";
+    items.forEach((item) => gsap.killTweensOf(children(item)));
   });
   items.forEach((item) => {
     const link = item.querySelector<HTMLAnchorElement>(".nav-link")!;
-    item.addEventListener("mouseenter", () => setOpen(item));
+    item.addEventListener("mouseenter", () => setOpen(item), { signal: scope.signal });
     item.addEventListener("mouseleave", () => {
       if (!item.contains(document.activeElement)) {
-        closeTimer = setTimeout(() => {
+        closeTimer = scope.timeout(() => {
           if (openItem === item) setOpen(null);
         }, 5000);
       }
-    });
-    item.addEventListener("focusin", () => setOpen(item));
+    }, { signal: scope.signal });
+    item.addEventListener("focusin", () => setOpen(item), { signal: scope.signal });
     item.addEventListener("focusout", (event) => {
       if (
         event.relatedTarget instanceof Node &&
         !item.contains(event.relatedTarget)
       )
         setOpen(null);
-    });
+    }, { signal: scope.signal });
     item.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         link.focus();
@@ -330,17 +339,18 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
         event.preventDefault();
         setOpen(item);
         // Wait for the visibility transition to enter its visible state.
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => {
+        scope.frame(() =>
+          scope.frame(() => {
             if (item.classList.contains("is-open"))
               item.querySelector<HTMLAnchorElement>(".nav-row")?.focus();
           }),
         );
       }
-    });
+    }, { signal: scope.signal });
   });
   document.addEventListener("click", (event) => {
     if (!items.some((item) => item.contains(event.target as Node)))
       setOpen(null);
+  }, { signal: scope.signal });
   });
 </script>
