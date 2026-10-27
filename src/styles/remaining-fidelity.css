@@ -341,3 +341,27 @@
  .category-filters.is-dragging, .category-filters.is-dragging button { cursor:grabbing; }
  .category-filters { user-select:none; scroll-behavior:auto; }
 }
+
+/* Neutral tool chips from Current Figma 504:3096; logos retain brand orange. */
+:root { --tool-tag-bg:#f9f9f9; }
+:root[data-theme="dark"] { --tool-tag-bg:color-mix(in srgb,var(--text) 4%,var(--surface)); }
+@media (prefers-color-scheme:dark) {
+ :root:not([data-theme="light"]):not([data-theme="dark"]) { --tool-tag-bg:color-mix(in srgb,var(--text) 4%,var(--surface)); }
+}
+.skills-grid .tool-chip,
+.case-page .case-hero .tool-chip,
+.project-tools > li {
+ background:var(--tool-tag-bg);
+ color:var(--text);
+}
+
+/* Mobile offer art keeps a complete, consistently spaced desktop-style slot. */
+@media (max-width:768px) {
+ .services-page .offer-art { height:224px; }
+ .services-page .offer-art img {
+  width:220px;
+  height:220px;
+  left:0;
+  top:0;
+ }
+}
