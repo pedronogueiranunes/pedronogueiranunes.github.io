@@ -124,10 +124,10 @@
   --bg: #0d0d0d;
   --bg-secondary: #161616;
   --text: #f5f3ef;
-  --text-secondary: #9c9890;
+  --text-secondary: #808080;
   --border: #2a2a2a;
   --surface: #1e1e1e;
-  --hero-lettering-opacity: 0.1;
+  --hero-lettering-opacity: 0.9;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
@@ -135,10 +135,10 @@
     --bg: #0d0d0d;
     --bg-secondary: #161616;
     --text: #f5f3ef;
-    --text-secondary: #9c9890;
+    --text-secondary: #808080;
     --border: #2a2a2a;
     --surface: #1e1e1e;
-    --hero-lettering-opacity: 0.1;
+    --hero-lettering-opacity: 0.9;
   }
 }
 * {
@@ -1505,13 +1505,46 @@ details[open] > summary > .faq-plus:after {
   padding-bottom: 50px;
   overflow: hidden;
 }
+@property --rail-edge-before {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+@property --rail-edge-after {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
 .project-rail {
+  --rail-fade-width: clamp(32px, 6vw, 88px);
+  --rail-edge-before: 1;
+  --rail-edge-after: 1;
+  /* Reveal the page background so the fade follows Light, Dark and Auto. */
+  mask-image: linear-gradient(
+    to right,
+    rgb(0 0 0 / var(--rail-edge-before)),
+    rgb(0 0 0 / calc(0.65 + 0.35 * var(--rail-edge-before))) calc(var(--rail-fade-width) * 0.5),
+    #000 var(--rail-fade-width),
+    #000 calc(100% - var(--rail-fade-width)),
+    rgb(0 0 0 / calc(0.65 + 0.35 * var(--rail-edge-after))) calc(100% - var(--rail-fade-width) * 0.5),
+    rgb(0 0 0 / var(--rail-edge-after))
+  );
+  transition: --rail-edge-before 160ms ease-out, --rail-edge-after 160ms ease-out;
   display: flex;
   gap: 24px;
   overflow: auto;
   scroll-snap-type: x mandatory;
   padding: 16px 0 40px;
   scrollbar-width: none;
+}
+[data-rail][data-more-before] .project-rail {
+  --rail-edge-before: 0;
+}
+[data-rail][data-more-after] .project-rail {
+  --rail-edge-after: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-rail { transition: none; }
 }
 .project-rail::-webkit-scrollbar {
   display: none;
@@ -4411,13 +4444,13 @@ details[open] > summary > .faq-plus:after {
   --footer-bg: #eef2ed;
 }
 :root[data-theme="dark"] {
-  --section-tint: #172017;
-  --footer-bg: #172017;
+  --section-tint: #050705;
+  --footer-bg: #050705;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --section-tint: #172017;
-    --footer-bg: #172017;
+    --section-tint: #050705;
+    --footer-bg: #050705;
   }
 }
 .site-footer {
@@ -5497,7 +5530,6 @@ body {
 
 .problems-section .section-heading > p { max-width: 400px; font-size: 16px; line-height: 1.6; }
 .problem-card h3 { white-space: pre-line; }
-.problem-card:last-child .problem-top { justify-content: flex-start; }
 .problem-start .tool-chip { padding: 6px 12px; line-height: 1.2; letter-spacing: 0.06em; }
 .problem-card:first-child .problem-start .tool-chip:first-child { font-size: 10px; }
 .problem-card { border-color: #e6e2da; }
@@ -5642,6 +5674,7 @@ body {
   text-align: left;
   text-transform: uppercase;
   white-space: nowrap;
+  color: #1e1e1e;
 }
 .footer-lettering-track {
   position: relative;
