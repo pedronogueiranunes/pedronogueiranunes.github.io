@@ -12,13 +12,12 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     value.emissive = new pc.Color(...color.map(v => v * (lit ? 0.18 : 1)));
     value.useLighting = lit;
     value.shininess = 65;
-    if (opacity < 1) {
-      value.opacity = opacity;
-      value.blendType = pc.BLEND_NORMAL;
-      value.depthWrite = false;
-    }
+    // Blended so the whole orbit can fade in and out.
+    value.opacity = opacity;
+    value.blendType = pc.BLEND_NORMAL;
+    value.depthWrite = opacity >= 1;
     value.update();
-    materials.push(value);
+    materials.push({ value, opacity });
     return value;
   };
   // Small code/design glyphs made from actual 3D strokes and pixel blocks.
@@ -105,28 +104,35 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     });
   };
   positionGlyphs();
+  const REVEAL_AT = 0.7; // reveal as the portrait is settling into About, not after it lands
   let shown = revealOnPose ? 0 : 1;
   let target = shown;
   const applyReveal = () => {
     root.enabled = shown > 0.001;
-    // Ease-out scale so the orbit grows from the portrait instead of popping in.
-    const k = 1 - Math.pow(1 - shown, 3);
-    root.setLocalScale(k, k, k);
+    // Smoothstep fade with a slight settle in scale, so the orbit eases in rather than popping.
+    const k = shown * shown * (3 - 2 * shown);
+    const scale = 0.9 + 0.1 * k;
+    root.setLocalScale(scale, scale, scale);
+    materials.forEach(({ value, opacity }) => {
+      value.opacity = opacity * k;
+      value.depthWrite = k >= 0.999 && opacity >= 1;
+      value.update();
+    });
   };
   const onPose = (e) => {
-    target = e.detail >= 0.98 ? 1 : 0;
+    target = e.detail >= REVEAL_AT ? 1 : 0;
     if (motion.matches) { shown = target; applyReveal(); }
     app.renderNextFrame = true;
   };
   if (revealOnPose) {
-    target = Number(viewport.dataset.scrollPose || 0) >= 0.98 ? 1 : 0;
+    target = Number(viewport.dataset.scrollPose || 0) >= REVEAL_AT ? 1 : 0;
     viewport.addEventListener("portraitpose", onPose);
     applyReveal();
   }
   const update = (dt) => {
     if (!visible || document.hidden) return;
     if (shown !== target) {
-      const delta = Math.min(dt, 0.05) / 0.45;
+      const delta = Math.min(dt, 0.05) / 0.9; // ~0.9s fade
       shown = motion.matches ? target : target > shown ? Math.min(target, shown + delta) : Math.max(target, shown - delta);
       applyReveal();
       app.renderNextFrame = true;
@@ -145,6 +151,6 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     viewport.removeEventListener("portraitpose", onPose);
     app.off("update", update);
     root.destroy();
-    materials.forEach(value => value.destroy());
+    materials.forEach(({ value }) => value.destroy());
   };
 }
