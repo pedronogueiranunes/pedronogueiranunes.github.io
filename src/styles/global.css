@@ -1634,37 +1634,6 @@ details[open] > summary > .faq-plus:after {
   line-height: 1.4;
   margin: 20px 0 0;
 }
-.problem-card--active {
-  color: white;
-  border: 0;
-  background: linear-gradient(180deg, #2f382e, #000);
-  box-shadow: 0 20px 40px -12px #1a140d2e;
-}
-.problem-card--active > p {
-  color: #b9bdb4;
-}
-.problem-card--active .problem-start {
-  background: var(--action-bg);
-  border: 0;
-  border-radius: 16px;
-  padding: 20px;
-}
-.problem-card--active .problem-start > .mono {
-  color: white;
-}
-.problem-card--active .problem-top > a {
-  background: var(--action-bg);
-  border-radius: 50%;
-}
-.problem-card--active .problem-art {
-  left: -88px;
-  top: 20px;
-}
-.problem-card--active .tool-chip {
-  background: #ffffff80;
-  color: #232625;
-  font-size: 10px;
-}
 .problem-note {
   color: var(--text-secondary);
   margin: 32px 0 0;
@@ -2216,15 +2185,6 @@ details[open] > summary > .faq-plus:after {
   .problem-top > span {
     font-size: 42px;
   }
-  .problem-start {
-    background: transparent !important;
-    padding: 20px 0 0 !important;
-    border-top: 1px solid var(--border) !important;
-    border-radius: 0 !important;
-  }
-  .problem-card--active .problem-start > .mono {
-    color: white;
-  }
   .problem-card .problem-art {
     top: 0;
     left: -20px;
@@ -2234,14 +2194,6 @@ details[open] > summary > .faq-plus:after {
   .problem-art img {
     width: 350px;
     top: -60px;
-  }
-  /* Stacked cards need the full icon below the clipped card edge. */
-  .problem-card:not(.problem-card--active) .problem-art img {
-    top: 0;
-  }
-  .problem-card--active .problem-art {
-    left: -72px;
-    top: 50px;
   }
   .problem-start .tool-chip {
     font-size: 10px;
@@ -4547,18 +4499,6 @@ details[open] > summary > .faq-plus:after {
 .footer-cta .action--secondary {
   color: var(--text);
 }
-.problem-card--active .problem-start {
-  background: var(--action-bg);
-}
-.problem-card--active .problem-top > a {
-  background: var(--action-bg);
-}
-.problem-card--active .problem-start > .mono {
-  color: white;
-}
-.problem-card:not(.problem-card--active) .problem-start > .mono {
-  color: var(--accent-ink);
-}
 .project-hover {
   background: var(--action-bg);
 }
@@ -5454,6 +5394,125 @@ body {
   padding-top: 50px;
   
 }
+
+/* Card states share geometry so pointer and keyboard interaction never reflows. */
+.problem-card {
+  --card-ink: #232625;
+  --card-muted: #697365;
+  --card-fill: #fff;
+  --start-fill: #f6f5f2;
+  --start-label: var(--accent);
+  --pill-fill: #fff;
+  --arrow-fill: transparent;
+  color: var(--card-ink);
+  background: var(--card-fill);
+  transition: background-color 350ms ease-out, color 350ms ease-out, box-shadow 350ms ease-out, transform 350ms ease-out;
+}
+.problem-card > p { color: var(--card-muted); transition: color 350ms ease-out; }
+.problem-card .problem-start { background: var(--start-fill); border: 0; border-radius: 16px; padding: 20px; transition: background-color 350ms ease-out; }
+.problem-card .problem-start > .mono { color: var(--start-label); }
+.problem-card .tool-chip { color: #232625; background: var(--pill-fill); font-size: 10px; }
+.problem-card .problem-top > a { border: 1px solid #e8e8e4; border-radius: 50%; background: var(--arrow-fill); transition: background-color 350ms ease-out, border-color 350ms ease-out; }
+.problem-art img { transition: transform 350ms ease-out; transform-origin: center; }
+.problem-outcome { margin-top: 12px; }
+.problem-followup { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px; margin-top: 48px; }
+.problem-followup .problem-note { margin: 0; }
+.problem-followup .text-link { font: 500 16px/1.4 var(--font-body); text-transform: none; letter-spacing: normal; }
+.problem-card:focus-within {
+  --card-ink: #fff;
+  --card-muted: #b9bdb4;
+  --card-fill: #20271f;
+  --start-fill: var(--accent);
+  --start-label: #fff;
+  --pill-fill: #ffffffb3;
+  --arrow-fill: var(--accent);
+  box-shadow: 0 20px 40px -12px #1a140d2e;
+  transform: translateY(-3px);
+}
+.problem-card:focus-within .problem-art img { transform: scale(1.06); }
+.problem-card:focus-within .problem-top > a { border-color: transparent; }
+@media (hover: hover) and (pointer: fine) {
+  .problem-card:hover {
+    --card-ink: #fff;
+    --card-muted: #b9bdb4;
+    --card-fill: #20271f;
+    --start-fill: var(--accent);
+    --start-label: #fff;
+    --pill-fill: #ffffffb3;
+    --arrow-fill: var(--accent);
+    box-shadow: 0 20px 40px -12px #1a140d2e;
+    transform: translateY(-3px);
+  }
+  .problem-card:hover .problem-art img { transform: scale(1.06); }
+  .problem-card:hover .problem-top > a { border-color: transparent; }
+}
+@media (max-width: 768px) {
+  .problem-card .problem-start { padding: 20px; }
+  .problem-followup { margin-top: 32px; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .problem-card, .problem-card > p, .problem-card .problem-start, .problem-card .problem-top > a, .problem-art img { transition: none; }
+  .problem-card:hover, .problem-card:focus-within, .problem-card:hover .problem-art img, .problem-card:focus-within .problem-art img { transform: none; }
+}
+
+@media (hover: none) {
+  .problem-card:focus-within:not(:has(:focus-visible)) {
+    --card-ink: #232625;
+    --card-muted: #697365;
+    --card-fill: #fff;
+    --start-fill: #f6f5f2;
+    --start-label: var(--accent);
+    --pill-fill: #fff;
+    --arrow-fill: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+  .problem-card:focus-within:not(:has(:focus-visible)) .problem-art img { transform: none; }
+}
+@media (min-width: 1281px) {
+  .problem-card:not(:first-child) h3 { font-size: 28px; }
+}
+.problem-card { border-color: #e6e6e2; }
+.problem-start .tool-chip { font-size: 9px; }
+.problem-outcome { justify-content: flex-start; gap: 6px; }
+.problem-outcome .pixel-icon { order: -1; }
+
+.problem-card { padding-top: 199px; }
+.problem-copy { display: grid; gap: 12px; }
+.problem-copy p { margin: 0; color: var(--card-muted); font-size: 14px; line-height: 1.6; transition: color 350ms ease-out; }
+@media (max-width: 1280px) { .problem-card { padding-top: 190px; } }
+@media (max-width: 768px) {
+  .problem-card { padding-top: 190px; }
+  .problem-copy p { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .problem-copy p { transition: none; } }
+
+.problem-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, #2f382e, #000); opacity: var(--card-dark, 0); transition: opacity 350ms ease-out; pointer-events: none; }
+.problem-card > :not(.problem-art) { position: relative; z-index: 1; }
+.problem-art { z-index: 1; }
+.problem-card:focus-within { --card-dark: 1; }
+@media (hover: hover) and (pointer: fine) { .problem-card:hover { --card-dark: 1; } }
+@media (hover: none) { .problem-card:focus-within:not(:has(:focus-visible)) { --card-dark: 0; } }
+@media (prefers-reduced-motion: reduce) { .problem-card::before { transition: none; } }
+
+.problems-section .section-heading > p { max-width: 400px; font-size: 16px; line-height: 1.6; }
+.problem-card h3 { white-space: pre-line; }
+.problem-card:last-child .problem-top { justify-content: flex-start; }
+.problem-start .tool-chip { padding: 6px 12px; line-height: 1.2; letter-spacing: 0.06em; }
+.problem-card:first-child .problem-start .tool-chip:first-child { font-size: 10px; }
+.problem-card { border-color: #e6e2da; }
+
+/* Preserve the square illustration slots used by the Figma masks. */
+.problem-art img { object-fit: contain; }
+@media (min-width: 769px) {
+  .problem-art img { height: 412px; }
+  .problem-card:first-child .problem-art { top: 39px; left: -88px; }
+  .problem-card:first-child .problem-art img { width: 374px; height: 374px; }
+  .problem-card:nth-child(2) .problem-art { top: 7px; left: -79px; }
+  .problem-card:nth-child(3) .problem-art { top: 15px; left: -99px; }
+  .problem-card:nth-child(3) .problem-art img { top: -63px; width: 360px; height: 360px; }
+}
+@media (max-width: 768px) { .problem-art img { height: 350px; } }
 
 /* Original 40s marquee at 70% speed: 40 / 0.7 = 57.142857 seconds. */
 .hero-lettering-track {
