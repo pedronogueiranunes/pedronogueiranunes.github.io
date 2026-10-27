@@ -292,6 +292,10 @@ const posts = (await getCollection("posts")).sort(
   import { initPortraitTravel } from "../scripts/portrait-travel.js";
   import { initReveal } from "../scripts/reveal.js";
   onPageLoad((scope) => {
+    // ClientRouter keeps this listener alive on every later page. Without this
+    // guard it also ran on About (which has its own #splat-viewport) and started
+    // a second PlayCanvas app on the same canvas, leaving the portrait blank.
+    if (!document.getElementById("portrait-origin")) return;
     const stopTravel = initPortraitTravel();
     if (stopTravel) scope.cleanup(stopTravel);
     scope.cleanup(initReveal());
