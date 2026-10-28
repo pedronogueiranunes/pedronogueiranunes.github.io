@@ -1,6 +1,8 @@
 // Local 3D accents shared by About and the home portrait reveal.
 // revealOnPose: on the home page the accents appear only once the portrait has fully
 // landed in the About section (pose 1) and shrink away when scrolling back up.
+import { createAmbientClock } from "./ambient-cadence.js";
+
 export const ABOUT_MOBILE_SCALE = 1.2;
 
 export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = false } = {}) {
@@ -210,23 +212,56 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   solidGlyph(slash, "left-chevron", chevron, 0.02, 0.0015, glyphOrange);
   solidGlyph(slash, "right-chevron", chevron.map(([x, y]) => [-x, y]).reverse(), 0.02, 0.0015, glyphOrange);
   // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
+  // The 96 dots used to be 96 render entities. Baking them into one merged mesh keeps the
+  // same silhouette and saves 95 scene nodes and draw submissions for sub-pixel geometry.
   const ring = new pc.Entity("shoulder-ring");
   root.addChild(ring);
   const RING_Y = -0.22, RING_R = 0.58, DOTS = 96;
-  for (let i = 0; i < DOTS; i++) {
-    const a = (i / DOTS) * Math.PI * 2;
-    const dot = new pc.Entity("ring-dot");
-    dot.addComponent("render", { type: "box" });
-    dot.render.material = ringGray;
-    dot.setLocalScale(0.006 * radius, 0.006 * radius, 0.006 * radius); // round-ish dots, not dashes
-    dot.setLocalPosition(Math.cos(a) * RING_R * radius, 0, Math.sin(a) * RING_R * radius);
-    dot.setLocalEulerAngles(0, -a * 180 / Math.PI + 90, 0);
-    ring.addChild(dot);
+  {
+    const half = 0.003 * radius; // the previous 0.006 * radius box, from centre to face
+    // Faces list their four corners counter-clockwise as seen from outside, so the
+    // merged cube keeps the engine's default back-face culling.
+    const faces = [
+      { normal: [1, 0, 0], corners: [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]] },
+      { normal: [-1, 0, 0], corners: [[-1, -1, 1], [-1, 1, 1], [-1, 1, -1], [-1, -1, -1]] },
+      { normal: [0, 1, 0], corners: [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]] },
+      { normal: [0, -1, 0], corners: [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]] },
+      { normal: [0, 0, 1], corners: [[1, -1, 1], [1, 1, 1], [-1, 1, 1], [-1, -1, 1]] },
+      { normal: [0, 0, -1], corners: [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]] },
+    ];
+    const positions = [], normals = [], indices = [];
+    for (let i = 0; i < DOTS; i++) {
+      const a = (i / DOTS) * Math.PI * 2;
+      const yaw = Math.PI / 2 - a; // same orientation each dot had before
+      const cos = Math.cos(yaw), sin = Math.sin(yaw);
+      const cx = Math.cos(a) * RING_R * radius, cz = Math.sin(a) * RING_R * radius;
+      for (const { normal, corners } of faces) {
+        const offset = positions.length / 3;
+        for (const corner of corners) {
+          const x = corner[0] * half, y = corner[1] * half, z = corner[2] * half;
+          positions.push(cx + x * cos + z * sin, y, cz - x * sin + z * cos);
+          const nx = normal[0], ny = normal[1], nz = normal[2];
+          normals.push(nx * cos + nz * sin, ny, -nx * sin + nz * cos);
+        }
+        indices.push(offset, offset + 1, offset + 2, offset, offset + 2, offset + 3);
+      }
+    }
+    const ringMesh = new pc.Mesh(app.graphicsDevice);
+    ringMesh.setPositions(positions);
+    ringMesh.setNormals(normals);
+    ringMesh.setIndices(indices);
+    ringMesh.update();
+    meshes.push(ringMesh);
+    ring.addComponent("render", {
+      meshInstances: [new pc.MeshInstance(ringMesh, ringGray, ring)],
+      layers: [iconLayer.id], castShadows: false, receiveShadows: false,
+    });
   }
   ring.setLocalPosition(0, RING_Y * radius, 0);
   let ringYaw = 0;
   let time = 0;
   let visible = true;
+  const ambientStep = createAmbientClock();
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const compact = matchMedia("(max-width: 768px)");
   const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
@@ -290,7 +325,12 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
       app.renderNextFrame = true;
     }
     if (motion.matches || !root.enabled) return;
-    const step = Math.min(dt, 0.05);
+    // The orbit never stops while it is on screen, so redraw it on the shared
+    // capped ambient cadence instead of on every display frame. The drift is slow
+    // enough that 30 Hz is indistinguishable from 60/120 Hz, while the reveal fade
+    // above and any interaction keep running at the display refresh rate.
+    const step = ambientStep();
+    if (!step) return;
     time += step;
     ringYaw = (ringYaw + step * 12) % 360;
     ring.setLocalEulerAngles(0, ringYaw, 0);

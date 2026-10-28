@@ -1,4 +1,5 @@
 import { getPortraitCenter } from "./portrait-travel.js";
+import { createAmbientClock } from "./ambient-cadence.js";
 
 // =============================================================================
 // TUNABLE INTERACTION CONSTANTS
@@ -45,6 +46,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   const autoRotate = viewport.dataset.autoRotate === "true";
   let orbitYaw = 0;
   let viewportVisible = true;
+  const ambientStep = createAmbientClock();
 
   // Drag state
   let isDragging = false;
@@ -238,8 +240,14 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     if (!viewportVisible || document.hidden) return;
     let active = false;
     if (autoRotate && !isDragging && !motionQuery.matches) {
-      orbitYaw = (orbitYaw + Math.min(dt || 0, 0.05) * 12) % 360;
-      active = true;
+      // The auto-rotation redraws the whole splat scene, so it shares the capped
+      // ambient cadence with the orbital accents (see ambient-cadence.js). Drag,
+      // magnetic look and pose/scroll updates below still run at display rate.
+      const ambient = ambientStep();
+      if (ambient) {
+        orbitYaw = (orbitYaw + ambient * 12) % 360;
+        active = true;
+      }
     }
 
     // 1. Check pose change
