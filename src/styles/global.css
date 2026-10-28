@@ -50,6 +50,14 @@
   font-weight: 400;
   font-display: swap;
 }
+@font-face {
+  /* Departure Mono by Helena Zhang, SIL OFL 1.1 (public/assets/fonts/licenses). */
+  font-family: "Departure Mono";
+  src: url("/assets/fonts/departure-mono-latin-400-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 :root {
   color-scheme: light;
@@ -100,6 +108,7 @@
   --font-label: "Silkscreen", monospace;
   --font-mono: "Geist Mono", monospace;
   --font-lettering: "Pixelify Sans", sans-serif;
+  --font-pixel-mono: "Departure Mono", monospace;
   --hero-lettering-opacity: 1;
   --hero-lettering-color: #fff;
   /* Compatibility aliases while existing sections migrate. */
