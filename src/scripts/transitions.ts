@@ -98,6 +98,7 @@ document.addEventListener("astro:before-swap", (event) => {
   const root = document.documentElement;
   e.newDocument.documentElement.dataset.theme = root.dataset.theme || "auto";
   delete e.newDocument.documentElement.dataset.transition;
+  delete e.newDocument.documentElement.dataset.pageArrival;
   if (!document.startViewTransition || !e.viewTransition) {
     navigating = false;
     navigationTransition = undefined;
@@ -110,7 +111,10 @@ document.addEventListener("astro:before-swap", (event) => {
   let animation: Animation | undefined;
   const curtain = e.newDocument.querySelector<HTMLElement>("#pixel-curtain");
   const animate = !!document.startViewTransition && !reduced() && moved;
-  if (curtain && animate) curtain.style.visibility = "visible";
+  if (curtain && animate) {
+    curtain.style.visibility = "visible";
+    e.newDocument.documentElement.dataset.pageArrival = "pending";
+  }
   transition.ready.then(() => {
     if (!animate) return;
     const steps = number("--curtain-steps");
@@ -127,6 +131,8 @@ document.addEventListener("astro:before-swap", (event) => {
     if (navigationTransition === transition) {
       document.getElementById("pixel-curtain")?.style.setProperty("visibility", "hidden");
       navigationTransition = undefined; navigating = false;
+      delete document.documentElement.dataset.pageArrival;
+      document.dispatchEvent(new Event("portfolio:page-arrival"));
     }
   });
 });
