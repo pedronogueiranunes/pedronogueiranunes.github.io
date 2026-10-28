@@ -6830,12 +6830,17 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
-.project-media-frame:hover .project-media-halo { opacity: 1; }
+.project-media-frame:hover .project-media-halo,
+.project-card:is(:hover, :focus-within) .project-media-halo { opacity: 1; }
 .project-media-frame:hover .project-media-halo > span,
-.project-media-frame:hover .project-media::before { animation: cta-light-orbit 6s linear infinite; }
+.project-media-frame:hover .project-media::before,
+.project-card:is(:hover, :focus-within) .project-media-halo > span,
+.project-card:is(:hover, :focus-within) .project-media::before { animation: cta-light-orbit 6s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .project-media-frame:hover .project-media-halo > span,
-  .project-media-frame:hover .project-media::before { animation: none; }
+  .project-media-frame:hover .project-media::before,
+  .project-card:is(:hover, :focus-within) .project-media-halo > span,
+  .project-card:is(:hover, :focus-within) .project-media::before { animation: none; }
   .project-media-halo { transition: none; }
 }
 

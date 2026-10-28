@@ -16,6 +16,8 @@ export function initProjectMediaScroll() {
   for (const media of mediaLinks) {
     const shot = media.querySelector(".project-media-shot");
     const track = shot?.querySelector(".project-media-track");
+    // The preview belongs to the whole card, not only to the media tile.
+    const card = media.closest(".project-card") ?? media;
     if (!shot || !track) continue;
     let frame = 0;
     let openedAt = 0;
@@ -73,10 +75,10 @@ export function initProjectMediaScroll() {
     const onMotionChange = () => { if (reduced.matches) close(); };
     const onHoverChange = () => { if (!hover.matches) close(); };
 
-    media.addEventListener("pointerenter", open);
-    media.addEventListener("pointerleave", close);
-    media.addEventListener("focusin", open);
-    media.addEventListener("focusout", close);
+    card.addEventListener("pointerenter", open);
+    card.addEventListener("pointerleave", close);
+    card.addEventListener("focusin", open);
+    card.addEventListener("focusout", close);
     reduced.addEventListener("change", onMotionChange);
     hover.addEventListener("change", onHoverChange);
 
@@ -84,10 +86,10 @@ export function initProjectMediaScroll() {
       stop();
       media.classList.remove("is-open");
       track.style.translate = "";
-      media.removeEventListener("pointerenter", open);
-      media.removeEventListener("pointerleave", close);
-      media.removeEventListener("focusin", open);
-      media.removeEventListener("focusout", close);
+      card.removeEventListener("pointerenter", open);
+      card.removeEventListener("pointerleave", close);
+      card.removeEventListener("focusin", open);
+      card.removeEventListener("focusout", close);
       reduced.removeEventListener("change", onMotionChange);
       hover.removeEventListener("change", onHoverChange);
     });
