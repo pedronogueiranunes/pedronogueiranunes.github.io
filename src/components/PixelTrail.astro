@@ -2,10 +2,14 @@
 interface Props { tone?: 'orange' | 'green' }
 const { tone = 'orange' } = Astro.props;
 ---
-<canvas class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} aria-hidden="true"></canvas>
+<div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} aria-hidden="true">
+  <canvas class="pixel-trail__rest"></canvas>
+  <canvas class="pixel-trail__trail"></canvas>
+</div>
 
 <style>
   .pixel-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .pixel-trail canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
   .pixel-trail--green { inset: auto; top: calc(-1 * var(--opening-nav-height, var(--projects-nav-space, 103px))); left: 50%; transform: translateX(-50%); width: 100vw; height: calc(100% + var(--opening-nav-height, var(--projects-nav-space, 103px))); z-index: -1; mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); }
   @media (hover: none), (prefers-reduced-motion: reduce) { .pixel-trail { display: none; } }
 </style>
@@ -13,32 +17,72 @@ const { tone = 'orange' } = Astro.props;
 <script>
   import { onPageLoad } from '../scripts/page-lifecycle';
   onPageLoad((scope) => {
-    document.querySelectorAll<HTMLCanvasElement>('.pixel-trail').forEach((canvas) => {
-    const panel = canvas?.parentElement;
+    document.querySelectorAll<HTMLElement>('.pixel-trail').forEach((root) => {
+    const panel = root?.parentElement;
     const hero = panel?.closest<HTMLElement>('.home-hero') || panel;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !panel || !hero || !ctx) return;
+    // Resting dots live on their own canvas, painted once per resize. Only the
+    // short-lived trail repaints per frame, so an idle pointer costs nothing and
+    // an active one no longer rebuilds the whole dot grid on every frame.
+    const rest = root?.querySelector<HTMLCanvasElement>('.pixel-trail__rest');
+    const trail = root?.querySelector<HTMLCanvasElement>('.pixel-trail__trail');
+    const restCtx = rest?.getContext('2d');
+    const ctx = trail?.getContext('2d');
+    if (!root || !panel || !hero || !rest || !trail || !restCtx || !ctx) return;
     const media = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    const color = root.dataset.tone === 'green' ? '#BDD4B5' : '#FF5A1F';
     const lettering = panel.querySelector<HTMLElement>('.hero-lettering');
     // Pixelify Sans uses a 0.1em square for each pixel in its glyphs.
     let pixelSize = 8;
     let step = 28;
     let offset = step / 2;
+
     const cells = new Map<string, { x: number; y: number; at: number; strength: number }>();
     let width = 0, height = 0, frame = 0, visible = true;
     let previous: { x: number; y: number } | undefined;
-    const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); previous = undefined; };
-    const paint = (now: number) => {
-      frame = 0;
-      ctx.clearRect(0, 0, width, height);
-      if (!media.matches || !visible || document.hidden) return;
-      ctx.fillStyle = canvas.dataset.tone === 'green' ? '#BDD4B5' : '#FF5A1F';
+    // Latest pointer sample; applied once per animation frame instead of on every
+    // pointermove (high-rate mice otherwise force a layout read per event).
+    let pending: { x: number; y: number } | undefined;
+    const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); previous = undefined; pending = undefined; };
+    const paintRest = () => {
+      restCtx.clearRect(0, 0, width, height);
+      restCtx.fillStyle = color;
+      restCtx.globalAlpha = 0.055;
       // Sparse, quiet resting marks keep the field lighter than the content.
       for (let x = offset; x < width; x += step) for (let y = offset; y < height; y += step) {
         if ((Math.floor(x / step) * 7 + Math.floor(y / step) * 11) % 5 === 0) continue;
-        ctx.globalAlpha = 0.055;
-        ctx.fillRect(x, y, 2, 2);
+        restCtx.fillRect(x, y, 2, 2);
       }
+      restCtx.globalAlpha = 1;
+    };
+    const stamp = (point: { x: number; y: number }, rect: DOMRect, now: number) => {
+      const local = { x: point.x - rect.left, y: point.y - rect.top };
+      if (local.x < 0 || local.y < 0 || local.x > width || local.y > height) { previous = undefined; return; }
+      const start = previous || local;
+      const count = Math.min(32, Math.max(1, Math.ceil(Math.hypot(local.x - start.x, local.y - start.y) / (step / 2))));
+      for (let i = 1; i <= count; i++) {
+        const px = start.x + (local.x - start.x) * i / count;
+        const py = start.y + (local.y - start.y) * i / count;
+        const col = Math.round((px - offset) / step), row = Math.round((py - offset) / step);
+        for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++) {
+          const distance = Math.hypot(dx, dy);
+          const x = (col + dx) * step + offset, y = (row + dy) * step + offset;
+          if (distance > 2.3 || x < 0 || y < 0 || x > width || y > height || ((col + dx) * 7 + (row + dy) * 11) % 5 === 0) continue;
+          cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: (lettering ? 0.14 : 0.42) * (1 - distance / 3) });
+        }
+      }
+      previous = local;
+    };
+    const paint = (now: number) => {
+      frame = 0;
+      if (!media.matches || !visible || document.hidden) { ctx.clearRect(0, 0, width, height); return; }
+      if (pending) {
+        const point = pending;
+        pending = undefined;
+        stamp(point, trail.getBoundingClientRect(), now);
+      }
+      ctx.clearRect(0, 0, width, height);
+      if (!cells.size) return;
+      ctx.fillStyle = color;
       for (const [key, cell] of cells) {
         const life = 1 - (now - cell.at) / 1050;
         if (life <= 0) { cells.delete(key); continue; }
@@ -50,15 +94,19 @@ const { tone = 'orange' } = Astro.props;
     };
     const requestPaint = () => { if (!frame) frame = requestAnimationFrame(paint); };
     const resize = new ResizeObserver(() => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = root.getBoundingClientRect();
       width = rect.width; height = rect.height;
       pixelSize = lettering ? parseFloat(getComputedStyle(lettering).fontSize) / 10 : 8;
       step = lettering ? pixelSize : 28;
       offset = step / 2;
       const ratio = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+      rest.width = Math.round(width * ratio); rest.height = Math.round(height * ratio);
+      restCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      trail.width = Math.round(width * ratio); trail.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      cells.clear(); previous = undefined; requestPaint();
+      cells.clear(); previous = undefined; pending = undefined;
+      paintRest();
+      requestPaint();
     });
     resize.observe(panel);
     const observer = new IntersectionObserver(([entry]) => {
@@ -68,26 +116,10 @@ const { tone = 'orange' } = Astro.props;
     observer.observe(hero);
     hero.addEventListener('pointermove', (event) => {
       if (!media.matches || !visible || event.pointerType !== 'mouse') return;
-      const rect = canvas.getBoundingClientRect();
-      const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-      if (point.x < 0 || point.y < 0 || point.x > width || point.y > height) { previous = undefined; return; }
-      const start = previous || point;
-      const count = Math.min(32, Math.max(1, Math.ceil(Math.hypot(point.x - start.x, point.y - start.y) / (step / 2))));
-      const now = performance.now();
-      for (let i = 1; i <= count; i++) {
-        const px = start.x + (point.x - start.x) * i / count;
-        const py = start.y + (point.y - start.y) * i / count;
-        const col = Math.round((px - offset) / step), row = Math.round((py - offset) / step);
-        for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++) {
-          const distance = Math.hypot(dx, dy);
-          const x = (col + dx) * step + offset, y = (row + dy) * step + offset;
-          if (distance > 2.3 || x < 0 || y < 0 || x > width || y > height || ((col + dx) * 7 + (row + dy) * 11) % 5 === 0) continue;
-          cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: (lettering ? 0.14 : 0.42) * (1 - distance / 3) });
-        }
-      }
-      previous = point; requestPaint();
+      pending = { x: event.clientX, y: event.clientY };
+      requestPaint();
     }, { signal: scope.signal, passive: true });
-    hero.addEventListener('pointerleave', () => { previous = undefined; }, { signal: scope.signal });
+    hero.addEventListener('pointerleave', () => { previous = undefined; pending = undefined; }, { signal: scope.signal });
     document.addEventListener('visibilitychange', () => { stop(); requestPaint(); }, { signal: scope.signal });
     media.addEventListener('change', () => { stop(); requestPaint(); }, { signal: scope.signal });
     scope.cleanup(() => { stop(); resize.disconnect(); observer.disconnect(); });
