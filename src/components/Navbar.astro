@@ -405,6 +405,58 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     if (!items.some((item) => item.contains(event.target as Node)))
       setOpen(null);
   }, { signal: scope.signal });
+  // The main nav pill lights up while the pointer is close and its glow trails
+  // the cursor, easing towards it until both position and intensity settle.
+  const desktopNav = document.querySelector<HTMLElement>(".desktop-nav");
+  if (desktopNav) {
+    let frame = 0;
+    let rect = desktopNav.getBoundingClientRect();
+    let currentX = 50;
+    let currentY = 50;
+    let currentAlpha = 0;
+    let targetX = currentX;
+    let targetY = currentY;
+    let targetAlpha = 0;
+    const apply = () => {
+      desktopNav.style.setProperty("--nav-glow-x", `${currentX.toFixed(2)}%`);
+      desktopNav.style.setProperty("--nav-glow-y", `${currentY.toFixed(2)}%`);
+      desktopNav.style.setProperty("--nav-glow-alpha", currentAlpha.toFixed(3));
+    };
+    const tick = () => {
+      frame = 0;
+      currentX += (targetX - currentX) * 0.07;
+      currentY += (targetY - currentY) * 0.07;
+      currentAlpha += (targetAlpha - currentAlpha) * 0.09;
+      apply();
+      if (
+        Math.abs(targetX - currentX) > 0.06 ||
+        Math.abs(targetY - currentY) > 0.06 ||
+        Math.abs(targetAlpha - currentAlpha) > 0.004
+      ) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      if (reducedMotion.matches) return;
+      rect = desktopNav.getBoundingClientRect();
+      const outsideX = Math.max(rect.left - event.clientX, 0, event.clientX - rect.right);
+      const outsideY = Math.max(rect.top - event.clientY, 0, event.clientY - rect.bottom);
+      const distance = Math.hypot(outsideX, outsideY);
+      targetAlpha = Math.max(0, Math.min(1, 1 - distance / 120));
+      targetX = Math.max(4, Math.min(96, ((event.clientX - rect.left) / rect.width) * 100));
+      targetY = Math.max(6, Math.min(94, ((event.clientY - rect.top) / rect.height) * 100));
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true, signal: scope.signal });
+    window.addEventListener("resize", () => { rect = desktopNav.getBoundingClientRect(); }, { passive: true, signal: scope.signal });
+    scope.cleanup(() => {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      desktopNav.style.removeProperty("--nav-glow-x");
+      desktopNav.style.removeProperty("--nav-glow-y");
+      desktopNav.style.removeProperty("--nav-glow-alpha");
+    });
+  }
   // The lighter gradient centre follows the pointer with a soft ease so the
   // panel feels lit rather than highlighted in a fixed corner.
   document.querySelectorAll<HTMLElement>(".nav-panel").forEach((panel) => {

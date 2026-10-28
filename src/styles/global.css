@@ -410,7 +410,13 @@ img {
   gap: 32px;
   border-radius: 999px;
   padding: 12px 16px;
-  background: var(--green);
+  background-color: var(--green);
+  /* The glow trails the pointer and only appears as it gets close to the bar. */
+  background-image: radial-gradient(
+    240px 165px at var(--nav-glow-x, 50%) var(--nav-glow-y, 50%),
+    rgb(214 232 200 / calc(var(--nav-glow-alpha, 0) * 0.42)),
+    rgb(214 232 200 / 0) 76%
+  );
   box-shadow: inset -2px -2px 8px #84a480;
 }
 .nav-link {
