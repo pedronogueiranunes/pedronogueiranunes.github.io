@@ -157,10 +157,12 @@ export function initSplat() {
         // The environment shares this factor; desktop/Home keep their framing.
         const modelScale = isMobile && viewport.dataset.autoRotate === "true" ? ABOUT_MOBILE_SCALE : 1;
         rig.setLocalScale(modelScale, modelScale, modelScale);
-        const sizeMultiplier = isMobile ? 1.15 : 1;
+        // Give the wider final Home pose room inside the fixed mobile buffer.
+        const mobileHome = isMobile && viewport.dataset.autoRotate !== "true";
+        const sizeMultiplier = isMobile ? 1.15 - (mobileHome ? 0.10 * pose : 0) : 1;
         const canvasHeadroom = isMobile ? origin.clientHeight / 325 : 1;
         camera.camera.fov = 2 * Math.atan(Math.tan(portraitFov * Math.PI / 360) * canvasHeadroom / sizeMultiplier) * 180 / Math.PI;
-        const distance = baseDistance * (1 - ZOOM_AT_BIO * pose);
+        const distance = baseDistance * (1 - (mobileHome ? 0 : ZOOM_AT_BIO) * pose);
         // About page box: sit the portrait (and its orbit) 14% of the frame lower,
         // so the bottom edge of the model is cropped by the box.
         const frameHeight = 2 * distance * Math.tan(camera.camera.fov * Math.PI / 360);
