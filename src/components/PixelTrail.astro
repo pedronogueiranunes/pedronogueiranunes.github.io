@@ -82,7 +82,7 @@ const { tone = 'orange' } = Astro.props;
           const distance = Math.hypot(dx, dy);
           const x = (col + dx) * step + offset, y = (row + dy) * step + offset;
           if (distance > 2.3 || x < 0 || y < 0 || x > width || y > height || ((col + dx) * 7 + (row + dy) * 11) % 5 === 0) continue;
-          cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: 0.42 * (1 - distance / 3) });
+          cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: (lettering ? 0.14 : 0.42) * (1 - distance / 3) });
         }
       }
       previous = point; requestPaint();
