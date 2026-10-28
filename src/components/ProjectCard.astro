@@ -19,14 +19,17 @@ const p = project.data;
     aria-label={`View case study: ${p.title}`}
   >
     <span class="project-media-shot">
-      <ResponsiveImage
-        src={p.cover || p.image}
-        sizes="(max-width: 768px) 310px, 380px"
-        width="648"
-        height="428"
-        loading="lazy"
-        alt={`${p.title} website preview`}
-      />
+      <span class="project-media-track">
+        <ResponsiveImage
+          src={p.cover || p.image}
+          sizes="(max-width: 768px) 310px, 380px"
+          width="648"
+          height="428"
+          loading="lazy"
+          alt={`${p.title} website preview`}
+        />
+        <span class="project-media-filler" aria-hidden="true"></span>
+      </span>
     </span>
     <span class="project-hover label">
       View case study <Icon name="arrow-up-right" />

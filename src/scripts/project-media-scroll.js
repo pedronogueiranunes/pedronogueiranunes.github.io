@@ -1,8 +1,7 @@
-// Hover treatment for project cards: the screenshot expands to fill the square
-// media frame, then pans from the top of the capture to the bottom in a loop.
-// On pointer/focus exit the screenshot returns to its resting inset position.
-// The CSS handles the zoom; this module only drives the vertical travel.
-const PAN_RATIO = 0.8; // matches the 1.8 image scale in CSS
+// Hover treatment for project cards: the screenshot expands to the full width
+// of the media frame, then the track scrolls from the top of the capture to the
+// bottom in a loop. On pointer/focus exit it returns to the resting inset.
+// The CSS handles the expansion; this module only drives the vertical travel.
 const HALF_CYCLE = 4500; // ms per direction, so a full loop takes 9s
 const ZOOM_MS = 450; // keep in sync with the shot transition
 const RETURN_MS = 320;
@@ -16,8 +15,8 @@ export function initProjectMediaScroll() {
 
   for (const media of mediaLinks) {
     const shot = media.querySelector(".project-media-shot");
-    const image = shot?.querySelector("img");
-    if (!shot || !image) continue;
+    const track = shot?.querySelector(".project-media-track");
+    if (!shot || !track) continue;
     let frame = 0;
     let openedAt = 0;
     let offset = 0;
@@ -29,14 +28,15 @@ export function initProjectMediaScroll() {
     const easeOut = (t) => 1 - (1 - t) ** 3;
 
     const pan = (now) => {
-      // Holding still for the zoom keeps the first movement from looking jumpy,
-      // and the pan distance is measured against the final frame height.
+      // The screenshot itself is static while the frame expands; the track's
+      // travel is whatever page length it has minus the visible viewport.
       const elapsed = Math.max(0, now - openedAt - ZOOM_MS);
       const cycle = HALF_CYCLE * 2;
       const t = elapsed % cycle;
       const progress = t <= HALF_CYCLE ? t / HALF_CYCLE : (cycle - t) / HALF_CYCLE;
-      offset = progress * PAN_RATIO * shot.clientHeight;
-      image.style.translate = `0 ${(-offset).toFixed(1)}px`;
+      const distance = Math.max(0, track.offsetHeight - media.clientHeight);
+      offset = progress * distance;
+      track.style.translate = `0 ${(-offset).toFixed(1)}px`;
       frame = requestAnimationFrame(pan);
     };
 
@@ -52,7 +52,7 @@ export function initProjectMediaScroll() {
       stop();
       media.classList.remove("is-open");
       if (!offset) {
-        image.style.translate = "";
+        track.style.translate = "";
         return;
       }
       const from = offset;
@@ -60,11 +60,11 @@ export function initProjectMediaScroll() {
       const startedAt = performance.now();
       const back = (now) => {
         const t = Math.min(1, (now - startedAt) / RETURN_MS);
-        image.style.translate = `0 ${(-from * (1 - easeOut(t))).toFixed(1)}px`;
+        track.style.translate = `0 ${(-from * (1 - easeOut(t))).toFixed(1)}px`;
         if (t < 1) frame = requestAnimationFrame(back);
         else {
           frame = 0;
-          image.style.translate = "";
+          track.style.translate = "";
         }
       };
       frame = requestAnimationFrame(back);
@@ -83,7 +83,7 @@ export function initProjectMediaScroll() {
     cleanups.push(() => {
       stop();
       media.classList.remove("is-open");
-      image.style.translate = "";
+      track.style.translate = "";
       media.removeEventListener("pointerenter", open);
       media.removeEventListener("pointerleave", close);
       media.removeEventListener("focusin", open);

@@ -757,7 +757,7 @@ img {
   /* Square frame: the inset screenshot sits at the top over the project tint
      and expands to fill the whole frame on hover. */
   height: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   container-type: inline-size;
   display: block;
   overflow: hidden;
@@ -773,7 +773,7 @@ img {
   height: calc((100cqw - 56px) * 0.625);
   overflow: hidden;
   border-radius: 10px 10px 0 0;
-  background: var(--surface);
+  background: var(--project-tint, var(--olive));
   box-shadow: 0 10px 28px -6px #1f1a1429;
   transition:
     top 450ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -783,16 +783,26 @@ img {
     border-radius 450ms ease,
     box-shadow 450ms ease;
 }
-.project-media-shot > img {
+.project-media-track {
+  /* The screenshot scrolls inside this track. The coloured filler gives it a
+     believable page length until the real 1440px-tall captures land. */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* 1.5x the frame width keeps a believable scroll length even with short
+     captures; taller screenshots simply make the filler collapse. */
+  min-height: var(--project-media-track-min, 150cqw);
+  will-change: transform;
+}
+.project-media-track > img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  transform-origin: top center;
-  transition:
-    scale 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    translate 320ms ease;
+  height: auto;
+}
+.project-media-filler {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--project-tint, var(--olive));
 }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .project-media.is-open .project-media-shot {
@@ -802,9 +812,6 @@ img {
     height: 100%;
     border-radius: 20px;
     box-shadow: none;
-  }
-  .project-media.is-open .project-media-shot > img {
-    scale: 1.8;
   }
 }
 .project-hover {
