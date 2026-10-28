@@ -12,19 +12,31 @@ import CheckList from "../components/CheckList.astro";
 import Comparison from "../components/Comparison.astro";
 import RelatedProjects from "../components/RelatedProjects.astro";
 import FAQ from "../components/FAQ.astro";
+import DitherIcon from "../components/DitherIcon.astro";
+import IconWaves from "../components/IconWaves.astro";
 import {
   offers,
   capabilities,
   deliverables,
   schedule,
-  sampleResults,
   faq,
-  resultHeadline,
+  caseResults,
 } from "../data/services";
 import { logoFor } from "../data/home";
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const projectsBySlug = new Map(
+  projects.map((project) => [project.data.caseSlug, project]),
+);
+const resultSlides = caseResults.map((result) => {
+  const project = projectsBySlug.get(result.slug);
+  return {
+    ...result,
+    image: result.image ?? project?.data.cover ?? "",
+    tint: project?.data.tint ?? "#f3e8c6",
+  };
+});
 ---
 
 <Base title="Services | Pedro Nogueira" pageClass="services-page">
@@ -73,40 +85,79 @@ const projects = (await getCollection("projects")).sort(
         hours
       </p>
     </div>
-    <div class="service-result">
-      <div class="service-result-image">
-        <ResponsiveImage
-          src="/assets/figma/488-10049-imgImageBsaLegal.webp"
-          width="900"
-          height="600"
-          alt="BSA Legal website"
-        />
+    <div class="service-result-slider" data-result-slider>
+      <div class="service-result">
+        {resultSlides.map((slide, index) => (
+          <article
+            class="service-result-slide"
+            data-result-slide
+            hidden={index > 0}
+          >
+            <div
+              class="service-result-image"
+              style={`background:${slide.tint}`}
+            >
+              <ResponsiveImage
+                src={slide.image}
+                width="1600"
+                height="1039"
+                alt={slide.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+            <div class="service-result-body">
+              <p class="mono accent">{slide.category}</p>
+              <h2>{slide.headline}</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Before</th>
+                    <th>After</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {slide.metrics.map((row) => (
+                    <tr>
+                      {row.map((cell, cellIndex) =>
+                        cellIndex === 0 ? (
+                          <th scope="row">{cell}</th>
+                        ) : (
+                          <td>{cell}</td>
+                        ),
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Button secondary href={`/work/${slide.slug}`}>
+                See the full case study
+              </Button>
+            </div>
+          </article>
+        ))}
       </div>
-      <div class="service-result-body">
-        <p class="mono accent">Client result · Web build</p>
-        <h2>{resultHeadline}</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Before</th>
-              <th>After</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sampleResults.map((row) => (
-              <tr>
-                {row.map((cell, i) =>
-                  i === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>,
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <Button secondary href="/work/bsa-legal">
-          See the full case study
-        </Button>
-      </div>
+      <button
+        class="result-arrow result-arrow--prev"
+        type="button"
+        aria-label="Previous client result"
+        data-result-prev
+      >
+        <Icon name="arrow-left" size={18} />
+      </button>
+      <button
+        class="result-arrow result-arrow--next"
+        type="button"
+        aria-label="Next client result"
+        data-result-next
+      >
+        <Icon name="arrow-right" size={18} />
+      </button>
+      <p
+        class="sr-only"
+        aria-live="polite"
+        data-result-status
+      ></p>
     </div>
   </section>
   <section class="offers-section page-section">
@@ -127,6 +178,7 @@ const projects = (await getCollection("projects")).sort(
             { "offer-card--featured": offer.featured },
           ]}
         >
+          <IconWaves />
           <div class:list={["offer-art", `offer-art--${index}`]}>
             <ResponsiveImage
               src={`/assets/figma/488-10107-imgImage${index || ""}.webp`}
@@ -135,6 +187,7 @@ const projects = (await getCollection("projects")).sort(
               sizes="254px"
               alt=""
             />
+            <DitherIcon />
           </div>
           <h3>{offer.title}</h3>
           <p>{offer.description}</p>
@@ -277,5 +330,34 @@ const projects = (await getCollection("projects")).sort(
   onPageLoad((scope) => {
     if (!document.querySelector(".services-page")) return;
     scope.cleanup(initReveal({ stagger: 60, maxDelay: 240 }));
+    // Client-result carousel: all slides are rendered for translation and SEO;
+    // the arrows only toggle which one is visible.
+    const slider = document.querySelector<HTMLElement>("[data-result-slider]");
+    if (!slider) return;
+    const slides = [...slider.querySelectorAll<HTMLElement>("[data-result-slide]")];
+    const prev = slider.querySelector<HTMLButtonElement>("[data-result-prev]");
+    const next = slider.querySelector<HTMLButtonElement>("[data-result-next]");
+    const status = slider.querySelector<HTMLElement>("[data-result-status]");
+    if (!slides.length || !prev || !next) return;
+    let index = 0;
+    const show = (target: number) => {
+      index = (target + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === index;
+        slide.hidden = !active;
+      });
+      if (status) {
+        const headline = slides[index].querySelector("h2")?.textContent?.trim() ?? "";
+        status.textContent = `${index + 1} / ${slides.length} · ${headline}`;
+      }
+    };
+    const step = (delta: number) => () => show(index + delta);
+    prev.addEventListener("click", step(-1), { signal: scope.signal });
+    next.addEventListener("click", step(1), { signal: scope.signal });
+    slider.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") { event.preventDefault(); show(index - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); show(index + 1); }
+    }, { signal: scope.signal });
+    show(0);
   });
 </script>
