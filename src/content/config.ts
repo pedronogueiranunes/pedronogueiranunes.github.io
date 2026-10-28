@@ -21,6 +21,16 @@ const projects = defineCollection({
     tint: z.string().optional(),
     location: z.string().optional(),
     caseSlug: z.string().optional(),
+    strategyTitle: z.string().optional(),
+    gallery: z.array(z.object({ src: z.string(), alt: z.string(), caption: z.string() })).default([]),
+    designSystem: z.object({
+      colors: z.array(z.object({ name: z.string(), value: z.string().regex(/^#[0-9a-fA-F]{6}$/) })),
+      fontFamily: z.string(),
+      headingWeight: z.number().default(700),
+      radius: z.number().min(0).max(64),
+      buttonLabel: z.string(),
+    }).optional(),
+    architecture: z.array(z.object({ title: z.string(), body: z.string(), icon: z.string() })).default([]),
   }),
 });
 

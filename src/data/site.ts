@@ -8,7 +8,7 @@ export const site = {
   legal: { notice: "", privacy: "", cookies: "" },
   projectUrls: {
     "pinelake-broken-bow": "",
-    "green-nation-collective": "",
+    "green-nation-collective": "https://greennationcollective.webflow.io/",
     "molina-chambo": "",
     "bsa-legal": "",
     "waipono-farms": "",

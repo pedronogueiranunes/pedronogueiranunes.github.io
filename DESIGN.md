@@ -331,4 +331,30 @@ The Home portrait eases its mobile camera size multiplier from 1.15 to 1.05 as i
 
 Mobile Home hero heading, description and actions are offset upward by 20px without moving the portrait or its origin, leaving clearance for the dotted link underline.
 
-The full-width mobile sticky header has square upper corners and 20px lower corner radii.
+The full-width mobile sticky header has square upper corners and 30px lower corner radii.
+
+## Touch menu preferences
+
+Within the mobile/tablet dialog, language radios use a two-column grid of 52px minimum touch targets. Theme radios use three matching 12px-radius outlined controls with icons and body type. Selected options have an orange border and subtle orange wash; keyboard focus has an offset outline. The groups stack on phones and sit side by side from 600px through 1024px. Native radio behavior and existing translated labels remain intact.
+
+## Case template refinements
+
+Case breadcrumbs use 11px Silkscreen in olive (`--positive-ink`), reducing to 10px on phones. Hero summaries use 18px/1.6 body type (17px tablet, 16px phone). Results labels use 11px Departure Mono with an orange pixel chart. Metadata chips carry orange pixel icons; stack chips are separated from the client identity and repeated in the snapshot with tool logos or relevant pixel icons.
+
+External actions use compact 44px controls, 12px radii, Silkscreen and stepped icon travel on hover/focus, respecting reduced motion. The live address prefers the supplied webflow.io staging domain; Wayback links open its capture index without asserting that a capture exists. Unknown project URLs remain disabled.
+
+Narrative headings use 24–32px Manrope, paragraphs use 17px/1.75 (16px mobile), and strategy headings use 18px. Clearly marked layout fixtures are DEV-only and excluded from production. TODO: replace existing unverified case placeholders with supplied project content. Snapshot details use a compact definition grid and a distinct stack group. The sidebar CTA has a 48px minimum button and wrapping text.
+
+The browser screenshot begins a linear downward pan immediately on hover or keyboard focus, preserving the 11s ping-pong cycle, 320ms exit reset, stable rendering surface and reduced-motion opt-out. Card preview easing remains unchanged.
+
+## Extended case showcase
+
+The desktop navigation proximity glow now peaks at 21% alpha, half the previous 42%. Case heroes group client identity and stack inside a divided metadata row, with external actions below and results aligned in a separate column. Sidebar CTAs share the primary CTA perimeter orbit and pointer highlight, including existing reduced-motion behavior.
+
+Project frontmatter supports `strategyTitle`, `gallery` (src/alt/caption), `designSystem` (named hex colors, fontFamily, headingWeight, radius, buttonLabel), and `architecture` (title/body/icon). TODO: populate these fields with verified values and assets per project. The gallery accepts 6–8 or more images, opens a native modal with previous/next, keyboard arrows, Escape, focus restoration and optional browser fullscreen. Temporary eight-image galleries use crops of the existing case screenshot and are DEV-only.
+
+The design-system showcase renders color swatches, typography, button/input examples and cards using project tokens, independent of portfolio tokens. Sample tokens, architecture and fictional testimonials are explicitly labeled and DEV-only. Live desktop/mobile previews create zero iframes before activation; a click creates a sandboxed iframe with 1440px or 390px internal width, scaled to its container by ResizeObserver. An external link remains available when a site blocks framing. Page lifecycle cleanup disconnects observers, removes frames and closes dialogs.
+
+Stack entries pair tool marks with role labels in a responsive grid. The narrative strategy title is project-specific rather than a generic placeholder. Fictional quotations never receive real client attribution.
+
+Secondary buttons share a borderless hover/focus fill with 12% brand orange mixed into the surface color. Keep the border width for layout stability and preserve the keyboard focus outline.
