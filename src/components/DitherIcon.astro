@@ -23,10 +23,14 @@ const { source } = Astro.props;
       if (!image || !card || !ctx) return;
       const growth = art.classList.contains('your-turn-growth');
       const offer = art.classList.contains('offer-art');
+      const problem = art.classList.contains('problem-art');
       const detailed = art.classList.contains('comparison-illustration') || growth;
-      // Offer icons are smaller than the Home artwork, so they get the finer
-      // comparison treatment to keep the 3D shapes readable.
-      const fineGrain = detailed || offer;
+      // Fine grain keeps the 3D shapes of the problem and offer artwork readable:
+      // one CSS pixel per dot instead of the coarser two-pixel texture. Only the
+      // comparison and offer art also use the open-highlight tone curve; the Home
+      // problem art keeps its denser ink so it does not wash out.
+      const fineGrain = detailed || offer || problem;
+      const fineTone = detailed || offer;
       const artwork = canvas.dataset.source ? new Image() : image;
       if (canvas.dataset.source) artwork.src = canvas.dataset.source;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -37,21 +41,35 @@ const { source } = Astro.props;
       let pixels: Uint8ClampedArray | undefined;
       let width = 0, height = 0, frame = 0, active = false, visible = true, last = 0;
       let elapsed = 0, mouseX = 0, mouseY = 0;
+      let output: ImageData | undefined;
+      // Fine-grain canvases are four times larger, so the animated wave is
+      // computed without per-pixel trigonometry: sin(x) / cos(x) tables plus one
+      // sin/cos pair per row.
+      let sinX: Float32Array | undefined, cosX: Float32Array | undefined;
       const draw = (phase: number) => {
         if (!pixels) return;
-        const output = ctx.createImageData(width, height);
-        for (let y=0; y<height; y++) for (let x=0; x<width; x++) {
-          const i = (y*width+x)*4;
-          const alpha = pixels[i+3]/255;
-          if (alpha < .04) continue;
-          const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
-          // Keep highlights open and shade the existing 3D contours with orange ink.
-          const wave = phase ? (Math.sin(x*.085+y*.05-phase*4.4 + mouseX*2)*.22 + Math.cos(y*.09-phase*3.2+mouseY*2)*.09) : 0;
-          // Finer comparison icons retain the deep shadows and open highlights of the source.
-          const tone = growth ? .08 + luminance*2.6 : fineGrain ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
-          const ink = Math.max(0, Math.min(1, (tone + wave*(fineGrain ? .35 : 1))*alpha));
-          if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
-            output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
+        // Fine-grain canvases are four times larger, so reuse the output buffer
+        // instead of allocating a fresh ImageData on every hover frame.
+        if (!output || output.width !== width || output.height !== height) output = ctx.createImageData(width, height);
+        else output.data.fill(0);
+        for (let y=0; y<height; y++) {
+          const i0 = y*width*4;
+          // Row constants for the two wave terms.
+          const rowSin = Math.sin(y*.05 - phase*4.4 + mouseX*2);
+          const rowCos = Math.cos(y*.05 - phase*4.4 + mouseX*2);
+          const rowWave = phase ? Math.cos(y*.09 - phase*3.2 + mouseY*2)*.09 : 0;
+          for (let x=0; x<width; x++) {
+            const i = i0 + x*4;
+            const alpha = pixels[i+3]/255;
+            if (alpha < .04) continue;
+            const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
+            // Keep highlights open and shade the existing 3D contours with orange ink.
+            const wave = phase ? (sinX![x]*rowCos + cosX![x]*rowSin)*.22 + rowWave : 0;
+            const tone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+            const ink = Math.max(0, Math.min(1, (tone + wave*(fineGrain ? .35 : 1))*alpha));
+            if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
+              output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
+            }
           }
         }
         ctx.putImageData(output,0,0);
@@ -69,12 +87,14 @@ const { source } = Astro.props;
         const style=getComputedStyle(image);
         for (const name of ['width','height','top','left','scale','transform-origin','mask-image','mask-size','mask-repeat','mask-position']) canvas.style.setProperty(name,style.getPropertyValue(name));
         if (detailed) { canvas.style.top='0px'; canvas.style.left='0px'; }
-        // Comparison details and offer icons use one CSS pixel per dot so their
-        // shapes stay legible; Home hero cards keep the bolder two-pixel texture.
+        // Fine-grain canvases use one CSS pixel per dot so the artwork's shapes
+        // stay legible; anything else keeps the bolder two-pixel texture.
         const dotSize=fineGrain ? 1 : 2;
         width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
         height=Math.max(1,Math.round(parseFloat(style.height)/dotSize));
         canvas.width=width; canvas.height=height;
+        sinX=new Float32Array(width); cosX=new Float32Array(width);
+        for(let x=0;x<width;x++){ sinX[x]=Math.sin(x*.085); cosX[x]=Math.cos(x*.085); }
         canvas.style.imageRendering='pixelated';
         const source=document.createElement('canvas'); source.width=width; source.height=height;
         const sourceCtx=source.getContext('2d',{willReadFrequently:true});
