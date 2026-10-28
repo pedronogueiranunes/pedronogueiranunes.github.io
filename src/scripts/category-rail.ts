@@ -39,7 +39,7 @@ onPageLoad(({ signal, cleanup }) => {
     if (!frame) frame = requestAnimationFrame(tick);
   };
   rail.addEventListener("pointerdown", (event) => {
-    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    if (event.pointerType !== "mouse" || event.button !== 0 || rail.scrollWidth <= rail.clientWidth) return;
     stop();
     pointerId = event.pointerId;
     originX = event.clientX;

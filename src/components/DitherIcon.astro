@@ -4,13 +4,13 @@ const { source } = Astro.props;
 ---
 <canvas class="dither-icon" data-source={source} aria-hidden="true"></canvas>
 <style is:global>
-  :is(.problem-art, .comparison-illustration) .dither-icon { position:absolute; max-width:none; pointer-events:none; transform: translate3d(var(--dither-x, 0px), var(--dither-y, 0px), 0) scale(var(--dither-zoom, 1)); transition: transform 240ms cubic-bezier(.16,1,.3,1); will-change: auto; }
-  :is(.problem-art, .comparison-illustration)[data-dither-ready] img { visibility:hidden; }
+  :is(.problem-art, .comparison-illustration, .your-turn-growth) .dither-icon { position:absolute; max-width:none; pointer-events:none; transform: translate3d(var(--dither-x, 0px), var(--dither-y, 0px), 0) scale(var(--dither-zoom, 1)); transition: transform 240ms cubic-bezier(.16,1,.3,1); will-change: auto; }
+  :is(.problem-art, .comparison-illustration, .your-turn-growth)[data-dither-ready] img { visibility:hidden; }
   .comparison-illustration .dither-icon { inset:0; }
   @media (max-width:768px) {
     .comparison-row .comparison-illustration { width:clamp(200px, 64vw, 240px); height:clamp(200px, 64vw, 240px); margin:36px -20px -8px auto; }
   }
-  @media (prefers-reduced-motion: reduce) { :is(.problem-art, .comparison-illustration) .dither-icon { transform:none; transition:none; } }
+  @media (prefers-reduced-motion: reduce) { :is(.problem-art, .comparison-illustration, .your-turn-growth) .dither-icon { transform:none; transition:none; } }
 </style>
 <script>
   import { onPageLoad } from '../scripts/page-lifecycle';
@@ -18,14 +18,17 @@ const { source } = Astro.props;
     document.querySelectorAll<HTMLCanvasElement>('.dither-icon').forEach((canvas) => {
       const art = canvas.parentElement!;
       const image = art.querySelector('img');
-      const card = art.closest<HTMLElement>('.problem-card, .comparison-row');
+      const card = art.closest<HTMLElement>('.problem-card, .comparison-row, .your-turn-card');
       const ctx = canvas.getContext('2d');
       if (!image || !card || !ctx) return;
-      const detailed = art.classList.contains('comparison-illustration');
+      const growth = art.classList.contains('your-turn-growth');
+      const detailed = art.classList.contains('comparison-illustration') || growth;
       const artwork = canvas.dataset.source ? new Image() : image;
       if (canvas.dataset.source) artwork.src = canvas.dataset.source;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
       const fine = matchMedia('(hover: hover) and (pointer: fine)');
+      const mobile = matchMedia('(max-width: 768px)');
+      const autoAnimate=()=>detailed && mobile.matches;
       const bayer = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
       let pixels: Uint8ClampedArray | undefined;
       let width = 0, height = 0, frame = 0, active = false, visible = true, last = 0;
@@ -41,7 +44,7 @@ const { source } = Astro.props;
           // Keep highlights open and shade the existing 3D contours with orange ink.
           const wave = phase ? (Math.sin(x*.085+y*.05-phase*4.4 + mouseX*2)*.22 + Math.cos(y*.09-phase*3.2+mouseY*2)*.09) : 0;
           // Finer comparison icons retain the deep shadows and open highlights of the source.
-          const tone = detailed ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+          const tone = growth ? .08 + luminance*2.6 : detailed ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
           const ink = Math.max(0, Math.min(1, (tone + wave*(detailed ? .35 : 1))*alpha));
           if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
             output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
@@ -55,13 +58,13 @@ const { source } = Astro.props;
         if (now-last>32) { elapsed += Math.min((now-last)/1000,.05); draw(elapsed); last=now; }
         frame=requestAnimationFrame(tick);
       };
-      const start = () => { if (!frame && active && visible && !document.hidden && !reduced.matches) { canvas.style.setProperty('--dither-zoom','1.06'); last=performance.now(); frame=requestAnimationFrame(tick); } };
+      const start = () => { if (!frame && active && visible && !document.hidden && !reduced.matches) { if (!autoAnimate()) canvas.style.setProperty('--dither-zoom','1.06'); last=performance.now(); frame=requestAnimationFrame(tick); } };
       const rest = () => { canvas.style.setProperty('--dither-x','0px'); canvas.style.setProperty('--dither-y','0px'); canvas.style.setProperty('--dither-zoom','1'); cancelAnimationFrame(frame); frame=0; elapsed=0; draw(0); };
       const setup = () => {
         if (scope.signal.aborted || !artwork.naturalWidth) return;
         const style=getComputedStyle(image);
         for (const name of ['width','height','top','left','scale','transform-origin','mask-image','mask-size','mask-repeat','mask-position']) canvas.style.setProperty(name,style.getPropertyValue(name));
-        if (art.classList.contains('comparison-illustration')) { canvas.style.top='0px'; canvas.style.left='0px'; }
+        if (detailed) { canvas.style.top='0px'; canvas.style.left='0px'; }
         // Comparison details use one CSS pixel per dot; hero cards keep the bolder two-pixel texture.
         const dotSize=detailed ? 1 : 2;
         width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
@@ -85,7 +88,7 @@ const { source } = Astro.props;
       image.addEventListener('load',setup,{signal:scope.signal});
       if (artwork !== image) artwork.addEventListener('load',setup,{signal:scope.signal});
       const resize=new ResizeObserver(setup); resize.observe(image);
-      const observer=new IntersectionObserver(([entry])=>{ visible=entry.isIntersecting; if (visible) start(); else rest(); }); observer.observe(card);
+      const observer=new IntersectionObserver(([entry])=>{ visible=entry.isIntersecting; if (autoAnimate()) active=true; if (visible) start(); else rest(); }); observer.observe(card);
       card.addEventListener('pointerenter',()=>{ if (fine.matches) {active=true;start();} },{signal:scope.signal});
       card.addEventListener('pointermove',(event)=>{
         if (!fine.matches || reduced.matches) return;
@@ -95,9 +98,10 @@ const { source } = Astro.props;
         canvas.style.setProperty('--dither-x',`${mouseX*8}px`);
         canvas.style.setProperty('--dither-y',`${mouseY*6}px`);
       },{signal:scope.signal,passive:true});
-      card.addEventListener('pointerleave',()=>{active=false;rest();},{signal:scope.signal});
+      card.addEventListener('pointerleave',()=>{active=autoAnimate();rest();start();},{signal:scope.signal});
       card.addEventListener('focusin',()=>{active=true;start();},{signal:scope.signal});
-      card.addEventListener('focusout',(event)=>{if (!card.contains(event.relatedTarget as Node)) {active=false;rest();}},{signal:scope.signal});
+      card.addEventListener('focusout',(event)=>{if (!card.contains(event.relatedTarget as Node)) {active=autoAnimate();rest();start();}},{signal:scope.signal});
+      mobile.addEventListener('change',()=>{active=autoAnimate();rest();start();},{signal:scope.signal});
       reduced.addEventListener('change',()=>{rest();start();},{signal:scope.signal});
       document.addEventListener('visibilitychange',()=>{rest();start();},{signal:scope.signal});
       setup();
