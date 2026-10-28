@@ -22,6 +22,7 @@ colors:
   footer-bg: "#EEF2ED"
   positive-ink: "#53634F"
   specimen-bg: "#EEF0EE"
+  footer-cta-panel: "#E2E8DF"
   dark-bg: "#0D0D0D"
   dark-bg-secondary: "#161616"
   dark-surface: "#1E1E1E"
@@ -287,7 +288,7 @@ The model's baseline yaw moves from the left-facing profile (−60°) to (30°),
 
 Large screens retain loading after paint/idle when appropriate; mobile/tablet loads on portrait engagement. The unactivated or failed model retains the same stage's static fallback. Reduced motion uses two still placements, switching at the travel midpoint without interpolated movement or 3D loading. The scripts defining this shared-stage behavior are `src/scripts/portrait-travel.js` and `src/scripts/splat-hero.js`. The scoped corrections, portrait-size and motion-stability reviews passed; their captures and measurements establish composition, uniform proportions, stable sampled buffers, layer order and final pose, not frame pacing on every device.
 
-The footer combines an illustrated CTA, navigation/platform columns, a lime availability pill, legal links and oversized Pixelify lettering. At mobile the lettering becomes smaller, wrapping and left-aligned. Missing URLs and download assets must remain honest unavailable states.
+The footer combines a split light-sage/charcoal CTA with a category reel, navigation/platform columns, a lime availability pill, legal links and oversized Pixelify lettering. The bio name uses the header's pixel-art logo treatment. At mobile the lettering becomes smaller, wrapping and left-aligned. Missing URLs and download assets must remain honest unavailable states.
 
 ## Do's and Don'ts
 
@@ -383,7 +384,7 @@ Projects uses the approved “Creative range. Digital focus. Measurable impact.�
 
 Timeline cards share one continuous dotted rule from the first visible project to the last, crossing year-group gaps. Orange nodes gain a soft glow on hover and keyboard focus. A faded tick ruler follows scroll position and offers native range/keyboard and year-button navigation; only visible years are available. Desktop uses a lateral fixed ruler and mobile uses a horizontal inline ruler. Scroll work is coalesced to one rAF and cleanup removes observers/listeners; reduced motion skips tick movement and smooth scrolling.
 
-The project CTA has no border/shadow, a slightly larger black orbit and YOUR TURN lettering, and growth artwork crossing the black/orange boundary. Artwork is not clipped by its local frame; the outer card retains its rounded clipping.
+The project CTA has no border/shadow, a black orbit sized to carry the whole orange-dithered growth chart, and YOUR TURN lettering. The chart reads against the black field rather than disappearing on orange; the outer card retains its rounded clipping.
 
 ### Subheadline wrapping
 
@@ -392,3 +393,37 @@ Choose subheadline font size and reading width together for the actual copy. Avo
 ### Project discovery and layout motion
 
 View changes reveal project cards in a subtle 300ms stagger (35ms spacing, capped at 210ms), canceling previous animations on rapid toggles and respecting reduced motion. Filter facets derive from content: platform stack, other tools, project type, year, location and existing card tint. Card color explicitly refers to the thumbnail background, not an inferred client brand palette. The filter panel stays within the viewport and scrolls independently when needed.
+
+
+## Projects category sculpture
+
+The Projects header is a split composition from 1024px up: copy on the left, a decorative extruded category sculpture on the right. The sculpture occupies the right half of the 1312px content container, is capped at 560px, and follows the same right edge as the navigation's Book a call action, so it stays with the content on ultrawide screens instead of drifting to the viewport edge. Below 1024px it is hidden and the category buttons' flat 22px pixel icons remain the only category marks. The slot is fixed and absolutely nothing about category changes may move the header, copy or filters.
+
+- Rendering: Canvas 2D. Each 24x24 glyph pixel is extruded into depth (24x24x9 cell model) and projected with a shallow perspective. Front faces are lit light sage; side walls are shaded darker to read as one solid object. The 256px render buffer is upscaled with `image-rendering: pixelated`.
+- Colour and dithering: sage/green palette derived from the pale green control surfaces (`#a3b790` to `#c2d2ae` faces, `#556851` to `#879c79` depth walls). A 4x4 Bayer matrix dithers the lit greys into five palette steps; an 8x8 Bayer threshold dithers the silhouette edge. Do not introduce orange into this specimen.
+- Motion: a slow ±2–3° idle drift keeps it alive. With a fine pointer it tilts magnetically toward the cursor (up to ~9°) with damped easing and shifts up to ~7px; it pauses offscreen and in hidden tabs, runs at ~32fps, and renders only one static frame when reduced motion is requested.
+- Category change: 480ms. Shared pixels keep their depth as the anchor; the outgoing glyph's columns retract and the incoming glyph's columns rise in Bayer-diagonal order, so the object dissolves into its pixels and reforms as the next icon. Rapid changes restart from the previous settled mask, never stacking loops.
+- Fallback: if a 2D context is unavailable the inline 24x24 SVG for the active category remains visible at 78% of the slot. Reduce motion keeps a static extruded frame.
+- Accessibility: `aria-hidden`, no focus target, `pointer-events: none`; the category buttons remain the only controls and the sculpture never replaces their labels.
+- Layout: at 1024px up the header grid uses two equal columns with a 56px gap and 32px/24px block padding. Headline and subheadline fill the same copy column, so the subheadline measure always matches the headline width. Do not reintroduce separate `max-width` values for the projects subheadline.
+
+
+## Supporting dither and orbital details
+
+About's four promise illustrations use `DitherIcon` orange dithering at rest and a dither wave on fine-pointer hover. Each card carries a lime police tape with a short complementary line in solid Silkscreen pixel type — "Stay on your terms", "Code is yours", "Talk to the maker" and "Time zones, not excuses" — using dotted tape edges and separators instead of a dotted text fill so the copy stays legible. The tape runs at 45 degrees across the top-right corner so both ends meet the card's top and right edges, stays clear of the illustration and copy at 1440/768/390, and is `aria-hidden`. With a fine pointer the tape is revealed on hover, the card inverts to charcoal with light copy, and the repeated dotted title scrolls as a stepped ticker; on touch the tape stays visible and runs while the section is in view; reduced motion keeps it static. Do not reintroduce the dotted orbit on these four cards. The illustrations remain decorative `alt=""` images. The unlocked padlock receives a 22px left and 3px down optical nudge so its visible edge lines up with the start of its title.
+
+The footer CTA no longer carries the illustrated site image: the dark lateral slot is purely the vector category reel. There is no dither canvas or ground shadow in this slot.
+
+The About promise icons keep the orange dither language; do not introduce new dither palettes there.
+
+
+## Footer CTA and category reel
+
+The CTA above the footer is one rounded split panel: a light sage (`footer-cta-panel`, `#E2E8DF`) dotted editorial surface on the left with dark copy and an orange primary action, and a charcoal lateral slot on the right. This replaces the previous heavy green panel; keep the left surface light and the right slot dark in both themes.
+
+- The dark slot is a vertical reel of the five category glyphs in brand orange, repeated to loop seamlessly. It is clipped by the panel and faded at the top and bottom edges. There is no fixed image or site illustration in front of the vector glyphs.
+- The reel is paused at rest and runs only while the dark panel is hovered. Its cycle is deliberately fast with an ease-in-out curve (`cubic-bezier(0.5, 0, 0.5, 1)`, 4.8s); the duplicate glyph group keeps the eased loop seamless. Reduced motion disables it.
+- The left panel keeps the existing copy and the outlined email action, which is dark-on-light. The primary action stays brand orange. Do not reintroduce the white-on-green treatment.
+- At 1024px the split remains with a narrower slot (96px glyphs); at 768px and below the copy stacks above the slot (64px glyphs), and the actions become full-width.
+- The footer bio name is not set in Manrope: it repeats the header's two-line Silkscreen logo (`Pedr0 / Nogueira`) in orange, as a home link. Keep the pixel logo alignment and line break.
+- Do not turn the reel into links or focusable controls; it is one decorative hover affordance, not navigation.

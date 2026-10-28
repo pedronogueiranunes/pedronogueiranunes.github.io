@@ -6,7 +6,15 @@ import ResponsiveImage from "../components/ResponsiveImage.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import ToolChip from "../components/ToolChip.astro";
 import Icon from "../components/Icon.astro";
+import DitherIcon from "../components/DitherIcon.astro";
 import { stats, promises, timeline, skills } from "../data/about";
+// Short complementary lines for the police tapes, one per promise card.
+const tapeCopy = [
+  "Stay on your terms",
+  "Code is yours",
+  "Talk to the maker",
+  "Time zones, not excuses",
+];
 import { logoFor } from "../data/home";
 ---
 
@@ -64,19 +72,37 @@ import { logoFor } from "../data/home";
       I'd rather remove the reasons you shouldn't.
     </p>
     <div class="promises-grid">
-      {promises.map(([title, body], i) => (
-        <article>
-          <ResponsiveImage
-            src={`/assets/figma/489-7767-imgImage${i || ""}.webp`}
-            width="138"
-            height="138"
-            loading="lazy"
-            alt=""
-          />
-          <h3>{title}</h3>
-          <p>{body}</p>
-        </article>
-      ))}
+      {promises.map(([title, body], i) => {
+        const tape = tapeCopy[i];
+        return (
+          <article class="promise-card">
+            <span class="promise-tape" aria-hidden="true">
+              <span class="promise-tape__track">
+                <span class="promise-tape__group">
+                  <span class="promise-tape__text">{tape}</span>
+                  <span class="promise-tape__text">{tape}</span>
+                </span>
+                <span class="promise-tape__group">
+                  <span class="promise-tape__text">{tape}</span>
+                  <span class="promise-tape__text">{tape}</span>
+                </span>
+              </span>
+            </span>
+            <div class="promise-art">
+              <ResponsiveImage
+                src={`/assets/figma/489-7767-imgImage${i || ""}.webp`}
+                width="138"
+                height="138"
+                loading="lazy"
+                alt=""
+              />
+              <DitherIcon />
+            </div>
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        );
+      })}
     </div>
     <div class="promise-facts">
       <p>
@@ -131,6 +157,14 @@ import { logoFor } from "../data/home";
     onPageLoad((scope) => {
       if (!document.querySelector(".about-page")) return;
       scope.cleanup(initReveal());
+      const promisesSection = document.querySelector(".promises-section");
+      if (promisesSection && "IntersectionObserver" in window) {
+        const tapeObserver = new IntersectionObserver(([entry]) => {
+          promisesSection.toggleAttribute("data-tape-play", entry.isIntersecting);
+        });
+        tapeObserver.observe(promisesSection);
+        scope.cleanup(() => tapeObserver.disconnect());
+      }
       const viewport = document.getElementById("splat-viewport")!;
       let loaded = false;
       let dispose: (() => void) | undefined;

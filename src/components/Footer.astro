@@ -1,8 +1,16 @@
 ---
 import "../styles/footer-email.css";
 import Button from "./Button.astro";
-import ResponsiveImage from "./ResponsiveImage.astro";
+import Icon from "./Icon.astro";
 import { site } from "../data/site";
+const categoryIcons = [
+  "category-web",
+  "category-brand",
+  "category-art",
+  "category-music",
+  "category-experiment",
+];
+const reelIcons = [...categoryIcons, ...categoryIcons];
 const platforms = [
   ["wordpress", "WordPress"],
   ["webflow", "Webflow"],
@@ -15,16 +23,6 @@ const platforms = [
 
 <footer class="site-footer" transition:name="site-footer" transition:persist="site-footer" transition:animate="none">
   <div class="footer-cta">
-    <div class="footer-art-ground" aria-hidden="true"></div>
-    <ResponsiveImage
-      class="footer-art"
-      sizes="285px"
-      src="/assets/figma/515-2792-imgGeminiGeneratedImage4Dkifk4Dkifk4Dki3.webp"
-      width="285"
-      height="285"
-      alt=""
-      loading="lazy"
-    />
     <div class="footer-cta-copy">
       <h2>
         Your site should be your best salesperson. <span>Is it?</span>
@@ -40,10 +38,30 @@ const platforms = [
         </Button>
       </div>
     </div>
+    <div class="footer-cta-slot" aria-hidden="true">
+      <div class="footer-reel">
+        <div class="footer-reel__track">
+          <div class="footer-reel__group">
+            {reelIcons.map((name) => (
+              <span class="footer-reel__icon"><Icon name={name} size={140} /></span>
+            ))}
+          </div>
+          <div class="footer-reel__group">
+            {reelIcons.map((name) => (
+              <span class="footer-reel__icon"><Icon name={name} size={140} /></span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="footer-columns">
     <div class="footer-bio">
-      <h3>Pedro Nogueira</h3>
+      <a class="footer-logo" href="/" aria-label="Pedro Nogueira home">
+        Pedr0
+        <br />
+        Nogueira
+      </a>
       <p>
         Senior web designer and developer. WordPress, Webflow, Framer, Shopify
         and React. 12+ years, clients in the US, Canada and Germany.

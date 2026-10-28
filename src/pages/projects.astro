@@ -9,6 +9,7 @@ import Eyebrow from "../components/Eyebrow.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import Button from "../components/Button.astro";
 import Icon from "../components/Icon.astro";
+import CategoryGlyph from "../components/CategoryGlyph.astro";
 import { featuredMetrics } from "../data/cases";
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order,
@@ -36,13 +37,16 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
 <Base title="Projects | Pedro Nogueira" pageClass="projects-page">
   <header class="projects-header page-section">
     <PixelTrail tone="green" />
-    <Eyebrow>Projects</Eyebrow>
-    <h1>
-      Creative range. Digital focus. Measurable impact.
-    </h1>
-    <p>
-      Specialized in websites and interaction, with work spanning brand identity, illustration, music and audiovisual. Different disciplines, connected by craft and purpose.
-    </p>
+    <div class="projects-header-copy">
+      <Eyebrow>Projects</Eyebrow>
+      <h1>
+        Creative range. Digital focus. Measurable impact.
+      </h1>
+      <p>
+        Specialized in websites and interaction, with work spanning brand identity, illustration, music and audiovisual. Different disciplines, connected by craft and purpose.
+      </p>
+    </div>
+    <div class="category-glyph-slot"><CategoryGlyph /></div>
   </header>
   <div data-projects-filter>
     <div class="projects-filters">
@@ -240,6 +244,7 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
       scope.cleanup(() => { introObserver.disconnect(); introAnimations.forEach((animation) => animation.cancel()); });
     }
     let category = "0";
+    let dispatchedCategory: string | null = null;
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       "button[data-category]",
     );
@@ -329,6 +334,15 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
           String(button.dataset.category === category),
         ),
       );
+      root.dataset.activeCategory = category;
+      if (category !== dispatchedCategory) {
+        dispatchedCategory = category;
+        document.dispatchEvent(
+          new CustomEvent("portfolio:category-change", {
+            detail: { category },
+          }),
+        );
+      }
       root.querySelector<HTMLElement>("[data-featured]")!.hidden =
         root.querySelector("[data-featured]")!.hasAttribute("data-featured-paused") || category !== "0" || !!year.value || !!location.value;
       root.querySelector<HTMLElement>("[data-empty]")!.hidden = count !== 0;
