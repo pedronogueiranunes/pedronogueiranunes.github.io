@@ -3,6 +3,7 @@ import { comparison } from "../data/home";
 import Eyebrow from "./Eyebrow.astro";
 import Icon from "./Icon.astro";
 import Button from "./Button.astro";
+import DitherIcon from "./DitherIcon.astro";
 const comparisonIcons = ["work", "focus", "platforms", "time", "communication", "ownership", "next"];
 const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 ---
@@ -59,10 +60,13 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
             )}
           </div>
         ))}
-        <picture class="comparison-illustration" aria-hidden="true">
+        <div class="comparison-illustration" aria-hidden="true">
+        <picture>
           <source media="(max-width: 768px)" srcset={`/assets/comparison/${comparisonIcons[i]}.webp`} />
           <img width="160" height="160" alt="" loading="lazy" decoding="async" />
         </picture>
+          <DitherIcon />
+        </div>
       </div>
     ))}
   </div>

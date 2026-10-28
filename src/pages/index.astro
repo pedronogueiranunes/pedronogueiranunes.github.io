@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import IconWaves from "../components/IconWaves.astro";
+import DitherIcon from "../components/DitherIcon.astro";
 import PixelTrail from "../components/PixelTrail.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
 import Button from "../components/Button.astro";
@@ -167,7 +169,7 @@ const posts = (await getCollection("posts")).sort(
   <div id="work">
     <ProjectRail projects={projects} />
   </div>
-  <section class="problems-section page-section">
+  <section class="problems-section page-section" id="where-to-start">
     <div class="section-heading">
       <div>
         <Eyebrow>Where to start</Eyebrow>
@@ -183,6 +185,7 @@ const posts = (await getCollection("posts")).sort(
         <article
           class="problem-card"
         >
+          <IconWaves />
           <div
             class="problem-art"
             style={`--art-mask:url('/assets/figma/488-6789-${problem.mask}.svg')`}
@@ -194,6 +197,7 @@ const posts = (await getCollection("posts")).sort(
               loading="lazy"
               alt=""
             />
+            <DitherIcon source={i === 1 ? "/assets/experiments/dither-website-3d.png" : undefined} />
           </div>
           <div class="problem-top">
             <span>{String(i + 1).padStart(2, "0")}</span>
