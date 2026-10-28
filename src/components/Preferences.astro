@@ -52,7 +52,7 @@ const { id = "preferences", inline = false } = Astro.props;
       <legend>Theme</legend>
       <div class="theme-segments">
         {["Light", "Dark", "Auto"].map((label) => (
-          <label>
+          <label title={label}>
             <input
               type="radio"
               name={`${id}-theme`}
@@ -67,7 +67,7 @@ const { id = "preferences", inline = false } = Astro.props;
                     ? "M2 0h3v1H3v4h4v1H6v1H2V6H1V1h1z"
                     : "M2 0h4v1h1v1h1v4H7v1H6v1H2V7H1V6H0V2h1V1h1zm2 1v6h2V6h1V2H6V1z"} />
               </svg>
-              {label}
+              <span class="theme-option-label">{label}</span>
             </span>
           </label>
         ))}

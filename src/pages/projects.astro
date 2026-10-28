@@ -22,6 +22,15 @@ const categories = [
 ];
 const categoryIcons = ["category-web", "category-brand", "category-art", "category-music", "category-experiment"];
 const gridOrder = [0, 1, 2, 3, 4, 5];
+const years = [...new Set(projects.map(project => project.data.year))].sort((a,b) => Number(b)-Number(a));
+const platforms = new Set(["Webflow", "WordPress", "Next.js", "JavaScript", "Shopify Lite"]);
+const unique = (values: string[]) => [...new Set(values)].sort();
+const stacks = unique(projects.flatMap(p => p.data.tools.filter(tool => platforms.has(tool))));
+const tools = unique(projects.flatMap(p => p.data.tools.filter(tool => !platforms.has(tool))));
+const services = unique(projects.map(p => p.data.category));
+const locations = unique(projects.flatMap(p => (p.data.location || "").split(" · ")));
+const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filter(Boolean));
+
 ---
 
 <Base title="Projects | Pedro Nogueira" pageClass="projects-page">
@@ -29,13 +38,10 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
     <PixelTrail tone="green" />
     <Eyebrow>Projects</Eyebrow>
     <h1>
-      Real sites.
-      <br />
-      Measured results.
+      Creative range. Digital focus. Measurable impact.
     </h1>
     <p>
-      Every number on this page comes from the client's own analytics. Filter by
-      the kind of work you need to see.
+      Specialized in websites and interaction, with work spanning brand identity, illustration, music and audiovisual. Different disciplines, connected by craft and purpose.
     </p>
   </header>
   <div data-projects-filter>
@@ -47,12 +53,14 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
             <span>{category}</span>
           </button>
         ))}
+        <button type="button" data-category="all" aria-pressed="false"><Icon name="grid2" size={22} /><span>All</span></button>
       </div>
       <div class="view-controls" role="group" aria-label="Project layout">
         {[
           ["2", "grid2", "Two columns"],
           ["3", "grid3", "Three columns"],
           ["list", "list", "List view"],
+          ["timeline", "timeline", "Timeline view"],
         ].map(([view, icon, label]) => (
           <button
             type="button"
@@ -73,19 +81,21 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
             Year
             <select name="year">
               <option value="">All years</option>
-              <option>2025</option>
-              <option>2024</option>
+              {years.map(year => <option>{year}</option>)}
             </select>
           </label>
           <label>
             Location
             <select name="location">
               <option value="">All locations</option>
-              <option>USA</option>
-              <option>Brazil</option>
-              <option>Germany</option>
+              {locations.map(value => <option>{value}</option>)}
             </select>
           </label>
+          {[ ["stack", "Stack", stacks], ["tool", "Tools", tools], ["service", "Project type", services] ].map(([name, label, values]) => (
+            <label>{label as string}<select name={name as string} data-facet><option value="">All</option>{(values as string[]).map(value => <option>{value}</option>)}</select></label>
+          ))}
+          <label>Card color<select name="color" data-facet><option value="">All</option>{colors.map((color,index) => <option value={color}>{color}</option>)}</select></label>
+          <div class="filter-color-preview" aria-hidden="true">{colors.map(color => <span style={`background:${color}`} />)}</div>
           <button type="button" data-reset>
             Reset filters
           </button>
@@ -123,6 +133,12 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
     </section>
     <section class="all-projects page-section">
       <p class="sr-only" data-count aria-live="polite"></p>
+      <aside class="timeline-ruler" aria-label="Browse by year" hidden>
+        <div class="timeline-ruler-ticks" aria-hidden="true"></div>
+        <label class="sr-only" for="timeline-year-range">Year</label>
+        <input id="timeline-year-range" type="range" min="0" max={Math.max(0,years.length-1)} value="0" step="1" aria-valuetext={years[0]} />
+        <div class="timeline-ruler-years">{years.map((year,index)=><button type="button" data-timeline-year={year} data-year-index={index} aria-pressed={index===0}>{year}</button>)}</div>
+      </aside>
       <div class="project-grid">
         {gridOrder.map((i) => (
           <div
@@ -130,6 +146,10 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
             data-kind={i === 4 || i === 5 ? "0,1" : "0"}
             data-year={projects[i].data.year}
             data-location={projects[i].data.location}
+            data-stack={JSON.stringify(projects[i].data.tools.filter(tool => platforms.has(tool)))}
+            data-tool={JSON.stringify(projects[i].data.tools.filter(tool => !platforms.has(tool)))}
+            data-service={projects[i].data.category}
+            data-color={projects[i].data.tint || projects[i].data.color}
           >
             <ProjectCard project={projects[i]} />
           </div>
@@ -225,13 +245,81 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
     );
     const year = root.querySelector<HTMLSelectElement>("[name=year]")!;
     const location = root.querySelector<HTMLSelectElement>("[name=location]")!;
+    const facets = Array.from(root.querySelectorAll<HTMLSelectElement>("[data-facet]"));
+    const grid = root.querySelector<HTMLElement>(".all-projects > .project-grid")!;
+    const items = Array.from(grid.querySelectorAll<HTMLElement>("[data-project]"));
+    const yearHeadings = new Map<string, HTMLHeadingElement>();
+    [...new Set(items.map(item => item.dataset.year!))].sort((a,b)=>Number(b)-Number(a)).forEach(value=>{
+      const heading=document.createElement("h2");
+      heading.className="project-year-heading";
+      heading.textContent=value;
+      heading.hidden=true;
+      yearHeadings.set(value,heading);
+      grid.insertBefore(heading,banner || null);
+    });
+    const ruler=root.querySelector<HTMLElement>(".timeline-ruler")!;
+    const yearRange=ruler.querySelector<HTMLInputElement>("input")!;
+    const yearControls=Array.from(ruler.querySelectorAll<HTMLButtonElement>("[data-timeline-year]"));
+    let rulerFrame=0;
+    let rulerYears:string[]=[];
+    const measureTimeline = () => {
+      rulerFrame=0;
+      const visible=items.filter(item=>!item.hidden);
+      const timeline=root.dataset.view === "timeline";
+      ruler.hidden=!timeline || !visible.length;
+      if(!timeline || !visible.length)return;
+      const gridBox=grid.getBoundingClientRect();
+      const first=visible[0].getBoundingClientRect();
+      const last=visible[visible.length-1].getBoundingClientRect();
+      grid.style.setProperty("--timeline-line-start",`${first.top-gridBox.top}px`);
+      grid.style.setProperty("--timeline-line-height",`${last.bottom-first.top}px`);
+      ruler.toggleAttribute("data-in-range",gridBox.bottom>160 && gridBox.top<innerHeight*.8);
+      const headings=Array.from(yearHeadings.entries()).filter(([,heading])=>!heading.hidden);
+      rulerYears=headings.map(([value])=>value);
+      yearRange.max=String(Math.max(0,rulerYears.length-1));
+      yearRange.disabled=rulerYears.length<2;
+      const active=headings.filter(([,heading])=>heading.getBoundingClientRect().top<innerHeight*.4).at(-1) || headings[0];
+      yearControls.forEach(button=>{button.hidden=!headings.some(([value])=>value===button.dataset.timelineYear);button.setAttribute("aria-pressed",String(button.dataset.timelineYear===active?.[0]));});
+      if(active){
+        const index=rulerYears.indexOf(active[0]);
+        yearRange.value=String(index);yearRange.setAttribute("aria-valuetext",active[0]);
+      }
+      const progress=Math.max(0,Math.min(1,(innerHeight*.4-first.top)/Math.max(1,last.bottom-first.top)));
+      ruler.style.setProperty("--ruler-offset",reducedMotion.matches?"0px":`${(progress*240).toFixed(1)}px`);
+    };
+    const scheduleRuler = () => {if(!rulerFrame)rulerFrame=requestAnimationFrame(measureTimeline);};
+    const goToYear=(value:string)=>{
+      const heading=yearHeadings.get(value);
+      if(heading && !heading.hidden)heading.scrollIntoView({behavior:reducedMotion.matches?"instant":"smooth",block:"start"});
+    };
+    yearControls.forEach(button=>button.addEventListener("click",()=>goToYear(button.dataset.timelineYear!),{signal:scope.signal}));
+    yearRange.addEventListener("input",()=>goToYear(rulerYears[Number(yearRange.value)]),{signal:scope.signal});
+    document.addEventListener("scroll",scheduleRuler,{passive:true,signal:scope.signal});
+    window.addEventListener("resize",scheduleRuler,{passive:true,signal:scope.signal});
+    const timelineObserver=new ResizeObserver(scheduleRuler);timelineObserver.observe(grid);
+    scope.cleanup(()=>{cancelAnimationFrame(rulerFrame);timelineObserver.disconnect();});
+    const updateTimeline = () => {
+      const timeline=root.dataset.view === "timeline";
+      yearHeadings.forEach((heading,value)=>{
+        const group=items.filter(item=>item.dataset.year===value);
+        heading.hidden=!timeline || !group.some(item=>!item.hidden);
+        if(timeline){grid.append(heading);group.forEach(item=>grid.append(item));}
+      });
+      if(!timeline) items.forEach(item=>grid.append(item));
+      if(banner)grid.append(banner);
+      scheduleRuler();
+    };
+    scope.cleanup(()=>yearHeadings.forEach(heading=>heading.remove()));
     const update = () => {
       let count = 0;
       root.querySelectorAll<HTMLElement>("[data-project]").forEach((item) => {
         const match =
-          item.dataset.kind!.split(",").includes(category) &&
+          (category === "all" || item.dataset.kind!.split(",").includes(category)) &&
           (!year.value || item.dataset.year === year.value) &&
-          (!location.value || item.dataset.location!.includes(location.value));
+          (!location.value || item.dataset.location!.includes(location.value)) &&
+          facets.every(select => !select.value || (["stack", "tool"].includes(select.name)
+            ? JSON.parse(item.dataset[select.name] || "[]").includes(select.value)
+            : item.dataset[select.name] === select.value));
         item.hidden = !match;
         if (match) count++;
       });
@@ -245,6 +333,7 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
         root.querySelector("[data-featured]")!.hasAttribute("data-featured-paused") || category !== "0" || !!year.value || !!location.value;
       root.querySelector<HTMLElement>("[data-empty]")!.hidden = count !== 0;
       root.querySelector("[data-count]")!.textContent = `${count} projects`;
+      updateTimeline();
     };
     buttons.forEach((button) =>
       button.addEventListener("click", () => {
@@ -252,20 +341,40 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
         update();
       }, { signal: scope.signal }),
     );
+    facets.forEach(select => select.addEventListener("change", update, { signal: scope.signal }));
     year.addEventListener("change", update, { signal: scope.signal });
     location.addEventListener("change", update, { signal: scope.signal });
     root.querySelector("[data-reset]")!.addEventListener("click", () => {
+      facets.forEach(select => select.value = "");
       year.value = "";
       location.value = "";
       category = "0";
       update();
     }, { signal: scope.signal });
     const param = new URLSearchParams(window.location.search).get("category");
-    if (param === "experiments") category = "4";
+    if (param === "all") category = "all";
+    else if (param === "experiments") category = "4";
     else if (param && /^[0-4]$/.test(param)) category = param;
+    const layoutAnimations = new Set<Animation>();
+    scope.cleanup(() => layoutAnimations.forEach(animation => animation.cancel()));
+    reducedMotion.addEventListener("change", () => { if(reducedMotion.matches) layoutAnimations.forEach(animation => animation.cancel()); }, {signal:scope.signal});
     root.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((button) =>
       button.addEventListener("click", () => {
+        if ((root.dataset.view || "3") === button.dataset.view) return;
+        layoutAnimations.forEach(animation => animation.cancel());
+        layoutAnimations.clear();
         root.dataset.view = button.dataset.view;
+        updateTimeline();
+        if (!reducedMotion.matches) {
+          items.filter(item => !item.hidden).forEach((item, index) => {
+            const animation = item.animate([
+              { opacity: 0, transform: "translateY(16px) scale(.99)" },
+              { opacity: 1, transform: "translateY(0) scale(1)" },
+            ], { duration: 300, delay: Math.min(index * 35, 210), easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" });
+            layoutAnimations.add(animation);
+            animation.onfinish = () => layoutAnimations.delete(animation);
+          });
+        }
         root
           .querySelectorAll("[data-view]")
           .forEach((control) =>
@@ -291,7 +400,6 @@ const gridOrder = [0, 1, 2, 3, 4, 5];
     .your-turn-card .your-turn-orbit { width:536.204px; height:536.204px; top:-282.13px; left:calc(50% - 268.102px); }
     .projects-filters .category-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; max-width:100%; gap:8px; padding:0; overflow:visible; mask-image:none; cursor:auto; touch-action:auto; }
     .projects-filters .category-filters button { width:100%; min-width:0; max-width:none; justify-self:stretch; justify-content:flex-start; border-radius:14px; padding:14px 12px; min-height:76px; text-align:left; white-space:normal; font-size:11px; line-height:1.5; letter-spacing:.02em; gap:10px; }
-    .projects-filters .category-filters button:last-child { grid-column:1/-1; min-height:50px; }
     .projects-filters .category-filters button > span:last-child { min-width:0; overflow-wrap:normal; }
   }
 </style>

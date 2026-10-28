@@ -358,3 +358,37 @@ The design-system showcase renders color swatches, typography, button/input exam
 Stack entries pair tool marks with role labels in a responsive grid. The narrative strategy title is project-specific rather than a generic placeholder. Fictional quotations never receive real client attribution.
 
 Secondary buttons share a borderless hover/focus fill with 12% brand orange mixed into the surface color. Keep the border width for layout stability and preserve the keyboard focus outline.
+
+## Page arrival motion
+
+After the orange navigation curtain finishes, visible content groups land in a quick stagger: 360ms per group, 24ms between starts, capped at 192ms (552ms maximum total). Movement starts 28px below at 98.5% scale, overshoots upward by 4px, then settles through 1px to its final position. Animate only visible non-nested groups, at most 16, in visual reading order. Header/footer stay stable; below-fold scroll reveals retain their existing behavior. The portrait drawing buffer is never resized.
+
+Arrival runs on first page load and after route/query navigation; hash-only navigation and theme changes do not replay it. A pending-state flag keeps incoming content behind the curtain until it completes. Reduced motion bypasses the landing; lifecycle cleanup cancels animations on navigation and a 1200ms fallback prevents stuck hidden content.
+
+Desktop preferences use a 344px popover with a two-column language grid, 48px controls, and matching theme options. Selected options share the mobile orange border/wash; inactive hover uses a subtle sage wash. Use 12px control radii, body type, Departure Mono group labels and explicit keyboard focus. Native radios and existing dismissal behavior remain intact.
+
+Theme selection now mirrors the project layout toggle across desktop and mobile: a full-width capsule with three equal 44px-high controls, 14px icons, visible Light/Dark/Auto labels, sage inactive content, white active content and a sliding orange pill (380ms). Names also remain in native hover titles. Reduced motion removes the slide.
+
+Project list cards center a compact copy/results group beside the image: 20px between heading group and metrics, 4px extra tool-tag margin, and metrics capped at 440px so values stay grouped rather than spreading across the full text column. Grid cards retain their existing spacing.
+
+## Projects discovery and timeline
+
+Category controls end with All, which includes every registered project while retaining year/location filters. Four layout modes are available: two columns, three columns, list and timeline. Timeline groups the existing DOM cards by actual project year, newest first, with a year heading and vertical rule/markers; empty year groups are hidden after filtering. Returning to other layouts restores editorial order. No duplicate project previews or listeners are created.
+
+The final project CTA spans the full grid width in every mode. At widths above 768px it uses a 340px minimum horizontal composition with artwork on the left and copy/actions on the right. Phones stack artwork, copy and actions. Visual checks at 1135px and 390px found no horizontal overflow; year filtering reduced the 2024 group to one matching project.
+
+## Projects timeline ruler and opening copy
+
+Projects uses the approved “Creative range. Digital focus. Measurable impact.” headline and supplied multidisciplinary summary, translated to PT-BR/ES/FR. The longer headline scales from 38–56px on larger screens and 30–38px on phones; the summary uses 18px/1.6 (16px mobile) with a 68ch reading width.
+
+Timeline cards share one continuous dotted rule from the first visible project to the last, crossing year-group gaps. Orange nodes gain a soft glow on hover and keyboard focus. A faded tick ruler follows scroll position and offers native range/keyboard and year-button navigation; only visible years are available. Desktop uses a lateral fixed ruler and mobile uses a horizontal inline ruler. Scroll work is coalesced to one rAF and cleanup removes observers/listeners; reduced motion skips tick movement and smooth scrolling.
+
+The project CTA has no border/shadow, a slightly larger black orbit and YOUR TURN lettering, and growth artwork crossing the black/orange boundary. Artwork is not clipped by its local frame; the outer card retains its rounded clipping.
+
+### Subheadline wrapping
+
+Choose subheadline font size and reading width together for the actual copy. Avoid an isolated final word or very short trailing line; use `text-wrap: pretty` and verify desktop, tablet and phone wrapping. Prefer a small size or width adjustment over forced line breaks so translations remain responsive.
+
+### Project discovery and layout motion
+
+View changes reveal project cards in a subtle 300ms stagger (35ms spacing, capped at 210ms), canceling previous animations on rapid toggles and respecting reduced motion. Filter facets derive from content: platform stack, other tools, project type, year, location and existing card tint. Card color explicitly refers to the thumbnail background, not an inferred client brand palette. The filter panel stays within the viewport and scrolls independently when needed.
