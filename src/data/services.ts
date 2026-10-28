@@ -127,11 +127,6 @@ export const schedule = [
     "A monthly report and the next round of tests, if you want to keep going.",
   ],
 ];
-export const sampleResults = [
-  ["Qualified leads / mo", "15", "+40%"],
-  ["Organic traffic / mo", "1,100", "3.2x"],
-  ["Lighthouse", "54", "98"],
-];
 // Only the first FAQ answer is authored in the visible Figma. Remaining answers are editorial TODOs.
 export const faq = [
   {
@@ -163,3 +158,86 @@ export const faq = [
 // TODO: confirm real number. Services hero case headline.
 export const resultHeadline =
   "BSA Legal went from no lead flow to +40% qualified contacts.";
+
+export interface CaseResult {
+  slug: string;
+  category: string;
+  image?: string;
+  alt: string;
+  headline: string;
+  metrics: [string, string, string][];
+}
+
+// Slides for the Services hero client-result carousel.
+// Slide 1 keeps the approved Figma result. The other five are MOCK placeholders
+// so the carousel can be reviewed before Pedro supplies verified numbers.
+// TODO: replace mock case results and headlines with approved copy and real data.
+export const caseResults: CaseResult[] = [
+  {
+    slug: "bsa-legal",
+    category: "Client result · Web build",
+    image: "/assets/figma/488-10049-imgImageBsaLegal.webp",
+    alt: "BSA Legal website",
+    headline: resultHeadline,
+    metrics: [
+      ["Qualified leads / mo", "15", "+40%"],
+      ["Organic traffic / mo", "1,100", "3.2x"],
+      ["Lighthouse performance", "54", "98"],
+    ],
+  },
+  {
+    slug: "pinelake-broken-bow",
+    category: "Client result · Web build",
+    alt: "",
+    headline: "PineLake Broken Bow turned app bookings into direct ones.",
+    metrics: [
+      ["Booking requests / mo", "24", "+38%"],
+      ["Mobile load time", "3.6s", "1.4s"],
+      ["Lighthouse performance", "61", "96"],
+    ],
+  },
+  {
+    slug: "green-nation-collective",
+    category: "Client result · Web build",
+    alt: "",
+    headline: "Green Nation launched a campaign site their own team runs.",
+    metrics: [
+      ["Newsletter sign-ups", "180", "+52%"],
+      ["Organic traffic / mo", "1,400", "2.1x"],
+      ["Lighthouse performance", "58", "97"],
+    ],
+  },
+  {
+    slug: "molina-chambo",
+    category: "Client result · Web build",
+    alt: "",
+    headline: "Molina Chambô turned local searches into consultations.",
+    metrics: [
+      ["Practice area pages", "6", "14"],
+      ["Organic traffic / mo", "2,300", "2.4x"],
+      ["Lighthouse performance", "49", "95"],
+    ],
+  },
+  {
+    slug: "waipono-farms",
+    category: "Client result · Web build",
+    alt: "",
+    headline: "Waipono Farms brought the farm stand online.",
+    metrics: [
+      ["Online orders / mo", "0", "120"],
+      ["Mobile load time", "4.2s", "1.6s"],
+      ["Lighthouse performance", "55", "97"],
+    ],
+  },
+  {
+    slug: "lemmbra-olympiad",
+    category: "Client result · Web build",
+    alt: "",
+    headline: "Lemmbra Olympiad made registration work in two countries.",
+    metrics: [
+      ["Registration sign-ups", "300", "1,100"],
+      ["Organic traffic / mo", "700", "3.1x"],
+      ["Lighthouse performance", "60", "98"],
+    ],
+  },
+];

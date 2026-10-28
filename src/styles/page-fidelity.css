@@ -153,3 +153,36 @@
  .services-page .capabilities .section-heading h2 { font-size:28px; line-height:1.15; }
  .services-page .schedule-intro > span { font-size:52px; }
 }
+
+/* Services: dither/wave layer on offer cards and the client-result carousel. */
+.services-page .offer-card { position: relative; }
+.services-page .service-result-slider { position: relative; }
+.services-page .service-result-slide[hidden] { display: none; }
+.services-page .service-result-slide h2 { min-height: 2.4em; }
+.services-page .result-arrow {
+  position: absolute;
+  top: 110px;
+  left: 0;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 12px 28px -18px #23262580;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.services-page .result-arrow--next { left: 100%; }
+.services-page .result-arrow:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.services-page .result-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.services-page .result-arrow:active { background: var(--action-active); border-color: var(--action-active); }
+@media (max-width: 768px) {
+  .services-page .result-arrow { left: 16px; transform: translate(0, -50%); }
+  .services-page .result-arrow--next { left: auto; right: 16px; }
+}
