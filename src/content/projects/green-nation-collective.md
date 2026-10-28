@@ -1,6 +1,6 @@
 ---
 title: "Green Nation Collective: campaign launch"
-order: 2
+order: 1
 category: "Campaign site"
 year: "2025"
 country: "USA"

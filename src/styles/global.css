@@ -754,10 +754,10 @@ img {
   min-width: 0;
 }
 .project-media {
-  /* Square frame: the inset screenshot sits at the top over the project tint
-     and expands to fill the whole frame on hover. */
+  /* Rectangular frame, ~10% shorter than 4:3: the inset screenshot runs
+     to the bottom edge and expands to fill the frame on hover. */
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   container-type: inline-size;
   display: block;
   overflow: hidden;
