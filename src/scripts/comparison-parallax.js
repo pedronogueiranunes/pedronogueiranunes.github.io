@@ -1,7 +1,7 @@
 // Small, scroll-linked counter-motion for the mobile comparison illustrations.
 export function initComparisonParallax() {
   const cards = [...document.querySelectorAll('.comparison-row')]
-    .map(card => ({ card, image: card.querySelector('.comparison-illustration img') }))
+    .map(card => ({ card, image: card.querySelector('.comparison-illustration') }))
     .filter(({ image }) => image);
   if (!cards.length) return () => {};
 
@@ -19,7 +19,7 @@ export function initComparisonParallax() {
       const positions = [...visible].map(item => {
         const bounds = item.card.getBoundingClientRect();
         const progress = Math.max(0, Math.min(1, (innerHeight - bounds.top) / (innerHeight + bounds.height)));
-        return [item.image, 8 - progress * 40];
+        return [item.image, 8 - progress * 16];
       });
       positions.forEach(([image, y]) => { image.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`; });
     };

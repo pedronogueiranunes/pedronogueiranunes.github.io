@@ -1,0 +1,107 @@
+---
+interface Props { source?: string }
+const { source } = Astro.props;
+---
+<canvas class="dither-icon" data-source={source} aria-hidden="true"></canvas>
+<style is:global>
+  :is(.problem-art, .comparison-illustration) .dither-icon { position:absolute; max-width:none; pointer-events:none; transform: translate3d(var(--dither-x, 0px), var(--dither-y, 0px), 0) scale(var(--dither-zoom, 1)); transition: transform 240ms cubic-bezier(.16,1,.3,1); will-change: auto; }
+  :is(.problem-art, .comparison-illustration)[data-dither-ready] img { visibility:hidden; }
+  .comparison-illustration .dither-icon { inset:0; }
+  @media (max-width:768px) {
+    .comparison-row .comparison-illustration { width:clamp(200px, 64vw, 240px); height:clamp(200px, 64vw, 240px); margin:36px -20px -8px auto; }
+  }
+  @media (prefers-reduced-motion: reduce) { :is(.problem-art, .comparison-illustration) .dither-icon { transform:none; transition:none; } }
+</style>
+<script>
+  import { onPageLoad } from '../scripts/page-lifecycle';
+  onPageLoad((scope) => {
+    document.querySelectorAll<HTMLCanvasElement>('.dither-icon').forEach((canvas) => {
+      const art = canvas.parentElement!;
+      const image = art.querySelector('img');
+      const card = art.closest<HTMLElement>('.problem-card, .comparison-row');
+      const ctx = canvas.getContext('2d');
+      if (!image || !card || !ctx) return;
+      const detailed = art.classList.contains('comparison-illustration');
+      const artwork = canvas.dataset.source ? new Image() : image;
+      if (canvas.dataset.source) artwork.src = canvas.dataset.source;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+      const fine = matchMedia('(hover: hover) and (pointer: fine)');
+      const bayer = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+      let pixels: Uint8ClampedArray | undefined;
+      let width = 0, height = 0, frame = 0, active = false, visible = true, last = 0;
+      let elapsed = 0, mouseX = 0, mouseY = 0;
+      const draw = (phase: number) => {
+        if (!pixels) return;
+        const output = ctx.createImageData(width, height);
+        for (let y=0; y<height; y++) for (let x=0; x<width; x++) {
+          const i = (y*width+x)*4;
+          const alpha = pixels[i+3]/255;
+          if (alpha < .04) continue;
+          const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
+          // Keep highlights open and shade the existing 3D contours with orange ink.
+          const wave = phase ? (Math.sin(x*.085+y*.05-phase*4.4 + mouseX*2)*.22 + Math.cos(y*.09-phase*3.2+mouseY*2)*.09) : 0;
+          // Finer comparison icons retain the deep shadows and open highlights of the source.
+          const tone = detailed ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+          const ink = Math.max(0, Math.min(1, (tone + wave*(detailed ? .35 : 1))*alpha));
+          if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
+            output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
+          }
+        }
+        ctx.putImageData(output,0,0);
+      };
+      const tick = (now: number) => {
+        frame=0;
+        if (!active || !visible || document.hidden || reduced.matches) return;
+        if (now-last>32) { elapsed += Math.min((now-last)/1000,.05); draw(elapsed); last=now; }
+        frame=requestAnimationFrame(tick);
+      };
+      const start = () => { if (!frame && active && visible && !document.hidden && !reduced.matches) { canvas.style.setProperty('--dither-zoom','1.06'); last=performance.now(); frame=requestAnimationFrame(tick); } };
+      const rest = () => { canvas.style.setProperty('--dither-x','0px'); canvas.style.setProperty('--dither-y','0px'); canvas.style.setProperty('--dither-zoom','1'); cancelAnimationFrame(frame); frame=0; elapsed=0; draw(0); };
+      const setup = () => {
+        if (scope.signal.aborted || !artwork.naturalWidth) return;
+        const style=getComputedStyle(image);
+        for (const name of ['width','height','top','left','scale','transform-origin','mask-image','mask-size','mask-repeat','mask-position']) canvas.style.setProperty(name,style.getPropertyValue(name));
+        if (art.classList.contains('comparison-illustration')) { canvas.style.top='0px'; canvas.style.left='0px'; }
+        // Comparison details use one CSS pixel per dot; hero cards keep the bolder two-pixel texture.
+        const dotSize=detailed ? 1 : 2;
+        width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
+        height=Math.max(1,Math.round(parseFloat(style.height)/dotSize));
+        canvas.width=width; canvas.height=height;
+        canvas.style.imageRendering='pixelated';
+        const source=document.createElement('canvas'); source.width=width; source.height=height;
+        const sourceCtx=source.getContext('2d',{willReadFrequently:true});
+        if (!sourceCtx) return;
+        try {
+          const fit=Math.min(width/artwork.naturalWidth,height/artwork.naturalHeight) * (canvas.dataset.source ? .6622 : 1);
+          const fittedWidth=artwork.naturalWidth*fit, fittedHeight=artwork.naturalHeight*fit;
+          // Keep the website anchored at the same upper-left origin when sizing it down.
+          const sourceX=canvas.dataset.source ? width*.14 : (width-fittedWidth)/2;
+          const sourceY=canvas.dataset.source ? height*.21 : (height-fittedHeight)/2;
+          sourceCtx.drawImage(artwork,sourceX,sourceY,fittedWidth,fittedHeight);
+          pixels=sourceCtx.getImageData(0,0,width,height).data;
+          draw(0); art.dataset.ditherReady='true';
+        } catch { /* Keep the original artwork if the source cannot be sampled. */ }
+      };
+      image.addEventListener('load',setup,{signal:scope.signal});
+      if (artwork !== image) artwork.addEventListener('load',setup,{signal:scope.signal});
+      const resize=new ResizeObserver(setup); resize.observe(image);
+      const observer=new IntersectionObserver(([entry])=>{ visible=entry.isIntersecting; if (visible) start(); else rest(); }); observer.observe(card);
+      card.addEventListener('pointerenter',()=>{ if (fine.matches) {active=true;start();} },{signal:scope.signal});
+      card.addEventListener('pointermove',(event)=>{
+        if (!fine.matches || reduced.matches) return;
+        const rect=card.getBoundingClientRect();
+        mouseX=(event.clientX-rect.left)/rect.width*2-1;
+        mouseY=(event.clientY-rect.top)/rect.height*2-1;
+        canvas.style.setProperty('--dither-x',`${mouseX*8}px`);
+        canvas.style.setProperty('--dither-y',`${mouseY*6}px`);
+      },{signal:scope.signal,passive:true});
+      card.addEventListener('pointerleave',()=>{active=false;rest();},{signal:scope.signal});
+      card.addEventListener('focusin',()=>{active=true;start();},{signal:scope.signal});
+      card.addEventListener('focusout',(event)=>{if (!card.contains(event.relatedTarget as Node)) {active=false;rest();}},{signal:scope.signal});
+      reduced.addEventListener('change',()=>{rest();start();},{signal:scope.signal});
+      document.addEventListener('visibilitychange',()=>{rest();start();},{signal:scope.signal});
+      setup();
+      scope.cleanup(()=>{cancelAnimationFrame(frame);resize.disconnect();observer.disconnect();delete art.dataset.ditherReady;});
+    });
+  });
+</script>
