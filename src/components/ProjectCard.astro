@@ -18,14 +18,16 @@ const p = project.data;
     style={`--project-tint:${p.tint || p.color}`}
     aria-label={`View case study: ${p.title}`}
   >
-    <ResponsiveImage
-      src={p.cover || p.image}
-      sizes="(max-width: 768px) 310px, 380px"
-      width="648"
-      height="428"
-      loading="lazy"
-      alt={`${p.title} website preview`}
-    />
+    <span class="project-media-shot">
+      <ResponsiveImage
+        src={p.cover || p.image}
+        sizes="(max-width: 768px) 310px, 380px"
+        width="648"
+        height="428"
+        loading="lazy"
+        alt={`${p.title} website preview`}
+      />
+    </span>
     <span class="project-hover label">
       View case study <Icon name="arrow-up-right" />
     </span>
@@ -62,3 +64,11 @@ const p = project.data;
 
   </div>
 </article>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  import { initProjectMediaScroll } from "../scripts/project-media-scroll";
+  onPageLoad((scope) => {
+    scope.cleanup(initProjectMediaScroll());
+  });
+</script>

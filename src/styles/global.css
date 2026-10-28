@@ -754,24 +754,58 @@ img {
   min-width: 0;
 }
 .project-media {
-  height: 236px;
+  /* Square frame: the inset screenshot sits at the top over the project tint
+     and expands to fill the whole frame on hover. */
+  height: auto;
+  aspect-ratio: 1 / 1;
+  container-type: inline-size;
   display: block;
   overflow: hidden;
   position: relative;
   background: var(--project-tint, var(--olive));
   border-radius: 20px;
 }
-.project-media > img {
+.project-media-shot {
   position: absolute;
   top: 30px;
   left: 28px;
   width: calc(100% - 56px);
-  height: 214px;
+  height: calc((100cqw - 56px) * 0.625);
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  background: var(--surface);
+  box-shadow: 0 10px 28px -6px #1f1a1429;
+  transition:
+    top 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    left 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 450ms ease,
+    box-shadow 450ms ease;
+}
+.project-media-shot > img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: top;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 10px 28px -6px #1f1a1429;
-  transition: transform 0.3s;
+  transform-origin: top center;
+  transition:
+    scale 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 320ms ease;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-media.is-open .project-media-shot {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: none;
+  }
+  .project-media.is-open .project-media-shot > img {
+    scale: 1.8;
+  }
 }
 .project-hover {
   display: flex;
@@ -791,10 +825,6 @@ img {
     transform 0.2s;
   white-space: nowrap;
   font-size: 12px;
-}
-.project-media:hover > img,
-.project-media:focus-visible > img {
-  transform: translateY(-8px);
 }
 .project-media:hover .project-hover,
 .project-media:focus-visible .project-hover {
@@ -1237,14 +1267,11 @@ details[open] > summary > .faq-plus:after {
   .site-nav .action .pixel-icon {
     --icon-size: 12px !important;
   }
-  .project-media {
-    height: 210px;
-  }
-  .project-media > img {
-    height: 200px;
-    left: 20px;
+  .project-media-shot {
     top: 24px;
+    left: 20px;
     width: calc(100% - 40px);
+    height: calc((100cqw - 40px) * 0.625);
   }
   .project-body {
     padding: 16px 4px 4px;
@@ -2178,14 +2205,11 @@ html.js .article-cover img:not(.is-loaded) {
   .project-rail .project-card {
     flex-basis: 224px;
   }
-  .project-rail .project-media {
-    height: 153px;
-  }
-  .project-rail .project-media > img {
-    left: 14px;
+  .project-rail .project-media-shot {
     top: 20px;
+    left: 14px;
     width: calc(100% - 28px);
-    height: 144px;
+    height: calc((100cqw - 28px) * 0.625);
   }
   .project-rail .project-meta {
     font-size: 9px;
