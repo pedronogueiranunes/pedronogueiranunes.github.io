@@ -396,7 +396,7 @@
 }
 
 /* A small cover zoom supports the article hover without moving the card's copy. */
-.home-page .article-cover img { transition:transform 400ms cubic-bezier(0.22,1,0.36,1); transform-origin:center; }
+.home-page .article-cover img { transition:transform 400ms cubic-bezier(0.22,1,0.36,1), opacity 600ms ease; transform-origin:center; }
 @media (hover:hover) and (pointer:fine) {
  .home-page .article-card:hover .article-cover img { transform:scale(1.04); }
 }

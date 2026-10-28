@@ -41,6 +41,8 @@ const { title, pageClass } = Astro.props;
       crossorigin
     />
     <script is:inline>
+      // Lets CSS hide media that fades in once it has decoded, with a no-JS fallback.
+      document.documentElement.classList.add("js");
       // Restore an explicitly selected language on unprefixed entry URLs.
       try {
         const language = localStorage.getItem("language");

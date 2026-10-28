@@ -305,6 +305,15 @@ const posts = (await getCollection("posts")).sort(
     const stopTravel = initPortraitTravel();
     if (stopTravel) scope.cleanup(stopTravel);
     scope.cleanup(initReveal());
+    // Fade the article covers in once decoded instead of letting them pop in.
+    document.querySelectorAll<HTMLImageElement>(".article-cover img").forEach((image) => {
+      const reveal = () => requestAnimationFrame(() => requestAnimationFrame(() => image.classList.add("is-loaded")));
+      if (image.complete) reveal();
+      else {
+        image.addEventListener("load", reveal, { signal: scope.signal });
+        image.addEventListener("error", reveal, { signal: scope.signal });
+      }
+    });
     // Start the portrait after the first paint on every screen size.
     const viewport = document.getElementById("splat-viewport");
     if (viewport) {
