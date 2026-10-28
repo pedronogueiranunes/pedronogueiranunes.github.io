@@ -316,3 +316,19 @@ The footer combines an illustrated CTA, navigation/platform columns, a lime avai
 - **Don't** grow the portrait to fill the larger bio slot, distort its source proportions or let it obscure content during travel.
 - **Don't** resize the GPU surface from scroll-driven stage geometry or apply manual camera-aspect workarounds.
 - **Don't** present unavailable links, downloads or an unconfigured form as working destinations.
+
+## Link underline detail
+
+Arrow text links share a dotted hover/focus underline: 2px round dots on a 6px repeat, using currentColor. Preserve the existing stepped reveal and reduced-motion behavior.
+
+## Metric typography
+
+Showcase metric values use Departure Mono at weight 400 through `--font-metric`, including project cards, featured metrics, case results, About stats, Services results/deliverables and offer prices. Keep the same family on hover/focus; labels retain their existing body typography.
+
+## Mobile Home portrait framing
+
+The Home portrait eases its mobile camera size multiplier from 1.15 to 1.05 as it reaches the final pose and omits the desktop 10% arrival dolly-in. This leaves lateral room for the wider shoulders without resizing the drawing buffer or changing the desktop or About-page framing.
+
+Mobile Home hero heading, description and actions are offset upward by 20px without moving the portrait or its origin, leaving clearance for the dotted link underline.
+
+The full-width mobile sticky header has square upper corners and 20px lower corner radii.

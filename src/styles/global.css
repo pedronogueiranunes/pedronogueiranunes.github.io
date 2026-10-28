@@ -108,6 +108,7 @@
   --font-label: "Silkscreen", monospace;
   --font-mono: "Departure Mono", monospace;
   --font-code: "Geist Mono", monospace;
+  --font-metric: "Departure Mono", monospace;
   --font-lettering: "Pixelify Sans", sans-serif;
   --hero-lettering-opacity: 1;
   --hero-lettering-color: #fff;
@@ -6170,7 +6171,7 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   background-position: 100% 100%;
   transition-duration: var(--motion-in);
 }
-/* Dashed pixel blocks reveal from the left on arrow links. */
+/* Pixel dots reveal from the left on arrow links. */
 .text-link {
   position: relative;
   background-image: none;
@@ -6180,7 +6181,7 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   position: absolute;
   inset: auto 0 0;
   height: 2px;
-  background: repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 6px);
+  background: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 1px) 0 0 / 6px 2px repeat-x;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--motion-out) steps(var(--motion-steps));
@@ -6386,7 +6387,7 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
     max-width: none;
     margin: 0;
     padding: 12px max(20px, env(safe-area-inset-left)) 12px max(20px, env(safe-area-inset-right));
-    border-radius: 0;
+    border-radius: 0 0 20px 20px;
     background: color-mix(in srgb, var(--surface) 85%, transparent);
   }
 }
@@ -6790,7 +6791,7 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 .project-card:is(:hover, :focus-within) .project-media > img { transform: translateY(-8px); }
 .project-card:is(:hover, :focus-within) .project-metrics dd {
   color: var(--accent);
-  font-family: var(--font-label);
+  font-family: var(--font-metric);
   font-weight: 400;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -6827,7 +6828,7 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .preferences-toggle:is(:hover, :focus-visible) > img { animation: none; }
 }
 
-/* Showcase values use the same pixel lettering in resting and hover states. */
+/* Showcase values use refined pixel numerals in resting and hover states. */
 :root body :is(
   .project-metrics dd,
   .featured-metrics dd,
@@ -6838,7 +6839,7 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .service-result td,
   .offer-price > p
 ) {
-  font-family: var(--font-label);
+  font-family: var(--font-metric);
   font-weight: 400;
   font-synthesis: none;
 }
@@ -6968,4 +6969,12 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 :root[data-theme="dark"] { --mobile-menu-fill: #000; --mobile-menu-ink: #fff; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) { --mobile-menu-fill: #000; --mobile-menu-ink: #fff; }
+}
+
+/* Leave room between mobile hero actions and the portrait on hover. */
+@media (max-width: 768px) {
+  .home-hero-panel > :is(h1, p, .actions) {
+    position: relative;
+    top: -20px;
+  }
 }
