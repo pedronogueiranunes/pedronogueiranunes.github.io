@@ -139,36 +139,6 @@
     "height": 1254,
     "srcset": "/assets/figma/489-7767-imgImage3--w320.webp 320w, /assets/figma/489-7767-imgImage3--w640.webp 640w, /assets/figma/489-7767-imgImage3--w960.webp 960w, /assets/figma/489-7767-imgImage3.webp 1254w"
   },
-  "/assets/figma/497-2932-imgCover.webp": {
-    "width": 1600,
-    "height": 1039,
-    "srcset": "/assets/figma/497-2932-imgCover--w320.webp 320w, /assets/figma/497-2932-imgCover--w640.webp 640w, /assets/figma/497-2932-imgCover--w960.webp 960w, /assets/figma/497-2932-imgCover.webp 1600w"
-  },
-  "/assets/figma/497-2958-imgCover.webp": {
-    "width": 1600,
-    "height": 1039,
-    "srcset": "/assets/figma/497-2958-imgCover--w320.webp 320w, /assets/figma/497-2958-imgCover--w640.webp 640w, /assets/figma/497-2958-imgCover--w960.webp 960w, /assets/figma/497-2958-imgCover.webp 1600w"
-  },
-  "/assets/figma/497-2984-imgCover.webp": {
-    "width": 1600,
-    "height": 1000,
-    "srcset": "/assets/figma/497-2984-imgCover--w320.webp 320w, /assets/figma/497-2984-imgCover--w640.webp 640w, /assets/figma/497-2984-imgCover--w960.webp 960w, /assets/figma/497-2984-imgCover.webp 1600w"
-  },
-  "/assets/figma/497-3010-imgCover.webp": {
-    "width": 1600,
-    "height": 1039,
-    "srcset": "/assets/figma/497-3010-imgCover--w320.webp 320w, /assets/figma/497-3010-imgCover--w640.webp 640w, /assets/figma/497-3010-imgCover--w960.webp 960w, /assets/figma/497-3010-imgCover.webp 1600w"
-  },
-  "/assets/figma/497-3036-imgCover.webp": {
-    "width": 1600,
-    "height": 1039,
-    "srcset": "/assets/figma/497-3036-imgCover--w320.webp 320w, /assets/figma/497-3036-imgCover--w640.webp 640w, /assets/figma/497-3036-imgCover--w960.webp 960w, /assets/figma/497-3036-imgCover.webp 1600w"
-  },
-  "/assets/figma/497-3062-imgCover.webp": {
-    "width": 1600,
-    "height": 1000,
-    "srcset": "/assets/figma/497-3062-imgCover--w320.webp 320w, /assets/figma/497-3062-imgCover--w640.webp 640w, /assets/figma/497-3062-imgCover--w960.webp 960w, /assets/figma/497-3062-imgCover.webp 1600w"
-  },
   "/assets/figma/510-8525-imgHead.webp": {
     "width": 600,
     "height": 784,
@@ -188,5 +158,35 @@
     "width": 1120,
     "height": 1500,
     "srcset": "/assets/head-about--w320.webp 320w, /assets/head-about--w640.webp 640w, /assets/head-about--w960.webp 960w, /assets/head-about.webp 1120w"
+  },
+  "/assets/cases/pinelake-broken-bow-cover.webp": {
+    "width": 1296,
+    "height": 2700,
+    "srcset": "/assets/cases/pinelake-broken-bow-cover--w320.webp 320w, /assets/cases/pinelake-broken-bow-cover--w640.webp 640w, /assets/cases/pinelake-broken-bow-cover--w960.webp 960w, /assets/cases/pinelake-broken-bow-cover.webp 1296w"
+  },
+  "/assets/cases/green-nation-collective-cover.webp": {
+    "width": 1411,
+    "height": 2940,
+    "srcset": "/assets/cases/green-nation-collective-cover--w320.webp 320w, /assets/cases/green-nation-collective-cover--w640.webp 640w, /assets/cases/green-nation-collective-cover--w960.webp 960w, /assets/cases/green-nation-collective-cover.webp 1411w"
+  },
+  "/assets/cases/waipono-farms-cover.webp": {
+    "width": 1411,
+    "height": 2940,
+    "srcset": "/assets/cases/waipono-farms-cover--w320.webp 320w, /assets/cases/waipono-farms-cover--w640.webp 640w, /assets/cases/waipono-farms-cover--w960.webp 960w, /assets/cases/waipono-farms-cover.webp 1411w"
+  },
+  "/assets/cases/molina-chambo-cover.webp": {
+    "width": 1411,
+    "height": 2940,
+    "srcset": "/assets/cases/molina-chambo-cover--w320.webp 320w, /assets/cases/molina-chambo-cover--w640.webp 640w, /assets/cases/molina-chambo-cover--w960.webp 960w, /assets/cases/molina-chambo-cover.webp 1411w"
+  },
+  "/assets/cases/bsa-legal-cover.webp": {
+    "width": 1411,
+    "height": 2940,
+    "srcset": "/assets/cases/bsa-legal-cover--w320.webp 320w, /assets/cases/bsa-legal-cover--w640.webp 640w, /assets/cases/bsa-legal-cover--w960.webp 960w, /assets/cases/bsa-legal-cover.webp 1411w"
+  },
+  "/assets/cases/lemmbra-olympiad-cover.webp": {
+    "width": 1418,
+    "height": 2954,
+    "srcset": "/assets/cases/lemmbra-olympiad-cover--w320.webp 320w, /assets/cases/lemmbra-olympiad-cover--w640.webp 640w, /assets/cases/lemmbra-olympiad-cover--w960.webp 960w, /assets/cases/lemmbra-olympiad-cover.webp 1418w"
   }
 }

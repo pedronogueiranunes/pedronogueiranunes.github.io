@@ -754,24 +754,65 @@ img {
   min-width: 0;
 }
 .project-media {
-  height: 236px;
+  /* Rectangular frame, ~10% shorter than 4:3: the inset screenshot runs
+     to the bottom edge and expands to fill the frame on hover. */
+  height: auto;
+  aspect-ratio: 3 / 2;
+  container-type: inline-size;
   display: block;
   overflow: hidden;
   position: relative;
   background: var(--project-tint, var(--olive));
   border-radius: 20px;
 }
-.project-media > img {
+.project-media-shot {
   position: absolute;
   top: 30px;
   left: 28px;
   width: calc(100% - 56px);
-  height: 214px;
-  object-fit: cover;
-  object-position: top;
+  height: calc(100% - 30px);
+  overflow: hidden;
   border-radius: 10px 10px 0 0;
+  background: var(--project-tint, var(--olive));
   box-shadow: 0 10px 28px -6px #1f1a1429;
-  transition: transform 0.3s;
+  transition:
+    top 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    left 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 450ms ease,
+    box-shadow 450ms ease;
+}
+.project-media-track {
+  /* The screenshot scrolls inside this track. The coloured filler gives it a
+     believable page length until the real 1440px-tall captures land. */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* 1.5x the frame width keeps a believable scroll length even with short
+     captures; taller screenshots simply make the filler collapse. */
+  min-height: var(--project-media-track-min, 150cqw);
+  will-change: transform;
+}
+.project-media-track > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.project-media-filler {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--project-tint, var(--olive));
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-media.is-open .project-media-shot {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: none;
+  }
 }
 .project-hover {
   display: flex;
@@ -783,7 +824,9 @@ img {
   transform: translateY(8px);
   background: var(--action-bg);
   color: white;
-  border-radius: 999px;
+  /* Nested inside the 20px media frame with an 8px inset, so 12px reads as
+     the matching inner curve instead of a capsule. */
+  border-radius: 12px;
   padding: 12px 16px;
   opacity: 0;
   transition:
@@ -791,10 +834,6 @@ img {
     transform 0.2s;
   white-space: nowrap;
   font-size: 12px;
-}
-.project-media:hover > img,
-.project-media:focus-visible > img {
-  transform: translateY(-8px);
 }
 .project-media:hover .project-hover,
 .project-media:focus-visible .project-hover {
@@ -1237,14 +1276,11 @@ details[open] > summary > .faq-plus:after {
   .site-nav .action .pixel-icon {
     --icon-size: 12px !important;
   }
-  .project-media {
-    height: 210px;
-  }
-  .project-media > img {
-    height: 200px;
-    left: 20px;
+  .project-media-shot {
     top: 24px;
+    left: 20px;
     width: calc(100% - 40px);
+    height: calc(100% - 24px);
   }
   .project-body {
     padding: 16px 4px 4px;
@@ -2174,18 +2210,24 @@ html.js .article-cover img:not(.is-loaded) {
   .project-rail {
     margin-right: -20px;
     padding-bottom: 32px;
+    /* No left fade on mobile: it overlapped the previous card's copy. The
+       right edge keeps its fade so the rail still reads as scrollable. */
+    mask-image: linear-gradient(
+      to right,
+      #000 0,
+      #000 calc(100% - var(--rail-fade-width)),
+      rgb(0 0 0 / calc(0.65 + 0.35 * var(--rail-edge-after))) calc(100% - var(--rail-fade-width) * 0.5),
+      rgb(0 0 0 / var(--rail-edge-after))
+    );
   }
   .project-rail .project-card {
     flex-basis: 224px;
   }
-  .project-rail .project-media {
-    height: 153px;
-  }
-  .project-rail .project-media > img {
-    left: 14px;
+  .project-rail .project-media-shot {
     top: 20px;
+    left: 14px;
     width: calc(100% - 28px);
-    height: 144px;
+    height: calc(100% - 20px);
   }
   .project-rail .project-meta {
     font-size: 9px;
@@ -3223,11 +3265,19 @@ html.js .article-cover img:not(.is-loaded) {
   font-size: 11px;
   color: var(--text-secondary);
 }
-.browser-mockup > img {
+.browser-mockup-viewport {
+  position: relative;
+  height: 700px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.browser-mockup-track {
+  will-change: translate;
+}
+.browser-mockup-track > img {
+  display: block;
   width: 100%;
-  max-height: 738px;
-  object-fit: cover;
-  object-position: top;
+  height: auto;
 }
 .case-body {
   display: grid;
@@ -3618,7 +3668,7 @@ html.js .article-cover img:not(.is-loaded) {
     font-size: 9px;
     padding: 8px;
   }
-  .browser-mockup > img {
+  .browser-mockup-viewport {
     height: 300px;
   }
   .case-body {
@@ -6799,12 +6849,17 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
-.project-media-frame:hover .project-media-halo { opacity: 1; }
+.project-media-frame:hover .project-media-halo,
+.project-card:is(:hover, :focus-within) .project-media-halo { opacity: 1; }
 .project-media-frame:hover .project-media-halo > span,
-.project-media-frame:hover .project-media::before { animation: cta-light-orbit 6s linear infinite; }
+.project-media-frame:hover .project-media::before,
+.project-card:is(:hover, :focus-within) .project-media-halo > span,
+.project-card:is(:hover, :focus-within) .project-media::before { animation: cta-light-orbit 6s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .project-media-frame:hover .project-media-halo > span,
-  .project-media-frame:hover .project-media::before { animation: none; }
+  .project-media-frame:hover .project-media::before,
+  .project-card:is(:hover, :focus-within) .project-media-halo > span,
+  .project-card:is(:hover, :focus-within) .project-media::before { animation: none; }
   .project-media-halo { transition: none; }
 }
 

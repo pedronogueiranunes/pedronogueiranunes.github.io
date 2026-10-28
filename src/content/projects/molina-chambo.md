@@ -8,7 +8,7 @@ location: "Brazil"
 image: "/assets/project-3.png"
 color: "#dde2ec"
 tint: "#dde2ec"
-cover: "/assets/figma/497-2984-imgCover.webp"
+cover: "/assets/cases/molina-chambo-cover.webp"
 summary: "Bilingual site for a São Paulo law firm, with practice area pages written to turn local searches into consultations."
 tools: ["WordPress", "ACF Pro", "Rank Math", "GA4"]
 caseSlug: "molina-chambo"

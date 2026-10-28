@@ -1,6 +1,6 @@
 ---
 title: "PineLake Broken Bow: luxury cabin rentals"
-order: 1
+order: 4
 category: "Web design & dev"
 year: "2025"
 country: "USA"
@@ -8,7 +8,7 @@ location: "USA"
 image: "/assets/project-1.png"
 color: "#e6e9d8"
 tint: "#e6e9d8"
-cover: "/assets/figma/497-2932-imgCover.webp"
+cover: "/assets/cases/pinelake-broken-bow-cover.webp"
 summary: "Booking-first site for a cabin resort in Oklahoma, rebuilt so guests reserve direct instead of through apps."
 tools: ["WordPress", "ACF Pro", "Thrive", "GA4", "GTM"]
 caseSlug: "pinelake-broken-bow"
