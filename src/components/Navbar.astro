@@ -419,12 +419,13 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     };
     const tick = () => {
       frame = 0;
-      currentX += (targetX - currentX) * 0.16;
-      currentY += (targetY - currentY) * 0.16;
+      // A gentle follow: the glow trails the pointer instead of sticking to it.
+      currentX += (targetX - currentX) * 0.055;
+      currentY += (targetY - currentY) * 0.055;
       apply();
       if (
-        Math.abs(targetX - currentX) > 0.08 ||
-        Math.abs(targetY - currentY) > 0.08
+        Math.abs(targetX - currentX) > 0.06 ||
+        Math.abs(targetY - currentY) > 0.06
       ) {
         frame = requestAnimationFrame(tick);
       }

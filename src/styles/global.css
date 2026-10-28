@@ -475,15 +475,22 @@ img {
   padding: 24px 28px;
   border-radius: 16px;
   color: #f5f3ef;
+  background-color: rgb(32 35 34 / 0.9);
   background-image:
     linear-gradient(180deg, #00000005, #0000001a),
     radial-gradient(
-      120% 100% at var(--nav-glow-x, 24%) var(--nav-glow-y, 20%),
-      #64736299 7.861%,
-      #bdd9b900 61.32%
+      155% 125% at var(--nav-glow-x, 26%) var(--nav-glow-y, 22%),
+      rgb(100 115 98 / 0.7) 6%,
+      rgb(189 217 185 / 0) 82%
     ),
-    linear-gradient(90deg, #232625, #232625);
-  backdrop-filter: blur(7.5px);
+    linear-gradient(90deg, rgb(32 35 34 / 0.88), rgb(32 35 34 / 0.84));
+  backdrop-filter: blur(16px) saturate(155%);
+  -webkit-backdrop-filter: blur(16px) saturate(155%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    inset 0 34px 44px -34px rgb(255 255 255 / 0.07),
+    0 30px 70px -34px rgb(0 0 0 / 0.55);
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
@@ -506,11 +513,11 @@ img {
   background-image:
     linear-gradient(140deg, #00000008 1.7143%, #0000004d 52.471%),
     radial-gradient(
-      130% 110% at var(--nav-glow-x, 24%) var(--nav-glow-y, 20%),
-      #64736299 7.861%,
-      #bdd9b900 61.32%
+      165% 130% at var(--nav-glow-x, 26%) var(--nav-glow-y, 22%),
+      rgb(100 115 98 / 0.72) 6%,
+      rgb(189 217 185 / 0) 84%
     ),
-    linear-gradient(90deg, #232625, #232625);
+    linear-gradient(90deg, rgb(32 35 34 / 0.88), rgb(32 35 34 / 0.84));
 }
 .nav-item.is-open .nav-panel {
   visibility: visible;
