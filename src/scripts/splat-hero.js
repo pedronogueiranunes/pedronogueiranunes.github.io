@@ -176,13 +176,25 @@ export function initSplat() {
       // The gsplat sort runs in a worker, so the first frames can be empty.
       // With on-demand rendering nothing redraws when the sort lands, which
       // left the canvas blank until the user scrolled. Render continuously
-      // until splat pixels actually reach the canvas, then reveal.
+      // until the splat is actually on screen, then reveal.
+      //
+      // Readiness comes from the engine's own "gsplat:sorted" signal plus one
+      // cheap framebuffer column readback. The previous probe read up to 25
+      // single pixels on every rendered frame, and every GPU readback stalls
+      // the pipeline.
       app.autoRender = true;
       const gl = app.graphicsDevice.gl;
-      const px = new Uint8Array(4);
       const started = performance.now();
       let revealed = false;
-      const hasPixels = () => {
+      let sorted = false;
+      // First confirmation waits briefly for the sort signal; the fallback
+      // cadence keeps the old reveal behaviour if an engine build never emits it.
+      let nextProbe = started + 600;
+      let lastProbe = -Infinity;
+      const PROBE_MS = 250;
+      const FALLBACK_PROBE_MS = 500;
+      let column = new Uint8Array(4);
+      const splatOnScreen = () => {
         if (!gl) return true;
         const w = gl.drawingBufferWidth;
         const h = gl.drawingBufferHeight;
@@ -190,25 +202,40 @@ export function initSplat() {
         // canvas backbuffer instead, then restore the engine's binding.
         const prev = gl.getParameter(gl.FRAMEBUFFER_BINDING);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        let found = false;
-        for (let i = 1; i < 6 && !found; i++) {
-          for (let j = 1; j < 6 && !found; j++) {
-            gl.readPixels(Math.floor((w * i) / 6), Math.floor((h * j) / 6), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-            if (px[3] > 0) found = true;
-          }
-        }
+        // One column down the middle covers the head and torso, so a single
+        // readback replaces the old 5x5 sweep of single-pixel probes.
+        if (column.length !== h * 4) column = new Uint8Array(h * 4);
+        gl.readPixels((w / 2) | 0, 0, 1, h, gl.RGBA, gl.UNSIGNED_BYTE, column);
         gl.bindFramebuffer(gl.FRAMEBUFFER, prev);
-        return found;
+        const length = h * 4;
+        for (let i = 3; i < length; i += 4) if (column[i]) return true;
+        return false;
       };
+      const onSorted = () => {
+        sorted = true;
+        // Confirm promptly, but a repeated sort signal must not turn this back
+        // into a per-frame probe.
+        nextProbe = Math.min(nextProbe, lastProbe + PROBE_MS);
+        app.renderNextFrame = true;
+      };
+      app.scene.on("gsplat:sorted", onSorted);
       const onPostRender = () => {
         if (revealed) return;
-        if (!hasPixels() && performance.now() - started < 10000) return;
+        const now = performance.now();
+        if (now - started < 10000) {
+          if (now < nextProbe) return;
+          lastProbe = now;
+          nextProbe = now + (sorted ? PROBE_MS : FALLBACK_PROBE_MS);
+          if (!splatOnScreen()) return;
+        }
         revealed = true;
         app.off("postrender", onPostRender);
+        app.scene.off("gsplat:sorted", onSorted);
         reveal();
         // Add the orbit accents only after the splat itself has drawn. Created any
-        // earlier, their opaque pixels satisfied hasPixels() before the splat sort
-        // landed, so the page revealed an empty portrait with just the glyphs.
+        // earlier, their opaque pixels satisfied the old pixel probe before the
+        // splat sort landed, so the page revealed an empty portrait with just the
+        // glyphs.
         if (!disposed) stopEnvironment = setupAboutEnvironment(app, viewport, radius, { revealOnPose: viewport.dataset.autoRotate !== "true" });
         // A few more frames so late sort updates land, then back to on-demand.
         later(() => {

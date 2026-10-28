@@ -344,9 +344,7 @@ const posts = (await getCollection("posts")).sort(
       ) {
         scope.frame(() =>
           scope.frame(() => {
-            if ("requestIdleCallback" in window)
-              scope.idle(load);
-            else scope.timeout(load, 1000);
+            scope.idle(load);
           }),
         );
       }
