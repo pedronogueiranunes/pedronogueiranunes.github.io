@@ -3,8 +3,10 @@ import { comparison } from "../data/home";
 import Eyebrow from "./Eyebrow.astro";
 import Icon from "./Icon.astro";
 import Button from "./Button.astro";
+import ComparisonShade from "./ComparisonShade.astro";
 import DitherIcon from "./DitherIcon.astro";
 const comparisonIcons = ["work", "focus", "platforms", "time", "communication", "ownership", "next"];
+const platforms = ["WordPress", "Webflow", "Framer", "Shopify", "React"];
 const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 ---
 
@@ -40,6 +42,7 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
     </div>
     {comparison.map((row, i) => (
       <div class="comparison-row" role="row">
+        <ComparisonShade />
         <h3 role="rowheader">{row[0]}</h3>
         {row.slice(1).map((text, index) => (
           <div
@@ -52,6 +55,16 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
             <span class="mono comparison-mobile-label">{labels[index]}</span>
             {i === 6 && index === 0 ? (
               <Button href="/contact">{text}</Button>
+            ) : i === 2 && index === 0 ? (
+              <>
+                <p class="comparison-platform-copy"><Icon name="check" size={20} /><span>{text}</span></p>
+                <div class="comparison-platforms">
+                  {platforms.map(platform => (
+                    <span><img src={`/assets/logos/${platform.toLowerCase()}.svg`} width="22" height="22" alt="" loading="lazy" />{platform}</span>
+                  ))}
+                  <p>Picked for your team</p>
+                </div>
+              </>
             ) : (
               <p>
                 {index === 0 && <Icon name="check" size={20} />}
@@ -83,3 +96,14 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
   import { initComparisonParallax } from "../scripts/comparison-parallax.js";
   onPageLoad((scope) => scope.cleanup(initComparisonParallax()));
 </script>
+
+<style>
+  .comparison-platforms { display:none; }
+  @media (max-width:768px) {
+    .comparison-platform-copy { display:none; }
+    .comparison-platforms { display:flex; flex-wrap:wrap; gap:14px 20px; }
+    .comparison-platforms > span { display:inline-flex; align-items:center; gap:8px; line-height:1.4; }
+    .comparison-platforms img { flex-shrink:0; object-fit:contain; }
+    .comparison-platforms > p { flex-basis:100%; margin:2px 0 0; }
+  }
+</style>

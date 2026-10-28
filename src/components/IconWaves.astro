@@ -1,6 +1,7 @@
 <canvas class="icon-waves" aria-hidden="true"></canvas>
 <style is:global>
-  .problem-card > .icon-waves { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; border-radius:inherit; }
+  :is(.problem-card, .your-turn-card) > .icon-waves { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; border-radius:inherit; }
+  .your-turn-card > .icon-waves { z-index:1; }
   @media (prefers-reduced-motion:reduce) { .icon-waves { display:none; } }
 </style>
 <script>
@@ -10,9 +11,13 @@
     const hover=matchMedia('(hover: hover) and (pointer: fine)');
     document.querySelectorAll<HTMLCanvasElement>('.icon-waves').forEach((canvas)=>{
       const card=canvas.parentElement!;
+      const growth=card.classList.contains('your-turn-card');
+      const mobile=matchMedia('(max-width:768px)');
+      const autoAnimate=()=>growth && mobile.matches;
       const icon=card.querySelector<HTMLCanvasElement>('.dither-icon');
       const ctx=canvas.getContext('2d');
       if (!ctx || !icon) return;
+      let maskX=0,maskY=0,maskRadius=0;
       let width=0,height=0,x=0,y=0,radius=0,frame=0,last=0,elapsed=0,visible=false,active=false;
       const measure=()=>{
         const bounds=card.getBoundingClientRect(), art=icon.getBoundingClientRect();
@@ -21,6 +26,10 @@
         canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);
         ctx.setTransform(ratio,0,0,ratio,0,0);
         x=art.left-bounds.left+art.width*.5;y=art.top-bounds.top+art.height*.5;
+        if(growth){
+          const orbit=card.querySelector('.your-turn-orbit')?.getBoundingClientRect();
+          if(orbit){maskX=orbit.left-bounds.left+orbit.width/2;maskY=orbit.top-bounds.top+orbit.height/2;maskRadius=orbit.width/2;}
+        }
         radius=Math.max(Math.hypot(x,y),Math.hypot(width-x,y),Math.hypot(x,height-y),Math.hypot(width-x,height-y));
       };
       const tick=(now:number)=>{
@@ -29,7 +38,9 @@
         if (now-last>=33) {
           elapsed+=Math.min((now-last)/1000,.1);last=now;
           ctx.clearRect(0,0,width,height);
-          ctx.strokeStyle='#FF5A1F';ctx.lineWidth=1.25;
+          ctx.save();
+          if(growth){ctx.beginPath();ctx.arc(maskX,maskY,maskRadius,0,Math.PI*2);ctx.clip();}
+          ctx.strokeStyle=growth ? '#FFE1CF' : '#FF5A1F';ctx.lineWidth=1.25;
           // Sparse dots echo the icon texture, with much less visual weight.
           ctx.setLineDash([2,3]);ctx.lineCap='round';
           for(let i=0;i<3;i++){
@@ -38,6 +49,7 @@
             ctx.globalAlpha=.6*fadeIn*Math.pow(1-progress,1.35);
             ctx.beginPath();ctx.arc(x,y,12+progress*radius,0,Math.PI*2);ctx.stroke();
           }
+          ctx.restore();
           ctx.globalAlpha=1;
         }
         frame=requestAnimationFrame(tick);
@@ -45,13 +57,14 @@
       const stop=()=>{cancelAnimationFrame(frame);frame=0;ctx.clearRect(0,0,width,height);};
       const start=()=>{if(!frame && active && visible && !reduced.matches && !document.hidden){last=performance.now();frame=requestAnimationFrame(tick);}};
       const resize=new ResizeObserver(measure);resize.observe(card);resize.observe(icon);
-      const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible){measure();start();}else stop();});observer.observe(card);
+      const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(autoAnimate()) active=true;if(visible){measure();start();}else stop();});observer.observe(card);
       card.addEventListener('pointerenter',()=>{
         if (!hover.matches) return;
         active=true;elapsed=0;measure();start();
       },{signal:scope.signal});
-      card.addEventListener('pointerleave',()=>{active=false;stop();},{signal:scope.signal});
-      hover.addEventListener('change',()=>{active=false;stop();},{signal:scope.signal});
+      card.addEventListener('pointerleave',()=>{active=autoAnimate();stop();start();},{signal:scope.signal});
+      hover.addEventListener('change',()=>{active=autoAnimate();stop();start();},{signal:scope.signal});
+      mobile.addEventListener('change',()=>{active=autoAnimate();stop();start();},{signal:scope.signal});
       reduced.addEventListener('change',()=>{stop();start();},{signal:scope.signal});
       document.addEventListener('visibilitychange',()=>{stop();start();},{signal:scope.signal});
       scope.cleanup(()=>{stop();resize.disconnect();observer.disconnect();});

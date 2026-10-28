@@ -1,0 +1,32 @@
+<canvas class="comparison-shade" aria-hidden="true"></canvas>
+<style is:global>
+  @media (max-width:768px) {
+    .comparison .comparison-row { isolation:isolate; }
+    .comparison .comparison-row > .comparison-shade { position:absolute; inset:auto 0 0; width:100%; height:280px; max-height:42%; z-index:-1; pointer-events:none; image-rendering:pixelated; }
+    .comparison .comparison-row > h3 { font-size:26px; line-height:1.2; padding-bottom:24px; }
+    .comparison .comparison-cell { font-size:18px; line-height:1.55; }
+    .comparison .comparison-mobile-label { font-size:11px; line-height:1.4; }
+  }
+  @media (min-width:769px) { .comparison-shade { display:none; } }
+</style>
+<script>
+  import { onPageLoad } from '../scripts/page-lifecycle';
+  onPageLoad((scope)=>{
+    document.querySelectorAll<HTMLCanvasElement>('.comparison-shade').forEach(canvas=>{
+      const ctx=canvas.getContext('2d');if(!ctx)return;
+      const bayer=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+      const observer=new ResizeObserver(()=>{
+        const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;
+        canvas.width=Math.ceil(rect.width/2);canvas.height=Math.ceil(rect.height/2);
+        const pixels=ctx.createImageData(canvas.width,canvas.height);
+        for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){
+          const density=Math.pow(y/canvas.height,1.7)*.8;
+          if(density<(bayer[(y%4)*4+x%4]+.5)/16)continue;
+          const i=(y*canvas.width+x)*4;
+          pixels.data[i]=255;pixels.data[i+1]=90;pixels.data[i+2]=31;pixels.data[i+3]=36;
+        }
+        ctx.putImageData(pixels,0,0);
+      });observer.observe(canvas);scope.cleanup(()=>observer.disconnect());
+    });
+  });
+</script>

@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import IconWaves from "../components/IconWaves.astro";
+import DitherIcon from "../components/DitherIcon.astro";
 import PixelTrail from "../components/PixelTrail.astro";
 import Base from "../layouts/Base.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
@@ -18,6 +20,7 @@ const categories = [
   "Music & Audiovisual",
   "Experiments",
 ];
+const categoryIcons = ["category-web", "category-brand", "category-art", "category-music", "category-experiment"];
 const gridOrder = [0, 2, 4, 1, 5, 3];
 ---
 
@@ -40,7 +43,8 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
       <div class="category-filters" role="group" aria-label="Project category">
         {categories.map((category, i) => (
           <button type="button" data-category={i} aria-pressed={i === 0}>
-            {category}
+            <Icon name={categoryIcons[i]} size={22} />
+            <span>{category}</span>
           </button>
         ))}
       </div>
@@ -88,7 +92,7 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
         </div>
       </details>
     </div>
-    <section class="featured-project page-section" data-featured>
+    <section class="featured-project page-section" data-featured data-featured-paused hidden>
       <div class="featured-project-card">
         <ResponsiveImage
           src="/assets/figma/488-8155-imgImageBsaLegal.webp"
@@ -131,13 +135,14 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
           </div>
         ))}
         <article class="your-turn-card">
+          <IconWaves />
           <div class="your-turn-graphics" aria-hidden="true">
             <picture class="your-turn-orbit">
               <source media="(max-width: 768px)" srcset="/assets/figma/projects-cta-ellipse-mobile.svg" />
               <img src="/assets/figma/projects-cta-ellipse-desktop.svg" width="536" height="536" alt="" loading="lazy" />
             </picture>
+            <div class="your-turn-growth">
             <ResponsiveImage
-              class="your-turn-growth"
               src="/assets/figma/488-8180-img3DResultsGrowthBlack.webp"
               width="300"
               height="300"
@@ -145,6 +150,8 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
               alt=""
               loading="lazy"
             />
+              <DitherIcon />
+            </div>
             <p class="your-turn-label">Your<br />turn</p>
           </div>
           <div class="your-turn-copy">
@@ -235,7 +242,7 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
         ),
       );
       root.querySelector<HTMLElement>("[data-featured]")!.hidden =
-        category !== "0" || !!year.value || !!location.value;
+        root.querySelector("[data-featured]")!.hasAttribute("data-featured-paused") || category !== "0" || !!year.value || !!location.value;
       root.querySelector<HTMLElement>("[data-empty]")!.hidden = count !== 0;
       root.querySelector("[data-count]")!.textContent = `${count} projects`;
     };
@@ -271,3 +278,20 @@ const gridOrder = [0, 2, 4, 1, 5, 3];
   });
   </script>
 </Base>
+
+<style>
+  :global(.your-turn-card) { isolation:isolate; }
+  :global(.your-turn-card .your-turn-actions .action:not(.action--secondary):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])) { background:#fff; color:#232625; }
+  :global(.your-turn-growth) { z-index:2; }
+  :global(.your-turn-growth img) { width:100%; height:100%; object-fit:contain; }
+  :global(.your-turn-label), :global(.your-turn-copy), :global(.your-turn-actions) { z-index:2; }
+  .projects-filters .category-filters button { display:flex; align-items:center; gap:10px; }
+  @media (max-width:768px) {
+    .your-turn-card .your-turn-graphics { height:254px; }
+    .your-turn-card .your-turn-orbit { width:536.204px; height:536.204px; top:-282.13px; left:calc(50% - 268.102px); }
+    .projects-filters .category-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; max-width:100%; gap:8px; padding:0; overflow:visible; mask-image:none; cursor:auto; touch-action:auto; }
+    .projects-filters .category-filters button { width:100%; min-width:0; max-width:none; justify-self:stretch; justify-content:flex-start; border-radius:14px; padding:14px 12px; min-height:76px; text-align:left; white-space:normal; font-size:11px; line-height:1.5; letter-spacing:.02em; gap:10px; }
+    .projects-filters .category-filters button:last-child { grid-column:1/-1; min-height:50px; }
+    .projects-filters .category-filters button > span:last-child { min-width:0; overflow-wrap:normal; }
+  }
+</style>
