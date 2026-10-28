@@ -1,16 +1,16 @@
 ---
-interface Props { source?: string }
-const { source } = Astro.props;
+interface Props { source?: string; invert?: boolean }
+const { source, invert = false } = Astro.props;
 ---
-<canvas class="dither-icon" data-source={source} aria-hidden="true"></canvas>
+<canvas class="dither-icon" data-source={source} data-invert={invert ? "true" : undefined} aria-hidden="true"></canvas>
 <style is:global>
-  :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art) .dither-icon { position:absolute; max-width:none; pointer-events:none; transform: translate3d(var(--dither-x, 0px), var(--dither-y, 0px), 0) scale(var(--dither-zoom, 1)); transition: transform 240ms cubic-bezier(.16,1,.3,1); will-change: auto; }
-  :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art)[data-dither-ready] img { visibility:hidden; }
-  .comparison-illustration .dither-icon { inset:0; }
+  :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art, .promise-art, .footer-art) .dither-icon { position:absolute; max-width:none; pointer-events:none; transform: translate3d(var(--dither-x, 0px), var(--dither-y, 0px), 0) scale(var(--dither-zoom, 1)); transition: transform 240ms cubic-bezier(.16,1,.3,1); will-change: auto; }
+  :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art, .promise-art, .footer-art)[data-dither-ready] img { visibility:hidden; }
+  .comparison-illustration .dither-icon, .promise-art .dither-icon, .footer-art .dither-icon { inset:0; }
   @media (max-width:768px) {
     .comparison-row .comparison-illustration { width:clamp(200px, 64vw, 240px); height:clamp(200px, 64vw, 240px); margin:36px -20px -8px auto; }
   }
-  @media (prefers-reduced-motion: reduce) { :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art) .dither-icon { transform:none; transition:none; } }
+  @media (prefers-reduced-motion: reduce) { :is(.problem-art, .comparison-illustration, .your-turn-growth, .offer-art, .promise-art, .footer-art) .dither-icon { transform:none; transition:none; } }
 </style>
 <script>
   import { onPageLoad } from '../scripts/page-lifecycle';
@@ -18,19 +18,22 @@ const { source } = Astro.props;
     document.querySelectorAll<HTMLCanvasElement>('.dither-icon').forEach((canvas) => {
       const art = canvas.parentElement!;
       const image = art.querySelector('img');
-      const card = art.closest<HTMLElement>('.problem-card, .comparison-row, .your-turn-card, .offer-card');
+      const card = art.closest<HTMLElement>('.problem-card, .comparison-row, .your-turn-card, .offer-card, .promise-card, .footer-art');
       const ctx = canvas.getContext('2d');
       if (!image || !card || !ctx) return;
       const growth = art.classList.contains('your-turn-growth');
       const offer = art.classList.contains('offer-art');
       const problem = art.classList.contains('problem-art');
+      const promise = art.classList.contains('promise-art');
+      const footer = art.classList.contains('footer-art');
+      const invert = canvas.dataset.invert === 'true';
       const detailed = art.classList.contains('comparison-illustration') || growth;
       // Fine grain keeps the 3D shapes of the problem and offer artwork readable:
       // one CSS pixel per dot instead of the coarser two-pixel texture. Only the
       // comparison and offer art also use the open-highlight tone curve; the Home
       // problem art keeps its denser ink so it does not wash out.
-      const fineGrain = detailed || offer || problem;
-      const fineTone = detailed || offer;
+      const fineGrain = detailed || offer || problem || promise || footer;
+      const fineTone = detailed || offer || promise || footer;
       const artwork = canvas.dataset.source ? new Image() : image;
       if (canvas.dataset.source) artwork.src = canvas.dataset.source;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -65,7 +68,8 @@ const { source } = Astro.props;
             const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
             // Keep highlights open and shade the existing 3D contours with orange ink.
             const wave = phase ? (sinX![x]*rowCos + cosX![x]*rowSin)*.22 + rowWave : 0;
-            const tone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+            const baseTone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+            const tone = invert ? 1 - baseTone : baseTone;
             const ink = Math.max(0, Math.min(1, (tone + wave*(fineGrain ? .35 : 1))*alpha));
             if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
               output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;

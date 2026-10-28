@@ -1,0 +1,605 @@
+---
+import Icon from "./Icon.astro";
+
+const glyphs = [
+  { key: "0", name: "category-web" },
+  { key: "1", name: "category-brand" },
+  { key: "2", name: "category-art" },
+  { key: "3", name: "category-music" },
+  { key: "4", name: "category-experiment" },
+  { key: "all", name: "grid2" },
+];
+---
+
+<div
+  class="category-glyph"
+  data-category-glyph
+  data-active-category="0"
+  aria-hidden="true"
+>
+  <div class="category-glyph__fallback">
+    {
+      glyphs.map(({ key, name }) => (
+        <span data-glyph={key}>
+          <Icon name={name} size={96} />
+        </span>
+      ))
+    }
+  </div>
+  <canvas class="category-glyph__canvas" width="256" height="256"></canvas>
+</div>
+
+<style>
+  .category-glyph {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .category-glyph__fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d3dfc6;
+  }
+
+  .category-glyph__fallback > span {
+    display: none;
+    width: 78%;
+    height: 78%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .category-glyph__fallback > span :global(.pixel-icon) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .category-glyph[data-active-category="0"] .category-glyph__fallback > span[data-glyph="0"],
+  .category-glyph[data-active-category="1"] .category-glyph__fallback > span[data-glyph="1"],
+  .category-glyph[data-active-category="2"] .category-glyph__fallback > span[data-glyph="2"],
+  .category-glyph[data-active-category="3"] .category-glyph__fallback > span[data-glyph="3"],
+  .category-glyph[data-active-category="4"] .category-glyph__fallback > span[data-glyph="4"],
+  .category-glyph[data-active-category="all"] .category-glyph__fallback > span[data-glyph="all"] {
+    display: flex;
+  }
+
+  /* The extruded canvas replaces the flat vector fallback once it is ready. */
+  .category-glyph.is-ready .category-glyph__fallback {
+    visibility: hidden;
+  }
+
+  .category-glyph__canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+
+  const GRID = 24;
+  const DEPTH = 9;
+  const SIZE = 256;
+  const TRANSITION_MS = 480;
+  const FRAME_MS = 1000 / 32;
+  const CAMERA = 90;
+  const SCALE = (SIZE / GRID) * 0.86;
+
+  // Standard 8x8 Bayer matrix, used for the dithered silhouette edge and for
+  // the palette quantisation that gives the sculpture its printed texture.
+  const DITHER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const BAYER = [
+    0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36,
+    14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41,
+    51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55,
+    23, 61, 29, 53, 21,
+  ];
+  const PALETTE = [
+    [0x55, 0x68, 0x51],
+    [0x6d, 0x80, 0x65],
+    [0x87, 0x9c, 0x79],
+    [0xa3, 0xb7, 0x90],
+    [0xc2, 0xd2, 0xae],
+  ];
+  const LIGHT = (() => {
+    const v = [-0.34, -0.5, 0.8];
+    const length = Math.hypot(v[0], v[1], v[2]);
+    return [v[0] / length, v[1] / length, v[2] / length];
+  })();
+
+  // Bayer order combined with a diagonal term so depth collapses and rebuilds
+  // as a wave instead of a random flicker.
+  const ORDER = new Float32Array(GRID * GRID);
+  for (let y = 0; y < GRID; y++) {
+    for (let x = 0; x < GRID; x++) {
+      const diagonal = (x + y) / (GRID * 2 - 2);
+      const bayer = (BAYER[(y % 8) * 8 + (x % 8)] + 0.5) / 64;
+      ORDER[y * GRID + x] = diagonal * 0.7 + bayer * 0.3;
+    }
+  }
+
+  const SHADE_CACHE: string[] = Array.from(
+    { length: 256 },
+    (_, value) => `rgb(${value}, ${value}, ${value})`,
+  );
+
+  const KEY_PARAM: Record<string, string> = {
+    all: "all",
+    experiments: "4",
+    "0": "0",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+  };
+  const normalizeKey = (value: string | null | undefined): string =>
+    value && KEY_PARAM[value] ? KEY_PARAM[value] : "0";
+  const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
+  function readMask(svg: SVGSVGElement): Promise<Uint8Array | null> {
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("width", String(GRID));
+    clone.setAttribute("height", String(GRID));
+    const markup = new XMLSerializer().serializeToString(clone);
+    const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
+
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = GRID;
+        canvas.height = GRID;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) {
+          resolve(null);
+          return;
+        }
+        context.imageSmoothingEnabled = false;
+        context.clearRect(0, 0, GRID, GRID);
+        context.drawImage(image, 0, 0, GRID, GRID);
+        try {
+          const data = context.getImageData(0, 0, GRID, GRID).data;
+          const mask = new Uint8Array(GRID * GRID);
+          for (let i = 0; i < mask.length; i++) {
+            mask[i] = data[i * 4 + 3] > 96 ? 1 : 0;
+          }
+          resolve(mask);
+        } catch {
+          resolve(null);
+        }
+      };
+      image.onerror = () => resolve(null);
+      image.src = source;
+    });
+  }
+
+  onPageLoad((scope) => {
+    document.querySelectorAll<HTMLElement>("[data-category-glyph]").forEach((root) => {
+      const canvas = root.querySelector<HTMLCanvasElement>(".category-glyph__canvas");
+      const context = canvas?.getContext("2d", { willReadFrequently: true });
+      const filterRoot = document.querySelector<HTMLElement>("[data-projects-filter]");
+      if (!canvas || !context) return;
+
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+      const fallbackSpans = Array.from(root.querySelectorAll<HTMLElement>("[data-glyph]"));
+      const masks = new Map<string, Uint8Array>();
+      const depths = new Float32Array(GRID * GRID);
+      let ready = false;
+      let visible = true;
+      let running = false;
+      let frame = 0;
+      let lastFrame = 0;
+      let current = normalizeKey(
+        filterRoot?.dataset.activeCategory ||
+          new URLSearchParams(window.location.search).get("category"),
+      );
+      let transition: {
+        from: Uint8Array | null;
+        to: Uint8Array;
+        start: number;
+      } | null = null;
+
+      // The sculpture leans a little by default so the extrusion reads, then
+      // drifts slowly and follows the pointer with a damped magnetic tilt.
+      const BASE_YAW = -0.36;
+      const BASE_PITCH = 0.16;
+      let yaw = BASE_YAW;
+      let pitch = BASE_PITCH;
+      let magnetX = 0;
+      let magnetY = 0;
+      let pointerX = 0;
+      let pointerY = 0;
+
+      root.dataset.activeCategory = current;
+
+      const depthAt = (x: number, y: number) => {
+        if (x < 0 || y < 0 || x >= GRID || y >= GRID) return 0;
+        return depths[y * GRID + x];
+      };
+
+      const faceShade = (
+        nx: number,
+        ny: number,
+        nz: number,
+        cosY: number,
+        sinY: number,
+        cosX: number,
+        sinX: number,
+      ) => {
+        const x1 = nx * cosY + nz * sinY;
+        const z1 = -nx * sinY + nz * cosY;
+        const y1 = ny * cosX - z1 * sinX;
+        const z2 = ny * sinX + z1 * cosX;
+        const dot = Math.max(0, x1 * LIGHT[0] + y1 * LIGHT[1] + z2 * LIGHT[2]);
+        const front = nz > 0.5;
+        const intensity = front ? 0.5 + 0.42 * dot : 0.12 + 0.5 * dot;
+        return Math.round(clamp01(intensity) * 255);
+      };
+
+      const render = (now: number) => {
+        const progress = transition
+          ? clamp01((now - transition.start) / TRANSITION_MS)
+          : 1;
+        depths.fill(0);
+
+        if (transition) {
+          const from = transition.from;
+          const to = transition.to;
+          for (let i = 0; i < depths.length; i++) {
+            const inFrom = from ? from[i] : 0;
+            const inTo = to[i];
+            if (inFrom && inTo) {
+              // Shared pixels keep full depth, so the silhouette's spine stays
+              // anchored while the rest of the sculpture changes.
+              depths[i] = DEPTH;
+            } else if (inFrom) {
+              const start = 0.06 + 0.42 * ORDER[i];
+              depths[i] = DEPTH * clamp01(1 - (progress - start) / 0.24);
+            } else if (inTo) {
+              const start = 0.22 + 0.56 * ORDER[i];
+              depths[i] = DEPTH * clamp01((progress - start) / 0.22);
+            }
+          }
+        } else {
+          const mask = masks.get(current);
+          if (!mask) return;
+          for (let i = 0; i < depths.length; i++) {
+            depths[i] = mask[i] ? DEPTH : 0;
+          }
+        }
+
+        const cosY = Math.cos(yaw);
+        const sinY = Math.sin(yaw);
+        const cosX = Math.cos(pitch);
+        const sinX = Math.sin(pitch);
+        const bob = reduced.matches ? 0 : Math.sin(now * 0.0008) * 2.2;
+        const offsetX = magnetX;
+        const offsetY = magnetY + bob;
+
+        const project = (x: number, y: number, z: number): [number, number, number] => {
+          const px = x - GRID / 2;
+          const py = y - GRID / 2;
+          const pz = z - DEPTH / 2;
+          const x1 = px * cosY + pz * sinY;
+          const z1 = -px * sinY + pz * cosY;
+          const y1 = py * cosX - z1 * sinX;
+          const z2 = py * sinX + z1 * cosX;
+          const perspective = CAMERA / (CAMERA - z2);
+          return [
+            SIZE / 2 + x1 * SCALE * perspective + offsetX,
+            SIZE / 2 + y1 * SCALE * perspective + offsetY,
+            z2,
+          ];
+        };
+
+        type Cell = {
+          x: number;
+          y: number;
+          d: number;
+          front: [number, number, number][];
+          sort: number;
+        };
+        const cells: Cell[] = [];
+
+        for (let y = 0; y < GRID; y++) {
+          for (let x = 0; x < GRID; x++) {
+            const d = depths[y * GRID + x];
+            if (d <= 0.02) continue;
+            const front = [
+              project(x, y, d),
+              project(x + 1, y, d),
+              project(x + 1, y + 1, d),
+              project(x, y + 1, d),
+            ] as [number, number, number][];
+            const sort = (front[0][2] + front[1][2] + front[2][2] + front[3][2]) / 4;
+            cells.push({ x, y, d, front, sort });
+          }
+        }
+        cells.sort((a, b) => a.sort - b.sort);
+
+        context.clearRect(0, 0, SIZE, SIZE);
+        context.globalAlpha = 1;
+        context.lineJoin = "round";
+
+        const drawFace = (
+          points: [number, number, number][],
+          shade: number,
+          outline: boolean,
+        ) => {
+          context.beginPath();
+          context.moveTo(points[0][0], points[0][1]);
+          for (let i = 1; i < points.length; i++) {
+            context.lineTo(points[i][0], points[i][1]);
+          }
+          context.closePath();
+          const color = SHADE_CACHE[shade];
+          context.fillStyle = color;
+          context.fill();
+          if (outline) {
+            // A hairline of the same tone closes anti-aliased seams between
+            // neighbouring front faces without changing the silhouette.
+            context.strokeStyle = color;
+            context.lineWidth = 0.7;
+            context.stroke();
+          }
+        };
+
+        for (const cell of cells) {
+          const { x, y, d, front } = cell;
+          const neighbors = [
+            { dx: 1, dy: 0, nx: 1, ny: 0 },
+            { dx: -1, dy: 0, nx: -1, ny: 0 },
+            { dx: 0, dy: 1, nx: 0, ny: 1 },
+            { dx: 0, dy: -1, nx: 0, ny: -1 },
+          ];
+          for (const { dx, dy, nx, ny } of neighbors) {
+            const neighborDepth = depthAt(x + dx, y + dy);
+            if (neighborDepth >= d - 0.02) continue;
+            let side: [number, number, number][];
+            if (dx === 1) {
+              side = [
+                project(x + 1, y, neighborDepth),
+                project(x + 1, y + 1, neighborDepth),
+                project(x + 1, y + 1, d),
+                project(x + 1, y, d),
+              ];
+            } else if (dx === -1) {
+              side = [
+                project(x, y, neighborDepth),
+                project(x, y + 1, neighborDepth),
+                project(x, y + 1, d),
+                project(x, y, d),
+              ];
+            } else if (dy === 1) {
+              side = [
+                project(x, y + 1, neighborDepth),
+                project(x + 1, y + 1, neighborDepth),
+                project(x + 1, y + 1, d),
+                project(x, y + 1, d),
+              ];
+            } else {
+              side = [
+                project(x, y, neighborDepth),
+                project(x + 1, y, neighborDepth),
+                project(x + 1, y, d),
+                project(x, y, d),
+              ];
+            }
+            drawFace(
+              side,
+              faceShade(nx, ny, 0, cosY, sinY, cosX, sinX),
+              false,
+            );
+          }
+          drawFace(
+            front,
+            faceShade(0, 0, 1, cosY, sinY, cosX, sinX),
+            true,
+          );
+        }
+
+        // Ordered dithering: quantise the lit greys into the sage palette with
+        // Bayer thresholds, and dither the silhouette edge at the same time.
+        const image = context.getImageData(0, 0, SIZE, SIZE);
+        const data = image.data;
+        for (let y = 0; y < SIZE; y++) {
+          const row = y * SIZE;
+          for (let x = 0; x < SIZE; x++) {
+            const index = (row + x) * 4;
+            const alpha = data[index + 3];
+            if (alpha === 0) continue;
+            const edgeBayer = (BAYER[(y % 8) * 8 + (x % 8)] + 0.5) / 64;
+            if (alpha < 255 * edgeBayer) {
+              data[index + 3] = 0;
+              continue;
+            }
+            const dither = (DITHER4[(y % 4) * 4 + (x % 4)] + 0.5) / 16;
+            const level = (data[index] / 255) * (PALETTE.length - 1);
+            const base = Math.min(PALETTE.length - 1, Math.floor(level));
+            const color =
+              PALETTE[
+                Math.min(
+                  PALETTE.length - 1,
+                  base + (level - base > dither ? 1 : 0),
+                )
+              ];
+            data[index] = color[0];
+            data[index + 1] = color[1];
+            data[index + 2] = color[2];
+            data[index + 3] = 255;
+          }
+        }
+        context.putImageData(image, 0, 0);
+      };
+
+      const updateMotion = (now: number) => {
+        const idleYaw = Math.sin(now * 0.00042) * 0.045;
+        const idlePitch = Math.cos(now * 0.00035) * 0.035;
+        const targetYaw = BASE_YAW + idleYaw + pointerX * 0.15;
+        const targetPitch = BASE_PITCH + idlePitch + pointerY * 0.11;
+        yaw += (targetYaw - yaw) * 0.09;
+        pitch += (targetPitch - pitch) * 0.09;
+        magnetX += (pointerX * 7 - magnetX) * 0.08;
+        magnetY += (pointerY * 5 - magnetY) * 0.08;
+      };
+
+      const tick = (now: number) => {
+        if (!running) return;
+        frame = requestAnimationFrame(tick);
+        if (now - lastFrame < FRAME_MS) return;
+        lastFrame = now;
+        if (!visible || document.hidden) return;
+        updateMotion(now);
+        if (transition && now - transition.start >= TRANSITION_MS) transition = null;
+        render(now);
+      };
+
+      const startLoop = () => {
+        if (running || reduced.matches) return;
+        running = true;
+        lastFrame = 0;
+        frame = requestAnimationFrame(tick);
+      };
+
+      const stopLoop = () => {
+        running = false;
+        cancelAnimationFrame(frame);
+        frame = 0;
+      };
+
+      const onPointerMove = (event: PointerEvent) => {
+        if (event.pointerType !== "mouse" || reduced.matches) return;
+        const rect = canvas.getBoundingClientRect();
+        pointerX = Math.max(
+          -1,
+          Math.min(
+            1,
+            (event.clientX - (rect.left + rect.width / 2)) / (innerWidth * 0.5),
+          ),
+        );
+        pointerY = Math.max(
+          -1,
+          Math.min(
+            1,
+            (event.clientY - (rect.top + rect.height / 2)) / (innerHeight * 0.5),
+          ),
+        );
+      };
+
+      const resetPointer = () => {
+        pointerX = 0;
+        pointerY = 0;
+      };
+
+      window.addEventListener("pointermove", onPointerMove, {
+        signal: scope.signal,
+        passive: true,
+      });
+      document.addEventListener("pointerleave", resetPointer, {
+        signal: scope.signal,
+      });
+      window.addEventListener("blur", resetPointer, { signal: scope.signal });
+
+      const onCategoryChange = (event: Event) => {
+        const next = normalizeKey(
+          (event as CustomEvent<{ category?: string }>).detail?.category,
+        );
+        if (next === current) return;
+        const from = masks.get(current) ?? null;
+        const to = masks.get(next);
+        current = next;
+        root.dataset.activeCategory = next;
+        if (!ready || !to) return;
+        if (reduced.matches) {
+          transition = null;
+          render(performance.now());
+          return;
+        }
+        if (!visible || document.hidden) {
+          transition = null;
+          return;
+        }
+        transition = { from, to, start: performance.now() };
+        startLoop();
+      };
+
+      document.addEventListener("portfolio:category-change", onCategoryChange, {
+        signal: scope.signal,
+      });
+
+      const observer =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              ([entry]) => {
+                visible = entry.isIntersecting;
+                if (!visible) stopLoop();
+                else startLoop();
+              },
+              { rootMargin: "120px" },
+            )
+          : null;
+      observer?.observe(root);
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+          if (document.hidden) stopLoop();
+          else startLoop();
+        },
+        { signal: scope.signal },
+      );
+
+      reduced.addEventListener(
+        "change",
+        () => {
+          if (reduced.matches) {
+            stopLoop();
+            transition = null;
+            resetPointer();
+            magnetX = 0;
+            magnetY = 0;
+            render(performance.now());
+          } else {
+            startLoop();
+          }
+        },
+        { signal: scope.signal },
+      );
+
+      scope.cleanup(() => {
+        stopLoop();
+        observer?.disconnect();
+        root.classList.remove("is-ready");
+      });
+
+      // Rasterize the glyph masks from the inline SVGs already in the document.
+      Promise.all(
+        fallbackSpans.map(async (span) => {
+          const svg = span.querySelector("svg");
+          if (!svg) return null;
+          const mask = await readMask(svg as SVGSVGElement);
+          if (mask) masks.set(span.dataset.glyph || "0", mask);
+          return null;
+        }),
+      ).then(() => {
+        if (scope.signal.aborted) return;
+        const mask = masks.get(current);
+        if (!mask) return;
+        ready = true;
+        root.dataset.activeCategory = current;
+        render(performance.now());
+        root.classList.add("is-ready");
+        if (visible && !document.hidden) startLoop();
+      });
+    });
+  });
+</script>

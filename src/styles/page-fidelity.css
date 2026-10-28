@@ -6,7 +6,7 @@
 .about-page .about-hero > div > p:not(.section-eyebrow) { font-size:22px; color:var(--text-secondary); margin:16px 0 0; }
 .about-page .about-portrait { height:auto; aspect-ratio:521.52 / 539.387; }
 .about-page .about-portrait img { height:auto; }
-.about-page .about-stats { padding-top:0; padding-bottom:64px; }
+.about-page .about-stats { padding-top:56px; padding-bottom:64px; }
 .about-page .about-stats-card { display:block; border:0; padding:28px 32px; border-radius:20px; background:var(--surface); box-shadow:0 16px 40px #64736229; }
 .about-page .about-stats dl { gap:0; margin:0 0 20px; }
 .about-page .about-stats dl > div { padding-inline:24px; gap:8px; border-left:1px solid var(--border); }

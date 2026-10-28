@@ -995,11 +995,26 @@ details[open] > summary > .faq-plus:after {
   position: absolute;
   top: -152px;
   left: 50%;
+  z-index: 1;
   transform: translateX(-50%);
   width: 285px;
   height: 285px;
   object-fit: contain;
+  pointer-events: none;
 }
+.footer-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* The dither is transparent between dots; the exported ground shadow would show
+   through it and muddy the icon, so it steps aside once the canvas is ready. */
+.footer-cta:has(.footer-art[data-dither-ready]) .footer-art-ground {
+  opacity: 0;
+}
+.footer-art-ground { transition: opacity 320ms ease; }
 /* Exact ground-shadow shape exported from Current Figma, node 488:7905. */
 .footer-art-ground {
   position: absolute;
@@ -2983,7 +2998,7 @@ html.js .article-cover img:not(.is-loaded) {
   letter-spacing: -0.02em;
   margin: 24px 0;
 }
-.projects-header > p {
+.projects-header-copy > p {
   font-size: 18px;
   color: var(--text-secondary);
   max-width: 600px;
@@ -3586,7 +3601,7 @@ html.js .article-cover img:not(.is-loaded) {
   .projects-header h1 {
     font-size: 40px;
   }
-  .projects-header > p {
+  .projects-header-copy > p {
     font-size: 16px;
   }
   .projects-filters {
@@ -6014,10 +6029,10 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
 @media (max-width: 1024px) {
   .projects-header { --projects-nav-space: 88px; }
 }
-.projects-header > p:not(.section-eyebrow) {
+.projects-header-copy > p:not(.section-eyebrow) {
   color: var(--projects-heading);
 }
-.projects-header > .section-eyebrow {
+.projects-header-copy > .section-eyebrow {
   color: var(--accent);
 }
 .projects-filters {
@@ -7294,14 +7309,14 @@ html[data-page-arrival="pending"] main { opacity: 0; }
 
 /* Longer multidisciplinary Projects copy uses a calmer opening scale. */
 .projects-page .projects-header h1 { font-size: clamp(38px,4.6vw,56px); line-height: 1.1; max-width: 23ch; text-wrap: balance; }
-.projects-page .projects-header > p:not(.section-eyebrow) { font-size: 18px; line-height: 1.6; max-width: 68ch; text-wrap: pretty; }
+.projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 18px; line-height: 1.6; max-width: 68ch; text-wrap: pretty; }
 @media (max-width:768px) {
   .projects-page .projects-header h1 { font-size: clamp(30px,8.4vw,38px); max-width: 22ch; }
-  .projects-page .projects-header > p:not(.section-eyebrow) { font-size: 16px; line-height: 1.6; }
+  .projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 16px; line-height: 1.6; }
 }
 /* Keep these sizes authoritative over the historical fidelity overrides. */
 body.projects-page .projects-header h1 { font-size: clamp(38px,4.6vw,56px); line-height: 1.1; max-width: 23ch; text-wrap: balance; }
-body.projects-page .projects-header > p:not(.section-eyebrow) { font-size: 18px; line-height: 1.6; max-width: 68ch; text-wrap: pretty; }
+body.projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 18px; line-height: 1.6; max-width: 68ch; text-wrap: pretty; }
 .projects-page .your-turn-card .your-turn-orbit { left: -130px; }
 .projects-page .your-turn-card .your-turn-growth { left: 210px; right: auto; }
 @media (min-width:769px) and (max-width:1024px) {
@@ -7313,7 +7328,7 @@ body.projects-page .projects-header > p:not(.section-eyebrow) { font-size: 18px;
 }
 @media (max-width:768px) {
   body.projects-page .projects-header h1 { font-size: clamp(30px,8.4vw,38px); max-width: 22ch; }
-  body.projects-page .projects-header > p:not(.section-eyebrow) { font-size: 16px; line-height: 1.6; }
+  body.projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 16px; line-height: 1.6; }
   .projects-page .your-turn-card .your-turn-growth { left: calc(50% - 30px); right: auto; }
 }
 
@@ -7324,3 +7339,167 @@ body.projects-page .projects-header > p:not(.section-eyebrow) { font-size: 18px;
 .projects-page .filter-options [data-reset], .filter-color-preview { grid-column: 1 / -1; }
 .filter-color-preview { display:flex; gap:8px; }
 .filter-color-preview span { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); }
+
+/* Projects category sculpture: the header becomes a split composition where the
+   extruded icon occupies the right half of the content container. The right
+   edge follows the same 1312px content line as the navigation CTA, so it never
+   floats to the viewport edge on ultrawide screens. */
+.projects-page .category-glyph-slot { display: none; }
+main.projects-page .projects-header-copy h1 { max-width: 100%; }
+main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 100%; }
+@media (min-width: 1024px) {
+  main.projects-page .projects-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 56px;
+    align-items: center;
+    padding-block: 32px 24px;
+  }
+  .projects-page .projects-header-copy { min-width: 0; }
+  main.projects-page .projects-header-copy h1 { max-width: 100%; }
+  main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 100%; }
+  .projects-page .category-glyph-slot {
+    display: flex;
+    justify-self: end;
+    align-self: center;
+    width: min(100%, 560px);
+    aspect-ratio: 1;
+    pointer-events: none;
+  }
+}
+
+
+/* About promises: the orange illustrations use the Services dither language,
+   with the dotted orbit revealed on hover/focus. */
+.about-page .promises-grid article.promise-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Promise cards replace the dotted orbit with a lime corner police tape. The
+   tape runs corner to corner across the top-right edge, clear of illustration
+   and copy, and its dotted title scrolls like a stepped ticker. */
+.about-page .promise-tape {
+  position: absolute;
+  top: 22px;
+  right: -68px;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  width: 280px;
+  height: 34px;
+  padding: 0 12px;
+  overflow: hidden;
+  color: var(--dark);
+  white-space: nowrap;
+  background: var(--accent-secondary);
+  border-block: 1px dotted color-mix(in srgb, var(--dark) 52%, transparent);
+  transform: rotate(45deg);
+  pointer-events: none;
+  font: 400 12px/1 var(--font-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 200ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.about-page .promise-tape__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: promise-tape-scroll 14s steps(70, end) infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+.about-page .promise-tape__group {
+  display: flex;
+  align-items: center;
+}
+.about-page .promise-tape__text {
+  display: block;
+  padding-right: 26px;
+  color: var(--dark);
+  border-right: 1px dotted color-mix(in srgb, var(--dark) 42%, transparent);
+}
+@keyframes promise-tape-scroll {
+  to { transform: translateX(-50%); }
+}
+@media (hover: hover) and (pointer: fine) {
+  .about-page .promise-tape {
+    opacity: 0;
+    transform: rotate(45deg) translateY(-8px);
+  }
+  .about-page .promise-card {
+    transition: background-color 240ms ease;
+  }
+  .about-page .promise-card h3,
+  .about-page .promise-card p {
+    transition: color 240ms ease;
+  }
+  .about-page .promise-card:hover {
+    background: var(--dark);
+  }
+  .about-page .promise-card:hover h3 {
+    color: #f5f3ef;
+  }
+  .about-page .promise-card:hover p {
+    color: #b9b4ac;
+  }
+  .about-page .promise-card:hover .promise-tape {
+    opacity: 1;
+    transform: rotate(45deg);
+  }
+  .about-page .promise-card:hover .promise-tape__track {
+    animation-play-state: running;
+  }
+}
+@media (hover: none) {
+  .about-page .promises-section[data-tape-play] .promise-tape__track {
+    animation-play-state: running;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-page .promise-tape {
+    opacity: 1;
+    transform: rotate(45deg);
+    transition: none;
+  }
+  .about-page .promise-tape__track {
+    animation: none;
+  }
+  .about-page .promise-card,
+  .about-page .promise-card h3,
+  .about-page .promise-card p {
+    transition: none;
+  }
+}
+.about-page .promise-art {
+  position: relative;
+  width: 114px;
+  height: 114px;
+  flex-shrink: 0;
+}
+.about-page .promise-art img {
+  width: 114px;
+  height: 114px;
+  object-fit: contain;
+}
+/* Optical alignment: the unlocked padlock sits ~3px higher and ~22px to the
+   right of the other illustrations inside its square, so it is nudged down and
+   left until its visible edge lines up with the title. */
+.about-page .promises-grid article.promise-card:nth-child(1) .promise-art {
+  transform: translate(-22px, 3px);
+}
+.about-page .promise-card > .promise-art,
+.about-page .promise-card > h3,
+.about-page .promise-card > p {
+  position: relative;
+  z-index: 1;
+}
+
+/* The black field in the Your turn banner now carries the whole growth chart,
+   so the orange dither reads against black instead of disappearing on orange. */
+.projects-page .your-turn-card .your-turn-orbit {
+  width: 680px;
+  height: 680px;
+  top: -190px;
+  left: -190px;
+}
