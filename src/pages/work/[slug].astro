@@ -109,15 +109,19 @@ const metrics = isBsa
         <span class="mono">[client-domain.com]</span>
         <small>Live since {p.year}</small>
       </div>
-      <ResponsiveImage
-        src={p.cover || p.image}
-        loading="eager"
-        sizes="(max-width: 768px) calc(100vw - 40px), calc(100vw - 128px)"
-        width="1312"
-        height="800"
-        alt={`${p.title} website`}
-        fetchpriority="high"
-      />
+      <div class="browser-mockup-viewport">
+        <div class="browser-mockup-track">
+          <ResponsiveImage
+            src={p.cover || p.image}
+            loading="eager"
+            sizes="(max-width: 768px) calc(100vw - 40px), calc(100vw - 128px)"
+            width="1312"
+            height="800"
+            alt={`${p.title} website`}
+            fetchpriority="high"
+          />
+        </div>
+      </div>
     </div>
   </section>
   <div class="case-body page-section">

@@ -3254,11 +3254,19 @@ html.js .article-cover img:not(.is-loaded) {
   font-size: 11px;
   color: var(--text-secondary);
 }
-.browser-mockup > img {
+.browser-mockup-viewport {
+  position: relative;
+  height: 700px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.browser-mockup-track {
+  will-change: translate;
+}
+.browser-mockup-track > img {
+  display: block;
   width: 100%;
-  max-height: 738px;
-  object-fit: cover;
-  object-position: top;
+  height: auto;
 }
 .case-body {
   display: grid;
@@ -3649,7 +3657,7 @@ html.js .article-cover img:not(.is-loaded) {
     font-size: 9px;
     padding: 8px;
   }
-  .browser-mockup > img {
+  .browser-mockup-viewport {
     height: 300px;
   }
   .case-body {

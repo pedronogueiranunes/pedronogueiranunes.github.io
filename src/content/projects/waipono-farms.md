@@ -8,7 +8,7 @@ location: "USA"
 image: "/assets/project-5.png"
 color: "#eee5d8"
 tint: "#eee5d8"
-cover: "/assets/figma/497-3036-imgCover.webp"
+cover: "/assets/cases/waipono-farms-cover.webp"
 summary: "Identity, illustrations and a Webflow site for a family farm in Hawaii, from the logo to online farm stand orders."
 tools: ["Illustrator", "Figma", "Webflow", "Shopify Lite"]
 caseSlug: "waipono-farms"

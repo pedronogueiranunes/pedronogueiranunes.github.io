@@ -74,6 +74,11 @@ const { title, pageClass } = Astro.props;
       import "../scripts/transitions";
       import "../scripts/localization";
       import "../scripts/pointer-glow";
+      import { onPageLoad } from "../scripts/page-lifecycle";
+      import { initScrollPreviews } from "../scripts/project-media-scroll";
+      onPageLoad((scope) => {
+        scope.cleanup(initScrollPreviews());
+      });
     </script>
   </body>
 </html>

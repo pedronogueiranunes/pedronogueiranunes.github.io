@@ -53,7 +53,6 @@
 .case-page .browser-toolbar i { width:10px; height:10px; background:#ff6159; }
 .case-page .browser-toolbar i:nth-child(2) { background:#ffbd2e; }
 .case-page .browser-toolbar i:nth-child(3) { background:#28c941; }
-.case-page .browser-mockup > img { height:700px; max-height:none; object-fit:cover; }
 .case-page .case-body { gap:64px; }
 .case-page .case-narrative > section { margin-bottom:56px; }
 .case-page .case-narrative h2 { margin-bottom:14px; }
@@ -137,7 +136,7 @@
  .case-page .case-result-card :is(dt,dd) { grid-column:1; grid-row:auto; }
  .case-page .case-result-card dd { grid-row:1; font-size:40px; line-height:1.15; }
  .case-page .case-result-card dt small { font-size:16px; }
- .case-page .browser-mockup > img { height:auto; max-height:400px; }
+ .case-page .browser-mockup-viewport { height:400px; }
  .case-page .browser-toolbar { gap:8px; }
  .case-page .browser-toolbar > span { font-size:12px; padding:6px; }
  .case-page .case-body { gap:40px; }
@@ -177,7 +176,6 @@
 .site-footer .footer-cta-copy { max-width:781px; padding-top:0; text-align:left; }
 .site-footer .footer-cta h2 { text-align:left; color:transparent; background:linear-gradient(90deg,var(--footer-heading-start),var(--footer-heading-end)); background-clip:text; }
 .site-footer .footer-cta h2 span { color:var(--accent-ink); }
-.case-page .browser-mockup > img { object-fit:fill; }
 @media (max-width:768px) {
  .site-footer .footer-cta { padding-top:100px; padding-bottom:40px; }
  .site-footer .footer-cta-copy { text-align:center; }

@@ -67,11 +67,3 @@ const p = project.data;
 
   </div>
 </article>
-
-<script>
-  import { onPageLoad } from "../scripts/page-lifecycle";
-  import { initProjectMediaScroll } from "../scripts/project-media-scroll";
-  onPageLoad((scope) => {
-    scope.cleanup(initProjectMediaScroll());
-  });
-</script>

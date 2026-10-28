@@ -8,7 +8,7 @@ location: "Brazil · Germany"
 image: "/assets/project-6.png"
 color: "#e6e3ef"
 tint: "#e6e3ef"
-cover: "/assets/figma/497-3062-imgCover.webp"
+cover: "/assets/cases/lemmbra-olympiad-cover.webp"
 summary: "Visual identity and registration platform for a German language olympiad running in two countries at once."
 tools: ["Webflow", "JavaScript", "GSAP", "Memberstack"]
 caseSlug: "lemmbra-olympiad"

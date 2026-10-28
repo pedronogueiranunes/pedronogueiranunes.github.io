@@ -1,58 +1,49 @@
-// Hover treatment for project cards: the screenshot expands to the full width
-// of the media frame, then the track scrolls from the top of the capture to the
-// bottom in a loop. On pointer/focus exit it returns to the resting inset.
-// The CSS handles the expansion; this module only drives the vertical travel.
-const HALF_CYCLE = 4500; // ms per direction, so a full loop takes 9s
-const ZOOM_MS = 450; // keep in sync with the shot transition
+// Scroll-on-hover previews for project cards and case-study browser windows.
+// The media track glides from the top of the capture to the bottom and back in
+// a loop; leaving the pointer or focus returns it to the top.
+const CARD_HALF_CYCLE = 4500; // 9s loop for the short card previews
+const BROWSER_HALF_CYCLE = 5500; // 11s loop for the larger case browser
+const CARD_ZOOM_MS = 450; // keep in sync with the media frame transition
 const RETURN_MS = 320;
 
-export function initProjectMediaScroll() {
+export function initScrollPreviews() {
   const hover = matchMedia("(hover: hover) and (pointer: fine)");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const mediaLinks = [...document.querySelectorAll(".project-media")];
   const cleanups = [];
-  if (!mediaLinks.length) return () => {};
 
-  for (const media of mediaLinks) {
-    const shot = media.querySelector(".project-media-shot");
-    const track = shot?.querySelector(".project-media-track");
-    // The preview belongs to the whole card, not only to the media tile.
-    const card = media.closest(".project-card") ?? media;
-    if (!shot || !track) continue;
-    let frame = 0;
+  const setup = ({ trigger, frame, track, toggleClass, delay, halfCycle }) => {
+    if (!trigger || !frame || !track) return;
+    let frameId = 0;
     let openedAt = 0;
     let offset = 0;
-
     const stop = () => {
-      if (frame) cancelAnimationFrame(frame);
-      frame = 0;
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = 0;
     };
     const easeOut = (t) => 1 - (1 - t) ** 3;
 
     const pan = (now) => {
-      // The screenshot itself is static while the frame expands; the track's
-      // travel is whatever page length it has minus the visible viewport.
-      const elapsed = Math.max(0, now - openedAt - ZOOM_MS);
-      const cycle = HALF_CYCLE * 2;
+      const elapsed = Math.max(0, now - openedAt - delay);
+      const cycle = halfCycle * 2;
       const t = elapsed % cycle;
-      const progress = t <= HALF_CYCLE ? t / HALF_CYCLE : (cycle - t) / HALF_CYCLE;
-      const distance = Math.max(0, track.offsetHeight - media.clientHeight);
+      const progress = t <= halfCycle ? t / halfCycle : (cycle - t) / halfCycle;
+      const distance = Math.max(0, track.offsetHeight - frame.clientHeight);
       offset = progress * distance;
       track.style.translate = `0 ${(-offset).toFixed(1)}px`;
-      frame = requestAnimationFrame(pan);
+      frameId = requestAnimationFrame(pan);
     };
 
     const open = () => {
       if (!hover.matches || reduced.matches) return;
       stop();
-      media.classList.add("is-open");
+      toggleClass?.(true);
       openedAt = performance.now();
-      frame = requestAnimationFrame(pan);
+      frameId = requestAnimationFrame(pan);
     };
 
     const close = () => {
       stop();
-      media.classList.remove("is-open");
+      toggleClass?.(false);
       if (!offset) {
         track.style.translate = "";
         return;
@@ -63,37 +54,58 @@ export function initProjectMediaScroll() {
       const back = (now) => {
         const t = Math.min(1, (now - startedAt) / RETURN_MS);
         track.style.translate = `0 ${(-from * (1 - easeOut(t))).toFixed(1)}px`;
-        if (t < 1) frame = requestAnimationFrame(back);
+        if (t < 1) frameId = requestAnimationFrame(back);
         else {
-          frame = 0;
+          frameId = 0;
           track.style.translate = "";
         }
       };
-      frame = requestAnimationFrame(back);
+      frameId = requestAnimationFrame(back);
     };
 
     const onMotionChange = () => { if (reduced.matches) close(); };
     const onHoverChange = () => { if (!hover.matches) close(); };
 
-    card.addEventListener("pointerenter", open);
-    card.addEventListener("pointerleave", close);
-    card.addEventListener("focusin", open);
-    card.addEventListener("focusout", close);
+    trigger.addEventListener("pointerenter", open);
+    trigger.addEventListener("pointerleave", close);
+    trigger.addEventListener("focusin", open);
+    trigger.addEventListener("focusout", close);
     reduced.addEventListener("change", onMotionChange);
     hover.addEventListener("change", onHoverChange);
 
     cleanups.push(() => {
       stop();
-      media.classList.remove("is-open");
+      toggleClass?.(false);
       track.style.translate = "";
-      card.removeEventListener("pointerenter", open);
-      card.removeEventListener("pointerleave", close);
-      card.removeEventListener("focusin", open);
-      card.removeEventListener("focusout", close);
+      trigger.removeEventListener("pointerenter", open);
+      trigger.removeEventListener("pointerleave", close);
+      trigger.removeEventListener("focusin", open);
+      trigger.removeEventListener("focusout", close);
       reduced.removeEventListener("change", onMotionChange);
       hover.removeEventListener("change", onHoverChange);
     });
-  }
+  };
+
+  document.querySelectorAll(".project-media").forEach((media) => {
+    setup({
+      trigger: media.closest(".project-card") ?? media,
+      frame: media,
+      track: media.querySelector(".project-media-track"),
+      toggleClass: (on) => media.classList.toggle("is-open", on),
+      delay: CARD_ZOOM_MS,
+      halfCycle: CARD_HALF_CYCLE,
+    });
+  });
+
+  document.querySelectorAll(".browser-mockup").forEach((mockup) => {
+    setup({
+      trigger: mockup,
+      frame: mockup.querySelector(".browser-mockup-viewport"),
+      track: mockup.querySelector(".browser-mockup-track"),
+      delay: 0,
+      halfCycle: BROWSER_HALF_CYCLE,
+    });
+  });
 
   return () => cleanups.forEach((fn) => fn());
 }
