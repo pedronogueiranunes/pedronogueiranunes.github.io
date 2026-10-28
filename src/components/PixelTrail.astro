@@ -19,7 +19,11 @@ const { tone = 'orange' } = Astro.props;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !panel || !hero || !ctx) return;
     const media = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
-    const step = 28;
+    const lettering = panel.querySelector<HTMLElement>('.hero-lettering');
+    // Pixelify Sans uses a 0.1em square for each pixel in its glyphs.
+    let pixelSize = 8;
+    let step = 28;
+    let offset = step / 2;
     const cells = new Map<string, { x: number; y: number; at: number; strength: number }>();
     let width = 0, height = 0, frame = 0, visible = true;
     let previous: { x: number; y: number } | undefined;
@@ -30,7 +34,7 @@ const { tone = 'orange' } = Astro.props;
       if (!media.matches || !visible || document.hidden) return;
       ctx.fillStyle = canvas.dataset.tone === 'green' ? '#BDD4B5' : '#FF5A1F';
       // Sparse, quiet resting marks keep the field lighter than the content.
-      for (let x = 14; x < width; x += step) for (let y = 14; y < height; y += step) {
+      for (let x = offset; x < width; x += step) for (let y = offset; y < height; y += step) {
         if ((Math.floor(x / step) * 7 + Math.floor(y / step) * 11) % 5 === 0) continue;
         ctx.globalAlpha = 0.055;
         ctx.fillRect(x, y, 2, 2);
@@ -39,7 +43,7 @@ const { tone = 'orange' } = Astro.props;
         const life = 1 - (now - cell.at) / 1050;
         if (life <= 0) { cells.delete(key); continue; }
         ctx.globalAlpha = cell.strength * life * life;
-        ctx.fillRect(cell.x - 4, cell.y - 4, 8, 8);
+        ctx.fillRect(cell.x - pixelSize / 2, cell.y - pixelSize / 2, pixelSize, pixelSize);
       }
       ctx.globalAlpha = 1;
       if (cells.size) frame = requestAnimationFrame(paint);
@@ -48,6 +52,9 @@ const { tone = 'orange' } = Astro.props;
     const resize = new ResizeObserver(() => {
       const rect = canvas.getBoundingClientRect();
       width = rect.width; height = rect.height;
+      pixelSize = lettering ? parseFloat(getComputedStyle(lettering).fontSize) / 10 : 8;
+      step = lettering ? pixelSize : 28;
+      offset = step / 2;
       const ratio = Math.min(devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -65,15 +72,15 @@ const { tone = 'orange' } = Astro.props;
       const point = { x: event.clientX - rect.left, y: event.clientY - rect.top };
       if (point.x < 0 || point.y < 0 || point.x > width || point.y > height) { previous = undefined; return; }
       const start = previous || point;
-      const count = Math.min(32, Math.max(1, Math.ceil(Math.hypot(point.x - start.x, point.y - start.y) / 14)));
+      const count = Math.min(32, Math.max(1, Math.ceil(Math.hypot(point.x - start.x, point.y - start.y) / (step / 2))));
       const now = performance.now();
       for (let i = 1; i <= count; i++) {
         const px = start.x + (point.x - start.x) * i / count;
         const py = start.y + (point.y - start.y) * i / count;
-        const col = Math.round((px - 14) / step), row = Math.round((py - 14) / step);
+        const col = Math.round((px - offset) / step), row = Math.round((py - offset) / step);
         for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++) {
           const distance = Math.hypot(dx, dy);
-          const x = (col + dx) * step + 14, y = (row + dy) * step + 14;
+          const x = (col + dx) * step + offset, y = (row + dy) * step + offset;
           if (distance > 2.3 || x < 0 || y < 0 || x > width || y > height || ((col + dx) * 7 + (row + dy) * 11) % 5 === 0) continue;
           cells.set(`${col + dx}:${row + dy}`, { x, y, at: now, strength: 0.42 * (1 - distance / 3) });
         }
