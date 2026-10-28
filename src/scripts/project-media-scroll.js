@@ -21,6 +21,7 @@ export function initScrollPreviews() {
       frameId = 0;
     };
     const easeOut = (t) => 1 - (1 - t) ** 3;
+    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
     const pan = (now) => {
       const elapsed = Math.max(0, now - openedAt - delay);
@@ -28,7 +29,7 @@ export function initScrollPreviews() {
       const t = elapsed % cycle;
       const progress = t <= halfCycle ? t / halfCycle : (cycle - t) / halfCycle;
       const distance = Math.max(0, track.offsetHeight - frame.clientHeight);
-      offset = progress * distance;
+      offset = easeInOut(progress) * distance;
       track.style.translate = `0 ${(-offset).toFixed(1)}px`;
       frameId = requestAnimationFrame(pan);
     };

@@ -770,7 +770,7 @@ img {
   top: 30px;
   left: 28px;
   width: calc(100% - 56px);
-  height: calc((100cqw - 56px) * 0.625);
+  height: calc(100% - 30px);
   overflow: hidden;
   border-radius: 10px 10px 0 0;
   background: var(--project-tint, var(--olive));
@@ -824,7 +824,9 @@ img {
   transform: translateY(8px);
   background: var(--action-bg);
   color: white;
-  border-radius: 999px;
+  /* Nested inside the 20px media frame with an 8px inset, so 12px reads as
+     the matching inner curve instead of a capsule. */
+  border-radius: 12px;
   padding: 12px 16px;
   opacity: 0;
   transition:
@@ -1278,7 +1280,7 @@ details[open] > summary > .faq-plus:after {
     top: 24px;
     left: 20px;
     width: calc(100% - 40px);
-    height: calc((100cqw - 40px) * 0.625);
+    height: calc(100% - 24px);
   }
   .project-body {
     padding: 16px 4px 4px;
@@ -2216,7 +2218,7 @@ html.js .article-cover img:not(.is-loaded) {
     top: 20px;
     left: 14px;
     width: calc(100% - 28px);
-    height: calc((100cqw - 28px) * 0.625);
+    height: calc(100% - 20px);
   }
   .project-rail .project-meta {
     font-size: 9px;
