@@ -819,7 +819,7 @@ img {
   align-items: center;
   gap: 12px;
   position: absolute;
-  left: 8px;
+  left: 12px;
   bottom: 12px;
   transform: translateY(8px);
   background: var(--action-bg);
@@ -1579,11 +1579,18 @@ details[open] > summary > .faq-plus:after {
     rgb(0 0 0 / var(--rail-edge-after))
   );
   transition: --rail-edge-before 160ms ease-out, --rail-edge-after 160ms ease-out;
+  /* Side gutter keeps the card halo inside the scroll clip; the negative
+     margin cancels it visually so the cards stay aligned with the page grid. */
+  --rail-side-gutter: 14px;
   display: flex;
   gap: 24px;
   overflow: auto;
   scroll-snap-type: x mandatory;
-  padding: 16px 0 40px;
+  padding: 16px var(--rail-side-gutter) 40px;
+  margin-inline: calc(var(--rail-side-gutter) * -1);
+  /* Snap to the gutter, not the raw scrollport edge, so the first card keeps
+     its halo room instead of being pulled flush against the clip. */
+  scroll-padding-inline: var(--rail-side-gutter);
   scrollbar-width: none;
 }
 [data-rail][data-more-before] .project-rail {
