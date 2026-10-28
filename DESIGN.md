@@ -330,3 +330,5 @@ Showcase metric values use Departure Mono at weight 400 through `--font-metric`,
 The Home portrait eases its mobile camera size multiplier from 1.15 to 1.05 as it reaches the final pose and omits the desktop 10% arrival dolly-in. This leaves lateral room for the wider shoulders without resizing the drawing buffer or changing the desktop or About-page framing.
 
 Mobile Home hero heading, description and actions are offset upward by 20px without moving the portrait or its origin, leaving clearance for the dotted link underline.
+
+The full-width mobile sticky header has square upper corners and 20px lower corner radii.
