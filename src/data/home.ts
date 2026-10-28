@@ -4,7 +4,7 @@ export const problems = [
     title: '"People visit, but nobody books."',
     body: "Traffic is there, trust is not. The page does not answer the questions a buyer has before they reach out.",
     image: "img3DConversionTarget1",
-    mask: "img3DConversionTarget",
+    mask: "img3DConversionTargetFade",
     tools: ["CRO audit", "Landing page redesign"],
     outcome: "First fixes live in 2 weeks",
   },
