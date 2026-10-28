@@ -50,6 +50,14 @@
   font-weight: 400;
   font-display: swap;
 }
+@font-face {
+  /* Departure Mono by Helena Zhang, SIL OFL 1.1 (public/assets/fonts/licenses). */
+  font-family: "Departure Mono";
+  src: url("/assets/fonts/departure-mono-latin-400-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 :root {
   color-scheme: light;
@@ -98,7 +106,8 @@
   --font-display: "Manrope", sans-serif;
   --font-body: "Hanken Grotesk", sans-serif;
   --font-label: "Silkscreen", monospace;
-  --font-mono: "Geist Mono", monospace;
+  --font-mono: "Departure Mono", monospace;
+  --font-code: "Geist Mono", monospace;
   --font-lettering: "Pixelify Sans", sans-serif;
   --hero-lettering-opacity: 1;
   --hero-lettering-color: #fff;
@@ -172,7 +181,7 @@ a {
   color: var(--text-secondary);
 }
 .label-mono {
-  font: 12px/1.4 var(--font-label);
+  font: 12px/1.4 var(--font-mono);
   text-transform: uppercase;
 }
 /* Shared browser and accessibility surfaces. */
@@ -270,7 +279,7 @@ img {
 }
 .label,
 .section-eyebrow {
-  font: 400 14px/1.2 var(--font-label);
+  font: 400 14px/1.2 var(--font-mono);
   text-transform: uppercase;
 }
 .mono {
@@ -533,7 +542,7 @@ img {
 }
 .nav-row small {
   flex-shrink: 0;
-  font: 400 12px/16px var(--font-label);
+  font: 400 12px/16px var(--font-mono);
   letter-spacing: 0.05em;
   color: #d2d9b8;
 }
@@ -572,7 +581,7 @@ img {
   color: #d2d9b8;
 }
 .nav-feature .nav-feature-eyebrow {
-  font: 400 12px/16px var(--font-label);
+  font: 400 12px/16px var(--font-mono);
   letter-spacing: 0.05em;
   color: var(--accent-ink);
 }
@@ -670,7 +679,7 @@ img {
   margin: 0;
 }
 .preferences-panel legend {
-  font: 12px var(--font-label);
+  font: 12px var(--font-mono);
   color: var(--text-secondary);
   margin-bottom: 12px;
   text-transform: uppercase;
@@ -808,7 +817,7 @@ img {
   flex-wrap: wrap;
   gap: 8px;
   margin: 0;
-  font: 12px/16px var(--font-label);
+  font: 12px/16px var(--font-mono);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-secondary);
@@ -1909,7 +1918,7 @@ details[open] > summary > .faq-plus:after {
   border-radius: 4px;
 }
 .build-visual pre {
-  font: 9px/1.7 var(--font-mono);
+  font: 9px/1.7 var(--font-code);
   margin: 0;
 }
 .build-visual pre span {
@@ -2640,7 +2649,7 @@ details[open] > summary > .faq-plus:after {
   place-items: center;
   background: var(--bg);
   border-radius: 50%;
-  font: 12px var(--font-label);
+  font: 12px var(--font-mono);
   width: 28px;
   height: 28px;
   flex-shrink: 0;
@@ -6577,7 +6586,7 @@ body { overflow-x: clip; }
 
 .project-heading .project-tools { margin-top: 12px; }
 
-.featured-project-copy > .chips > span { font-family: var(--font-label); }
+.featured-project-copy > .chips > span { font-family: var(--font-mono); }
 .featured-project-copy > .chips > .outline-chip { color: var(--projects-control-ink); }
 .featured-project-copy > .chips > .outline-chip { font-size: 10px; }
 @media (max-width: 768px) {

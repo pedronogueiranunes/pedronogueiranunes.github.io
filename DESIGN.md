@@ -180,9 +180,9 @@ The supplied computed-style evidence confirms the exact base orange for header C
 
 ## Typography
 
-**Display Font:** Manrope, sans-serif. **Body Font:** Hanken Grotesk, sans-serif. **Label Font:** Silkscreen, monospace. **Technical Font:** Geist Mono, monospace. **Lettering Font:** Pixelify Sans, sans-serif.
+**Display Font:** Manrope, sans-serif. **Body Font:** Hanken Grotesk, sans-serif. **Action Font:** Silkscreen, monospace (navigation, buttons, text links). **Label Font:** Departure Mono, monospace (eyebrows, tags, chips, table headers, metadata). **Code Font:** Geist Mono, monospace (code samples). **Lettering Font:** Pixelify Sans, sans-serif.
 
-All five families are self-hosted WOFF2 with swap behavior. Manrope bold and Hanken regular are preloaded. Manrope and Hanken also have medium files; Geist Mono uses medium and the two pixel families use regular.
+All six families are self-hosted WOFF2 with swap behavior. Manrope bold and Hanken regular are preloaded. Manrope and Hanken also have medium files; Geist Mono uses medium and the three pixel families use regular.
 
 ### Hierarchy
 
@@ -190,11 +190,12 @@ All five families are self-hosted WOFF2 with swap behavior. Manrope bold and Han
 - **Headline:** shared section headings use the observed headline role. At mobile they become (28px/1.15). Home's heading becomes (40px/1.15); Contact also uses a current frame-specific (40px) mobile heading.
 - **Title:** project titles use (20px/28px); metric values use (24px/30px). Offer titles use the title role. Preserve semantic heading levels separately from visual size.
 - **Body:** standard copy uses the frontmatter body role. Supporting copy may use (14px); larger descriptive roles use (18px) or (22px). Mobile body remains (16px). Long FAQ answers are limited to the centered FAQ container; post reading is constrained to an (800px) wrapper.
-- **Label:** section eyebrows, navigation and buttons use uppercase Silkscreen. Metadata uses (12px/16px) with slight tracking. Do not set long prose in this face.
-- **Mono:** uppercase technical labels and tools use Geist Mono. Medium chips use (12px); default chips and compact technical text use (11px).
+- **Action:** navigation, buttons and text links use uppercase Silkscreen. Do not set long prose in this face.
+- **Label:** section eyebrows, tags, chips, data-table headers and metadata use Departure Mono at 11–14px with slight tracking, so labels read as pixel type without competing with Silkscreen actions. Do not set long prose in this face.
+- **Code:** code samples keep Geist Mono at 9–10px so source reads as source, not as UI label.
 - **Lettering:** Pixelify is used for expressive large numbers and oversized hero/footer words, with size determined by the approved composition. The frontmatter lettering role captures recurring case/service numerals, not all lettering sizes.
 
-**The Five Voices Rule.** Keep titles in Manrope, prose in Hanken, interface labels in Silkscreen, technical details in Geist Mono and expressive lettering in Pixelify.
+**The Five Voices Rule.** Keep titles in Manrope, prose in Hanken, actions in Silkscreen, labels and tags in Departure Mono, code in Geist Mono and expressive lettering in Pixelify.
 
 ## Layout
 
