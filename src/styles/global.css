@@ -477,7 +477,11 @@ img {
   color: #f5f3ef;
   background-image:
     linear-gradient(180deg, #00000005, #0000001a),
-    linear-gradient(115deg, #64736299 7.861%, #bdd9b900 61.32%),
+    radial-gradient(
+      120% 100% at var(--nav-glow-x, 24%) var(--nav-glow-y, 20%),
+      #64736299 7.861%,
+      #bdd9b900 61.32%
+    ),
     linear-gradient(90deg, #232625, #232625);
   backdrop-filter: blur(7.5px);
   visibility: hidden;
@@ -501,7 +505,11 @@ img {
   padding: 0;
   background-image:
     linear-gradient(140deg, #00000008 1.7143%, #0000004d 52.471%),
-    linear-gradient(129.865deg, #64736299 7.861%, #bdd9b900 61.32%),
+    radial-gradient(
+      130% 110% at var(--nav-glow-x, 24%) var(--nav-glow-y, 20%),
+      #64736299 7.861%,
+      #bdd9b900 61.32%
+    ),
     linear-gradient(90deg, #232625, #232625);
 }
 .nav-item.is-open .nav-panel {
@@ -516,8 +524,9 @@ img {
 .nav-heading {
   margin: 0 0 10px;
   color: #d2d9b8;
-  font: 400 17px/16px var(--font-label);
-  letter-spacing: 0.01em;
+  font: 400 14px/1.2 var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 .nav-row {
   display: flex;
@@ -600,6 +609,9 @@ img {
   gap: 6px;
   align-items: center;
   color: var(--accent-ink);
+  font: 400 14px/16px var(--font-label);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .nav-feature-cta .pixel-icon {
   width: 14px;
@@ -615,10 +627,6 @@ img {
 .nav-panel--wide .nav-feature-thumb {
   height: 252px;
   border-radius: 8px;
-}
-.nav-panel--wide .nav-feature-eyebrow {
-  font-size: 20px;
-  letter-spacing: 0.04em;
 }
 .nav-panel--wide .nav-feature p {
   font-size: 24px;
