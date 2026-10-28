@@ -7,6 +7,7 @@ import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import Button from "../../components/Button.astro";
 import ToolChip from "../../components/ToolChip.astro";
 import Icon from "../../components/Icon.astro";
+import CaseShowcase from "../../components/CaseShowcase.astro";
 import RelatedProjects from "../../components/RelatedProjects.astro";
 import { bsaCase } from "../../data/cases";
 import { logoFor } from "../../data/home";
@@ -21,6 +22,20 @@ const { project } = Astro.props;
 const p = project.data;
 const isBsa = project.slug === "bsa-legal";
 const liveUrl = site.projectUrls[project.slug];
+const archiveUrl = liveUrl ? `https://web.archive.org/web/*/${liveUrl}` : undefined;
+const stack = isBsa ? bsaCase.stack : p.tools;
+const toolIcon = (tool: string) => /GA4|GTM|analytics/i.test(tool) ? "chart" : /GSAP/i.test(tool) ? "category-experiment" : "category-web";
+// TODO: Replace layout fixtures with verified project narratives before publishing.
+// Fixtures are intentionally excluded from production output.
+const showMock = import.meta.env.DEV && !isBsa;
+const strategyTitles: Record<string, string> = {
+  "green-nation-collective": "From a collective idea to a campaign ready to launch.",
+  "lemmbra-olympiad": "One registration journey across two countries.",
+  "molina-chambo": "A clearer path from legal expertise to consultation.",
+  "pinelake-broken-bow": "A direct route from cabin discovery to booking.",
+  "waipono-farms": "Bring the farm identity into the online experience.",
+};
+const strategyTitle = p.strategyTitle || strategyTitles[project.slug] || p.title;
 const related = (await getCollection("projects"))
   .filter((other) => other.slug !== project.slug)
   .sort((a, b) => a.data.order - b.data.order);
@@ -33,7 +48,7 @@ const metrics = isBsa
   <section class="case-hero page-section">
     <PixelTrail tone="green" />
     <div class="case-hero-top">
-      <div>
+      <div class="case-intro">
         <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
           <a href="/projects">Projects</a>
           <span>/</span>
@@ -54,26 +69,27 @@ const metrics = isBsa
         </h1>
         <p>{isBsa ? bsaCase.summary : p.summary}</p>
         <div class="chips">
-          <ToolChip label={p.category} />
-          <ToolChip
-            label={isBsa ? "Webflow" : p.tools[0]}
-            logo={logoFor(isBsa ? "Webflow" : p.tools[0])}
-          />
-          {isBsa && <ToolChip label="CMS + forms" />}
-          <ToolChip label={`${p.location} · ${p.year}`} />
+          <ToolChip label={p.category} icon="category-web" />
+          {isBsa && <ToolChip label="CMS + forms" icon="grid2" />}
+          <ToolChip label={p.location} icon="location" />
+          <ToolChip label={p.year} icon="calendar" />
         </div>
+        <div class="case-identity-group">
         <div class="case-client-row">
           <div class="case-client-badge">
-            <span class="case-client-avatar" aria-hidden="true"></span>
+            <span class="case-client-avatar" aria-hidden="true"><Icon name="category-brand" size={18} /></span>
             <div>
               <p class="case-client">
                 {isBsa ? bsaCase.client : p.title.split(":")[0]}
               </p>
-              <p class="muted">
-                {isBsa ? "UI/UX + Webflow build · [X] weeks" : p.tools.join(" · ")}
-              </p>
             </div>
           </div>
+        </div>
+        <div class="case-hero-stack" aria-label="Stack">
+          {stack.map((tool) => <ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool) ? undefined : toolIcon(tool)} />)}
+        </div>
+        </div>
+        <div class="case-external-actions">
           <Button
             href={liveUrl || undefined}
             disabled={!liveUrl}
@@ -82,10 +98,11 @@ const metrics = isBsa
           >
             Visit live site
           </Button>
+          <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>
         </div>
       </div>
       <div class="case-result-card">
-        <p class="mono accent">{isBsa ? "Results in 3 months" : "Results"}</p>
+        <p class="mono accent"><Icon name="chart" size={16} />{isBsa ? "Results in 3 months" : "Results"}</p>
         <dl>
           {metrics.map((metric) => (
             <div>
@@ -99,14 +116,14 @@ const metrics = isBsa
         </dl>
       </div>
     </div>
-    <div class="browser-mockup">
+    <div class="browser-mockup" tabindex="0" aria-label="Website preview">
       <div class="browser-toolbar">
         <div aria-hidden="true">
           <i></i>
           <i></i>
           <i></i>
         </div>
-        <span class="mono">[client-domain.com]</span>
+        <span class="mono">{liveUrl ? new URL(liveUrl).hostname : "[client-domain.com]"}</span>
         <small>Live since {p.year}</small>
       </div>
       <div class="browser-mockup-viewport">
@@ -126,14 +143,19 @@ const metrics = isBsa
   </section>
   <div class="case-body page-section">
     <div class="case-narrative">
+      {showMock && <p class="case-mock-notice"><Icon name="category-experiment" />Mock content for layout review. Development preview only.</p>}
       <section>
         <h2>The challenge</h2>
         <h3>{isBsa ? bsaCase.challengeTitle : p.title}</h3>
         <p>{isBsa ? bsaCase.challenge : p.summary}</p>
+        {showMock && <>
+          <p>This sample brief explores how a growing team could present a complex offer clearly, support different audiences and keep the next step easy to find. It is a layout fixture, not a verified description of this project.</p>
+          <p>A longer narrative needs room for context, constraints and competing priorities. This paragraph tests reading rhythm, line length and the spacing between ideas before the final case copy is available.</p>
+        </>}
       </section>
       <section>
         <h2>The strategy</h2>
-        <h3>{isBsa ? "Three moves, in this order." : "[Project strategy]"}</h3>
+        <h3>{isBsa ? "Three moves, in this order." : strategyTitle}</h3>
         {isBsa ? (
           <ol class="strategy-list">
             {bsaCase.strategy.map((row) => (
@@ -144,15 +166,17 @@ const metrics = isBsa
             ))}
           </ol>
         ) : (
-          <div
-            class="case-copy-placeholder"
-            aria-label="Project-specific strategy awaiting content"
-          ></div>
+          showMock ? <ol class="strategy-list">
+            <li><h4>Clarify the journey</h4><p>Map the questions a visitor may bring, group related information and establish a clear path through the page. This is sample strategy content for reviewing the template.</p></li>
+            <li><h4>Build a flexible system</h4><p>Explore reusable sections, readable typography and a consistent set of controls. Test both short and long content across desktop, tablet and mobile layouts.</p></li>
+            <li><h4>Review before launch</h4><p>Check navigation, forms and responsive behavior, then document what still needs real content or validation. No project outcome is implied by this mock narrative.</p></li>
+          </ol> : <div class="case-copy-placeholder" aria-label="Project-specific strategy awaiting content"></div>
         )}
       </section>
       <section>
         <h2>The results</h2>
         <h3>{isBsa ? "Three months later." : p.title.split(":")[0]}</h3>
+        {showMock && <p>This sample results section tests how narrative and metric cards sit together. Replace placeholder figures and explanations with verified evidence before presenting this case publicly.</p>}
         {isBsa ? (
           <table class="results-table">
             <thead>
@@ -183,14 +207,15 @@ const metrics = isBsa
           </dl>
         )}
       </section>
-      <blockquote>
+      <blockquote class="case-testimonial">
+        {showMock && <small class="case-testimonial-note">Fictional quote for layout review</small>}
         <span aria-hidden="true">“</span>
         <p>
           {isBsa
             ? bsaCase.quote
-            : "[Client quote about working together and the result. Two or three lines.]"}
+            : showMock ? "We needed a website that made the idea easy to understand and gave our team the confidence to keep it moving. The result feels clear, considered and easy to build on." : "[Client quote about working together and the result. Two or three lines.]"}
         </p>
-        <cite>{isBsa ? bsaCase.quoteAttribution : "[Name], [Role]"}</cite>
+        <cite><Icon name="chat" />{isBsa ? bsaCase.quoteAttribution : showMock ? "Sample client, fictional testimonial" : "[Name], [Role]"}</cite>
       </blockquote>
     </div>
     <aside class="case-sidebar">
@@ -203,7 +228,7 @@ const metrics = isBsa
             ["Market", p.location],
             ["Services", isBsa ? bsaCase.services : p.category],
             ["Timeline", isBsa ? bsaCase.timeline : "[X] weeks"],
-            ["Stack", (isBsa ? bsaCase.stack : p.tools).join(", ")],
+
           ].map(([key, value]) => (
             <div>
               <dt>{key}</dt>
@@ -211,6 +236,10 @@ const metrics = isBsa
             </div>
           ))}
         </dl>
+        <div class="snapshot-stack">
+          <h3><Icon name="category-web" />Stack</h3>
+          <div class="chips">{stack.map((tool) => <ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool) ? undefined : toolIcon(tool)} />)}</div>
+        </div>
       </div>
       <div class="case-sidebar-cta">
         <h2>Need a site that brings in qualified leads?</h2>
@@ -225,53 +254,6 @@ const metrics = isBsa
       </div>
     </aside>
   </div>
-  <section class="case-gallery page-section">
-    <h2>Asset gallery</h2>
-    <div class="gallery-primary">
-      <div></div>
-      <div></div>
-    </div>
-    <div class="gallery-secondary">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </section>
-  <section class="case-specimens page-section">
-    <h2>Design System</h2>
-    <div>
-      {["Buttons", "Inputs", "Cards", "Typography", "Icons"].map((label) => (
-        <figure>
-          <div></div>
-          <figcaption>{label}</figcaption>
-        </figure>
-      ))}
-    </div>
-  </section>
-  <section class="case-architecture page-section">
-    <h2>Architecture &amp; Integrations</h2>
-    <div>
-      <p>
-        Simplified diagram: Headless CMS <Icon name="arrow-right" /> API{" "}
-        <Icon name="arrow-right" /> Front-end <Icon name="arrow-right" />{" "}
-        Automated forms <Icon name="arrow-right" /> CRM.
-      </p>
-    </div>
-  </section>
-  <section class="case-responsive page-section">
-    <h2>Responsive</h2>
-    <div>
-      <div></div>
-      <div></div>
-    </div>
-  </section>
-  <section class="case-stack page-section">
-    <h2>Stack &amp; integrations</h2>
-    <div class="chips">
-      {(isBsa ? bsaCase.integrations : p.tools).map((tool) => (
-        <ToolChip label={tool} logo={logoFor(tool)} size="m" />
-      ))}
-    </div>
-  </section>
+  <CaseShowcase project={p} liveUrl={liveUrl} />
   <RelatedProjects projects={related} />
 </Base>

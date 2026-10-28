@@ -4,7 +4,7 @@ onPageLoad(({ signal, cleanup }) => {
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   document.querySelectorAll<HTMLElement>(
-    '.action:not(.action--secondary):not(.case-sidebar-cta .action), .project-media-frame',
+    '.action:not(.action--secondary), .project-media-frame',
   ).forEach((button) => {
     let frame = 0;
     let x = 50;

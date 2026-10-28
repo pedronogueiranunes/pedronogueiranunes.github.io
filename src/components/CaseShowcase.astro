@@ -1,0 +1,114 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "./Icon.astro";
+import ToolChip from "./ToolChip.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import { logoFor } from "../data/home";
+interface Props { project: CollectionEntry<"projects">["data"]; liveUrl?: string; }
+const { project: p, liveUrl } = Astro.props;
+const preview = import.meta.env.DEV;
+const cover = p.cover || p.image;
+const galleryMock = !p.gallery.length;
+const gallery = p.gallery.length ? p.gallery : preview ? Array.from({ length: 8 }, (_, i) => ({ src: cover, alt: p.title, caption: "Screenshot detail", position: `${Math.round(i * 100 / 7)}%` })) : [];
+const dsMock = !p.designSystem;
+// TODO: Replace preview tokens with each project's verified designSystem frontmatter.
+const ds = p.designSystem || (preview ? {
+  colors: [{name:"Primary",value:"#173B30"},{name:"Surface",value:"#F4F7F0"},{name:"Ink",value:"#18251E"},{name:"Accent",value:"#B8D888"}],
+  fontFamily: "Manrope", headingWeight: 700, radius: 12, buttonLabel: "Explore the project",
+} : undefined);
+const architectureMock = !p.architecture.length;
+const architecture = p.architecture.length ? p.architecture : preview ? [
+  {title:"Content & assets",body:"Reusable content, images and editorial updates.",icon:"grid2"},
+  {title:"Website & interactions",body:"Responsive pages, shared components and motion.",icon:"category-web"},
+  {title:"Forms & follow-up",body:"Enquiries routed to the team for the next step.",icon:"email"},
+  {title:"Measurement",body:"Events and reports to review visitor journeys.",icon:"chart"},
+] : [];
+const roleFor = (tool: string) => /figma|illustrator/i.test(tool) ? "Design" : /gsap|javascript/i.test(tool) ? "Interactions" : /ga4|gtm/i.test(tool) ? "Measurement" : /hubspot|zapier|memberstack/i.test(tool) ? "Integrations" : "Development";
+const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test(tool) ? "category-experiment" : "category-web";
+---
+{gallery.length > 0 && <section class="case-gallery case-section page-section" data-case-gallery>
+  <header class="case-section-heading"><h2>Asset gallery</h2><span class="case-section-meta">{String(gallery.length).padStart(2,"0")}</span></header>
+  {galleryMock && <p class="case-fixture-note">Layout preview using crops of the existing screenshot.</p>}
+  <div class="case-gallery-grid">
+    {gallery.map((asset, index) => <figure class:list={["case-gallery-item", {"case-gallery-item--wide": index === 0}]}>
+      <button type="button" class="case-gallery-open" data-gallery-src={asset.src} data-gallery-alt={asset.alt} data-gallery-caption={`${asset.caption} ${String(index+1).padStart(2,"0")}`} aria-label={`View image ${index+1}`}>
+        <img src={asset.src} alt={asset.alt} loading="lazy" decoding="async" style={`object-position: center ${"position" in asset ? asset.position : "top"}`} />
+        <span class="case-gallery-expand"><Icon name="expand" size={18} /></span>
+      </button>
+      <figcaption><span>{asset.caption}</span><small>{String(index+1).padStart(2,"0")}</small></figcaption>
+    </figure>)}
+  </div>
+  <dialog class="case-lightbox" aria-label="Image viewer">
+    <div class="case-lightbox-bar"><p data-gallery-caption></p><button type="button" data-gallery-close aria-label="Close image"><Icon name="close" size={20}/></button></div>
+    <div class="case-lightbox-image"><img alt="" /></div>
+    <div class="case-lightbox-controls"><button type="button" data-gallery-prev aria-label="Previous image"><Icon name="arrow-left"/></button><output data-gallery-counter></output><button type="button" data-gallery-next aria-label="Next image"><Icon name="arrow-right"/></button><button type="button" data-gallery-fullscreen aria-label="Full screen"><Icon name="fullscreen"/></button></div>
+  </dialog>
+</section>}
+{ds && <section class="case-design-system case-section page-section" style={`--project-primary:${ds.colors[0]?.value || "#173B30"};--project-surface:${ds.colors[1]?.value || "#F4F7F0"};--project-ink:${ds.colors[2]?.value || "#18251E"};--project-radius:${ds.radius}px;--project-font:${ds.fontFamily};--project-weight:${ds.headingWeight}`}>
+  <header class="case-section-heading"><h2>Design System</h2><Icon name="grid2"/></header>
+  {dsMock && <p class="case-fixture-note">Sample tokens for layout review. Replace with project values.</p>}
+  <div class="case-ds-grid">
+    <article class="case-ds-colors"><h3>Color palette</h3><div>{ds.colors.map(color=><figure><div style={`background:${color.value}`}></div><figcaption><span>{color.name}</span><code>{color.value}</code></figcaption></figure>)}</div></article>
+    <article class="case-ds-type"><h3>Typography</h3><span class="case-ds-letter">Aa</span><p>{ds.fontFamily}</p><small>ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>abcdefghijklmnopqrstuvwxyz<br/>0123456789</small></article>
+    <article class="case-ds-controls"><h3>Buttons & inputs</h3><div><button type="button" class="case-ds-button">{ds.buttonLabel}<Icon name="arrow-right"/></button><label>Email<input type="email" placeholder="hello@example.com" readonly /></label></div></article>
+    <article class="case-ds-card"><h3>Cards & details</h3><div><Icon name="category-brand" size={28}/><strong>{p.title.split(":")[0]}</strong><p>{p.category}</p><div class="case-ds-icons"><Icon name="arrow-right"/><Icon name="check"/><Icon name="plus"/><Icon name="email"/></div></div></article>
+  </div>
+</section>}
+{architecture.length > 0 && <section class="case-system-map case-section page-section">
+  <header class="case-section-heading"><h2>Architecture &amp; Integrations</h2><Icon name="category-web"/></header>
+  {architectureMock && <p class="case-fixture-note">Illustrative architecture. Confirm the project implementation.</p>}
+  <ol class="case-architecture-flow">{architecture.map((node,index)=><li><div class="case-node-icon"><Icon name={node.icon} size={24}/></div><small>{String(index+1).padStart(2,"0")}</small><h3>{node.title}</h3><p>{node.body}</p>{index < architecture.length-1 && <span class="case-node-arrow"><Icon name="arrow-right"/></span>}</li>)}</ol>
+</section>}
+<section class="case-devices case-section page-section">
+  <header class="case-section-heading"><h2>Responsive</h2><Icon name="expand"/></header>
+  <div class="case-device-grid">
+    {[{name:"Desktop",width:1440,height:900},{name:"Mobile",width:390,height:720}].map(device=><article class:list={["case-device",{"case-device--mobile":device.name==="Mobile"}]} data-device-width={device.width} data-device-height={device.height}>
+      <header><h3>{device.name}</h3><small>{device.width}px</small></header>
+      <div class="case-device-viewport" style={`--device-ratio:${device.width}/${device.height}`}>
+        <ResponsiveImage src={cover} width={1312} height={800} alt={`${p.title} website`} loading="lazy" sizes="(max-width: 768px) 100vw, 70vw"/>
+        <button type="button" class="case-device-load" data-embed-url={liveUrl} disabled={!liveUrl}><Icon name="category-web"/><span>Load live preview</span></button>
+      </div>
+      <div class="case-device-actions">{liveUrl && <a href={liveUrl} class="case-device-fallback">Open site<Icon name="arrow-up-right" size={14}/></a>}<button type="button" data-embed-reset hidden>Back to thumbnail</button></div>
+    </article>)}
+  </div>
+  <p class="case-fixture-note">Live previews load on click. If embedding is blocked, open the site directly.</p>
+</section>
+<section class="case-stack-details case-section page-section">
+  <header class="case-section-heading"><h2>Stack &amp; integrations</h2><Icon name="grid2"/></header>
+  <div class="case-stack-grid">{p.tools.map(tool=><article><ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool)?undefined:iconFor(tool)} size="m"/><span>{roleFor(tool)}</span></article>)}</div>
+</section>
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  onPageLoad(scope=>{
+    const gallery = document.querySelector<HTMLElement>("[data-case-gallery]");
+    const dialog = gallery?.querySelector<HTMLDialogElement>("dialog");
+    if(gallery && dialog){
+      const triggers = Array.from(gallery.querySelectorAll<HTMLButtonElement>("[data-gallery-src]"));
+      const image=dialog.querySelector<HTMLImageElement>(".case-lightbox-image img")!;
+      let active=0; let opener:HTMLButtonElement|undefined;
+      const show=(index:number)=>{active=(index+triggers.length)%triggers.length;const item=triggers[active];image.src=item.dataset.gallerySrc!;image.alt=item.dataset.galleryAlt!;dialog.querySelector("[data-gallery-caption]")!.textContent=item.dataset.galleryCaption!;dialog.querySelector("[data-gallery-counter]")!.textContent=`${active+1} / ${triggers.length}`;};
+      triggers.forEach((button,index)=>button.addEventListener("click",()=>{opener=button;show(index);dialog.showModal();},{signal:scope.signal}));
+      dialog.querySelector("[data-gallery-close]")?.addEventListener("click",()=>dialog.close(),{signal:scope.signal});
+      dialog.querySelector("[data-gallery-prev]")?.addEventListener("click",()=>show(active-1),{signal:scope.signal});
+      dialog.querySelector("[data-gallery-next]")?.addEventListener("click",()=>show(active+1),{signal:scope.signal});
+      const fullscreenButton=dialog.querySelector<HTMLButtonElement>("[data-gallery-fullscreen]")!;
+      fullscreenButton.hidden=!document.fullscreenEnabled;
+      fullscreenButton.addEventListener("click",async()=>{try {if(document.fullscreenElement)await document.exitFullscreen();else await dialog.requestFullscreen();}catch{/* The dialog remains usable when fullscreen is unavailable. */}},{signal:scope.signal});
+      dialog.addEventListener("keydown",event=>{if(event.key==="ArrowRight"){event.preventDefault();show(active+1);}if(event.key==="ArrowLeft"){event.preventDefault();show(active-1);}},{signal:scope.signal});
+      dialog.addEventListener("close",()=>{if(document.fullscreenElement===dialog)void document.exitFullscreen().catch(()=>{});image.removeAttribute("src");opener?.focus();},{signal:scope.signal});
+      dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();},{signal:scope.signal});
+      scope.cleanup(()=>{if(dialog.open)dialog.close();});
+    }
+    document.querySelectorAll<HTMLElement>(".case-device").forEach(device=>{
+      const container=device.querySelector<HTMLElement>(".case-device-viewport")!;
+      const button=device.querySelector<HTMLButtonElement>("[data-embed-url]")!;
+      const reset=device.querySelector<HTMLButtonElement>("[data-embed-reset]")!;
+      let frame:HTMLIFrameElement|undefined;
+      reset.addEventListener("click",()=>{frame?.remove();frame=undefined;button.hidden=false;reset.hidden=true;button.focus();},{signal:scope.signal});
+      const resize=()=>{if(!frame)return;const width=Number(device.dataset.deviceWidth);const height=Number(device.dataset.deviceHeight);const scale=container.clientWidth/width;frame.style.width=`${width}px`;frame.style.height=`${height}px`;frame.style.transform=`scale(${scale})`;};
+      const observer=new ResizeObserver(resize);observer.observe(container);
+      button.addEventListener("click",()=>{if(frame || !button.dataset.embedUrl)return;frame=document.createElement("iframe");frame.title=device.querySelector("h3")!.textContent!;frame.src=button.dataset.embedUrl;frame.setAttribute("sandbox","allow-scripts allow-same-origin");frame.setAttribute("referrerpolicy","no-referrer");container.append(frame);resize();button.hidden=true;reset.hidden=false;},{signal:scope.signal});
+      scope.cleanup(()=>{observer.disconnect();frame?.remove();});
+    });
+  });
+</script>

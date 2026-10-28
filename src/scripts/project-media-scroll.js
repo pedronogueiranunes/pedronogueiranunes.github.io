@@ -11,7 +11,7 @@ export function initScrollPreviews() {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const cleanups = [];
 
-  const setup = ({ trigger, frame, track, toggleClass, delay, halfCycle }) => {
+  const setup = ({ trigger, frame, track, toggleClass, delay, halfCycle, immediate = false }) => {
     if (!trigger || !frame || !track) return;
     let frameId = 0;
     let openedAt = 0;
@@ -29,7 +29,7 @@ export function initScrollPreviews() {
       const t = elapsed % cycle;
       const progress = t <= halfCycle ? t / halfCycle : (cycle - t) / halfCycle;
       const distance = Math.max(0, track.offsetHeight - frame.clientHeight);
-      offset = easeInOut(progress) * distance;
+      offset = (immediate ? progress : easeInOut(progress)) * distance;
       track.style.translate = `0 ${(-offset).toFixed(1)}px`;
       frameId = requestAnimationFrame(pan);
     };
@@ -105,6 +105,7 @@ export function initScrollPreviews() {
       track: mockup.querySelector(".browser-mockup-track"),
       delay: 0,
       halfCycle: BROWSER_HALF_CYCLE,
+      immediate: true,
     });
   });
 
