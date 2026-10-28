@@ -25,9 +25,15 @@
       let width=0,height=0,x=0,y=0,radius=0,frame=0,last=0,elapsed=0,visible=false,active=false;
       // Offer cards get a dotted orbit around the icon, echoing the shoulder
       // ring on the 3D portrait; the other cards keep the expanding rings.
-      let intensity=0,orbitX=0,orbitY=0,orbitRX=0,orbitRY=0,ink='#111111';
+      let intensity=0,orbitX=0,orbitY=0,orbitRX=0,orbitRY=0;
       const ORBIT_DOTS=84;
       const ORBIT_SPEED=0.45; // rad/s
+      const ORBIT_TILT=-24*Math.PI/180; // Saturn-style incline
+      const ORBIT_INK='#FF5A1F';
+      // Silhouette of the dithered icon: the back half of the ring passes
+      // behind the artwork instead of painting over it.
+      let iconMask:Uint8Array|null=null, iconMaskW=0, iconMaskH=0;
+      let iconLeft=0, iconTop=0, iconWidth=0, iconHeight=0;
       const measure=()=>{
         const bounds=card.getBoundingClientRect(), artBounds=art.getBoundingClientRect();
         width=card.clientWidth;height=card.clientHeight;
@@ -37,12 +43,14 @@
         x=artBounds.left-bounds.left+artBounds.width*.5;
         y=artBounds.top-bounds.top+artBounds.height*.5;
         if(offer){
-          // A shallow ellipse reads as a horizontal orbit, like the 3D ring.
-          // Dots use the card's own text ink so they stay visible over both the
-          // orange dither and the white or dark card background.
+          // Inclined ellipse: dots travel around the icon like a ring around a
+          // planet, slightly past the artwork on every side.
           orbitX=x;orbitY=y+artBounds.height*.02;
-          orbitRX=artBounds.width*.65;orbitRY=artBounds.width*.55;
-          ink=getComputedStyle(card).color;
+          orbitRX=artBounds.width*.75;orbitRY=artBounds.width*.55;
+          iconLeft=artBounds.left-bounds.left;
+          iconTop=artBounds.top-bounds.top;
+          iconWidth=artBounds.width;iconHeight=artBounds.height;
+          iconMask=null;
         }
         if(growth){
           const orbit=card.querySelector('.your-turn-orbit')?.getBoundingClientRect();
@@ -50,15 +58,47 @@
         }
         radius=Math.max(Math.hypot(x,y),Math.hypot(width-x,y),Math.hypot(x,height-y),Math.hypot(width-x,height-y));
       };
+      const buildMask=()=>{
+        if(!offer || iconMask || !art.hasAttribute('data-dither-ready')) return;
+        try{
+          iconMaskW=icon.width;iconMaskH=icon.height;
+          if(!iconMaskW || !iconMaskH) return;
+          const data=icon.getContext('2d')!.getImageData(0,0,iconMaskW,iconMaskH).data;
+          const base=new Uint8Array(iconMaskW*iconMaskH);
+          for(let i=0;i<base.length;i++) if(data[i*4+3]>40) base[i]=1;
+          const mask=new Uint8Array(base.length);
+          // Grow the silhouette so back dots do not peek through the dither gaps.
+          for(let y2=0;y2<iconMaskH;y2++) for(let x2=0;x2<iconMaskW;x2++){
+            if(!base[y2*iconMaskW+x2]) continue;
+            for(let dy=-2;dy<=2;dy++) for(let dx=-2;dx<=2;dx++){
+              const nx=x2+dx, ny=y2+dy;
+              if(nx>=0 && ny>=0 && nx<iconMaskW && ny<iconMaskH) mask[ny*iconMaskW+nx]=1;
+            }
+          }
+          iconMask=mask;
+        }catch{iconMask=null;}
+      };
+      const insideIcon=(px:number,py:number)=>{
+        if(!iconMask || !iconWidth || !iconHeight) return false;
+        const mx=Math.round((px-iconLeft)/iconWidth*iconMaskW);
+        const my=Math.round((py-iconTop)/iconHeight*iconMaskH);
+        if(mx<0||my<0||mx>=iconMaskW||my>=iconMaskH) return false;
+        return iconMask[my*iconMaskW+mx]===1;
+      };
       const drawOrbit=(alpha:number)=>{
-        ctx.fillStyle=ink;
+        buildMask();
+        const cosT=Math.cos(ORBIT_TILT), sinT=Math.sin(ORBIT_TILT);
+        ctx.fillStyle=ORBIT_INK;
         for(let i=0;i<ORBIT_DOTS;i++){
           const angle=elapsed*ORBIT_SPEED+(i/ORBIT_DOTS)*Math.PI*2;
+          const ex=Math.cos(angle)*orbitRX, ey=Math.sin(angle)*orbitRY;
           const depth=Math.sin(angle); // 1 = front of the orbit, -1 = behind the icon
-          const px=orbitX+Math.cos(angle)*orbitRX;
-          const py=orbitY+depth*orbitRY;
-          const size=2.2+Math.max(0,depth)*1.5;
-          ctx.globalAlpha=alpha*(.4+.45*((depth+1)/2));
+          const px=orbitX+ex*cosT-ey*sinT;
+          const py=orbitY+ex*sinT+ey*cosT;
+          // The back half of the ring hides behind the artwork.
+          if(depth<0 && insideIcon(px,py)) continue;
+          const size=2.4+Math.max(0,depth)*1.8;
+          ctx.globalAlpha=alpha*(.35+.5*((depth+1)/2));
           ctx.fillRect(px-size/2,py-size/2,size,size);
         }
         ctx.globalAlpha=1;
@@ -102,7 +142,7 @@
       const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(autoAnimate()) active=true;if(visible){measure();start();}else stop();});observer.observe(card);
       card.addEventListener('pointerenter',()=>{
         if (!hover.matches) return;
-        active=true;elapsed=0;measure();start();
+        active=true;elapsed=0;measure();buildMask();start();
       },{signal:scope.signal});
       card.addEventListener('pointerleave',()=>{
         active=autoAnimate();
