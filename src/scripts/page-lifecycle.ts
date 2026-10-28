@@ -19,8 +19,16 @@ export function onPageLoad(init: (scope: PageScope) => void) {
         return id;
       },
       idle: (fn) => {
-        const id = window.requestIdleCallback(() => { if (!controller.signal.aborted) fn(); }, { timeout: 4000 });
-        cleanups.push(() => window.cancelIdleCallback(id));
+        // requestIdleCallback is missing in Safari before 15.4 and in some
+        // embedded webviews. Defer to a timed callback there so every route
+        // schedules idle work the same way and none has to feature-detect.
+        if (typeof window.requestIdleCallback === "function") {
+          const id = window.requestIdleCallback(() => { if (!controller.signal.aborted) fn(); }, { timeout: 4000 });
+          cleanups.push(() => window.cancelIdleCallback?.(id));
+          return;
+        }
+        const id = window.setTimeout(() => { if (!controller.signal.aborted) fn(); }, 1000);
+        cleanups.push(() => clearTimeout(id));
       },
     };
     dispose = () => {
