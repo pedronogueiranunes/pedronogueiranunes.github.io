@@ -22,7 +22,11 @@ const { source } = Astro.props;
       const ctx = canvas.getContext('2d');
       if (!image || !card || !ctx) return;
       const growth = art.classList.contains('your-turn-growth');
+      const offer = art.classList.contains('offer-art');
       const detailed = art.classList.contains('comparison-illustration') || growth;
+      // Offer icons are smaller than the Home artwork, so they get the finer
+      // comparison treatment to keep the 3D shapes readable.
+      const fineGrain = detailed || offer;
       const artwork = canvas.dataset.source ? new Image() : image;
       if (canvas.dataset.source) artwork.src = canvas.dataset.source;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -44,8 +48,8 @@ const { source } = Astro.props;
           // Keep highlights open and shade the existing 3D contours with orange ink.
           const wave = phase ? (Math.sin(x*.085+y*.05-phase*4.4 + mouseX*2)*.22 + Math.cos(y*.09-phase*3.2+mouseY*2)*.09) : 0;
           // Finer comparison icons retain the deep shadows and open highlights of the source.
-          const tone = growth ? .08 + luminance*2.6 : detailed ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
-          const ink = Math.max(0, Math.min(1, (tone + wave*(detailed ? .35 : 1))*alpha));
+          const tone = growth ? .08 + luminance*2.6 : fineGrain ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+          const ink = Math.max(0, Math.min(1, (tone + wave*(fineGrain ? .35 : 1))*alpha));
           if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
             output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
           }
@@ -65,8 +69,9 @@ const { source } = Astro.props;
         const style=getComputedStyle(image);
         for (const name of ['width','height','top','left','scale','transform-origin','mask-image','mask-size','mask-repeat','mask-position']) canvas.style.setProperty(name,style.getPropertyValue(name));
         if (detailed) { canvas.style.top='0px'; canvas.style.left='0px'; }
-        // Comparison details use one CSS pixel per dot; hero cards keep the bolder two-pixel texture.
-        const dotSize=detailed ? 1 : 2;
+        // Comparison details and offer icons use one CSS pixel per dot so their
+        // shapes stay legible; Home hero cards keep the bolder two-pixel texture.
+        const dotSize=fineGrain ? 1 : 2;
         width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
         height=Math.max(1,Math.round(parseFloat(style.height)/dotSize));
         canvas.width=width; canvas.height=height;
