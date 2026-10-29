@@ -613,6 +613,8 @@ img {
   padding: 12px 0;
   color: inherit;
   font: 700 20px/28px var(--font-display);
+  /* Title, number and divider ease in together on hover. */
+  transition: color 260ms ease, box-shadow 260ms ease;
 }
 .nav-row + .nav-row {
   box-shadow: inset 0 1px #232625;
@@ -626,11 +628,19 @@ img {
 .nav-row:focus-visible {
   color: var(--accent-ink);
 }
+/* The divider under a hovered row and its number turn orange with the title. */
+.nav-row:is(:hover, :focus-visible) + .nav-row {
+  box-shadow: inset 0 1px var(--accent-ink);
+}
+.nav-row:is(:hover, :focus-visible) small {
+  color: var(--accent-ink);
+}
 .nav-row small {
   flex-shrink: 0;
   font: 400 12px/16px var(--font-mono);
   letter-spacing: 0.05em;
   color: #d2d9b8;
+  transition: color 260ms ease;
 }
 .nav-panel--wide .nav-list {
   width: 460px;
