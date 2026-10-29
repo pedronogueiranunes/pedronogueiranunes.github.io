@@ -460,7 +460,9 @@ img {
 @property --w10 { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --w11 { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --w12 { syntax: "<length>"; inherits: true; initial-value: 0px; }
-.site-logo__char { display: inline-block; transform: translateY(var(--wave, 0px)); }
+/* Letters move along the depth axis, so the whole extruded letter slides back and forth. */
+.site-logo__layer { transform-style: preserve-3d; }
+.site-logo__char { display: inline-block; transform: translateZ(var(--wave, 0px)); }
 /* Without this, an instant pose change skips the transition (used after the menu closes). */
 .site-logo.no-transition .site-logo__model, .site-logo.no-transition .site-logo__layer { transition: none !important; }
 /* Mobile menu open: the logo turns to face the camera and drops its extrusion. */

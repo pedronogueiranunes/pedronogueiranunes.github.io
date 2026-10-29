@@ -261,7 +261,7 @@ import LogoModel from "./LogoModel.astro";
       { duration: 520, easing: "ease-out" },
     );
   }, { signal: scope.signal });
-  // Hover wave: letters bob in sequence, starting from the one closest to where the pointer came in.
+  // Hover wave: letters sway back and forth in depth, in sequence, starting from the one closest to where the pointer came in.
   const waveLogo = document.querySelector<HTMLElement>(".site-nav .site-logo");
   const waveModel = waveLogo?.querySelector<HTMLElement>(".site-logo__model");
   const faceChars = [...(waveLogo?.querySelectorAll<HTMLElement>(".site-logo__layer:first-child .site-logo__char") ?? [])];
@@ -275,10 +275,15 @@ import LogoModel from "./LogoModel.astro";
       waves = faceChars.map((char, index) => {
         const box = char.getBoundingClientRect();
         const distance = Math.hypot(event.clientX - (box.left + box.width / 2), event.clientY - (box.top + box.height / 2));
-        // ponytail: 4ms of delay per px from the pointer; raise it for a slower ripple.
+        // ponytail: 6ms of delay per px from the pointer; raise it for a slower ripple.
         return waveModel.animate(
-          [{ [`--w${index}`]: "0px" }, { [`--w${index}`]: "-6px", offset: .3 }, { [`--w${index}`]: "2px", offset: .6 }, { [`--w${index}`]: "0px" }],
-          { duration: 720, delay: distance * 4, iterations: Infinity, easing: "ease-in-out" },
+          [
+            { [`--w${index}`]: "0px", easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "-12px", offset: .4, easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "4px", offset: .75, easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "0px" },
+          ],
+          { duration: 1400, delay: distance * 6, iterations: Infinity },
         );
       });
     }, { signal: scope.signal });
