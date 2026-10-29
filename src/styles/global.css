@@ -447,7 +447,7 @@ img {
   /* ponytail: 56 layers x 2px = 112px deep; fewer layers if text rendering ever gets heavy. */
   transform: translateZ(calc(var(--depth) * -2px));
   /* Light extrusion that fades into the bar, so the front face carries the weight. */
-  color: color-mix(in srgb, var(--accent-ink) calc(max(8%, 34% - var(--depth) * .5%)), var(--surface));
+  color: color-mix(in srgb, var(--accent-ink) calc(max(5%, 22% - var(--depth) * .32%)), var(--surface));
 }
 .site-logo__layer:not(:first-child) {
   position: absolute;
