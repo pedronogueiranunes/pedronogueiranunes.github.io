@@ -238,29 +238,6 @@ import LogoModel from "./LogoModel.astro";
   const dialog = document.querySelector<HTMLDialogElement>("#mobile-menu")!;
   const trigger = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  // Click on the logo: the face blinks and the model is pushed back, then springs into place.
-  // The header persists across navigation, so the animation keeps running on the next page.
-  const pushLogo = document.querySelector<HTMLElement>(".site-nav .site-logo");
-  pushLogo?.addEventListener("click", (event) => {
-    if (reducedMotion.matches || event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
-    const model = pushLogo.querySelector<HTMLElement>(".site-logo__model");
-    const face = pushLogo.querySelector<HTMLElement>(".site-logo__layer");
-    model?.animate(
-      [
-        { transform: "none" },
-        { transform: "translate(8px, -12px) scale(.74) rotateX(18deg) rotateY(-10deg)", offset: .18 },
-        { transform: "translate(-3px, 4px) scale(1.12) rotateX(-6deg)", offset: .42 },
-        { transform: "translate(1px, -2px) scale(.95) rotateX(3deg)", offset: .62 },
-        { transform: "scale(1.03)", offset: .8 },
-        { transform: "none" },
-      ],
-      { duration: 950, easing: "cubic-bezier(.2,.7,.2,1)", composite: "add" },
-    );
-    face?.animate(
-      [{ opacity: 1 }, { opacity: .45, offset: .18 }, { opacity: 1, offset: .4 }, { opacity: .8, offset: .55 }, { opacity: 1 }],
-      { duration: 520, easing: "ease-out" },
-    );
-  }, { signal: scope.signal });
   // Hover wave: letters sway back and forth in depth, in sequence, starting from the one closest to where the pointer came in.
   const waveLogo = document.querySelector<HTMLElement>(".site-nav .site-logo");
   const waveModel = waveLogo?.querySelector<HTMLElement>(".site-logo__model");
