@@ -1,0 +1,106 @@
+---
+import Icon from "./Icon.astro";
+interface Props { name: string }
+const { name } = Astro.props;
+---
+<div class="stack-glyph" aria-hidden="true"><span class="stack-glyph__fallback"><Icon name={name} size={48}/></span><canvas width="96" height="96"></canvas></div>
+<style is:global>
+.stack-glyph { position:relative; width:56px; height:56px; flex:none; color:#ff5a1f; }
+.stack-glyph__fallback, .stack-glyph canvas { position:absolute; inset:0; width:100%; height:100%; }
+.stack-glyph__fallback { display:grid; place-items:center; }
+.stack-glyph canvas { display:block; image-rendering:pixelated; }
+.stack-glyph.is-ready .stack-glyph__fallback { visibility:hidden; }
+</style>
+<script>
+import { onPageLoad } from "../scripts/page-lifecycle";
+const GRID=24, SIZE=96, DEPTH=4;
+const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+onPageLoad((scope)=>{
+  document.querySelectorAll<HTMLElement>(".stack-glyph").forEach((root)=>{
+    const canvas=root.querySelector<HTMLCanvasElement>("canvas");
+    const svg=root.querySelector<SVGSVGElement>("svg");
+    const card=root.closest<HTMLElement>("article");
+    const ctx=canvas?.getContext("2d",{willReadFrequently:true});
+    if(!canvas||!svg||!card||!ctx) return;
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+    const fine=matchMedia("(hover: hover) and (pointer: fine)");
+    const source=document.createElement("canvas"); source.width=source.height=GRID;
+    const sourceCtx=source.getContext("2d",{willReadFrequently:true});
+    if(!sourceCtx) return;
+    const clone=svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("width",String(GRID)); clone.setAttribute("height",String(GRID));
+    clone.setAttribute("color","#000");
+    const image=new Image();
+    let mask:Uint8Array|null=null, raf=0, yaw=0, last=0, hovering=false, visible=true;
+    const paint=()=>{
+      if(!mask)return;
+      ctx.clearRect(0,0,SIZE,SIZE);
+      const cos=Math.cos(yaw), sin=Math.sin(yaw), scale=3.15;
+      const project=(x:number,y:number,z:number)=>{
+        const px=x-GRID/2, pz=z-DEPTH/2;
+        const xx=px*cos+pz*sin, zz=-px*sin+pz*cos;
+        const perspective=80/(80-zz);
+        return [SIZE/2+xx*scale*perspective,SIZE/2+(y-GRID/2)*scale*perspective,zz];
+      };
+      const faces:{p:number[][]; z:number; shade:number; front:boolean}[]=[];
+      const add=(p:number[][],shade:number,front=false)=>faces.push({p,z:p.reduce((n,v)=>n+v[2],0)/p.length,shade,front});
+      const occupied=(x:number,y:number)=>x>=0&&y>=0&&x<GRID&&y<GRID&&mask![y*GRID+x]!==0;
+      for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){
+        if(!occupied(x,y))continue;
+        const z=cos>=0?DEPTH:0;
+        add([project(x,y,z),project(x+1,y,z),project(x+1,y+1,z),project(x,y+1,z)],0,true);
+        if(!occupied(x-1,y))add([project(x,y,0),project(x,y+1,0),project(x,y+1,DEPTH),project(x,y,DEPTH)],0.35+0.4*Math.max(0,-sin));
+        if(!occupied(x+1,y))add([project(x+1,y,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x+1,y,DEPTH)],0.35+0.4*Math.max(0,sin));
+        if(!occupied(x,y-1))add([project(x,y,0),project(x+1,y,0),project(x+1,y,DEPTH),project(x,y,DEPTH)],0.62);
+        if(!occupied(x,y+1))add([project(x,y+1,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x,y+1,DEPTH)],0.3);
+      }
+      faces.sort((a,b)=>a.z-b.z);
+      for(const face of faces){
+        ctx.beginPath();ctx.moveTo(face.p[0][0],face.p[0][1]);
+        for(let i=1;i<face.p.length;i++)ctx.lineTo(face.p[i][0],face.p[i][1]);
+        ctx.closePath();
+        const shade=face.front?255:Math.round(65+face.shade*120);
+        ctx.fillStyle=`rgb(${shade},${shade},${shade})`;ctx.fill();
+        if(face.front){ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.6;ctx.stroke();}
+      }
+      const pixels=ctx.getImageData(0,0,SIZE,SIZE);
+      for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){
+        const i=(y*SIZE+x)*4;if(!pixels.data[i+3])continue;
+        const value=pixels.data[i];
+        if(value>245){pixels.data[i]=255;pixels.data[i+1]=90;pixels.data[i+2]=31;}
+        else {
+          const dot=(BAYER[(y%4)*4+x%4]+.5)/16;
+          const light=value/255>dot;
+          pixels.data[i]=light?255:194;pixels.data[i+1]=light?90:54;pixels.data[i+2]=light?31:18;
+        }
+      }
+      ctx.putImageData(pixels,0,0);
+    };
+    const tick=(now:number)=>{
+      raf=0;if(reduced.matches||document.hidden||!visible)return;
+      const dt=Math.min((now-last)/1000,.05);last=now;
+      if(hovering) yaw+=dt*2.0;
+      else { const angle=Math.atan2(Math.sin(yaw),Math.cos(yaw)); yaw=angle*(1-Math.min(1,dt*7)); }
+      paint();
+      if(hovering||Math.abs(yaw)>.005)raf=requestAnimationFrame(tick);
+      else {yaw=0;paint();}
+    };
+    const start=()=>{if(!raf&&mask&&!reduced.matches&&visible&&!document.hidden){last=performance.now();raf=requestAnimationFrame(tick);}};
+    const stop=()=>{if(raf)cancelAnimationFrame(raf);raf=0;};
+    image.onload=()=>{
+      if(scope.signal.aborted)return;
+      sourceCtx.clearRect(0,0,GRID,GRID);sourceCtx.drawImage(image,0,0,GRID,GRID);
+      const data=sourceCtx.getImageData(0,0,GRID,GRID).data;
+      mask=new Uint8Array(GRID*GRID);for(let i=0;i<mask.length;i++)mask[i]=data[i*4+3]>100?1:0;
+      paint();root.classList.add("is-ready");if(hovering)start();
+    };
+    image.src=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(clone))}`;
+    card.addEventListener("pointerenter",()=>{if(fine.matches){hovering=true;start();}},{signal:scope.signal});
+    card.addEventListener("pointerleave",()=>{hovering=false;start();},{signal:scope.signal});
+    const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(!visible)stop();else if(hovering||Math.abs(yaw)>.005)start();});io.observe(card);
+    reduced.addEventListener("change",()=>{if(reduced.matches){stop();yaw=0;paint();}else start();},{signal:scope.signal});
+    document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(hovering||Math.abs(yaw)>.005)start();},{signal:scope.signal});
+    scope.cleanup(()=>{stop();io.disconnect();image.onload=null;root.classList.remove("is-ready");});
+  });
+});
+</script>

@@ -20,3 +20,41 @@ const { items } = Astro.props;
     </details>
   ))}
 </div>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  onPageLoad((scope) => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    document.querySelectorAll<HTMLDetailsElement>(".faq-list details").forEach((details) => {
+      const summary = details.querySelector<HTMLElement>("summary");
+      if (!summary) return;
+      let animation: Animation | null = null;
+      let closing = false;
+      summary.addEventListener("click", (event) => {
+        if (reduced.matches) return;
+        event.preventDefault();
+        const start = details.getBoundingClientRect().height;
+        const open = !details.open || closing;
+        animation?.cancel();
+        closing = !open;
+        details.style.overflow = "hidden";
+        details.style.height = `${start}px`;
+        if (open) details.open = true;
+        details.style.height = "auto";
+        const style = getComputedStyle(details);
+        const closedHeight = summary.offsetHeight + parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+        const end = open ? details.getBoundingClientRect().height : closedHeight;
+        details.style.height = `${start}px`;
+        animation = details.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration: 260, easing: "cubic-bezier(.2,.7,.2,1)" });
+        animation.onfinish = () => {
+          details.open = open;
+          details.style.height = "";
+          details.style.overflow = "";
+          closing = false;
+          animation = null;
+        };
+      }, { signal: scope.signal });
+      scope.cleanup(() => { animation?.cancel(); details.style.height = ""; details.style.overflow = ""; });
+    });
+  });
+</script>

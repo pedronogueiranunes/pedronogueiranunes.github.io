@@ -288,7 +288,7 @@ The model's baseline yaw moves from the left-facing profile (−60°) to (30°),
 
 Large screens retain loading after paint/idle when appropriate; mobile/tablet loads on portrait engagement. The unactivated or failed model retains the same stage's static fallback. Reduced motion uses two still placements, switching at the travel midpoint without interpolated movement or 3D loading. The scripts defining this shared-stage behavior are `src/scripts/portrait-travel.js` and `src/scripts/splat-hero.js`. The scoped corrections, portrait-size and motion-stability reviews passed; their captures and measurements establish composition, uniform proportions, stable sampled buffers, layer order and final pose, not frame pacing on every device.
 
-The footer combines a split light-sage/charcoal CTA with a category reel, navigation/platform columns, a lime availability pill, legal links and oversized Pixelify lettering. The bio name uses the header's pixel-art logo treatment. At mobile the lettering becomes smaller, wrapping and left-aligned. Missing URLs and download assets must remain honest unavailable states.
+The footer combines a split light-sage CTA whose inset sage icon box hosts the infinite zoom tunnel, navigation/platform columns, a lime availability pill, legal links and oversized Pixelify lettering. The bio name uses the header's pixel-art logo treatment. At mobile the lettering becomes smaller, wrapping and left-aligned. Missing URLs and download assets must remain honest unavailable states.
 
 ## Do's and Don'ts
 
@@ -412,18 +412,17 @@ The Projects header is a split composition from 1024px up: copy on the left, a d
 
 About's four promise illustrations use `DitherIcon` orange dithering at rest and a dither wave on fine-pointer hover. Each card carries a lime police tape with a short complementary line in solid Silkscreen pixel type — "Stay on your terms", "Code is yours", "Talk to the maker" and "Time zones, not excuses" — using dotted tape edges and separators instead of a dotted text fill so the copy stays legible. The tape runs at 45 degrees across the top-right corner so both ends meet the card's top and right edges, stays clear of the illustration and copy at 1440/768/390, and is `aria-hidden`. With a fine pointer the tape is revealed on hover, the card inverts to charcoal with light copy, and the repeated dotted title scrolls as a stepped ticker; on touch the tape stays visible and runs while the section is in view; reduced motion keeps it static. Do not reintroduce the dotted orbit on these four cards. The illustrations remain decorative `alt=""` images. The unlocked padlock receives a 22px left and 3px down optical nudge so its visible edge lines up with the start of its title.
 
-The footer CTA no longer carries the illustrated site image: the dark lateral slot is purely the vector category reel. There is no dither canvas or ground shadow in this slot.
+The footer CTA no longer carries the illustrated site image: the inset sage icon box is purely the zoom tunnel of the five dithered category glyphs. There is no separate dither canvas or ground shadow in this box.
 
 The About promise icons keep the orange dither language; do not introduce new dither palettes there.
 
 
-## Footer CTA and category reel
+## Footer CTA dotted globe
 
-The CTA above the footer is one rounded split panel: a light sage (`footer-cta-panel`, `#E2E8DF`) dotted editorial surface on the left with dark copy and an orange primary action, and a charcoal lateral slot on the right. This replaces the previous heavy green panel; keep the left surface light and the right slot dark in both themes.
+The CTA uses a 26px-radius panel and contains a decorative rotating globe in an inset box matching the footer background. Dotted latitude and longitude lines describe the enlarged sphere, cropped at the lower right, and orange pixels mark Brazil, with soft orange regional highlights across North America and Europe. The globe gently follows the mouse on fine-pointer devices. The rotation pauses outside the viewport and when the tab is hidden; reduced motion shows a static view centered on Brazil.
 
-- The dark slot is a vertical reel of the five category glyphs in brand orange, repeated to loop seamlessly. It is clipped by the panel and faded at the top and bottom edges. There is no fixed image or site illustration in front of the vector glyphs.
-- The reel is paused at rest and runs only while the dark panel is hovered. Its cycle is deliberately fast with an ease-in-out curve (`cubic-bezier(0.5, 0, 0.5, 1)`, 4.8s); the duplicate glyph group keeps the eased loop seamless. Reduced motion disables it.
+- The canvas renders at a maximum of 30fps with DPR capped at 2; it requires no extra dependencies and remains decorative, with no links or focus targets.
 - The left panel keeps the existing copy and the outlined email action, which is dark-on-light. The primary action stays brand orange. Do not reintroduce the white-on-green treatment.
-- At 1024px the split remains with a narrower slot (96px glyphs); at 768px and below the copy stacks above the slot (64px glyphs), and the actions become full-width.
+- At 1024px the split remains with a narrower animation box; at 768px and below the copy stacks above the box, and the actions become full-width.
 - The footer bio name is not set in Manrope: it repeats the header's two-line Silkscreen logo (`Pedr0 / Nogueira`) in orange, as a home link. Keep the pixel logo alignment and line break.
-- Do not turn the reel into links or focusable controls; it is one decorative hover affordance, not navigation.
+- Do not turn the icon box into links or focusable controls; it is one decorative hover affordance, not navigation.

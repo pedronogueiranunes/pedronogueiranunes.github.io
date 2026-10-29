@@ -113,12 +113,20 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
         profiles.push([contour, sign * (depth / 2 - bevel + Math.cos(angle) * bevel)]);
       }
     }
+    // Share vertices across bevel bands so adjacent facets interpolate their
+    // normals and catch a continuous highlight instead of a faceted seam.
+    const bandStart = positions.length / 3;
+    for (const [contour, z] of profiles) {
+      for (const point of contour) positions.push(point[0] * radius, point[1] * radius, z * radius);
+    }
     for (let band = 0; band < profiles.length - 1; band++) {
       for (let i = 0; i < outline.length; i++) {
         const j = (i + 1) % outline.length;
-        const [lo, z0] = profiles[band], [hi, z1] = profiles[band + 1];
-        const a = [...lo[i], z0], b = [...lo[j], z0], c = [...hi[i], z1], d = [...hi[j], z1];
-        triangle(a, b, c); triangle(b, d, c);
+        const a = bandStart + band * outline.length + i;
+        const b = bandStart + band * outline.length + j;
+        const c = bandStart + (band + 1) * outline.length + i;
+        const d = bandStart + (band + 1) * outline.length + j;
+        indices.push(a, b, c, b, d, c);
       }
     }
     const mesh = new pc.Mesh(app.graphicsDevice);
@@ -139,8 +147,8 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     value.useLighting = lit;
     value.useMetalness = true;
     value.metalness = 0;
-    value.shininess = 38;
-    value.specular = new pc.Color(0.28, 0.28, 0.28);
+    value.shininess = 55;
+    value.specular = new pc.Color(0.38, 0.38, 0.38);
     // Opacity is shared by the icon coverage fade and the unlit ring.
     value.opacity = opacity;
     // Screen-door opacity keeps the icons in the opaque depth pass. Splats then
@@ -199,7 +207,7 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     [0.035, -0.008], [0.035, 0.008], [0.019, 0.008], [0.019, 0.024],
     [0.003, 0.024], [0.003, 0.04], [-0.013, 0.04], [-0.013, 0.056],
     [-0.029, 0.056], [-0.029, 0.072], [-0.045, 0.072]];
-  solidGlyph(cursor, "beveled-pixel-pointer", outline, 0.03, 0.0025, glyphOrange);
+  solidGlyph(cursor, "beveled-pixel-pointer", outline, 0.038, 0.003, glyphOrange);
   const design = glyph("design-selection-frame", Math.PI);
   for (const side of [-1, 1]) {
     stroke(design, [0.15, 0.006, 0.012], [0, side * 0.055, 0], glyphGreen);
