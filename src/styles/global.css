@@ -5718,7 +5718,8 @@ body {
 @media (prefers-reduced-motion: reduce) { .problem-copy p { transition: none; } }
 
 .problem-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, #2f382e, #000); opacity: var(--card-dark, 0); transition: opacity 350ms ease-out; pointer-events: none; }
-.problem-card > :not(.problem-art) { position: relative; z-index: 1; }
+/* The art and the wave canvas stay absolute; an in-flow canvas stretched the card on high-DPR phones. */
+.problem-card > :not(.problem-art, .icon-waves) { position: relative; z-index: 1; }
 .problem-art { z-index: 1; }
 .problem-card:focus-within { --card-dark: 1; }
 @media (hover: hover) and (pointer: fine) { .problem-card:hover { --card-dark: 1; } }
