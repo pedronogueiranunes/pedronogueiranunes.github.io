@@ -612,3 +612,22 @@
   .site-footer .footer-cta h2 { font-size: clamp(40px, 4.5vw, 60px); }
   .site-footer .footer-cta p { max-width: 620px; font-size: 15.5px; line-height: 1.6; }
 }
+
+/* Dark surfaces keep the workflow pixels subtle and the CTA readable. */
+:root[data-theme="dark"] .process-section::before { opacity: .14; }
+:root[data-theme="dark"] .process-section::after { filter: opacity(.2); }
+:root[data-theme="dark"] .site-footer .footer-cta { background-color: #1d261e; }
+:root[data-theme="dark"] .site-footer .footer-cta-slot { background-color: #101711; }
+:root[data-theme="dark"] .site-footer .footer-cta h2 { color: #f5f3ef; }
+:root[data-theme="dark"] .site-footer .footer-cta p { color: #c2cec0; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .process-section::before { opacity: .14; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .process-section::after { filter: opacity(.2); }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-footer .footer-cta { background-color: #1d261e; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-footer .footer-cta-slot { background-color: #101711; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-footer .footer-cta h2 { color: #f5f3ef; }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) .site-footer .footer-cta p { color: #c2cec0; }
+}
+
+.about-page .career-cv { display: inline-flex; margin: 0 0 28px; min-height: 44px; }
+
