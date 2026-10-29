@@ -93,10 +93,10 @@ export function initSplat() {
   });
   app.root.addChild(camera);
 
-  // SOG is ~40% smaller than compressed PLY at the same SH bands — try it first, fall back to
-  // PLY if the browser/engine build can't load the .sog zip bundle for any reason.
+  // Approved 92k-splat SOG keeps SH1 color at 1.77 MB. The original is archived
+  // under docs/source-assets/portrait; compressed PLY remains the load fallback.
   const sogAsset = new pc.Asset("pedro-head-sog", "gsplat", {
-    url: "/assets/pedro-head.sog",
+    url: "/assets/pedro-head-92k.sog",
   });
   app.assets.add(sogAsset);
   sogAsset.on("load", () => attachSplat(sogAsset));
@@ -140,8 +140,12 @@ export function initSplat() {
     // customAabb isn't populated until the gsplat instance exists, which needs one frame — so frame the camera on the next update rather than right after addComponent.
     app.once("update", () => {
       const aabb = splat.gsplat.customAabb;
-      const center = aabb ? aabb.center : new pc.Vec3(0, 0, 0);
-      const radius = aabb ? aabb.halfExtents.length() : 1;
+      // Keep the original model's measured framing, as in the approved A/B lab.
+      // Decimation slightly changes bounds; it must not resize the portrait/orbit.
+      const center = asset === sogAsset
+        ? new pc.Vec3(-0.01384061574935913, -0.3027264475822449, 0.009611845016479492)
+        : aabb ? aabb.center : new pc.Vec3(0, 0, 0);
+      const radius = asset === sogAsset ? 0.3904232457799805 : aabb ? aabb.halfExtents.length() : 1;
       splat.setLocalPosition(-center.x, -center.y, -center.z);
       // Slight camera dolly-in as the portrait lands in the About section.
       // Done in 3D (not CSS scale) so the drawing buffer never resizes.
