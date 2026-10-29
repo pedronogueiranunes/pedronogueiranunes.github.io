@@ -68,6 +68,14 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   let targetMagPitch = 0;
   let magneticBlend = 1.0; // 0 while dragging, smoothly blends to 1 after release
 
+  // A short burst of rapid back-and-forth drags triggers a temporary orbit.
+  const dizzy = document.createElement("div");
+  dizzy.className = "portrait-dizzy";
+  dizzy.setAttribute("aria-hidden", "true");
+  dizzy.innerHTML = '<div class="portrait-dizzy__orbit"><i></i><i></i><i></i><i></i><i></i></div>';
+  viewport.appendChild(dizzy);
+  let movements = [], lastDirection = 0, dizzyTimer = 0;
+
   // Custom drag cursor
   const dragCursor = document.createElement("div");
   dragCursor.className = "drag-cursor";
@@ -150,6 +158,19 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
         lastX = e.clientX;
         lastY = e.clientY;
 
+        if (!motionQuery.matches && Math.abs(deltaX) > 1) {
+          const now = performance.now();
+          const direction = Math.sign(deltaX);
+          movements.push({ time: now, distance: Math.abs(deltaX), turn: lastDirection && direction !== lastDirection ? 1 : 0 });
+          lastDirection = direction;
+          movements = movements.filter((entry) => now - entry.time < 1800);
+          if (movements.reduce((sum, entry) => sum + entry.distance, 0) > 300 && movements.reduce((sum, entry) => sum + entry.turn, 0) >= 3) {
+            dizzy.classList.add("is-visible");
+            clearTimeout(dizzyTimer);
+            dizzyTimer = window.setTimeout(() => dizzy.classList.remove("is-visible"), 3200);
+            movements = [];
+          }
+        }
         dragYaw += deltaX * DRAG_SENSITIVITY;
         dragYaw = Math.max(-DRAG_MAX_YAW, Math.min(DRAG_MAX_YAW, dragYaw));
         requestRender();
@@ -374,5 +395,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     viewport.removeEventListener("portraitpose", onPortraitPose);
     visibilityObserver.disconnect();
     dragCursor?.remove?.();
+    clearTimeout(dizzyTimer);
+    dizzy.remove();
   };
 }

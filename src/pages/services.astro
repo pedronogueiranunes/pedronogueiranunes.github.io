@@ -14,6 +14,9 @@ import RelatedProjects from "../components/RelatedProjects.astro";
 import FAQ from "../components/FAQ.astro";
 import DitherIcon from "../components/DitherIcon.astro";
 import IconWaves from "../components/IconWaves.astro";
+import StackGlyph from "../components/StackGlyph.astro";
+import BlueprintPixels from "../components/BlueprintPixels.astro";
+import ResearchRobot from "../components/ResearchRobot.astro";
 import {
   offers,
   capabilities,
@@ -220,8 +223,9 @@ const resultSlides = caseResults.map((result) => {
       </p>
     </div>
     <div class="capability-grid">
-      {capabilities.map((cap) => (
+      {capabilities.map((cap, index) => (
         <article>
+          <StackGlyph name={ ["category-web", "category-commerce", "chart", "category-brand", "category-art", "category-music"][index] } />
           <h3>{cap.title}</h3>
           <p>{cap.body}</p>
           <div class="chips">
@@ -232,11 +236,14 @@ const resultSlides = caseResults.map((result) => {
         </article>
       ))}
     </div>
-    <p class="ai-note">
-      AI-assisted on every step: Claude and Claude Code speed up research,
-      drafts and builds. Every decision, pixel and line of code still goes
-      through me.
-    </p>
+    <aside class="ai-note">
+      <div class="ai-note__copy">
+      <span class="ai-note__label">Research-led · Human-directed</span>
+      <h3>Better decisions start with evidence.</h3>
+      <p>I combine research and data with AI-assisted exploration. I review the insights, make the decisions and shape every design and build.</p>
+      </div>
+      <ResearchRobot />
+    </aside>
   </section>
   <section class="deliverables-section page-section">
     <div>
@@ -288,6 +295,7 @@ const resultSlides = caseResults.map((result) => {
         </a>
       </p>
     </div>
+    <BlueprintPixels />
   </section>
   <section class="schedule-section page-section">
     <div class="section-heading schedule-heading">
@@ -340,12 +348,22 @@ const resultSlides = caseResults.map((result) => {
     const status = slider.querySelector<HTMLElement>("[data-result-status]");
     if (!slides.length || !prev || !next) return;
     let index = 0;
-    const show = (target: number) => {
+    const show = (target: number, animate = true) => {
       index = (target + slides.length) % slides.length;
       slides.forEach((slide, slideIndex) => {
         const active = slideIndex === index;
         slide.hidden = !active;
       });
+      if (animate) {
+        const slide = slides[index];
+        const elements = slide.querySelectorAll<HTMLElement>(".service-result-image, .result-tag, h2, thead, tbody tr, .service-result-body .action");
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          elements.forEach((element, i) => {
+            element.getAnimations().forEach((animation) => animation.cancel());
+            element.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 240, delay: Math.min(i * 35, 210), fill: "backwards", easing: "cubic-bezier(.16,1,.3,1)" });
+          });
+        }
+      }
       if (status) {
         const headline = slides[index].querySelector("h2")?.textContent?.trim() ?? "";
         status.textContent = `${index + 1} / ${slides.length} · ${headline}`;
@@ -358,6 +376,6 @@ const resultSlides = caseResults.map((result) => {
       if (event.key === "ArrowLeft") { event.preventDefault(); show(index - 1); }
       if (event.key === "ArrowRight") { event.preventDefault(); show(index + 1); }
     }, { signal: scope.signal });
-    show(0);
+    show(0, false);
   });
 </script>

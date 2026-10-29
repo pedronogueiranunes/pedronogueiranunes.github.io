@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { mkdir, writeFile } from 'node:fs/promises';
 
 // One character is one pixel; the first pixel starts at (1, 1).
-// O: charcoal outline, F: orange fill, H: upper-left highlight.
+// O: orange edge, F: orange fill, H: upper-left highlight.
 const maps = {
   arrow: `
 O
@@ -70,7 +70,7 @@ OFFFFFFFFO
 OOOOOOOOOO
 `,
 };
-const colors = { O: '#212322', F: '#FF5A1F', H: '#FFB08F' };
+const colors = { O: '#FF5A1F', F: '#FF5A1F', H: '#FFB08F' };
 const output = new URL('../public/assets/cursors/', import.meta.url);
 await mkdir(output, { recursive: true });
 for (const [name, map] of Object.entries(maps)) {

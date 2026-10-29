@@ -185,3 +185,21 @@
   .services-page .result-arrow { left: 16px; transform: translate(0, -50%); }
   .services-page .result-arrow--next { left: auto; right: 16px; }
 }
+
+.services-page .capability-grid article .stack-glyph { margin-bottom: 4px; }
+
+/* Research and AI support the designer's judgment. */
+.services-page .ai-note { max-width: none; margin-top: 48px; padding: 28px 32px; border-radius: 16px; background: var(--section-tint); color: var(--text); }
+.services-page .ai-note__label { color: var(--accent-ink); font: 400 12px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+.services-page .ai-note h3 { margin: 12px 0 8px; font-size: 23px; line-height: 1.2; }
+.services-page .ai-note p { max-width: 760px; margin: 0; color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
+@media (max-width: 768px) { .services-page .ai-note { padding: 24px; } .services-page .ai-note h3 { font-size: 21px; } }
+
+.services-page .ai-note { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.services-page .ai-note__copy { min-width: 0; }
+@media (max-width: 480px) { .services-page .ai-note { gap: 16px; } .research-robot { width: 56px; height: 56px; } }
+
+.services-page .ai-note { position: relative; overflow: hidden; min-height: 180px; }
+.services-page .ai-note__copy { padding-right: 190px; }
+@media (max-width:768px) { .services-page .ai-note__copy { padding-right: 120px; } }
+@media (max-width:480px) { .services-page .ai-note { padding-bottom: 100px; } .services-page .ai-note__copy { padding-right: 0; } .services-page .ai-note .research-robot { width:140px; height:140px; } }

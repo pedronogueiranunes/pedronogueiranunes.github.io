@@ -1,58 +1,17 @@
-// TODO: confirm real number. Stats are current Figma placeholders, not verified analytics.
-export const stats = [
-  ["12+", "years building for the web"],
-  ["50+", "sites and brands shipped"],
-  ["3", "countries: US, Canada, Germany"],
-  ["+40%", "best lift in qualified leads"],
-];
 export const promises = [
-  [
-    "No lock-in",
-    "Fixed scope per project. Retainers are month to month after launch.",
-  ],
-  [
-    "You own everything",
-    "Your site, code, Figma files, copy, assets and logins. Yours from day one.",
-  ],
-  [
-    "Senior hands only",
-    "The person on the call is the person doing the work. No hand-offs to juniors.",
-  ],
-  [
-    "Async with overlap",
-    "GMT-3 means real overlap with US and Canada hours, and daily written updates.",
-  ],
+  ["Design & UX", "Clear interfaces, visual systems and prototypes shaped around the people who use them."],
+  ["Webflow & front-end", "Responsive builds, CMS structures and custom front-end work that bring designs into production."],
+  ["Motion & interaction", "Animation and interaction that add character and support the experience."],
+  ["Collaboration", "Working across design, marketing and development to move ideas forward together."],
 ];
 export const timeline = [
-  ["2015–16", "Frontend Web Developer", "Agência Vilaça Comunicação"],
-  ["2016–20", "Information Systems", "B.A., Information Systems"],
-  [
-    "2017–18",
-    "Frontend Developer & Visual Designer",
-    "Fertili: mobile frontend, UI, Shopify",
-  ],
-  [
-    "2018–19",
-    "Graphic & Motion Designer",
-    "Seu.Menu: social, motion, design systems",
-  ],
-  [
-    "2019–21",
-    "Art Director & Motion Designer",
-    "Vasta: brand systems, video for TV & digital",
-  ],
-  ["2020–22", "Advertising", "Advertising studies (not completed)"],
-  [
-    "2021–25",
-    "Founder, Freelance Studio",
-    "superfluid: web dev & design, US/EU/BR clients",
-  ],
-  [
-    "2025–26",
-    "Senior Graphic Web Designer",
-    "On The Map, Inc.: US marketing agency",
-  ],
-  ["2026–", "Senior Webflow Developer", "ilegra: enterprise Webflow builds"],
+  ["Current", "Senior Web Designer", "BT Marketing"],
+  ["2026", "Senior Webflow Developer", "ilegra: enterprise Webflow builds and multidisciplinary collaboration"],
+  ["2025–26", "Senior Graphic Web Designer", "On The Map, Inc.: design and development for a US marketing agency"],
+  ["2021–25", "Senior Front-End Developer & Visual Designer", "SUPERFLUID: front-end development and visual design for global clients"],
+  ["2020–21", "Video Editor & Motion Designer", "VASTA: video and motion for digital media and TV"],
+  ["2017–18", "Front-End Developer & Visual Designer", "FERTILI: mobile front-end, UI and web projects"],
+  ["2015–16", "Junior Front-End Developer", "Agência Vilaça Comunicação"],
 ];
 export const skills = [
   [

@@ -1,0 +1,83 @@
+<div class="research-robot" aria-hidden="true">
+  <svg class="research-robot__fallback" viewBox="0 0 24 24" shape-rendering="crispEdges"><path fill="#ff5a1f" d="M10 1h4v3h-4zM5 4h14v2h2v12h-2v2h-3v3h-2v-3h-4v3H8v-3H5v-2H3V6h2z"/><path fill="#f9d7c6" d="M6 8h12v7H6z"/><path fill="#4d5d49" d="M8 10h2v2H8zm6 0h2v2h-2z"/></svg>
+  <canvas width="128" height="128"></canvas>
+</div>
+<style is:global>
+.services-page .ai-note .research-robot { position:absolute; right:12px; bottom:-64px; width:220px; height:220px; pointer-events:none; }
+.research-robot canvas,.research-robot__fallback { position:absolute; inset:0; display:block; width:100%; height:100%; image-rendering:pixelated; }
+.research-robot.is-ready .research-robot__fallback { visibility:hidden; }
+@media(max-width:768px){.services-page .ai-note .research-robot { width:160px; height:160px; bottom:-45px; right:0; }}
+</style>
+<script>
+import { onPageLoad } from "../scripts/page-lifecycle";
+const N=24,SIZE=128,DEPTH=6;
+const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+onPageLoad(scope=>{
+  document.querySelectorAll<HTMLElement>(".research-robot").forEach(root=>{
+    const canvas=root.querySelector<HTMLCanvasElement>("canvas"), ctx=canvas?.getContext("2d",{willReadFrequently:true});
+    const section=root.closest<HTMLElement>(".ai-note");
+    if(!canvas||!ctx||!section)return;
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)"),fine=matchMedia("(hover: hover) and (pointer: fine)");
+    const mask=new Uint8Array(N*N);
+    const fill=(x:number,y:number,w:number,h:number)=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)mask[yy*N+xx]=1;};
+    fill(10,1,4,3);fill(5,4,14,2);fill(3,6,18,12);fill(5,18,14,2);fill(8,20,2,3);fill(14,20,2,3);fill(1,10,2,5);fill(21,10,2,5);
+    let raf=0,last=0,time=0,visible=false,lookX=0,lookY=0,targetX=0,targetY=0;
+    const render=()=>{
+      ctx.clearRect(0,0,SIZE,SIZE);
+      const yaw=-0.33+lookX*.4+(reduced.matches?0:Math.sin(time*.8)*.05);
+      const pitch=0.14+lookY*.2;
+      const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);
+      const project=(x:number,y:number,z:number)=>{
+        const px=x-N/2,py=y-N/2,pz=z-DEPTH/2;
+        const x1=px*cy+pz*sy,z1=-px*sy+pz*cy,y1=py*cx-z1*sx,z2=py*sx+z1*cx;
+        const p=90/(90-z2);return [SIZE/2+x1*4.5*p,SIZE/2+y1*4.5*p,z2];
+      };
+      const faces:{points:number[][];depth:number;shade:number}[]=[];
+      const add=(points:number[][],shade:number)=>faces.push({points,depth:points.reduce((sum,v)=>sum+v[2],0)/4,shade});
+      const has=(x:number,y:number)=>x>=0&&y>=0&&x<N&&y<N&&mask[y*N+x]!==0;
+      for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+        if(!has(x,y))continue;
+        let shade=255;
+        if(y>=8&&y<=14&&x>=6&&x<=17)shade=240;
+        const eyeX=Math.round(lookX*3),eyeY=Math.round(lookY*3);
+        const blink=!reduced.matches && (time % 4.8 > 4.55 && time % 4.8 < 4.7);
+        const eyeTop=10+eyeY;
+        if(y>=eyeTop&&y<=eyeTop+(blink?0:1)&&((x>=8+eyeX&&x<=9+eyeX)||(x>=14+eyeX&&x<=15+eyeX)))shade=20;
+        if(y===14&&x>=10&&x<=13)shade=80;
+        add([project(x,y,DEPTH),project(x+1,y,DEPTH),project(x+1,y+1,DEPTH),project(x,y+1,DEPTH)],shade);
+        if(!has(x-1,y))add([project(x,y,0),project(x,y+1,0),project(x,y+1,DEPTH),project(x,y,DEPTH)],115);
+        if(!has(x+1,y))add([project(x+1,y,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x+1,y,DEPTH)],145);
+        if(!has(x,y-1))add([project(x,y,0),project(x+1,y,0),project(x+1,y,DEPTH),project(x,y,DEPTH)],180);
+        if(!has(x,y+1))add([project(x,y+1,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x,y+1,DEPTH)],90);
+      }
+      faces.sort((a,b)=>a.depth-b.depth);
+      for(const face of faces){ctx.beginPath();ctx.moveTo(face.points[0][0],face.points[0][1]);for(let i=1;i<4;i++)ctx.lineTo(face.points[i][0],face.points[i][1]);ctx.closePath();ctx.fillStyle=`rgb(${face.shade},${face.shade},${face.shade})`;ctx.fill();ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.4;ctx.stroke();}
+      const image=ctx.getImageData(0,0,SIZE,SIZE), data=image.data;
+      for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){
+        const i=(y*SIZE+x)*4;if(!data[i+3])continue;const v=data[i];
+        if(v>248){data[i]=255;data[i+1]=90;data[i+2]=31;}
+        else if(v>225){data[i]=249;data[i+1]=215;data[i+2]=198;}
+        else if(v<35){data[i]=77;data[i+1]=93;data[i+2]=73;}
+        else {const light=v/255>(BAYER[(y%4)*4+x%4]+.5)/16;data[i]=light?255:183;data[i+1]=light?90:49;data[i+2]=light?31:16;}
+      }
+      ctx.putImageData(image,0,0);root.classList.add("is-ready");
+    };
+    const shouldRun=()=>visible&&!document.hidden&&!reduced.matches;
+    const tick=(now:number)=>{raf=0;if(!shouldRun())return;if(!last)last=now;if(now-last>=40){time+=Math.min(now-last,80)/1000;last=now;lookX+=(targetX-lookX)*.14;lookY+=(targetY-lookY)*.14;render();}raf=requestAnimationFrame(tick);};
+    const start=()=>{if(!raf&&shouldRun()){last=0;raf=requestAnimationFrame(tick);}};
+    const stop=()=>{if(raf)cancelAnimationFrame(raf);raf=0;last=0;};
+    window.addEventListener("pointermove",event=>{
+      if(reduced.matches||!fine.matches||event.pointerType!=="mouse")return;
+      const r=root.getBoundingClientRect(), dx=event.clientX-r.left-r.width/2,dy=event.clientY-r.top-r.height*.35;
+      const distance=Math.hypot(dx,dy),strength=Math.max(0,1-distance/420);
+      targetX=Math.max(-1,Math.min(1,dx/150))*strength;targetY=Math.max(-1,Math.min(1,dy/150))*strength;
+    },{signal:scope.signal,passive:true});
+    document.addEventListener("pointerleave",()=>{targetX=0;targetY=0;},{signal:scope.signal});
+    const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible)start();else stop();});io.observe(section);
+    reduced.addEventListener("change",()=>{stop();targetX=targetY=lookX=lookY=0;render();start();},{signal:scope.signal});
+    document.addEventListener("visibilitychange",()=>document.hidden?stop():start(),{signal:scope.signal});
+    scope.cleanup(()=>{stop();io.disconnect();root.classList.remove("is-ready");});
+    render();
+  });
+});
+</script>
