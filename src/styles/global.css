@@ -3895,8 +3895,7 @@ html.js .article-cover img:not(.is-loaded) {
 }
 .about-portrait {
   height: 540px;
-  /* Translucent so the pulsing world map in the hero shows behind the portrait. */
-  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  background: var(--surface);
   border-radius: 60px;
   overflow: hidden;
   position: relative;

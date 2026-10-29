@@ -73,10 +73,11 @@ const { tone = 'orange', world = false } = Astro.props;
       }
       if (land.length) restCtx.fillStyle = themeStyle.getPropertyValue('--projects-control-ink').trim() || color;
       for (const dot of land) {
-        // ponytail: one cosine wave over distance from home; tune period (5200ms) and wavelength (d * 9) here.
-        const pulse = Math.pow(0.5 + 0.5 * Math.cos(dot.d * 9 - now / 5200 * Math.PI * 2), 2);
-        const size = 2.5 + pulse * 2.5;
-        restCtx.globalAlpha = 0.16 + pulse * 0.36;
+        // ponytail: one cosine wave over distance from home; tune period (3600ms) and wavelength (d * 9) here.
+        const pulse = Math.pow(0.5 + 0.5 * Math.cos(dot.d * 9 - now / 3600 * Math.PI * 2), 2);
+        // Crest dots grow to the hover trail's pixel size.
+        const size = 2.5 + pulse * (pixelSize - 2.5);
+        restCtx.globalAlpha = 0.05 + pulse * 0.072;
         restCtx.fillRect(dot.x - size / 2, dot.y - size / 2, size, size);
       }
       restCtx.globalAlpha = 1;
