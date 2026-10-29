@@ -75,7 +75,10 @@ function curtainBand(progress: number, backward: boolean) {
   const front = Math.min(1, progress / 0.45) * extent;
   const tail = Math.max(0, (progress - 0.55) / 0.45) * extent;
   const right: string[] = [], left: string[] = [];
-  const point = (x: number, y: number) => `${backward ? innerWidth - x : x}px ${y}px`;
+  // Percentages of the snapshot's own box: the band always spans the whole curtain,
+  // even when the transition layer's size differs from innerWidth/innerHeight.
+  const pct = (value: number, total: number) => `${((value / total) * 100).toFixed(3)}%`;
+  const point = (x: number, y: number) => `${pct(backward ? innerWidth - x : x, innerWidth)} ${pct(y, innerHeight)}`;
   for (let row = 0; row < rows; row++) {
     const top = row * cell, bottom = Math.min(innerHeight, top + cell);
     const a = Math.min(innerWidth, Math.max(0, Math.floor(tail - row) * cell));
