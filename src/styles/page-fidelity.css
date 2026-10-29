@@ -34,7 +34,7 @@
 .about-page .career-timeline p { font-size:14px; line-height:1.5; color:#6b6660; }
 .about-page .skills-section { padding-top:20px; padding-bottom:100px; }
 .services-page .service-hero { grid-template-columns:minmax(0,1fr) 480px; padding-top:77px; }
-.services-page .service-hero h1 { font-size:64px; line-height:1.05; letter-spacing:-.02em; color:var(--text); }
+.services-page .service-hero h1 { font-size:50px; line-height:1.08; max-width:11.5em; letter-spacing:-.02em; color:var(--text); }
 .services-page .service-hero > div > p:not(.mono):not(.section-eyebrow) { font-size:22px; color:var(--text-secondary); }
 .services-page .service-hero .check-list { font-size:16px; font-weight:500; }
 .services-page .service-hero .mono.muted { font:14px/1.5 var(--font-body); letter-spacing:.02em; color:#767675; }
@@ -81,6 +81,7 @@
 @media (max-width:1100px) and (min-width:769px) {
  .services-page .service-hero { grid-template-columns:minmax(0,1fr) minmax(0,.8fr); gap:32px; }
  .services-page .service-hero h1, .about-page .about-hero h1 { font-size:48px; }
+ .services-page .service-hero h1 { font-size:42px; }
  .about-page .promises-section { padding-inline:32px; }
  .about-page .promises-section > h2 { font-size:40px; }
  .services-page .offer-card { height:auto; min-height:559px; }
@@ -107,7 +108,7 @@
  .about-page .career-date { font-size:16px; }
  .about-page .skills-section { padding-block:0 64px; }
  .services-page .service-hero { grid-template-columns:1fr; padding-top:89px; gap:40px; }
- .services-page .service-hero h1 { font-size:40px; line-height:1.15; }
+ .services-page .service-hero h1 { font-size:34px; line-height:1.15; }
  .services-page .service-hero > div > p:not(.mono):not(.section-eyebrow) { font-size:16px; line-height:1.5; }
  .services-page .service-hero .check-list { font-size:16px; }
  .services-page .service-result-image { height:220px; }
