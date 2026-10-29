@@ -9,25 +9,30 @@ import Icon from "../components/Icon.astro";
 import { nextSteps, testimonial } from "../data/contact";
 import { faq } from "../data/services";
 import { site } from "../data/site";
+const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
 ---
 
-<Base title="Contact | Pedro Nogueira" pageClass="contact-page">
+<Base
+  title="Contact Pedro Nogueira: projects, agency work and roles"
+  description="Start a website, brand or CRO project, talk about agency partnerships, or reach out about a senior design engineer role."
+  pageClass="contact-page"
+>
   <section class="contact-hero page-section">
     <PixelTrail tone="green" />
     <div class="contact-intro">
       <Eyebrow>Contact</Eyebrow>
       <h1>
-        Tell me about your site.
+        Tell me what you're working on.
         <br />
-        <span>I'll come back with a plan.</span>
+        <span>I'll reply with a clear next step.</span>
       </h1>
       <div class="first-call">
-        <h2>What you get from the first call, free</h2>
+        <h2>What you get from the first call</h2>
         <CheckList
           items={[
-            "A quick review of your site before we talk",
-            "The three fixes I would ship first, with rough effort",
-            "A clear scope and price range. Yours to keep, even if you do not hire me",
+            "A look at your site or brief before we talk",
+            "Honest advice on scope, platform and timeline",
+            "A written price range, yours to keep even if you do not hire me",
           ]}
         />
       </div>
@@ -44,16 +49,22 @@ import { site } from "../data/site";
           ))}
         </ol>
       </div>
-      <blockquote class="contact-testimonial">
-        <span class="testimonial-avatar" aria-hidden="true"></span>
-        <div>
-          <p>
-            {testimonial.quote}{" "}
-            <small aria-label="5 out of 5 stars">{testimonial.rating}</small>
-          </p>
-          <cite>{testimonial.attribution}</cite>
-        </div>
-      </blockquote>
+      {hasTestimonial ? (
+        <blockquote class="contact-testimonial">
+          <span class="testimonial-avatar" aria-hidden="true"></span>
+          <div>
+            <p>
+              {testimonial.quote}{" "}
+              <small aria-label="5 out of 5 stars">{testimonial.rating}</small>
+            </p>
+            <cite>{testimonial.attribution}</cite>
+          </div>
+        </blockquote>
+      ) : (
+        <p class="mono muted">
+          Recent clients include BSA Legal, Molina Chambô and PineLake Broken Bow.
+        </p>
+      )}
       <dl class="contact-details">
         <div>
           <dt>Email</dt>
@@ -63,11 +74,13 @@ import { site } from "../data/site";
         </div>
         <div>
           <dt>Time zone</dt>
-          <dd>GMT-3, overlaps US and Canada</dd>
+          {/* TODO: confirm with Pedro before publishing */}
+          <dd>Brasília (UTC−3) · Calls 11 am to 4 pm ET</dd>
         </div>
         <div>
           <dt>Reply time</dt>
-          <dd>Within 24 hours</dd>
+          {/* TODO: confirm with Pedro before publishing */}
+          <dd>Within one business day</dd>
         </div>
       </dl>
     </div>
