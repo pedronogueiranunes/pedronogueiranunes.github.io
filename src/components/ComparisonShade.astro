@@ -23,7 +23,7 @@
           const density=Math.pow(y/canvas.height,1.7)*.8;
           if(density<(bayer[(y%4)*4+x%4]+.5)/16)continue;
           const i=(y*canvas.width+x)*4;
-          pixels.data[i]=255;pixels.data[i+1]=90;pixels.data[i+2]=31;pixels.data[i+3]=36;
+          pixels.data[i]=255;pixels.data[i+1]=90;pixels.data[i+2]=31;pixels.data[i+3]=56;
         }
         ctx.putImageData(pixels,0,0);
       });observer.observe(canvas);scope.cleanup(()=>observer.disconnect());
