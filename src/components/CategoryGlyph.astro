@@ -123,10 +123,12 @@ const glyphs = [
   const DEPTH = 9;
   const SIZE = 256;
   const TRANSITION_MS = 480;
-  // Phones get a lighter loop; the canvas also only redraws when the pose changes.
-  const FRAME_MS = 1000 / (matchMedia("(pointer: coarse)").matches ? 24 : 32);
-  // Smallest pose change (radians) that triggers a redraw.
-  const REDRAW_EPSILON = 0.003;
+  // Capped at 60fps (with slack for rAF jitter, so 120Hz screens don't run twice as fast).
+  const FRAME_MS = 1000 / 60 - 1.5;
+  // Smallest pose change (radians) that triggers a redraw; below this the pixels barely move.
+  const REDRAW_EPSILON = 0.0008;
+  // Flat, undithered colour for every front face.
+  const FRONT = [0xd2, 0xdb, 0xca];
   const CAMERA = 90;
   const SCALE = (SIZE / GRID) * 0.86;
 
@@ -281,9 +283,9 @@ const glyphs = [
         const y1 = ny * cosX - z1 * sinX;
         const z2 = ny * sinX + z1 * cosX;
         const dot = Math.max(0, x1 * LIGHT[0] + y1 * LIGHT[1] + z2 * LIGHT[2]);
-        const front = nz > 0.5;
-        const intensity = front ? 0.53 + 0.42 * dot : 0.12 + 0.5 * dot;
-        return Math.round(clamp01(intensity) * 255);
+        // Front faces are flagged with 255 and painted flat; sides stay below it and get dithered.
+        if (nz > 0.5) return 255;
+        return Math.round(clamp01(0.12 + 0.5 * dot) * 250);
       };
 
       const render = (now: number) => {
@@ -450,7 +452,7 @@ const glyphs = [
         }
 
         // Ordered dithering: quantise the lit greys into the sage palette with
-        // Bayer thresholds, and dither the silhouette edge at the same time.
+        // Bayer thresholds for the side faces; front faces are painted flat.
         const image = context.getImageData(0, 0, SIZE, SIZE);
         const data = image.data;
         for (let y = 0; y < SIZE; y++) {
@@ -459,9 +461,18 @@ const glyphs = [
             const index = (row + x) * 4;
             const alpha = data[index + 3];
             if (alpha === 0) continue;
-            const edgeBayer = (BAYER[(y % 8) * 8 + (x % 8)] + 0.5) / 64;
-            if (alpha < 255 * edgeBayer) {
+            // Hard cut instead of a dithered edge: dithering partial alpha punched
+            // white specks into the seams between faces.
+            if (alpha < 128) {
               data[index + 3] = 0;
+              continue;
+            }
+            // Sides top out near 155, so anything brighter is front (or a front seam).
+            if (data[index] >= 200) {
+              data[index] = FRONT[0];
+              data[index + 1] = FRONT[1];
+              data[index + 2] = FRONT[2];
+              data[index + 3] = 255;
               continue;
             }
             const dither = (DITHER4[(y % 4) * 4 + (x % 4)] + 0.5) / 16;
@@ -488,14 +499,14 @@ const glyphs = [
         const idlePitch = Math.cos(now * 0.00035) * 0.035;
         const targetYaw = BASE_YAW + idleYaw + pointerX * 0.15;
         const targetPitch = BASE_PITCH + idlePitch + pointerY * 0.11;
-        yaw += (targetYaw - yaw) * 0.09;
-        pitch += (targetPitch - pitch) * 0.09;
-        magnetX += (pointerX * 7 - magnetX) * 0.08;
-        magnetY += (pointerY * 5 - magnetY) * 0.08;
+        yaw += (targetYaw - yaw) * 0.049;
+        pitch += (targetPitch - pitch) * 0.049;
+        magnetX += (pointerX * 7 - magnetX) * 0.044;
+        magnetY += (pointerY * 5 - magnetY) * 0.044;
         // ponytail: fixed-step springs at the loop rate; tune stiffness/damping here.
         for (const key of Object.keys(spring) as (keyof typeof spring)[]) {
           // Near-critical damping: a slow, weightless drift back with no bounce.
-          velocity[key] = (velocity[key] - spring[key] * 0.0024) * 0.9;
+          velocity[key] = (velocity[key] - spring[key] * 0.00068) * 0.945;
           spring[key] += velocity[key];
         }
         const bob = Math.sin(now * 0.0008) * 2.2;
@@ -520,11 +531,11 @@ const glyphs = [
         const rect = root.getBoundingClientRect();
         const dx = Math.max(-1, Math.min(1, (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2)));
         const dy = Math.max(-1, Math.min(1, (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2)));
-        velocity.yaw += dx * 0.06;
-        velocity.pitch -= dy * 0.045;
-        velocity.x -= dx * 2;
-        velocity.y -= dy * 1.6;
-        velocity.scale -= 0.006;
+        velocity.yaw += dx * 0.032;
+        velocity.pitch -= dy * 0.024;
+        velocity.x -= dx * 1.07;
+        velocity.y -= dy * 0.85;
+        velocity.scale -= 0.0032;
         pop(event.clientX - rect.left, event.clientY - rect.top);
         startLoop();
       };
