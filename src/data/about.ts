@@ -1,38 +1,29 @@
 export const promises = [
-  ["Design & UX", "Clear interfaces, visual systems and prototypes shaped around the people who use them."],
-  ["Webflow & front-end", "Responsive builds, CMS structures and custom front-end work that bring designs into production."],
-  ["Motion & interaction", "Animation and interaction that add character and support the experience."],
-  ["Collaboration", "Working across design, marketing and development to move ideas forward together."],
+  ["Brand and system first", "Every project starts with a clear visual language: type, color, components. That is what keeps a site consistent after launch."],
+  ["Design and build, one hand", "No handoff gap. What you approve in Figma is what goes live, on Webflow, WordPress or React."],
+  ["Evidence over taste", "Analytics, heatmaps and competitor research before opinions. AI helps me sort the research faster. The decisions stay mine."],
+  // TODO: confirm with Pedro before publishing (weekly updates, calls in US hours)
+  ["Clear and async", "Weekly updates, documented handovers, and calls in US hours. You always know where the project is."],
 ];
+// TODO: confirm with Pedro before publishing (include Seu.Menu 2018–19? add education?)
 export const timeline = [
-  ["Current", "Senior Web Designer", "BT Marketing"],
-  ["2026", "Senior Webflow Developer", "ilegra: enterprise Webflow builds and multidisciplinary collaboration"],
-  ["2025–26", "Senior Graphic Web Designer", "On The Map, Inc.: design and development for a US marketing agency"],
-  ["2021–25", "Senior Front-End Developer & Visual Designer", "SUPERFLUID: front-end development and visual design for global clients"],
-  ["2020–21", "Video Editor & Motion Designer", "VASTA: video and motion for digital media and TV"],
-  ["2017–18", "Front-End Developer & Visual Designer", "FERTILI: mobile front-end, UI and web projects"],
-  ["2015–16", "Junior Front-End Developer", "Agência Vilaça Comunicação"],
+  ["2026–", "Senior Web Designer & CRO", "BT Marketing (Toronto): CRO audits and redesigns for North American clients"],
+  ["2026", "Senior Webflow Developer", "ilegra: enterprise Webflow builds, custom GSAP interactions and technical SEO"],
+  ["2025–26", "Senior Graphic Web Designer", "On The Map, Inc. (Miami): landing pages and design systems for a US marketing agency"],
+  ["2021–25", "Founder, design engineer", "SUPERFLUID, my independent studio: brands, sites and web apps for clients in the US, Europe and Brazil"],
+  ["2019–21", "Art Director & Motion Designer", "VASTA: design systems, campaigns, video and motion for digital and TV"],
+  ["2017–18", "Front-End Developer & Visual Designer", "FERTILI: mobile app front end, UI, Shopify and WordPress for agency clients"],
+  ["2015–16", "Junior Front-End Developer", "Agência Vilaça Comunicação: promotional sites and first UI work"],
 ];
 export const skills = [
   [
     "Build",
-    [
-      "HTML/CSS/JS",
-      "React",
-      "Webflow",
-      "WordPress",
-      "Framer",
-      "Shopify Hydrogen",
-      "AI-assisted workflows",
-    ],
+    ["Webflow", "WordPress", "React", "Next.js", "Shopify Hydrogen", "GSAP", "HTML/CSS/JS", "Claude Code"],
   ],
+  ["Brand & design systems", ["Figma", "Illustrator", "Photoshop", "Krita"]],
   [
-    "Design & illustration",
-    ["Figma", "Krita", "Pixelmator Pro", "Photoshop", "Illustrator"],
+    "CRO & analytics",
+    ["GA4", "Google Tag Manager", "Microsoft Clarity", "Hotjar", "Semrush", "Google Lighthouse"],
   ],
-  [
-    "Motion & video",
-    ["After Effects", "Premiere", "DaVinci Resolve", "Final Cut Pro"],
-  ],
-  ["Performance & SEO", ["Google Lighthouse", "Semrush"]],
+  ["Motion, video & sound", ["After Effects", "Premiere", "DaVinci Resolve", "Ableton Live"]],
 ] as const;
