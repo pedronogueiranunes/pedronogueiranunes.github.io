@@ -5927,6 +5927,10 @@ body {
 ::view-transition-new(page-content) {
   animation: page-enter var(--page-enter-duration) var(--page-enter-delay) ease-out both;
 }
+/* A view-transition-name makes an element a backdrop root, which stops the megamenu
+   panels from blurring the page. Astro sets data-astro-transition on <html> just before
+   a navigation starts, so the header and nav only carry their names while one runs. */
+html:not([data-astro-transition]) :is(.site-nav, .desktop-nav) { view-transition-name: none !important; }
 ::view-transition-group(pixel-curtain) { z-index: 10; }
 ::view-transition-group(site-header),
 ::view-transition-group(site-footer),
