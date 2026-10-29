@@ -88,6 +88,32 @@ const glyphs = [
     /* Float, magnet and tap push are applied here, so they never re-render the canvas. */
     will-change: transform;
   }
+
+  /* Orange pop drawn at the tap point; created per tap, so the rules are global. */
+  .category-glyph :global(.glyph-pop) {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    overflow: visible;
+    pointer-events: none;
+    color: var(--accent, #ff5a1f);
+  }
+  .category-glyph :global(.glyph-pop circle) {
+    animation: glyph-pop-ring 520ms cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .category-glyph :global(.glyph-pop line) {
+    animation: glyph-pop-ray 480ms cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes glyph-pop-ring {
+    from { transform: scale(.3); opacity: 1; }
+    to { transform: scale(1.5); opacity: 0; }
+  }
+  @keyframes glyph-pop-ray {
+    from { transform: translateY(4px) scaleY(.4); opacity: 1; }
+    60% { opacity: 1; }
+    to { transform: translateY(-12px) scaleY(.2); opacity: 0; }
+  }
 </style>
 
 <script>
@@ -468,7 +494,8 @@ const glyphs = [
         magnetY += (pointerY * 5 - magnetY) * 0.08;
         // ponytail: fixed-step springs at the loop rate; tune stiffness/damping here.
         for (const key of Object.keys(spring) as (keyof typeof spring)[]) {
-          velocity[key] = (velocity[key] - spring[key] * 0.075) * 0.9;
+          // Near-critical damping: a slow, weightless drift back with no bounce.
+          velocity[key] = (velocity[key] - spring[key] * 0.0024) * 0.9;
           spring[key] += velocity[key];
         }
         const bob = Math.sin(now * 0.0008) * 2.2;
@@ -478,17 +505,27 @@ const glyphs = [
         canvas.style.transform = `translate(${tx.toFixed(2)}%, ${ty.toFixed(2)}%) scale(${(1 + spring.scale).toFixed(4)})`;
       };
 
+      const pop = (x: number, y: number) => {
+        const rays = Array.from({ length: 8 }, (_, i) =>
+          `<g transform="rotate(${i * 45})"><line x1="0" y1="-15" x2="0" y2="-25" style="transform-origin:0 -20px"/></g>`).join("");
+        root.insertAdjacentHTML("beforeend",
+          `<svg class="glyph-pop" viewBox="-36 -36 72 72" style="left:${x}px;top:${y}px" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" shape-rendering="crispEdges"><circle r="10"/>${rays}</svg>`);
+        const svg = root.lastElementChild as SVGElement;
+        setTimeout(() => svg.remove(), 560);
+      };
+
       // A tap spins the sculpture away from the touch point and pushes it back; springs return it to its float.
       const onTap = (event: PointerEvent) => {
         if (reduced.matches || !ready) return;
         const rect = root.getBoundingClientRect();
         const dx = Math.max(-1, Math.min(1, (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2)));
         const dy = Math.max(-1, Math.min(1, (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2)));
-        velocity.yaw += dx * 0.09;
-        velocity.pitch -= dy * 0.07;
-        velocity.x -= dx * 9;
-        velocity.y -= dy * 7;
-        velocity.scale -= 0.035;
+        velocity.yaw += dx * 0.06;
+        velocity.pitch -= dy * 0.045;
+        velocity.x -= dx * 2;
+        velocity.y -= dy * 1.6;
+        velocity.scale -= 0.006;
+        pop(event.clientX - rect.left, event.clientY - rect.top);
         startLoop();
       };
       root.addEventListener("pointerdown", onTap, { signal: scope.signal });

@@ -36,13 +36,16 @@ const { tone = 'orange' } = Astro.props;
     let step = 28;
     let offset = step / 2;
 
+    // Ripples sent out by taps on the category glyph: rings of dots that grow and fade.
+    const waves: { x: number; y: number; at: number }[] = [];
+    const WAVE_MS = 1400, WAVE_SPEED = 0.55, WAVE_BAND = 46;
     const cells = new Map<string, { x: number; y: number; at: number; strength: number }>();
     let width = 0, height = 0, frame = 0, visible = true;
     let previous: { x: number; y: number } | undefined;
     // Latest pointer sample; applied once per animation frame instead of on every
     // pointermove (high-rate mice otherwise force a layout read per event).
     let pending: { x: number; y: number } | undefined;
-    const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); previous = undefined; pending = undefined; };
+    const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); waves.length = 0; previous = undefined; pending = undefined; };
     const paintRest = () => {
       restCtx.clearRect(0, 0, width, height);
       restCtx.fillStyle = color;
@@ -81,8 +84,29 @@ const { tone = 'orange' } = Astro.props;
         stamp(point, trail.getBoundingClientRect(), now);
       }
       ctx.clearRect(0, 0, width, height);
-      if (!cells.size) return;
+      if (!cells.size && !waves.length) return;
       ctx.fillStyle = color;
+      for (let i = waves.length - 1; i >= 0; i--) {
+        const wave = waves[i];
+        const age = now - wave.at;
+        if (age >= WAVE_MS) { waves.splice(i, 1); continue; }
+        const radius = age * WAVE_SPEED, fade = 1 - age / WAVE_MS;
+        // ponytail: scans only the ring's bounding box of grid cells; fine for a few waves at once.
+        const c0 = Math.max(0, Math.floor((wave.x - radius - WAVE_BAND - offset) / step));
+        const c1 = Math.ceil((wave.x + radius + WAVE_BAND - offset) / step);
+        const r0 = Math.max(0, Math.floor((wave.y - radius - WAVE_BAND - offset) / step));
+        const r1 = Math.ceil((wave.y + radius + WAVE_BAND - offset) / step);
+        for (let col = c0; col <= c1; col++) for (let row = r0; row <= r1; row++) {
+          if ((col * 7 + row * 11) % 5 === 0) continue;
+          const x = col * step + offset, y = row * step + offset;
+          if (x > width || y > height) continue;
+          const crest = 1 - Math.abs(Math.hypot(x - wave.x, y - wave.y) - radius) / WAVE_BAND;
+          if (crest <= 0) continue;
+          const size = 2 + (pixelSize - 2) * crest;
+          ctx.globalAlpha = 0.5 * crest * fade * fade;
+          ctx.fillRect(x - size / 2, y - size / 2, size, size);
+        }
+      }
       for (const [key, cell] of cells) {
         const life = 1 - (now - cell.at) / 1050;
         if (life <= 0) { cells.delete(key); continue; }
@@ -90,7 +114,7 @@ const { tone = 'orange' } = Astro.props;
         ctx.fillRect(cell.x - pixelSize / 2, cell.y - pixelSize / 2, pixelSize, pixelSize);
       }
       ctx.globalAlpha = 1;
-      if (cells.size) frame = requestAnimationFrame(paint);
+      if (cells.size || waves.length) frame = requestAnimationFrame(paint);
     };
     const requestPaint = () => { if (!frame) frame = requestAnimationFrame(paint); };
     const resize = new ResizeObserver(() => {
@@ -117,6 +141,12 @@ const { tone = 'orange' } = Astro.props;
     hero.addEventListener('pointermove', (event) => {
       if (!media.matches || !visible || event.pointerType !== 'mouse') return;
       pending = { x: event.clientX, y: event.clientY };
+      requestPaint();
+    }, { signal: scope.signal, passive: true });
+    hero.addEventListener('pointerdown', (event) => {
+      if (!media.matches || !visible || !(event.target as Element).closest?.('[data-category-glyph]')) return;
+      const rect = trail.getBoundingClientRect();
+      waves.push({ x: event.clientX - rect.left, y: event.clientY - rect.top, at: performance.now() });
       requestPaint();
     }, { signal: scope.signal, passive: true });
     hero.addEventListener('pointerleave', () => { previous = undefined; pending = undefined; }, { signal: scope.signal });
