@@ -7,6 +7,11 @@ let navigationTransition: ViewTransition | undefined;
 let navigating = false;
 let moved = false;
 
+// Clip points as percentages of the snapshot's own box: the shape always spans the
+// full transition layer, even when its size differs from innerWidth/innerHeight.
+const pct = (value: number, total: number) => `${((value / total) * 100).toFixed(3)}%`;
+const at = (x: number, y: number) => `${pct(x, innerWidth)} ${pct(y, innerHeight)}`;
+
 // Row-by-row raster contour: every edge lands on a square cell boundary.
 // Discrete keyframes avoid interpolating hundreds of points each frame.
 function pixelCircle(x: number, y: number, radius: number, cell: number) {
@@ -20,8 +25,8 @@ function pixelCircle(x: number, y: number, radius: number, cell: number) {
     const visible = Math.abs(dy) <= radius;
     const l = visible ? a : Math.round(x / cell) * cell;
     const r = visible ? b : l;
-    right.push(`${r}px ${top}px`, `${r}px ${low}px`);
-    left.unshift(`${l}px ${low}px`, `${l}px ${top}px`);
+    right.push(at(r, top), at(r, low));
+    left.unshift(at(l, low), at(l, top));
   }
   return `polygon(${[...right, ...left].join(",")})`;
 }
@@ -47,7 +52,7 @@ export function changeTheme(theme: string, control: HTMLElement, sync: () => voi
   const steps = number("--theme-steps");
   const cell = number("--theme-cell-size");
   const frames = Array.from({ length: steps + 1 }, (_, i) => ({
-    clipPath: i === 0 ? `circle(0px at ${x}px ${y}px)` : i === steps ? "inset(0)" : pixelCircle(x, y, radius * i / steps, cell),
+    clipPath: i === 0 ? `circle(0 at ${at(x, y)})` : i === steps ? "inset(0)" : pixelCircle(x, y, radius * i / steps, cell),
     offset: i / steps, easing: "steps(1, end)",
   }));
   const transition = document.startViewTransition(flipTheme);
@@ -75,10 +80,7 @@ function curtainBand(progress: number, backward: boolean) {
   const front = Math.min(1, progress / 0.45) * extent;
   const tail = Math.max(0, (progress - 0.55) / 0.45) * extent;
   const right: string[] = [], left: string[] = [];
-  // Percentages of the snapshot's own box: the band always spans the whole curtain,
-  // even when the transition layer's size differs from innerWidth/innerHeight.
-  const pct = (value: number, total: number) => `${((value / total) * 100).toFixed(3)}%`;
-  const point = (x: number, y: number) => `${pct(backward ? innerWidth - x : x, innerWidth)} ${pct(y, innerHeight)}`;
+  const point = (x: number, y: number) => at(backward ? innerWidth - x : x, y);
   for (let row = 0; row < rows; row++) {
     const top = row * cell, bottom = Math.min(innerHeight, top + cell);
     const a = Math.min(innerWidth, Math.max(0, Math.floor(tail - row) * cell));
