@@ -398,8 +398,19 @@ img {
   min-height: 88px;
   border-radius: 50px;
   background: color-mix(in srgb, var(--surface) 85%, transparent);
-  backdrop-filter: blur(12.4px);
   box-shadow: inset -2px -2px 12px #64736226;
+}
+/* The bar's blur lives on a layer: a backdrop-filter on .site-nav itself would stop
+   the megamenu panels from blurring the page behind them. */
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: blur(12.4px);
+  -webkit-backdrop-filter: blur(12.4px);
+  pointer-events: none;
 }
 
 .site-logo {
@@ -545,7 +556,7 @@ img {
   padding: 24px 28px;
   border-radius: 16px;
   color: #f5f3ef;
-  background-color: rgb(32 35 34 / 0.9);
+  background-color: rgb(32 35 34 / 0.8);
   background-image:
     linear-gradient(180deg, #00000005, #0000001a),
     radial-gradient(
@@ -553,9 +564,9 @@ img {
       rgb(100 115 98 / 0.7) 6%,
       rgb(189 217 185 / 0) 82%
     ),
-    linear-gradient(90deg, rgb(32 35 34 / 0.88), rgb(32 35 34 / 0.84));
-  backdrop-filter: blur(16px) saturate(155%);
-  -webkit-backdrop-filter: blur(16px) saturate(155%);
+    linear-gradient(90deg, rgb(32 35 34 / 0.78), rgb(32 35 34 / 0.74));
+  backdrop-filter: blur(8px) saturate(155%);
+  -webkit-backdrop-filter: blur(8px) saturate(155%);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.12),
     inset 0 0 0 1px rgb(255 255 255 / 0.06),
@@ -587,7 +598,7 @@ img {
       rgb(100 115 98 / 0.72) 6%,
       rgb(189 217 185 / 0) 84%
     ),
-    linear-gradient(90deg, rgb(32 35 34 / 0.88), rgb(32 35 34 / 0.84));
+    linear-gradient(90deg, rgb(32 35 34 / 0.78), rgb(32 35 34 / 0.74));
 }
 .nav-item.is-open .nav-panel {
   visibility: visible;
