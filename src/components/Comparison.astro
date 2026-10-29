@@ -5,7 +5,8 @@ import Icon from "./Icon.astro";
 import Button from "./Button.astro";
 import ComparisonShade from "./ComparisonShade.astro";
 import DitherIcon from "./DitherIcon.astro";
-const comparisonIcons = ["work", "focus", "platforms", "time", "communication", "ownership", "next"];
+import ComparisonStrokes from "./ComparisonStrokes.astro";
+const comparisonIcons = ["work", "focus", "platforms", "time", "communication", "ownership", "next"] as const;
 const platforms = ["WordPress", "Webflow", "Framer", "Shopify", "React"];
 const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 ---
@@ -74,6 +75,7 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
           </div>
         ))}
         <div class="comparison-illustration" aria-hidden="true">
+        <ComparisonStrokes kind={comparisonIcons[i]} />
         <picture>
           <source media="(max-width: 768px)" srcset={`/assets/comparison/${comparisonIcons[i]}.webp`} />
           <img width="160" height="160" alt="" loading="lazy" decoding="async" />
@@ -99,6 +101,8 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 
 <style>
   .comparison-platforms { display:none; }
+  /* Keep the icon above the looping strokes before its dither canvas is ready. */
+  .comparison-illustration picture { position:relative; display:block; width:100%; height:100%; }
   @media (max-width:768px) {
     .comparison-platform-copy { display:none; }
     .comparison-platforms { display:flex; flex-wrap:wrap; gap:14px 20px; }
