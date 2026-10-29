@@ -1,8 +1,13 @@
 ---
-interface Props { tone?: 'orange' | 'green'; world?: boolean }
-const { tone = 'orange', world = false } = Astro.props;
+interface Props {
+  tone?: 'orange' | 'green';
+  world?: boolean;
+  /** Selector inside the section the world pulse spreads from (defaults to Bahia on the map). */
+  worldOrigin?: string;
+}
+const { tone = 'orange', world = false, worldOrigin } = Astro.props;
 ---
-<div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} data-world={world ? '' : undefined} aria-hidden="true">
+<div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} data-world={world ? '' : undefined} data-world-origin={worldOrigin} aria-hidden="true">
   <canvas class="pixel-trail__rest"></canvas>
   <canvas class="pixel-trail__trail"></canvas>
 </div>
@@ -53,8 +58,8 @@ const { tone = 'orange', world = false } = Astro.props;
     // pointermove (high-rate mice otherwise force a layout read per event).
     let pending: { x: number; y: number } | undefined;
     const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); waves.length = 0; previous = undefined; pending = undefined; };
-    // World mode: land dots pulse in slow rings spreading from Bahia, which sits
-    // behind the portrait (lon -39 lands at ~39% of the width on a full -180..180 map).
+    // World mode: land dots pulse in round rings spreading from Bahia (lon -39 lands
+    // at ~39% of the width on a full -180..180 map), or from an origin element.
     const world = root.dataset.world !== undefined;
     const HOME = { u: (180 - 39) / 360, v: (80 + 12) / 138 };
     let land: { x: number; y: number; d: number }[] = [];
@@ -86,9 +91,15 @@ const { tone = 'orange', world = false } = Astro.props;
       land = [];
       if (!world) return;
       const mapHeight = height * 0.88;
+      let ox = HOME.u * width, oy = HOME.v * mapHeight;
+      const originEl = root.dataset.worldOrigin ? panel.querySelector(root.dataset.worldOrigin) : null;
+      if (originEl) {
+        const box = originEl.getBoundingClientRect(), base = root.getBoundingClientRect();
+        ox = box.left + box.width / 2 - base.left;
+        oy = box.top + box.height / 2 - base.top;
+      }
       for (let x = offset; x < width; x += step) for (let y = offset; y < mapHeight; y += step) {
-        const u = x / width, v = y / mapHeight;
-        if (isLand(u, v)) land.push({ x, y, d: Math.hypot((u - HOME.u) * 2, v - HOME.v) });
+        if (isLand(x / width, y / mapHeight)) land.push({ x, y, d: Math.hypot(x - ox, y - oy) / mapHeight });
       }
     };
     const worldMotion = matchMedia('(prefers-reduced-motion: no-preference)');
