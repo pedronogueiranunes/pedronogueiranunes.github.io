@@ -6,6 +6,12 @@
 .about-page .about-hero > div > p:not(.section-eyebrow) { font-size:22px; color:var(--text-secondary); margin:16px 0 0; }
 .about-page .about-portrait { height:auto; aspect-ratio:521.52 / 539.387; }
 .about-page .about-portrait img { height:auto; }
+/* Desktop: the portrait bleeds out to 16px inside the navbar's left edge and starts 41px under it.
+   The nav is 18px in (centred at 1410px max); the section pads 64px (40px <=1024). */
+@media (min-width:769px) {
+ .about-page .about-portrait { --hero-pad:64px; margin-left:calc(max(18px, (100vw - 1410px) / 2) - max(0px, (100vw - 1440px) / 2) - var(--hero-pad) + 16px); margin-top:-16px; }
+}
+@media (min-width:769px) and (max-width:1024px) { .about-page .about-portrait { --hero-pad:40px; } }
 .about-page .about-stats { padding-top:56px; padding-bottom:64px; }
 .about-page .about-stats-card { display:block; border:0; padding:28px 32px; border-radius:20px; background:var(--surface); box-shadow:0 16px 40px #64736229; }
 .about-page .about-stats dl { gap:0; margin:0 0 20px; }
