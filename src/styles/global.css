@@ -1166,7 +1166,7 @@ details[open] > summary > .faq-plus:after {
   }
   .desktop-nav {
     gap: 16px;
-    padding-inline: 24px;
+    padding-inline: 16px;
   }
   .site-logo {
     width: 140px;
@@ -6706,7 +6706,7 @@ body { overflow-x: clip; }
   html:not([lang="en"]) .your-turn-label { font-size: 24px; line-height: 1.1; }
 }
 @media (min-width: 1025px) and (max-width: 1200px) {
-  html:not([lang="en"]) .desktop-nav { gap: 8px; padding-inline: 12px; }
+  html:not([lang="en"]) .desktop-nav { gap: 8px; padding-inline: 16px; }
   html:not([lang="en"]) .nav-link { font-size: 11px; padding-inline: 10px; }
   html:not([lang="en"]) .site-nav .site-logo { width: 120px; }
   html:not([lang="en"]) .site-nav .action { font-size: 12px; padding-inline: 12px; }

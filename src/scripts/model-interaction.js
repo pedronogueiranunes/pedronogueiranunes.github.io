@@ -72,8 +72,12 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   const dizzy = document.createElement("div");
   dizzy.className = "portrait-dizzy";
   dizzy.setAttribute("aria-hidden", "true");
-  dizzy.innerHTML = '<div class="portrait-dizzy__orbit"><i></i><i></i><i></i><i></i><i></i></div>';
-  viewport.appendChild(dizzy);
+  const star = `<i><svg viewBox="0 0 24 24" shape-rendering="crispEdges"><path fill="#a33b17" d="M10 2h5v5h3v3h4v5h-4v3h-3v4h-5v-4H7v-3H3v-5h4V7h3z"/><path fill="#ff5a1f" d="M9 1h5v5h3v3h4v4h-4v3h-3v4H9v-4H6v-3H2V9h4V6h3z"/><path fill="#ffb18b" d="M9 2h3v4H9zM6 7h3v2H6zM3 9h3v2H3z"/></svg></i>`;
+  dizzy.innerHTML = `<div class="portrait-dizzy__orbit">${star.repeat(5)}</div>`;
+  dizzy.classList.add("portrait-dizzy--front");
+  const dizzyBack = dizzy.cloneNode(true);
+  dizzyBack.classList.replace("portrait-dizzy--front", "portrait-dizzy--back");
+  viewport.append(dizzyBack, dizzy);
   let movements = [], lastDirection = 0, dizzyTimer = 0;
 
   // Custom drag cursor
@@ -163,11 +167,12 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
           const direction = Math.sign(deltaX);
           movements.push({ time: now, distance: Math.abs(deltaX), turn: lastDirection && direction !== lastDirection ? 1 : 0 });
           lastDirection = direction;
-          movements = movements.filter((entry) => now - entry.time < 1800);
-          if (movements.reduce((sum, entry) => sum + entry.distance, 0) > 300 && movements.reduce((sum, entry) => sum + entry.turn, 0) >= 3) {
+          movements = movements.filter((entry) => now - entry.time < 2200);
+          if (movements.reduce((sum, entry) => sum + entry.distance, 0) > 440 && movements.reduce((sum, entry) => sum + entry.turn, 0) >= 4) {
             dizzy.classList.add("is-visible");
+            dizzyBack.classList.add("is-visible");
             clearTimeout(dizzyTimer);
-            dizzyTimer = window.setTimeout(() => dizzy.classList.remove("is-visible"), 3200);
+            dizzyTimer = window.setTimeout(() => { dizzy.classList.remove("is-visible"); dizzyBack.classList.remove("is-visible"); }, 4200);
             movements = [];
           }
         }
@@ -397,5 +402,6 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     dragCursor?.remove?.();
     clearTimeout(dizzyTimer);
     dizzy.remove();
+    dizzyBack.remove();
   };
 }

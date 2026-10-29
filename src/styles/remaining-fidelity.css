@@ -558,29 +558,48 @@
 
 /* The orbit is attached to the travelling portrait, not to the viewport. */
 .portrait-dizzy {
-  position: absolute; inset: 0; z-index: 5;
+  position: absolute; inset: 0;
   pointer-events: none; opacity: 0; transition: opacity 350ms ease;
 }
+.portrait-stage > #splat-canvas { position: absolute; z-index: 1; }
+.portrait-dizzy--back { z-index: 0; }
+.portrait-dizzy--front { z-index: 2; }
 .portrait-dizzy.is-visible { opacity: 1; }
 .portrait-dizzy__orbit {
-  position: absolute; left: 50%; top: 24%; width: 42%; height: 16%;
+  position: absolute; left: 50%; top: 27%; width: 47%; height: 18%;
   transform: translate(-50%, -50%);
 }
 .portrait-dizzy__orbit i {
-  position: absolute; left: 50%; top: 50%; width: 14px; height: 14px;
-  background: #ff5a1f;
-  clip-path: polygon(40% 0,60% 0,60% 30%,100% 30%,100% 60%,60% 60%,60% 100%,40% 100%,40% 60%,0 60%,0 30%,40% 30%);
-  transform: translate(-50%, -50%) rotate(var(--star-angle)) translateX(clamp(46px, 9vw, 110px)) rotate(calc(-1 * var(--star-angle)));
+  position: absolute; left: 50%; top: 50%; width: 20px; height: 20px;
+  transform: translate(-50%, -50%); will-change: left, top, transform;
 }
-.portrait-dizzy__orbit i:nth-child(1) { --star-angle: 0deg; }
-.portrait-dizzy__orbit i:nth-child(2) { --star-angle: 72deg; }
-.portrait-dizzy__orbit i:nth-child(3) { --star-angle: 144deg; }
-.portrait-dizzy__orbit i:nth-child(4) { --star-angle: 216deg; }
-.portrait-dizzy__orbit i:nth-child(5) { --star-angle: 288deg; }
+.portrait-dizzy__orbit svg { display:block; width:100%; height:100%; }
 @media (prefers-reduced-motion: no-preference) {
-  .portrait-dizzy.is-visible .portrait-dizzy__orbit { animation: portrait-dizzy-orbit 2.4s linear infinite; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i { animation: portrait-star-orbit 3s linear infinite, portrait-star-front 3s steps(1, end) infinite; }
+  .portrait-dizzy--back.is-visible .portrait-dizzy__orbit i { animation-name: portrait-star-orbit, portrait-star-back; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit svg { animation: portrait-star-bob 1.6s ease-in-out infinite; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(2) svg { animation-delay: -.3s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(3) svg { animation-delay: -.6s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(4) svg { animation-delay: -.9s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(5) svg { animation-delay: -1.2s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(2) { animation-delay: -.6s, -.6s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(3) { animation-delay: -1.2s, -1.2s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(4) { animation-delay: -1.8s, -1.8s; }
+  .portrait-dizzy.is-visible .portrait-dizzy__orbit i:nth-child(5) { animation-delay: -2.4s, -2.4s; }
 }
-@keyframes portrait-dizzy-orbit { from { transform: translate(-50%, -50%) rotate(0); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes portrait-star-bob { 0%,100% { transform:translateY(-8px); } 50% { transform:translateY(8px); } }
+@keyframes portrait-star-front { 0%,50% { opacity:1; } 50.01%,100% { opacity:0; } }
+@keyframes portrait-star-back { 0%,50% { opacity:0; } 50.01%,100% { opacity:1; } }
+@keyframes portrait-star-orbit {
+  0%,100% { left:100%; top:50%; transform:translate(-50%,-50%) scale(.85); }
+  12.5% { left:85%; top:85%; transform:translate(-50%,-50%) scale(1); }
+  25% { left:50%; top:100%; transform:translate(-50%,-50%) scale(1.12); }
+  37.5% { left:15%; top:85%; transform:translate(-50%,-50%) scale(1); }
+  50% { left:0%; top:50%; transform:translate(-50%,-50%) scale(.85); }
+  62.5% { left:15%; top:15%; transform:translate(-50%,-50%) scale(.72); }
+  75% { left:50%; top:0%; transform:translate(-50%,-50%) scale(.68); }
+  87.5% { left:85%; top:15%; transform:translate(-50%,-50%) scale(.72); }
+}
 @media (prefers-reduced-motion: reduce) { .portrait-dizzy { display: none; } }
 
 /* Match the hero's quiet secondary text link. */

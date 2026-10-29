@@ -107,8 +107,8 @@ const glyphs = [
     [0x55, 0x68, 0x51],
     [0x6d, 0x80, 0x65],
     [0x87, 0x9c, 0x79],
-    [0xa3, 0xb7, 0x90],
-    [0xc2, 0xd2, 0xae],
+    [0xae, 0xbd, 0xa5],
+    [0xd2, 0xdb, 0xca],
   ];
   const LIGHT = (() => {
     const v = [-0.34, -0.5, 0.8];
@@ -241,7 +241,7 @@ const glyphs = [
         const z2 = ny * sinX + z1 * cosX;
         const dot = Math.max(0, x1 * LIGHT[0] + y1 * LIGHT[1] + z2 * LIGHT[2]);
         const front = nz > 0.5;
-        const intensity = front ? 0.5 + 0.42 * dot : 0.12 + 0.5 * dot;
+        const intensity = front ? 0.53 + 0.42 * dot : 0.12 + 0.5 * dot;
         return Math.round(clamp01(intensity) * 255);
       };
 

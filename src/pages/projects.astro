@@ -406,6 +406,10 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
   :global(.your-turn-card) { isolation:isolate; }
   :global(.your-turn-card .your-turn-actions .action:not(.action--secondary):is(:hover, :focus-visible):not(:disabled):not([aria-disabled="true"])) { background:#fff; color:#232625; }
   :global(.your-turn-growth) { z-index:2; }
+  @media (min-width:1101px) {
+    :global(body.projects-page .your-turn-card .your-turn-orbit) { left:-245px; }
+    :global(body.projects-page .your-turn-card .your-turn-growth) { left:155px; }
+  }
   :global(.your-turn-growth img) { width:100%; height:100%; object-fit:contain; }
   :global(.your-turn-label), :global(.your-turn-copy), :global(.your-turn-actions) { z-index:2; }
   .projects-filters .category-filters button { display:flex; align-items:center; gap:10px; }
