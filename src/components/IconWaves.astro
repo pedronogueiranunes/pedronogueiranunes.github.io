@@ -14,7 +14,8 @@
       const offer=card.classList.contains('offer-card');
       const growth=card.classList.contains('your-turn-card');
       const mobile=matchMedia('(max-width:768px)');
-      const autoAnimate=()=>growth && mobile.matches;
+      // Touch screens have no hover: the effect plays on its own while the card is in view.
+      const autoAnimate=()=>!hover.matches || (growth && mobile.matches);
       const icon=card.querySelector<HTMLCanvasElement>('.dither-icon');
       // The offer orbit follows the original image box: it is laid out before the
       // dither canvas replaces the artwork.
@@ -22,6 +23,7 @@
       const ctx=canvas.getContext('2d');
       if(!ctx || !icon || !art) return;
       let maskX=0,maskY=0,maskRadius=0;
+      let iconRadius=0;
       let width=0,height=0,x=0,y=0,radius=0,frame=0,last=0,elapsed=0,visible=false,active=false;
       // Offer cards get a dotted orbit around the icon, echoing the shoulder
       // ring on the 3D portrait; the other cards keep the expanding rings.
@@ -42,6 +44,7 @@
         ctx.setTransform(ratio,0,0,ratio,0,0);
         x=artBounds.left-bounds.left+artBounds.width*.5;
         y=artBounds.top-bounds.top+artBounds.height*.5;
+        iconRadius=Math.max(artBounds.width,artBounds.height)*.5;
         if(offer){
           // Inclined ellipse: dots travel around the icon like a ring around a
           // planet, slightly past the artwork on every side.
@@ -115,6 +118,13 @@
           ctx.globalAlpha=.6*fadeIn*Math.pow(1-progress,1.35);
           ctx.beginPath();ctx.arc(x,y,12+progress*radius,0,Math.PI*2);ctx.stroke();
         }
+        // Clear the rings over the icon: a transparent core that fades into the
+        // rings around it, so the pulse never mixes with the artwork.
+        // ponytail: radius stops (.55 / 1.05 of the icon radius) tune where rings appear.
+        const core=ctx.createRadialGradient(x,y,iconRadius*.55,x,y,iconRadius*1.05);
+        core.addColorStop(0,'rgba(0,0,0,1)');core.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.globalCompositeOperation='destination-out';ctx.globalAlpha=1;
+        ctx.fillStyle=core;ctx.fillRect(x-iconRadius*1.1,y-iconRadius*1.1,iconRadius*2.2,iconRadius*2.2);
         ctx.restore();
         ctx.globalAlpha=1;
       };
