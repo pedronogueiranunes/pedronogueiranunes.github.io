@@ -2,7 +2,7 @@
 export const site = {
   email: "pedronogueiranunes@gmail.com",
   bookingUrl: "",
-  cvUrl: "",
+  cvUrl: "/assets/Pedro_Nogueira_CV_2026_EN.pdf",
   sampleProposalUrl: "",
   socials: { instagram: "", linkedin: "", behance: "", whatsapp: "" },
   legal: { notice: "", privacy: "", cookies: "" },

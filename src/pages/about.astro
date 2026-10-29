@@ -8,6 +8,7 @@ import ToolChip from "../components/ToolChip.astro";
 import Icon from "../components/Icon.astro";
 import DitherIcon from "../components/DitherIcon.astro";
 import { promises, timeline, skills } from "../data/about";
+import { site } from "../data/site";
 // Short complementary lines for the police tapes, one per promise card.
 const promiseIcons = ["design", "development", "motion", "collaboration"];
 const tapeCopy = [
@@ -98,6 +99,7 @@ import { logoFor } from "../data/home";
   </section>
   <section class="career-section page-section" id="timeline">
     <h2>Experience across teams and disciplines</h2>
+    {site.cvUrl ? <a class="text-link career-cv" href={site.cvUrl} download>Download CV <Icon name="download" /></a> : <a class="text-link career-cv" href={`mailto:${site.email}?subject=CV%20request`}>Request my CV <Icon name="arrow-right" /></a>}
     <ol class="career-timeline">
       {timeline.map(([date, title, description]) => (
         <li>
