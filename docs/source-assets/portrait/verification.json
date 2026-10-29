@@ -1,0 +1,66 @@
+[
+  {
+    "route": "/",
+    "mobile": false,
+    "ready": "true",
+    "model": [
+      {
+        "url": "http://127.0.0.1:4322/assets/pedro-head-92k.sog",
+        "bytes": 1759970
+      }
+    ],
+    "canvas": {
+      "width": 640,
+      "height": 480
+    },
+    "errors": []
+  },
+  {
+    "route": "/about",
+    "mobile": false,
+    "ready": "true",
+    "model": [
+      {
+        "url": "http://127.0.0.1:4322/assets/pedro-head-92k.sog",
+        "bytes": 1759970
+      }
+    ],
+    "canvas": {
+      "width": 540,
+      "height": 558
+    },
+    "errors": []
+  },
+  {
+    "route": "/",
+    "mobile": true,
+    "ready": "true",
+    "model": [
+      {
+        "url": "http://127.0.0.1:4322/assets/pedro-head-92k.sog",
+        "bytes": 1759970
+      }
+    ],
+    "canvas": {
+      "width": 555,
+      "height": 547
+    },
+    "errors": []
+  },
+  {
+    "route": "/about",
+    "mobile": true,
+    "ready": "true",
+    "model": [
+      {
+        "url": "http://127.0.0.1:4322/assets/pedro-head-92k.sog",
+        "bytes": 1759970
+      }
+    ],
+    "canvas": {
+      "width": 525,
+      "height": 525
+    },
+    "errors": []
+  }
+]
