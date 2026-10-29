@@ -1,76 +1,77 @@
-// Current Figma Services, not the older prices in the original brief.
-// TODO: confirm real number. All offer prices, durations and sample results require approval.
+// TODO: confirm real number. Offer prices and durations are conservative examples pending Pedro's approval.
 export const offers = [
   {
-    title: "CRO audit",
-    description: "For sites with traffic but not enough calls.",
-    items: [
-      "Full review of your key pages",
-      "Heatmaps and analytics read-out",
-      "Prioritized fix list with effort",
-      "Two quick wins shipped",
-    ],
-    duration: "1 to 2 weeks",
-    price: "From $1,000",
-  },
-  {
     title: "Website design and build",
-    description:
-      "For sites that look dated, load slowly or are painful to update, on any platform.",
+    description: "For brands that need a site as good as the work they do.",
     items: [
-      "Conversion-first UX and UI in Figma",
-      "Built on WordPress, Webflow, Framer, Shopify or React",
-      "Forms, tracking and integrations",
-      "30 days of post-launch support",
+      "UX, UI and a small design system in Figma",
+      "Built on Webflow, WordPress, React or Shopify",
+      "CMS your team edits without breaking layouts",
+      "Forms, tracking and integrations wired in",
     ],
-    duration: "6 to 8 weeks",
-    price: "From $7,000",
+    duration: "6 to 10 weeks", // TODO: confirm with Pedro before publishing
+    price: "From $9,000", // TODO: confirm real number
     featured: true,
   },
   {
-    title: "White-label for agencies",
+    title: "Brand identity and design systems",
     description:
-      "For agencies with more design and dev work than senior hands.",
+      "For companies whose look no longer matches where they are going.",
     items: [
-      "Design, dev or both, under your brand",
-      "Joins your Slack, Jira or Asana",
-      "Clean, documented handover",
-      "Flexible monthly capacity",
+      "Logo system, color and type",
+      "Guidelines your team and vendors can follow",
+      "Design tokens and components in Figma",
+      "Ready to carry into the website",
     ],
-    duration: "Starts in 2 weeks",
-    price: "From $4,000 / month",
+    duration: "3 to 6 weeks", // TODO: confirm with Pedro before publishing
+    price: "From $5,000", // TODO: confirm real number
+  },
+  {
+    title: "CRO audit and redesign",
+    description: "For sites with traffic that is not turning into calls.",
+    items: [
+      "Review of up to 5 key pages, desktop and mobile",
+      "Analytics and heatmap read-out",
+      "Prioritized fix list with effort",
+      "Redesign of your most important page in Figma",
+    ],
+    duration: "2 to 3 weeks", // TODO: confirm with Pedro before publishing
+    price: "From $1,800", // TODO: confirm real number
   },
 ];
+// TODO: confirm real number. Bundle price shown under the offer cards.
+export const bundleNote = "Brand and website together start at $13,000.";
 export const capabilities = [
   {
     title: "Websites & CMS",
     body: "Marketing sites your team can edit on their own, without breaking the layout.",
-    tools: ["WordPress", "Webflow", "Framer"],
+    tools: ["Webflow", "WordPress", "Framer"],
   },
   {
-    title: "Headless & e-commerce",
-    body: "Custom front ends and Hydrogen stores for when a page builder is not enough.",
-    tools: ["React", "Next.js", "Shopify Hydrogen"],
+    title: "Brand identity",
+    body: "Logos, color, type and guidelines with a clear point of view.",
+    tools: ["Illustrator", "Figma"],
+  },
+  {
+    title: "Design systems",
+    body: "Tokens and components in Figma that developers build without guessing.",
+    // TODO: confirm with Pedro before publishing (Storybook only if he uses it).
+    tools: ["Figma", "Variables", "Storybook"],
   },
   {
     title: "CRO & analytics",
     body: "Find where visitors drop off, then fix the pages that bring in revenue first.",
-    tools: ["GA4", "GTM", "Hotjar"],
+    tools: ["GA4", "GTM", "Clarity", "Hotjar"],
   },
   {
-    title: "UX/UI & design systems",
-    body: "Wireframes, UI and small design systems in Figma that developers build without guessing.",
-    tools: ["Figma", "FigJam", "Prototypes"],
+    title: "Custom front end & e-commerce",
+    body: "React, Next.js and Shopify Hydrogen for when a page builder is not enough.",
+    tools: ["React", "Next.js", "Shopify Hydrogen"],
   },
   {
-    title: "Illustration & art direction",
-    body: "Custom illustration and a clear visual direction, so the site never looks like a template.",
-    tools: ["Illustrator", "Photoshop", "Procreate"],
-  },
-  {
-    title: "Motion, video & sound",
-    body: "Interface animation, edited launch videos and original sound for brands that move.",
-    tools: ["GSAP", "After Effects", "DaVinci", "Ableton"],
+    title: "Illustration, motion & sound",
+    body: "Custom illustration, interface animation and original sound, so the brand never looks generic.",
+    tools: ["Illustrator", "After Effects", "GSAP", "Ableton"],
   },
 ];
 export const deliverables = [
@@ -101,6 +102,7 @@ export const deliverables = [
   ],
   [
     "Launch + handover",
+    // TODO: confirm with Pedro before publishing (30 days of fixes).
     "I launch, record a walkthrough video for your team and stay around for 30 days to fix anything that comes up.",
     "Week 8",
   ],
@@ -108,8 +110,8 @@ export const deliverables = [
 export const schedule = [
   [
     "Week 1",
-    "Free plan",
-    "I review your site, analytics and three competitors, and send a written plan.",
+    "Discovery",
+    "I review your site, analytics and competitors, and send a written plan.",
   ],
   [
     "Week 2 to 4",
@@ -127,117 +129,114 @@ export const schedule = [
     "A monthly report and the next round of tests, if you want to keep going.",
   ],
 ];
-// Only the first FAQ answer is authored in the visible Figma. Remaining answers are editorial TODOs.
 export const faq = [
   {
     question: "What does a project usually cost?",
+    // TODO: confirm real number
     answer:
-      "It depends on scope. After the first call you get a fixed price range in writing, before any commitment.",
+      "Websites start at $9,000, brand identity at $5,000 and CRO audits at $1,800. After the first call you get a fixed price range in writing, before any commitment.",
   },
   {
     question: "Which platforms do you work with?",
-    answer: "WordPress, Webflow, Framer, Shopify and React.",
+    answer:
+      "Webflow, WordPress, Framer, Shopify and React or Next.js. I recommend one based on who will run the site after launch.",
   },
   {
     question: "Do you work white-label with agencies?",
     answer:
-      "Design, dev or both, under your brand. Joins your Slack, Jira or Asana. Clean, documented handover. Flexible monthly capacity.",
+      "Yes. I have worked as a subcontractor for agencies and inside agency teams. Rates depend on scope and monthly capacity, so we agree them on a call.",
   },
-  { question: "How fast can we start?", answer: "Starts in 2 weeks." },
-  // TODO: provide the NDA policy; do not publish an invented commitment.
   {
     question: "Do you sign NDAs?",
-    answer: "Ask me by email: pedronogueiranunes@gmail.com.",
+    answer: "Yes, before we look at any files.", // TODO: confirm with Pedro before publishing
   },
   {
-    question: "Just have a quick question?",
-    answer: "Email pedronogueiranunes@gmail.com.",
+    question: "What time zone do you work in?",
+    // TODO: confirm with Pedro before publishing (call hours)
+    answer:
+      "Brasília time (UTC−3). Calls from 11 am to 4 pm Eastern, async the rest of the day. Europe gets late-afternoon calls.",
+  },
+  {
+    question: "Who owns the work?",
+    answer:
+      "You do. Files, accounts and code are yours after the final payment.", // TODO: confirm with Pedro before publishing
+  },
+  {
+    question: "How fast can we start?",
+    answer: "Usually within two weeks. Ask for the current availability.", // TODO: confirm with Pedro before publishing
   },
 ];
 
-// TODO: confirm real number. Services hero case headline.
-export const resultHeadline =
-  "BSA Legal went from no lead flow to +40% qualified contacts.";
-
 export interface CaseResult {
   slug: string;
-  category: string;
   image?: string;
   alt: string;
   headline: string;
-  metrics: [string, string, string][];
+  rows: [string, string][];
 }
 
-// Slides for the Services hero client-result carousel.
-// Slide 1 keeps the approved Figma result. The other five are MOCK placeholders
-// so the carousel can be reviewed before Pedro supplies verified numbers.
-// TODO: replace mock case results and headlines with approved copy and real data.
+// Slides for the Services hero carousel. Facts only (role, stack, link) until verified metrics exist.
 export const caseResults: CaseResult[] = [
   {
     slug: "bsa-legal",
-    category: "Client result · Web build",
     image: "/assets/figma/488-10049-imgImageBsaLegal.webp",
     alt: "BSA Legal website",
-    headline: resultHeadline,
-    metrics: [
-      ["Qualified leads / mo", "15", "+40%"],
-      ["Organic traffic / mo", "1,100", "3.2x"],
-      ["Lighthouse performance", "54", "98"],
-    ],
-  },
-  {
-    slug: "pinelake-broken-bow",
-    category: "Client result · Web build",
-    alt: "",
-    headline: "PineLake Broken Bow turned app bookings into direct ones.",
-    metrics: [
-      ["Booking requests / mo", "24", "+38%"],
-      ["Mobile load time", "3.6s", "1.4s"],
-      ["Lighthouse performance", "61", "96"],
-    ],
-  },
-  {
-    slug: "green-nation-collective",
-    category: "Client result · Web build",
-    alt: "",
-    headline: "Green Nation launched a campaign site their own team runs.",
-    metrics: [
-      ["Newsletter sign-ups", "180", "+52%"],
-      ["Organic traffic / mo", "1,400", "2.1x"],
-      ["Lighthouse performance", "58", "97"],
+    headline: "BSA Legal: brand and website for an entertainment law firm.",
+    rows: [
+      ["Role", "Brand, design system, Webflow build"],
+      ["Stack", "Webflow, GSAP, n8n, Mailchimp"],
+      ["Live", "bsa.legal"],
     ],
   },
   {
     slug: "molina-chambo",
-    category: "Client result · Web build",
     alt: "",
-    headline: "Molina Chambô turned local searches into consultations.",
-    metrics: [
-      ["Practice area pages", "6", "14"],
-      ["Organic traffic / mo", "2,300", "2.4x"],
-      ["Lighthouse performance", "49", "95"],
+    headline: "Molina Chambô: from brand to live site in 2.5 months.",
+    rows: [
+      ["Role", "Brand, design system, Webflow build"],
+      ["Stack", "Webflow, n8n, Clarity"],
+      ["Live", "molinachambo.com.br"],
     ],
   },
   {
-    slug: "waipono-farms",
-    category: "Client result · Web build",
+    slug: "pinelake-broken-bow",
     alt: "",
-    headline: "Waipono Farms brought the farm stand online.",
-    metrics: [
-      ["Online orders / mo", "0", "120"],
-      ["Mobile load time", "4.2s", "1.6s"],
-      ["Lighthouse performance", "55", "97"],
+    headline: "PineLake Broken Bow: direct booking for luxury cabins.",
+    rows: [
+      ["Role", "Website design and build, part of the brand"],
+      ["Stack", "WordPress, ACF Pro, Hostfully API"],
+      ["Live", "pinelakebrokenbow.com"],
     ],
   },
   {
     slug: "lemmbra-olympiad",
-    category: "Client result · Web build",
     alt: "",
-    headline: "Lemmbra Olympiad made registration work in two countries.",
-    metrics: [
-      ["Registration sign-ups", "300", "1,100"],
-      ["Organic traffic / mo", "700", "3.1x"],
-      ["Lighthouse performance", "60", "98"],
+    headline: "Lemmbra Olympiad: a platform for a language olympiad.",
+    rows: [
+      ["Role", "Brand, design system, Webflow build"],
+      ["Stack", "Webflow, Memberstack, API integration"],
+      // TODO: confirm with Pedro before publishing (permission to name the backers)
+      ["Backed by", "German Embassy in Brazil, UFF, UFPR"],
+    ],
+  },
+  {
+    slug: "green-nation-collective",
+    alt: "",
+    headline: "Green Nation Collective: a site for an impact ecosystem.",
+    rows: [
+      ["Role", "Design, design system, Webflow build"],
+      ["Engagement", "Subcontractor for Qodeture"],
+      ["Stack", "Webflow, GA4, GTM"],
+    ],
+  },
+  {
+    slug: "waipono-farms",
+    alt: "",
+    headline: "Waipono Farms: a regenerative farm community in Maui.",
+    rows: [
+      ["Role", "Design, design system, Webflow build"],
+      ["Engagement", "Subcontractor for Qodeture"],
+      ["Stack", "Webflow, GA4, GTM"],
     ],
   },
 ];

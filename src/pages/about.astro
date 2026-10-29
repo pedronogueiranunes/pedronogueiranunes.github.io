@@ -14,13 +14,44 @@ const promiseIcons = ["design", "development", "motion", "collaboration"];
 const tapeCopy = [
   "Design with purpose",
   "Built to work",
-  "Details in motion",
+  "Measured, not guessed",
   "Better together",
 ];
 import { logoFor } from "../data/home";
+const personSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Pedro Nogueira",
+  alternateName: "Pedro José Nogueira Nunes",
+  jobTitle: "Design Engineer",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Vitória da Conquista",
+    addressRegion: "BA",
+    addressCountry: "BR",
+  },
+  knowsLanguage: ["pt", "en", "es"],
+  knowsAbout: [
+    "Web design",
+    "Webflow",
+    "WordPress",
+    "React",
+    "Brand identity",
+    "Design systems",
+    "Conversion rate optimization",
+  ],
+  url: new URL("/about", Astro.site).href,
+  email: `mailto:${site.email}`,
+  sameAs: Object.values(site.socials).filter(Boolean),
+});
 ---
 
-<Base title="About | Pedro Nogueira" pageClass="about-page">
+<Base
+  title="About Pedro Nogueira: design engineer, brand and web"
+  description="Pedro Nogueira is a senior designer and developer based in Brazil, working with agencies and brands in North America and Europe since 2015. Brand, design systems, Webflow, WordPress and React."
+  pageClass="about-page"
+>
+  <script type="application/ld+json" slot="head" set:html={personSchema} />
   <section class="about-hero page-section">
     <PixelTrail tone="green" />
     <div class="about-portrait" id="splat-viewport" data-auto-rotate="true">
@@ -38,20 +69,21 @@ import { logoFor } from "../data/home";
     </div>
     <div>
       <Eyebrow>About me</Eyebrow>
-      <h1>Design and development, brought together.</h1>
-      <p>I'm Pedro Nogueira, a designer and developer with 12+ years of experience across the web, visual design and motion. Currently a Senior Web Designer at BT Marketing, I bring ideas from concept to production.</p>
+      <h1>I design it, then I build it.</h1>
+      {/* TODO: confirm with Pedro before publishing ("lead" vs "work on" at BT Marketing) */}
+      <p>I'm Pedro Nogueira, a design engineer based in Bahia, Brazil. For 12+ years I have taken brands and websites from the first sketch to production, for clients in the US, Canada, Germany and Brazil. Today I lead web design and CRO at BT Marketing, a Toronto agency, and take on a few projects of my own.</p>
       <div class="about-hero__actions">
-        <a class="text-link" href="/contact">Get in touch <Icon name="arrow-right" /></a>
-        <a class="text-link" href="/projects">View selected work <Icon name="arrow-right" /></a>
+        <a class="text-link" href="/contact">Start a project <Icon name="arrow-right" /></a>
+        {site.cvUrl ? <a class="text-link" href={site.cvUrl} download>Download CV <Icon name="download" /></a> : <a class="text-link" href={`mailto:${site.email}?subject=CV%20request`}>Request my CV <Icon name="arrow-right" /></a>}
       </div>
     </div>
   </section>
   <section class="about-approach page-section" aria-labelledby="approach-title">
     <div class="about-approach__inner">
-      <h2 id="approach-title">A multidisciplinary approach to the web</h2>
+      <h2 id="approach-title">From print shops to production code.</h2>
       <div class="about-approach__copy">
         <span class="about-approach__mark" aria-hidden="true"></span>
-        <p>My background spans visual design, front-end development and motion. I've worked on marketing websites, interfaces and audiovisual projects, bringing those disciplines together to create thoughtful digital experiences.</p>
+        <p>I started in graphic design for print, preparing films and plates, and moved to the web soon after. Along the way I spent years in an agency doing art direction, video and motion, then went all in on front-end. From 2021 to 2025 I ran SUPERFLUID, my own studio, designing and building brands, sites and web apps for clients abroad. Since then I have worked inside agencies and consultancies on enterprise Webflow builds, landing pages and conversion work. That mix is the point: I can sit with a brand team in the morning and review a pull request in the afternoon.</p>
       </div>
     </div>
   </section>
@@ -93,8 +125,10 @@ import { logoFor } from "../data/home";
       })}
     </div>
     <div class="promise-facts">
-      <p><span class="mono">Based in</span>Brazil · Remote</p>
-      <p><span class="mono">Languages</span>Portuguese and English</p>
+      <p><span class="mono">Based in</span>Bahia, Brazil · Remote</p>
+      <p><span class="mono">Languages</span>Portuguese (native), English (professional), Spanish (advanced)</p>
+      {/* TODO: confirm with Pedro before publishing */}
+      <p><span class="mono">Working hours</span>Overlaps US Eastern and Pacific</p>
     </div>
   </section>
   <section class="career-section page-section" id="timeline">
@@ -143,7 +177,8 @@ import { logoFor } from "../data/home";
       scope.cleanup(initReveal());
       const approach = document.querySelector<HTMLElement>(".about-approach");
       const heading = approach?.querySelector<HTMLHeadingElement>("h2");
-      const wordPattern = /multidisciplin(?:ary|ar|aire)/i;
+      // Highlights "production" in each locale (EN/FR production, ES producción, PT produção).
+      const wordPattern = /produ(?:ction|cción|ção)/i;
       if (approach && heading && !heading.querySelector(".approach-word")) {
         const text = heading.textContent || "";
         const match = wordPattern.exec(text);

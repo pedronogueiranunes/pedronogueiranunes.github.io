@@ -9,7 +9,6 @@ import Button from "../components/Button.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import ToolChip from "../components/ToolChip.astro";
 import CheckList from "../components/CheckList.astro";
-import Comparison from "../components/Comparison.astro";
 import RelatedProjects from "../components/RelatedProjects.astro";
 import FAQ from "../components/FAQ.astro";
 import DitherIcon from "../components/DitherIcon.astro";
@@ -24,6 +23,7 @@ import {
   schedule,
   faq,
   caseResults,
+  bundleNote,
 } from "../data/services";
 import { logoFor } from "../data/home";
 const projects = (await getCollection("projects")).sort(
@@ -40,34 +40,48 @@ const resultSlides = caseResults.map((result) => {
     tint: project?.data.tint ?? "#f3e8c6",
   };
 });
+const faqSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+});
 ---
 
-<Base title="Services | Pedro Nogueira" pageClass="services-page">
+<Base
+  title="Services: websites, brand identity, design systems and CRO | Pedro Nogueira"
+  description="Senior design engineer for agencies and brands in North America and Europe. Brand identity, design systems, and websites designed and built on Webflow, WordPress or React."
+  pageClass="services-page"
+>
+  <script type="application/ld+json" slot="head" set:html={faqSchema} />
   <section class="service-hero page-section">
     <PixelTrail tone="green" />
     <div>
       <Eyebrow>Services</Eyebrow>
       <h1>
-        Websites that sell,
+        Brands, design systems and websites.
         <br />
-        on the stack that fits.
+        Designed and built by one senior hand.
       </h1>
       <p>
-        Design, development and CRO for companies and agencies. 12+ years
-        shipping on WordPress, Webflow, Framer, Shopify and React, plus the
-        illustration and motion that make a brand feel like nobody else.
+        I design the identity, turn it into a system, and ship the site on the
+        platform your team can run. 12+ years of client work, with the
+        illustration and motion that keep a brand from looking like a template.
       </p>
       <CheckList
         items={[
-          "Conversion audit before any redesign",
-          "Built on the platform your team can actually run",
-          "White-label design and dev for agencies",
+          "Brand, design system and build in one place",
+          "Research and CRO before any redesign",
+          "Webflow, WordPress, React or Shopify, chosen for your team",
         ]}
       />
       <div class="actions">
-        <Button href="/contact">Book a call</Button>
+        <Button href="/contact">Start a project</Button>
         <Button href="#results" secondary>
-          See the results
+          See the work
         </Button>
       </div>
       <div class="builds-on">
@@ -84,8 +98,7 @@ const resultSlides = caseResults.map((result) => {
         )}
       </div>
       <p class="mono muted">
-        5 platforms · Clients in the US, Canada and Germany · Replies within 24
-        hours
+        Clients in the US, Canada, Germany and Brazil · Remote, US hours
       </p>
     </div>
     <div class="service-result-slider" data-result-slider>
@@ -109,26 +122,20 @@ const resultSlides = caseResults.map((result) => {
               />
             </div>
             <div class="service-result-body">
-              <p class="result-tag">{slide.category}</p>
+              <p class="result-tag">Selected work</p>
               <h2>{slide.headline}</h2>
               <table>
                 <thead>
                   <tr>
-                    <th>Metric</th>
-                    <th>Before</th>
-                    <th>After</th>
+                    <th>Scope</th>
+                    <th>Detail</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {slide.metrics.map((row) => (
+                  {slide.rows.map(([label, detail]) => (
                     <tr>
-                      {row.map((cell, cellIndex) =>
-                        cellIndex === 0 ? (
-                          <th scope="row">{cell}</th>
-                        ) : (
-                          <td>{cell}</td>
-                        ),
-                      )}
+                      <th scope="row">{label}</th>
+                      <td>{detail}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -167,7 +174,7 @@ const resultSlides = caseResults.map((result) => {
     <div class="section-heading">
       <div>
         <Eyebrow>Engagements</Eyebrow>
-        <h2>Three ways to work together.</h2>
+        <h2>Three ways to start.</h2>
       </div>
       <p>
         Not sure which one fits? <strong>The first call sorts that out.</strong>
@@ -208,24 +215,50 @@ const resultSlides = caseResults.map((result) => {
         </article>
       ))}
     </div>
+    <p class="mono muted offer-bundle-note">{bundleNote}</p>
+  </section>
+  <section class="agencies-section page-section" id="agencies">
+    <div class="section-heading">
+      <div>
+        <Eyebrow>For agencies</Eyebrow>
+        <h2>Senior design and build, under your brand.</h2>
+      </div>
+      {/* TODO: confirm with Pedro before publishing (naming On The Map, ilegra and BT Marketing) */}
+      <p>
+        I have worked as a subcontractor for agencies in the US and Canada, and
+        inside teams at On The Map, ilegra and BT Marketing. I join your Slack,
+        Jira or Asana, follow your process and hand over clean, documented
+        files.
+      </p>
+    </div>
+    <CheckList
+      items={[
+        "Design, development or both",
+        "White-label, NDA friendly", // TODO: confirm with Pedro before publishing (NDA)
+        "Monthly capacity or per project",
+        "Rates on request",
+      ]}
+    />
+    <div class="actions">
+      <Button href="/contact?route=agency">Talk about a partnership</Button>
+    </div>
   </section>
   <section class="capabilities page-section" id="stacks">
     <div class="section-heading">
       <div>
         <Eyebrow>Stacks &amp; skills</Eyebrow>
-        <h2>One partner, the whole stack.</h2>
+        <h2>Design and code, in the same hands.</h2>
       </div>
       <p>
-        Twelve years of client work means I have shipped on most of the tools
-        your team already uses. I pick the stack for how you run the site after
-        launch, and I bring the design, illustration and motion skills most
-        developers outsource.
+        Twelve years of client work across design, front-end and motion. I pick
+        the stack for how you will run the site after launch, and I bring the
+        brand, illustration and motion skills most developers outsource.
       </p>
     </div>
     <div class="capability-grid">
       {capabilities.map((cap, index) => (
         <article>
-          <StackGlyph name={ ["category-web", "category-commerce", "chart", "category-brand", "category-art", "category-music"][index] } />
+          <StackGlyph name={ ["category-web", "category-brand", "category-art", "chart", "category-commerce", "category-music"][index] } />
           <h3>{cap.title}</h3>
           <p>{cap.body}</p>
           <div class="chips">
@@ -254,6 +287,7 @@ const resultSlides = caseResults.map((result) => {
         on it, you do not pay for it. If you want something added, we talk about
         it first.
       </p>
+      {/* TODO: confirm with Pedro before publishing (weekly updates, 30 days of fixes) */}
       <dl class="deliverable-stats">
         <div>
           <dt>things you get, in writing</dt>
@@ -264,7 +298,7 @@ const resultSlides = caseResults.map((result) => {
           <dd>Weekly</dd>
         </div>
         <div>
-          <dt>of fixes after launch, free</dt>
+          <dt>of fixes after launch</dt>
           <dd>30 days</dd>
         </div>
       </dl>
@@ -291,7 +325,7 @@ const resultSlides = caseResults.map((result) => {
       <p class="deliverable-foot">
         We agree on this together before I build anything{" "}
         <a href="/contact" class="text-link">
-          See a sample proposal <Icon name="arrow-right" size={12} />
+          Ask for a sample proposal <Icon name="arrow-right" size={12} />
         </a>
       </p>
     </div>
@@ -303,6 +337,7 @@ const resultSlides = caseResults.map((result) => {
         <Eyebrow>How it works</Eyebrow>
         <h2>From first call to a site that sells.</h2>
       </div>
+      {/* TODO: confirm with Pedro before publishing (2 weeks to first designs) */}
       <div class="schedule-intro">
         <span>2</span>
         <div>
@@ -321,7 +356,6 @@ const resultSlides = caseResults.map((result) => {
       ))}
     </div>
   </section>
-  <Comparison />
   <div id="results">
     <RelatedProjects projects={projects} />
   </div>

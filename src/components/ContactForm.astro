@@ -1,8 +1,25 @@
 ---
 import Icon from "./Icon.astro";
-import { needs, platforms, budgets, startDates } from "../data/contact";
+import {
+  routes,
+  needs,
+  agencyNeeds,
+  platforms,
+  budgets,
+  agencyBudgets,
+  startDates,
+} from "../data/contact";
 import { site } from "../data/site";
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
+// `data-routes` marks parts that only apply to some routes; the script hides and disables the rest.
+const choiceGroups = [
+  { name: "needs", id: "needs", routes: "project", legend: "What do you need?", hint: "Pick all that apply.", type: "checkbox", options: needs },
+  { name: "needs", id: "agency-needs", routes: "agency", legend: "What do you need?", hint: "Pick all that apply.", type: "checkbox", options: agencyNeeds },
+];
+const budgetGroups = [
+  { id: "budget", routes: "project", legend: "Budget range", options: budgets },
+  { id: "agency-budget", routes: "agency", legend: "Budget range", options: agencyBudgets },
+];
 ---
 
 <div class="contact-form-wrap">
@@ -23,15 +40,47 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       tabindex="-1"
       aria-hidden="true"
     />
-    <div class="form-step" data-step="1">
+    <div class="form-step" data-step="0">
       <div class="form-progress-head">
-        <span class="mono accent">Step 1 of 2</span>
+        <span class="mono accent">Step 1 of 3</span>
         <span>Takes 60 seconds</span>
       </div>
       <div class="form-progress" aria-hidden="true">
-        <span></span>
+        <span style="width:33%"></span>
       </div>
-      <h2 tabindex="-1">Where should I send your plan?</h2>
+      <h2 tabindex="-1">What brings you here?</h2>
+      <fieldset
+        class="form-choices"
+        data-required-group="route"
+        aria-describedby="route-error"
+      >
+        <legend class="sr-only">What brings you here?</legend>
+        <div>
+          {routes.map(([label, value]) => (
+            <label class="choice-pill">
+              <input type="radio" name="route" value={value} />
+              <span>{label}</span>
+            </label>
+          ))}
+        </div>
+        <small id="route-error" class="field-error"></small>
+      </fieldset>
+      <button type="button" class="action" data-continue>
+        Continue <span class="form-action-icon"><Icon name="arrow-right" /></span>
+      </button>
+    </div>
+    <div class="form-step" data-step="1" hidden>
+      <div class="form-progress-head">
+        <span class="mono accent">Step 2 of 3</span>
+        <span>Takes 60 seconds</span>
+      </div>
+      <div class="form-progress" aria-hidden="true">
+        <span style="width:67%"></span>
+      </div>
+      <h2 tabindex="-1">
+        <span data-routes="project agency">Where should I send your plan?</span>
+        <span data-routes="role" hidden>Where should I reply?</span>
+      </h2>
       {[
         ["name", "Full name", "text", "Jane Smith", "name"],
         ["company", "Company", "text", "Acme Co.", "organization"],
@@ -43,6 +92,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
             "form-field",
             { "form-field--half": name === "name" || name === "company" },
           ]}
+          data-routes={name === "website" ? "project agency" : undefined}
         >
           <label for={`contact-${name}`}>{label}</label>
           <input
@@ -59,42 +109,49 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
         </div>
       ))}
       <button type="button" class="action" data-continue>
-        Continue to step 2 <span class="form-action-icon"><Icon name="arrow-right" /></span>
+        Continue to step 3 <span class="form-action-icon"><Icon name="arrow-right" /></span>
       </button>
+      {/* TODO: confirm with Pedro before publishing (reply time) */}
       <p class="form-reassurance">
-        No spam, no contracts. I reply within 24 hours.
+        No spam, no contracts. I reply within one business day.
       </p>
+      <button type="button" class="form-back" data-back>
+        <Icon name="arrow-left" /> Back
+      </button>
     </div>
     <div class="form-step" data-step="2" hidden>
       <div class="form-progress-head">
-        <span class="mono accent">Step 2 of 2</span>
+        <span class="mono accent">Step 3 of 3</span>
         <span>Almost done</span>
       </div>
       <div class="form-progress form-progress--complete" aria-hidden="true">
         <span></span>
       </div>
       <h2 tabindex="-1">
-        A bit about the project<span data-person-name></span>.
+        <span data-routes="project agency">A bit about the project</span><span data-routes="role" hidden>A bit about the role</span><span data-person-name></span>.
       </h2>
-      <fieldset
-        class="form-choices"
-        data-required-group="needs"
-        aria-describedby="needs-error"
-      >
-        <legend>
-          What do you need? <span>Pick all that apply.</span>
-        </legend>
-        <div>
-          {needs.map((label) => (
-            <label class="choice-pill">
-              <input type="checkbox" name="needs" value={label} />
-              <span>{label}</span>
-            </label>
-          ))}
-        </div>
-        <small id="needs-error" class="field-error"></small>
-      </fieldset>
-      <fieldset class="form-choices">
+      {choiceGroups.map((group) => (
+        <fieldset
+          class="form-choices"
+          data-required-group={group.id}
+          data-routes={group.routes}
+          aria-describedby={`${group.id}-error`}
+        >
+          <legend>
+            {group.legend} <span>{group.hint}</span>
+          </legend>
+          <div>
+            {group.options.map((label) => (
+              <label class="choice-pill">
+                <input type={group.type} name={group.name} value={label} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <small id={`${group.id}-error`} class="field-error"></small>
+        </fieldset>
+      ))}
+      <fieldset class="form-choices" data-routes="project agency">
         <legend>Platform, if you already have one</legend>
         <div>
           {platforms.map(([label, logo]) => (
@@ -115,25 +172,29 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
           ))}
         </div>
       </fieldset>
-      <fieldset
-        class="form-choices"
-        data-required-group="budget"
-        aria-describedby="budget-error"
-      >
-        <legend>Budget range</legend>
-        <div>
-          {budgets.map((label) => (
-            <label class="choice-pill">
-              <input type="radio" name="budget" value={label} />
-              <span>{label}</span>
-            </label>
-          ))}
-        </div>
-        <small id="budget-error" class="field-error"></small>
-      </fieldset>
+      {budgetGroups.map((group) => (
+        <fieldset
+          class="form-choices"
+          data-required-group={group.id}
+          data-routes={group.routes}
+          aria-describedby={`${group.id}-error`}
+        >
+          <legend>{group.legend}</legend>
+          <div>
+            {group.options.map((label) => (
+              <label class="choice-pill">
+                <input type="radio" name="budget" value={label} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <small id={`${group.id}-error`} class="field-error"></small>
+        </fieldset>
+      ))}
       <fieldset
         class="form-choices"
         data-required-group="start"
+        data-routes="project agency"
         aria-describedby="start-error"
       >
         <legend>When do you want to start?</legend>
@@ -147,6 +208,21 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
         </div>
         <small id="start-error" class="field-error"></small>
       </fieldset>
+      <div class="form-field" data-routes="role">
+        <label for="contact-role_link">
+          Link to the role <span>(optional)</span>
+        </label>
+        <input
+          id="contact-role_link"
+          name="role_link"
+          type="text"
+          placeholder="company.com/careers/role"
+          autocomplete="url"
+          maxlength="2048"
+          aria-describedby="role_link-error"
+        />
+        <small class="field-error" id="role_link-error"></small>
+      </div>
       <div class="form-field">
         <label for="contact-message">
           Anything else? <span>(optional)</span>
@@ -159,6 +235,16 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
           maxlength="5000"
         ></textarea>
       </div>
+      <p class="actions form-role-links" data-routes="role">
+        {site.cvUrl ? (
+          <a class="text-link" href={site.cvUrl} download>Download CV <Icon name="download" /></a>
+        ) : (
+          <a class="text-link" href={`mailto:${site.email}?subject=CV%20request`}>Request my CV <Icon name="arrow-right" /></a>
+        )}
+        {site.socials.linkedin && (
+          <a class="text-link" href={site.socials.linkedin}>LinkedIn <Icon name="arrow-up-right" /></a>
+        )}
+      </p>
       <button type="submit" class="action" data-submit>
         <span>Send and get my plan</span>
         <span class="form-action-icon"><Icon name="arrow-right" /></span>
@@ -215,8 +301,30 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
   const steps = [...form.querySelectorAll<HTMLElement>("[data-step]")];
   const status = form.querySelector<HTMLElement>(".form-status")!;
   const submit = form.querySelector<HTMLButtonElement>("[data-submit]")!;
+  const subject = form.elements.namedItem("subject") as HTMLInputElement;
+  const subjects: Record<string, string> = {
+    project: "Portfolio project inquiry",
+    agency: "Portfolio agency inquiry",
+    role: "Portfolio role inquiry",
+  };
   let current = 0;
   let sending = false;
+  const route = () =>
+    (form.querySelector<HTMLInputElement>("[name=route]:checked")?.value) || "project";
+  const submitLabel = () => (route() === "role" ? "Send message" : "Send and get my plan");
+  // Hide and disable parts of other routes, so they are neither validated nor sent.
+  const applyRoute = () => {
+    const active = route();
+    form.querySelectorAll<HTMLElement>("[data-routes]").forEach((part) => {
+      const on = part.dataset.routes!.split(" ").includes(active);
+      part.hidden = !on;
+      part
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea")
+        .forEach((input) => (input.disabled = !on));
+    });
+    subject.value = subjects[active];
+    if (!sending) submit.querySelector("span")!.textContent = submitLabel();
+  };
   const show = (step: number) => {
     current = step;
     steps.forEach((node, i) => (node.hidden = i !== step));
@@ -238,7 +346,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
           : "Please enter your email.";
     else if (input.type === "email" && !input.validity.valid)
       message = "Please enter a valid email address.";
-    else if (input.name === "website" && input.value) {
+    else if ((input.name === "website" || input.name === "role_link") && input.value) {
       try {
         const url = new URL(
           /^https?:\/\//i.test(input.value)
@@ -258,18 +366,16 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
     if (error) error.textContent = message;
     return !message;
   };
-  const validateFirst = () => {
+  const textInputs = (step: number) =>
+    [...steps[step].querySelectorAll<HTMLInputElement>(".form-field input")].filter(
+      (input) => !input.disabled,
+    );
+  const validateGroups = (step: number) => {
     let valid = true;
-    steps[0].querySelectorAll<HTMLInputElement>("input").forEach((input) => {
-      if (!validateField(input)) valid = false;
-    });
-    return valid;
-  };
-  const validateGroups = () => {
-    let valid = true;
-    steps[1]
+    steps[step]
       .querySelectorAll<HTMLFieldSetElement>("[data-required-group]")
       .forEach((group) => {
+        if (group.hidden) return;
         const checked = group.querySelector("input:checked");
         const error = group.querySelector<HTMLElement>(".field-error")!;
         error.textContent = checked ? "" : "Please select an option.";
@@ -278,19 +384,39 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       });
     return valid;
   };
-  form.querySelector("[data-continue]")!.addEventListener("click", () => {
-    if (validateFirst()) show(1);
-    else steps[0].querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
-  }, { signal: scope.signal });
-  form.querySelector("[data-back]")!.addEventListener("click", () => show(0), { signal: scope.signal });
-  steps[0].querySelectorAll<HTMLInputElement>("input").forEach((input) =>
+  // Returns the first invalid control of a step, or null when the step is valid.
+  const validateStep = (step: number) => {
+    let valid = true;
+    textInputs(step).forEach((input) => {
+      if (!validateField(input)) valid = false;
+    });
+    if (!validateGroups(step)) valid = false;
+    return valid
+      ? null
+      : steps[step].querySelector<HTMLElement>(
+          ".form-field input[aria-invalid=true]:not(:disabled), [aria-invalid=true]:not([hidden]) input",
+        );
+  };
+  const advance = () => {
+    const invalid = validateStep(current);
+    if (invalid) invalid.focus();
+    else show(current + 1);
+  };
+  form.querySelectorAll("[data-continue]").forEach((button) =>
+    button.addEventListener("click", advance, { signal: scope.signal }),
+  );
+  form.querySelectorAll("[data-back]").forEach((button) =>
+    button.addEventListener("click", () => show(current - 1), { signal: scope.signal }),
+  );
+  form.querySelectorAll<HTMLInputElement>(".form-field input").forEach((input) =>
     input.addEventListener("blur", () => {
       if (input.value || input.getAttribute("aria-invalid") === "true")
         validateField(input);
     }, { signal: scope.signal }),
   );
-  steps[1].querySelectorAll("input").forEach((input) =>
+  form.querySelectorAll<HTMLInputElement>(".form-choices input").forEach((input) =>
     input.addEventListener("change", () => {
+      if (input.name === "route") applyRoute();
       const group = input.closest<HTMLFieldSetElement>("[data-required-group]");
       if (group && group.getAttribute("aria-invalid") === "true") {
         group.setAttribute("aria-invalid", "false");
@@ -301,18 +427,17 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (sending) return;
-    if (current === 0) {
-      form.querySelector<HTMLButtonElement>("[data-continue]")!.click();
+    if (current < steps.length - 1) {
+      advance();
       return;
     }
-    if (!validateFirst()) {
-      show(0);
-      steps[0].querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
-      return;
-    }
-    if (!validateGroups()) {
-      steps[1].querySelector<HTMLElement>("[aria-invalid=true] input")?.focus();
-      return;
+    for (let step = 0; step < steps.length; step++) {
+      const invalid = validateStep(step);
+      if (invalid) {
+        if (step !== current) show(step);
+        invalid.focus();
+        return;
+      }
     }
     const key = form.dataset.accessKey;
     const feedback = (message: string, error = true) => {
@@ -341,7 +466,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
     }, { once: true });
     try {
       const payload = Object.fromEntries(data);
-      payload.needs = data.getAll("needs").join(", ");
+      if (data.has("needs")) payload.needs = data.getAll("needs").join(", ");
       payload.access_key = key;
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -356,8 +481,9 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       if (!response.ok || result.success !== true)
         throw new Error("Send failed");
       steps.forEach((step) => (step.hidden = true));
+      // TODO: confirm with Pedro before publishing (reply time)
       feedback(
-        "Thanks. Your message has been sent. I'll reply within 24 hours.",
+        "Thanks. Your message has been sent. I'll reply within one business day.",
         false,
       );
       form.reset();
@@ -370,23 +496,28 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || "";
       clearTimeout(timeout);
       sending = false;
       submit.disabled = false;
-      submit.querySelector("span")!.textContent = "Send and get my plan";
+      submit.querySelector("span")!.textContent = submitLabel();
       form.removeAttribute("aria-busy");
     }
   }, { signal: scope.signal });
-  const service = new URLSearchParams(location.search).get("service");
-  const selection =
-    service === "CRO audit"
-      ? "CRO audit"
-      : service === "White-label for agencies"
-        ? "White-label for my agency"
-        : service === "Website design and build"
-          ? "Website design + build"
-          : null;
+  // Deep links: ?route=agency|role|project and ?service=<offer title>.
+  const params = new URLSearchParams(location.search);
+  const serviceNeeds: Record<string, string[]> = {
+    "Website design and build": ["Website design + build"],
+    "Brand identity and design systems": ["Brand identity", "Design system"],
+    "CRO audit and redesign": ["CRO audit or redesign"],
+  };
+  const selection = serviceNeeds[params.get("service") ?? ""];
+  const requested = params.get("route") ?? (selection ? "project" : "");
+  const routeInput = form.querySelector<HTMLInputElement>(
+    `[name=route][value="${CSS.escape(requested)}"]`,
+  );
+  if (routeInput) routeInput.checked = true;
+  applyRoute();
   if (selection) {
     form
-      .querySelectorAll<HTMLInputElement>("[name=needs]")
-      .forEach((input) => (input.checked = input.value === selection));
+      .querySelectorAll<HTMLInputElement>("[data-routes=project] [name=needs]")
+      .forEach((input) => (input.checked = selection.includes(input.value)));
   }
   });
 </script>
