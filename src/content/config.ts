@@ -40,8 +40,13 @@ const posts = defineCollection({
     title: z.string(),
     excerpt: z.string(),
     tag: z.string(),
+    category: z.enum(["design", "motion", "career"]),
     date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
     image: z.string(),
+    cover: z.string(),
+    // Layout fixtures: the body renders in dev only and the page is noindex until replaced.
+    mock: z.boolean().default(false),
   }),
 });
 

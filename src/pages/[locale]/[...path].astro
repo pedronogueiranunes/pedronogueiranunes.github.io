@@ -7,6 +7,9 @@ import Services from "../services.astro";
 import Contact from "../contact.astro";
 import Work from "../work/[slug].astro";
 import Post from "../thoughts/[slug].astro";
+import Thoughts from "../thoughts/index.astro";
+import ThoughtsCategory from "../thoughts/category/[category].astro";
+import { categories } from "../../data/blog";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   const posts = await getCollection("posts");
@@ -14,11 +17,16 @@ export async function getStaticPaths() {
     ...[undefined, "projects", "about", "services", "contact"].map(path => ({ path, props: {} })),
     ...projects.map(project => ({ path: `work/${project.data.caseSlug || project.slug}`, props: { project } })),
     ...posts.map(post => ({ path: `thoughts/${post.slug}`, props: { post } })),
+    { path: "thoughts", props: {} },
+    ...categories.filter(c => posts.some(post => post.data.category === c.slug)).map(c => ({ path: `thoughts/category/${c.slug}`, props: {} })),
   ];
   return ["pt-br", "es", "fr"].flatMap(locale => paths.map(({ path, props }) => ({ params: { locale, path }, props })));
 }
 const path = Astro.params.path || "";
-const pages = { "": Home, projects: Projects, about: About, services: Services, contact: Contact };
-const Page = path.startsWith("work/") ? Work : path.startsWith("thoughts/") ? Post : pages[path as keyof typeof pages];
+const pages = { "": Home, projects: Projects, about: About, services: Services, contact: Contact, thoughts: Thoughts };
+const Page = path.startsWith("work/") ? Work
+  : path.startsWith("thoughts/category/") ? ThoughtsCategory
+  : path.startsWith("thoughts/") ? Post
+  : pages[path as keyof typeof pages];
 ---
 <Page {...Astro.props} />

@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content";
+import PixelTrail from "./PixelTrail.astro";
+import Eyebrow from "./Eyebrow.astro";
+import PostCard from "./PostCard.astro";
+import BlogCta from "./BlogCta.astro";
+import { categories, categoryBySlug } from "../data/blog";
+import "../styles/blog.css";
+
+interface Props {
+  active?: string;
+}
+const { active } = Astro.props;
+const all = (await getCollection("posts")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = active ? all.filter((post) => post.data.category === active) : all;
+const category = active ? categoryBySlug(active) : undefined;
+// Only list categories that have posts, with their counts.
+const chips = categories
+  .map((item) => ({ ...item, count: all.filter((post) => post.data.category === item.slug).length }))
+  .filter((item) => item.count);
+const [featured, ...rest] = posts;
+const cta = category?.cta ?? {
+  title: "Have a project these notes could help with?",
+  body: "I design and build brands, design systems and websites for companies and agencies.",
+  label: "Start a project",
+  href: "/contact",
+};
+---
+
+<section class="blog-hero page-section">
+  <PixelTrail tone="green" world />
+  <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span>/</span>
+    {category ? <a href="/thoughts">Thoughts</a> : <span>Thoughts</span>}
+    {category && <><span>/</span><span>{category.label}</span></>}
+  </nav>
+  <Eyebrow>{category ? "Category" : "Thoughts"}</Eyebrow>
+  <h1>{category ? category.label : "Notes from the field."}</h1>
+  <p>{category ? category.description : "Practical notes on design systems, motion and working with agencies, from 12+ years of shipping client work."}</p>
+  <nav class="blog-categories" id="categories" aria-label="Categories">
+    <a class="blog-chip" href="/thoughts" aria-current={active ? undefined : "page"}>
+      All <span>{all.length}</span>
+    </a>
+    {chips.map((item) => (
+      <a class="blog-chip" href={`/thoughts/category/${item.slug}`} aria-current={item.slug === active ? "page" : undefined}>
+        {item.label} <span>{item.count}</span>
+      </a>
+    ))}
+  </nav>
+</section>
+
+<section class="blog-feed page-section" id="archive" aria-label="Articles">
+  {featured && <PostCard post={featured} featured headingLevel="h2" />}
+  {rest.length > 0 && (
+    <div class="blog-grid">
+      {rest.map((post) => <PostCard post={post} headingLevel="h2" />)}
+    </div>
+  )}
+  <BlogCta {...cta} />
+</section>

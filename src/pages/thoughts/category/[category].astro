@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import BlogListing from "../../../components/BlogListing.astro";
+import { categories, categoryBySlug } from "../../../data/blog";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return categories
+    .filter((category) => posts.some((post) => post.data.category === category.slug))
+    .map((category) => ({ params: { category: category.slug } }));
+}
+// Localized routes render this page with `path` instead of `category`.
+const slug = Astro.params.category ?? Astro.params.path?.split("/").pop() ?? "";
+const category = categoryBySlug(slug)!;
+---
+
+<Base
+  title={`${category.label} articles | Pedro Nogueira`}
+  description={category.description}
+  pageClass="blog-page"
+>
+  <BlogListing active={category.slug} />
+</Base>

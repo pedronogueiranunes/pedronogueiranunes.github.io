@@ -1,6 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
+import PixelTrail from "../../components/PixelTrail.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import PostCard from "../../components/PostCard.astro";
+import BlogCta from "../../components/BlogCta.astro";
+import Icon from "../../components/Icon.astro";
+import { categoryBySlug, readingMinutes } from "../../data/blog";
+import "../../styles/blog.css";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -11,24 +18,167 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const p = post.data;
+const { Content, headings } = await post.render();
+const category = categoryBySlug(p.category)!;
+const minutes = readingMinutes(post.body);
+// TODO: mock posts are layout fixtures. Their body renders in dev only; production shows a
+// short notice and asks search engines not to index the page until real copy replaces it.
+const showBody = !p.mock || import.meta.env.DEV;
+const toc = showBody ? headings.filter((heading) => heading.depth === 2) : [];
+const locale = Astro.currentLocale || "en";
+const formatDate = (date: Date) =>
+  date.toLocaleDateString(locale, { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
+
+// Related: same category first, then the newest of the rest; two cards.
+const others = (await getCollection("posts"))
+  .filter((other) => other.slug !== post.slug)
+  .sort((a, b) =>
+    Number(b.data.category === p.category) - Number(a.data.category === p.category) ||
+    b.data.date.valueOf() - a.data.date.valueOf(),
+  )
+  .slice(0, 2);
+
+const url = new URL(`/thoughts/${post.slug}`, Astro.site).href;
+const schema = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: p.title,
+    description: p.excerpt,
+    datePublished: p.date.toISOString(),
+    dateModified: (p.updated ?? p.date).toISOString(),
+    image: new URL(p.cover, Astro.site).href,
+    articleSection: category.label,
+    wordCount: post.body.split(/\s+/).filter(Boolean).length,
+    author: { "@type": "Person", name: "Pedro Nogueira", url: new URL("/about", Astro.site).href },
+    mainEntityOfPage: url,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Thoughts", item: new URL("/thoughts", Astro.site).href },
+      { "@type": "ListItem", position: 2, name: category.label, item: new URL(`/thoughts/category/${category.slug}`, Astro.site).href },
+      { "@type": "ListItem", position: 3, name: p.title, item: url },
+    ],
+  },
+]);
 ---
 
-<Base title={`${post.data.title} | Pedro Nogueira`} pageClass="article-page">
-  <article class="post-page">
-    <p class="post__meta label-mono">
-      <span class="muted">
-        {post.data.date.toLocaleDateString(Astro.currentLocale || "en", {
-          timeZone: "UTC",
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })}
-      </span>
-      <span class="muted">·</span>
-      <span class="accent">{post.data.tag}</span>
+<Base title={`${p.title} | Pedro Nogueira`} description={p.excerpt} pageClass="article-page">
+  <Fragment slot="head">
+    {p.mock && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={p.title} />
+    <meta property="og:description" content={p.excerpt} />
+    <meta property="og:image" content={new URL(p.cover, Astro.site).href} />
+    <script type="application/ld+json" set:html={schema} />
+  </Fragment>
+
+  <header class="post-hero page-section">
+    <PixelTrail tone="green" />
+    <nav class="case-breadcrumb mono" aria-label="Breadcrumb">
+      <a href="/thoughts">Thoughts</a>
+      <span>/</span>
+      <a href={`/thoughts/category/${category.slug}`}>{category.label}</a>
+    </nav>
+    <p class="post-hero__meta mono">
+      <a class="blog-chip blog-chip--small" href={`/thoughts/category/${category.slug}`}>{category.label}</a>
+      <time datetime={p.date.toISOString()}>{formatDate(p.date)}</time>
+      {p.updated && <span>Updated <time datetime={p.updated.toISOString()}>{formatDate(p.updated)}</time></span>}
+      <span>{minutes} <span>min read</span></span>
     </p>
-    <h1>{post.data.title}</h1>
-    <Content />
-  </article>
+    <h1>{p.title}</h1>
+    <p class="post-hero__dek">{p.excerpt}</p>
+    <a class="post-byline" href="/about">
+      <ResponsiveImage src="/assets/head-hero.webp" width="40" height="40" sizes="40px" alt="" />
+      <span><strong>Pedro Nogueira</strong><small>Design engineer, 12+ years</small></span>
+    </a>
+  </header>
+
+  <div class="post-cover page-section">
+    <ResponsiveImage
+      src={p.cover}
+      width="1312"
+      height="640"
+      loading="eager"
+      fetchpriority="high"
+      sizes="(max-width: 768px) calc(100vw - 40px), min(1312px, calc(100vw - 128px))"
+      alt=""
+    />
+  </div>
+
+  <div class="post-layout page-section">
+    {toc.length > 1 && (
+      <aside class="post-toc" aria-label="On this page">
+        <details open>
+          <summary class="mono">On this page</summary>
+          <ol>
+            {toc.map((heading) => (
+              <li><a href={`#${heading.slug}`}>{heading.text}</a></li>
+            ))}
+          </ol>
+        </details>
+        <a class="post-toc__cta text-link" href={category.cta.href}>
+          {category.cta.label} <Icon name="arrow-right" />
+        </a>
+      </aside>
+    )}
+    <article class="post-body">
+      {showBody ? (
+        <Content />
+      ) : (
+        <p class="post-body__soon">The full article is on its way. In the meantime, browse the work or get in touch.</p>
+      )}
+    </article>
+  </div>
+
+  <section class="post-end page-section" aria-label="About the author">
+    <div class="post-author">
+      <ResponsiveImage src="/assets/head-hero.webp" width="72" height="72" sizes="72px" alt="" />
+      <div>
+        <p class="mono accent">Written by</p>
+        <h2>Pedro Nogueira</h2>
+        <p>Design engineer based in Bahia, Brazil. I design and build brands, design systems and websites for companies and agencies in the US, Canada and Europe.</p>
+        <a class="text-link" href="/about">More about me <Icon name="arrow-right" /></a>
+      </div>
+    </div>
+    <BlogCta {...category.cta} />
+  </section>
+
+  {others.length > 0 && (
+    <section class="post-related page-section" aria-labelledby="related-title">
+      <div class="section-heading">
+        <h2 id="related-title">Keep reading</h2>
+        <a class="text-link" href="/thoughts">All articles <Icon name="arrow-right" /></a>
+      </div>
+      <div class="blog-grid">
+        {others.map((other) => <PostCard post={other} />)}
+      </div>
+    </section>
+  )}
+  <script>
+    import { onPageLoad } from "../../scripts/page-lifecycle";
+    onPageLoad((scope) => {
+      const toc = document.querySelector<HTMLElement>(".post-toc");
+      if (!toc) return;
+      // Contents start collapsed where they sit inline above the article.
+      const details = toc.querySelector("details");
+      if (details && matchMedia("(max-width: 1100px)").matches) details.open = false;
+      // Highlight the section being read.
+      const links = new Map(
+        [...toc.querySelectorAll<HTMLAnchorElement>("a[href^='#']")].map((link) => [decodeURIComponent(link.hash.slice(1)), link]),
+      );
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((link) => link.removeAttribute("aria-current"));
+          links.get(entry.target.id)?.setAttribute("aria-current", "true");
+        }
+      }, { rootMargin: "-120px 0px -65% 0px" });
+      links.forEach((_, id) => { const heading = document.getElementById(id); if (heading) observer.observe(heading); });
+      scope.cleanup(() => observer.disconnect());
+    });
+  </script>
 </Base>
