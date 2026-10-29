@@ -5,7 +5,7 @@ const lines = ["Pedr0", "Nogueira"];
 const letters = lines.map((line, row) => [...line].map((char, col) => ({ char, index: row === 0 ? col : lines[0].length + col })));
 ---
 <span class="site-logo__model">
-  {Array.from({ length: 56 }, (_, depth) => (
+  {Array.from({ length: 28 }, (_, depth) => (
     <span class="site-logo__layer" style={`--depth:${depth}`} aria-hidden={depth > 0 ? "true" : undefined}>
       {letters.map((line, row) => (
         <>

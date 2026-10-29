@@ -444,10 +444,11 @@ img {
 }
 .site-logo__layer {
   display: block;
-  /* ponytail: 56 layers x 2px = 112px deep; fewer layers if text rendering ever gets heavy. */
-  transform: translateZ(calc(var(--depth) * -2px));
+  /* ponytail: 28 layers x 4px = 112px deep. 56 layers doubled scroll frame time on phones;
+     go lower only if steps start to show between layers. */
+  transform: translateZ(calc(var(--depth) * -4px));
   /* Light extrusion that fades into the bar, so the front face carries the weight. */
-  color: color-mix(in srgb, var(--accent-ink) calc(max(5%, 22% - var(--depth) * .32%)), var(--surface));
+  color: color-mix(in srgb, var(--accent-ink) calc(max(5%, 22% - var(--depth) * .64%)), var(--surface));
 }
 .site-logo__layer:not(:first-child) {
   position: absolute;
@@ -7598,4 +7599,126 @@ main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 
   height: 680px;
   top: -190px;
   left: -190px;
+}
+
+/* Mobile menu polish: numbered rows like the desktop panels, compact preferences
+   and a call to action that stays in reach at the bottom of the sheet. */
+@media (max-width: 1024px) {
+  .mobile-dialog[open] {
+    gap: 0;
+    padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
+  }
+  .mobile-dialog .mobile-menu-header {
+    top: 0;
+    padding: 16px 0 12px;
+  }
+  .mobile-dialog nav {
+    flex: 1 0 auto;
+    counter-reset: menu;
+  }
+  .mobile-dialog nav > details {
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-dialog summary {
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 18px 0;
+    font: 700 26px/1.15 var(--font-display);
+    letter-spacing: -0.02em;
+    list-style: none;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+  .mobile-dialog summary::-webkit-details-marker { display: none; }
+  .mobile-dialog summary::before {
+    counter-increment: menu;
+    content: counter(menu, decimal-leading-zero);
+    width: 24px;
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font: 400 12px/1 var(--font-mono);
+    letter-spacing: 0.05em;
+  }
+  .mobile-dialog summary > .pixel-icon {
+    --icon-size: 12px;
+    box-sizing: content-box;
+    margin-left: auto;
+    padding: 10px;
+    border-radius: 50%;
+    background: var(--projects-control-bg);
+    color: var(--projects-control-ink);
+    transition: transform 250ms ease, background-color 200ms ease, color 200ms ease;
+  }
+  .mobile-dialog details[open] summary { color: var(--accent-ink); }
+  .mobile-dialog details[open] summary > .pixel-icon {
+    transform: rotate(90deg);
+    background: var(--accent);
+    color: #fff;
+  }
+  .mobile-dialog .mobile-submenu {
+    gap: 0;
+    padding: 0 0 20px 40px;
+  }
+  .mobile-dialog .mobile-submenu > .nav-row {
+    padding: 10px 0;
+    font: 600 17px/1.4 var(--font-display);
+  }
+  .mobile-dialog .mobile-submenu > .nav-row + .nav-row { box-shadow: none; }
+  .mobile-dialog .mobile-submenu .nav-heading { margin-bottom: 4px; }
+
+  /* Preferences: one compact row per setting. */
+  .mobile-dialog .preferences-panel--inline {
+    gap: 20px;
+    padding: 24px 0 20px;
+  }
+  .mobile-dialog .preferences-panel--inline legend {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+    font: 400 12px/1 var(--font-mono);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .mobile-dialog .preferences-panel--inline fieldset:first-child {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .mobile-dialog .language-option {
+    justify-content: center;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 999px;
+    background: var(--projects-control-bg);
+    border-color: transparent;
+  }
+  /* The full language name stays as the accessible label; the code is what shows. */
+  .mobile-dialog .language-option > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .mobile-dialog .language-option small {
+    margin: 0;
+    color: var(--projects-control-ink);
+    font: 400 13px/1 var(--font-label);
+  }
+  .mobile-dialog .language-option:has(input:checked) {
+    border-color: transparent;
+    background: var(--accent);
+  }
+  .mobile-dialog .language-option:has(input:checked) small { color: #fff; }
+
+  /* CTA pinned to the bottom of the sheet while the menu scrolls. */
+  .mobile-dialog > .action {
+    position: sticky;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 1;
+    flex-shrink: 0;
+    width: 100%;
+    margin: 8px 0 max(16px, env(safe-area-inset-bottom));
+    /* Solid strip behind the pinned button so scrolling rows never show through it. */
+    box-shadow: 0 0 0 max(16px, env(safe-area-inset-bottom)) var(--mobile-menu-bg, #ffffff);
+  }
 }
