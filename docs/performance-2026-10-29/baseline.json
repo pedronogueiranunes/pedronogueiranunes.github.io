@@ -1,0 +1,2164 @@
+[
+  {
+    "mobile": false,
+    "route": "/",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 255.822
+    },
+    "footer": {
+      "frames": 89,
+      "over25": 1,
+      "taskMs": 230.48999999999998
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "head-hero--w640.webp",
+        "bytes": 52128
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "488-6649-imgIconExperience.svg",
+        "bytes": 549
+      },
+      {
+        "name": "488-6649-imgIconInternationalMarkets.svg",
+        "bytes": 984
+      },
+      {
+        "name": "488-6649-imgIconRemoteLocation.svg",
+        "bytes": 897
+      },
+      {
+        "name": "ProjectRail.astro_astro_type_script_index_0_lang.BdqDDW2_.js",
+        "bytes": 536
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "ComparisonShade.astro_astro_type_script_index_0_lang.DEfhLIgV.js",
+        "bytes": 666
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "Comparison.astro_astro_type_script_index_0_lang.Cy5htbw1.js",
+        "bytes": 726
+      },
+      {
+        "name": "Process.astro_astro_type_script_index_0_lang.Coyn4vfL.js",
+        "bytes": 723
+      },
+      {
+        "name": "index.astro_astro_type_script_index_0_lang.Bfk9HWwH.js",
+        "bytes": 776
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "488-6789-img3DConversionTargetFade.svg",
+        "bytes": 552
+      },
+      {
+        "name": "488-6789-img3DFastWebsite.svg",
+        "bytes": 526
+      },
+      {
+        "name": "488-6789-img3DAgencyPartnership.svg",
+        "bytes": 532
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "green-nation-collective-cover--w640.webp",
+        "bytes": 53516
+      },
+      {
+        "name": "molina-chambo-cover--w640.webp",
+        "bytes": 44388
+      },
+      {
+        "name": "lemmbra-olympiad-cover--w640.webp",
+        "bytes": 31624
+      },
+      {
+        "name": "pinelake-broken-bow-cover--w640.webp",
+        "bytes": 125070
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "playcanvas-loader.BTifQoyS.js",
+        "bytes": 271
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "portrait-travel.C6UAJ8wg.js",
+        "bytes": 1156
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      },
+      {
+        "name": "dither-website-3d.png",
+        "bytes": 1281943
+      },
+      {
+        "name": "playcanvas.min.js",
+        "bytes": 574977
+      },
+      {
+        "name": "splat-hero.CMLwrz_M.js",
+        "bytes": 7451
+      },
+      {
+        "name": "pedro-head.sog",
+        "bytes": 2682618
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/about",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 151.006
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 89.30699999999997
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "head-hero.webp",
+        "bytes": 111736
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "about.astro_astro_type_script_index_0_lang.DOn7LnAo.js",
+        "bytes": 1317
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "design.webp",
+        "bytes": 12498
+      },
+      {
+        "name": "development.webp",
+        "bytes": 15782
+      },
+      {
+        "name": "motion.webp",
+        "bytes": 21218
+      },
+      {
+        "name": "collaboration.webp",
+        "bytes": 15200
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "playcanvas-loader.BTifQoyS.js",
+        "bytes": 271
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      },
+      {
+        "name": "favicon.ico",
+        "bytes": 1717
+      },
+      {
+        "name": "playcanvas.min.js",
+        "bytes": 574977
+      },
+      {
+        "name": "splat-hero.CMLwrz_M.js",
+        "bytes": 7451
+      },
+      {
+        "name": "portrait-travel.C6UAJ8wg.js",
+        "bytes": 1156
+      },
+      {
+        "name": "pedro-head.sog",
+        "bytes": 2682618
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/projects",
+    "top": {
+      "frames": 92,
+      "over25": 0,
+      "taskMs": 195.65
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 147.88299999999998
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "CategoryGlyph.astro_astro_type_script_index_0_lang.BH6Ec97X.js",
+        "bytes": 3106
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "projects.astro_astro_type_script_index_0_lang.BvavrE3U.js",
+        "bytes": 2877
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "green-nation-collective-cover--w640.webp",
+        "bytes": 53516
+      },
+      {
+        "name": "molina-chambo-cover--w640.webp",
+        "bytes": 44388
+      },
+      {
+        "name": "lemmbra-olympiad-cover--w640.webp",
+        "bytes": 31624
+      },
+      {
+        "name": "pinelake-broken-bow-cover--w640.webp",
+        "bytes": 125070
+      },
+      {
+        "name": "waipono-farms-cover--w640.webp",
+        "bytes": 72908
+      },
+      {
+        "name": "bsa-legal-cover--w640.webp",
+        "bytes": 39080
+      },
+      {
+        "name": "projects-cta-ellipse-desktop.svg",
+        "bytes": 269
+      },
+      {
+        "name": "488-8180-img3DResultsGrowthBlack--w320.webp",
+        "bytes": 9636
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/services",
+    "top": {
+      "frames": 91,
+      "over25": 1,
+      "taskMs": 100.813
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 105.792
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "488-10049-imgImageBsaLegal--w960.webp",
+        "bytes": 28518
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "StackGlyph.astro_astro_type_script_index_0_lang.B9EhqZSx.js",
+        "bytes": 1686
+      },
+      {
+        "name": "ResearchRobot.astro_astro_type_script_index_0_lang.BHJjg_cz.js",
+        "bytes": 1746
+      },
+      {
+        "name": "BlueprintPixels.astro_astro_type_script_index_0_lang.CecLYFj0.js",
+        "bytes": 1011
+      },
+      {
+        "name": "ComparisonShade.astro_astro_type_script_index_0_lang.DEfhLIgV.js",
+        "bytes": 666
+      },
+      {
+        "name": "Comparison.astro_astro_type_script_index_0_lang.Cy5htbw1.js",
+        "bytes": 726
+      },
+      {
+        "name": "FAQ.astro_astro_type_script_index_0_lang.C7enYTAN.js",
+        "bytes": 951
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "services.astro_astro_type_script_index_0_lang.BfhiiV6L.js",
+        "bytes": 732
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "488-10107-imgImage--w320.webp",
+        "bytes": 11944
+      },
+      {
+        "name": "488-10107-imgImage1--w320.webp",
+        "bytes": 12172
+      },
+      {
+        "name": "488-10107-imgImage2--w320.webp",
+        "bytes": 10560
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/contact",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 58.452000000000005
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 110.54799999999999
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "ContactForm.astro_astro_type_script_index_0_lang.Csol6KmP.js",
+        "bytes": 1651
+      },
+      {
+        "name": "FAQ.astro_astro_type_script_index_0_lang.C7enYTAN.js",
+        "bytes": 951
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "text@2x.png",
+        "bytes": 233
+      },
+      {
+        "name": "text.svg",
+        "bytes": 376
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/work/bsa-legal",
+    "top": {
+      "frames": 92,
+      "over25": 0,
+      "taskMs": 109.36699999999999
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 128.799
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "bsa-legal-cover.webp",
+        "bytes": 105078
+      },
+      {
+        "name": "CaseShowcase.astro_astro_type_script_index_0_lang.DD9WmyEP.js",
+        "bytes": 963
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "figma.svg",
+        "bytes": 790
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": false,
+    "route": "/thoughts/design-system-without-overdoing-it",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 106.234
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 119.60100000000001
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "arrow.svg",
+        "bytes": 422
+      },
+      {
+        "name": "arrow@2x.png",
+        "bytes": 271
+      },
+      {
+        "name": "hand@2x.png",
+        "bytes": 255
+      },
+      {
+        "name": "hand.svg",
+        "bytes": 473
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "manrope-latin-500-normal.woff2",
+        "bytes": 14044
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "claude.svg",
+        "bytes": 1401
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 201.446
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 234.04900000000006
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "head-hero.webp",
+        "bytes": 111736
+      },
+      {
+        "name": "488-6649-imgIconInternationalMarkets.svg",
+        "bytes": 984
+      },
+      {
+        "name": "488-6649-imgIconRemoteLocation.svg",
+        "bytes": 897
+      },
+      {
+        "name": "488-6649-imgIconExperience.svg",
+        "bytes": 549
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "ProjectRail.astro_astro_type_script_index_0_lang.BdqDDW2_.js",
+        "bytes": 536
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "ComparisonShade.astro_astro_type_script_index_0_lang.DEfhLIgV.js",
+        "bytes": 666
+      },
+      {
+        "name": "Comparison.astro_astro_type_script_index_0_lang.Cy5htbw1.js",
+        "bytes": 726
+      },
+      {
+        "name": "Process.astro_astro_type_script_index_0_lang.Coyn4vfL.js",
+        "bytes": 723
+      },
+      {
+        "name": "index.astro_astro_type_script_index_0_lang.Bfk9HWwH.js",
+        "bytes": 776
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "488-6789-img3DConversionTargetFade.svg",
+        "bytes": 552
+      },
+      {
+        "name": "488-6789-img3DFastWebsite.svg",
+        "bytes": 526
+      },
+      {
+        "name": "488-6789-img3DAgencyPartnership.svg",
+        "bytes": 532
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "playcanvas-loader.BTifQoyS.js",
+        "bytes": 271
+      },
+      {
+        "name": "portrait-travel.C6UAJ8wg.js",
+        "bytes": 1156
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      },
+      {
+        "name": "dither-website-3d.png",
+        "bytes": 1281943
+      },
+      {
+        "name": "playcanvas.min.js",
+        "bytes": 574977
+      },
+      {
+        "name": "splat-hero.CMLwrz_M.js",
+        "bytes": 7451
+      },
+      {
+        "name": "pedro-head.sog",
+        "bytes": 2682618
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/about",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 104.157
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 151.879
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "head-hero.webp",
+        "bytes": 111736
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "about.astro_astro_type_script_index_0_lang.DOn7LnAo.js",
+        "bytes": 1317
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "design.webp",
+        "bytes": 12498
+      },
+      {
+        "name": "development.webp",
+        "bytes": 15782
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "playcanvas-loader.BTifQoyS.js",
+        "bytes": 271
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      },
+      {
+        "name": "playcanvas.min.js",
+        "bytes": 574977
+      },
+      {
+        "name": "splat-hero.CMLwrz_M.js",
+        "bytes": 7451
+      },
+      {
+        "name": "portrait-travel.C6UAJ8wg.js",
+        "bytes": 1156
+      },
+      {
+        "name": "pedro-head.sog",
+        "bytes": 2682618
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/projects",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 84.65199999999999
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 154.642
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "CategoryGlyph.astro_astro_type_script_index_0_lang.BH6Ec97X.js",
+        "bytes": 3106
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "projects.astro_astro_type_script_index_0_lang.BvavrE3U.js",
+        "bytes": 2877
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "green-nation-collective-cover--w960.webp",
+        "bytes": 86382
+      },
+      {
+        "name": "lemmbra-olympiad-cover--w960.webp",
+        "bytes": 56954
+      },
+      {
+        "name": "molina-chambo-cover--w960.webp",
+        "bytes": 76610
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/services",
+    "top": {
+      "frames": 92,
+      "over25": 0,
+      "taskMs": 155.06699999999998
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 176.88899999999998
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "488-10049-imgImageBsaLegal.webp",
+        "bytes": 69466
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "IconWaves.astro_astro_type_script_index_0_lang.BWtNdYru.js",
+        "bytes": 1776
+      },
+      {
+        "name": "DitherIcon.astro_astro_type_script_index_0_lang.BUT2Gym_.js",
+        "bytes": 1893
+      },
+      {
+        "name": "StackGlyph.astro_astro_type_script_index_0_lang.B9EhqZSx.js",
+        "bytes": 1686
+      },
+      {
+        "name": "ResearchRobot.astro_astro_type_script_index_0_lang.BHJjg_cz.js",
+        "bytes": 1746
+      },
+      {
+        "name": "BlueprintPixels.astro_astro_type_script_index_0_lang.CecLYFj0.js",
+        "bytes": 1011
+      },
+      {
+        "name": "ComparisonShade.astro_astro_type_script_index_0_lang.DEfhLIgV.js",
+        "bytes": 666
+      },
+      {
+        "name": "Comparison.astro_astro_type_script_index_0_lang.Cy5htbw1.js",
+        "bytes": 726
+      },
+      {
+        "name": "FAQ.astro_astro_type_script_index_0_lang.C7enYTAN.js",
+        "bytes": 951
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "services.astro_astro_type_script_index_0_lang.BfhiiV6L.js",
+        "bytes": 732
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "488-10107-imgImage1--w960.webp",
+        "bytes": 51248
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      },
+      {
+        "name": "reveal.BdIDQ3BW.js",
+        "bytes": 1216
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/contact",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 63.22800000000001
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 152.89299999999997
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "FAQ.astro_astro_type_script_index_0_lang.C7enYTAN.js",
+        "bytes": 951
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "ContactForm.astro_astro_type_script_index_0_lang.Csol6KmP.js",
+        "bytes": 1651
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "geist-mono-latin-500-normal.woff2",
+        "bytes": 10116
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/work/bsa-legal",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 75.58099999999999
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 82.19299999999998
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "PixelTrail.astro_astro_type_script_index_0_lang.BcLDGApf.js",
+        "bytes": 1363
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "bsa-legal-cover.webp",
+        "bytes": 105078
+      },
+      {
+        "name": "CaseShowcase.astro_astro_type_script_index_0_lang.DD9WmyEP.js",
+        "bytes": 963
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "figma.svg",
+        "bytes": 790
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "route": "/thoughts/design-system-without-overdoing-it",
+    "top": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 46.103
+    },
+    "footer": {
+      "frames": 91,
+      "over25": 0,
+      "taskMs": 144.58
+    },
+    "resources": [
+      {
+        "name": "ClientRouter.astro_astro_type_script_index_0_lang.BFfqj1ee.js",
+        "bytes": 4537
+      },
+      {
+        "name": "manrope-latin-700-normal.woff2",
+        "bytes": 14212
+      },
+      {
+        "name": "hanken-grotesk-latin-400-normal.woff2",
+        "bytes": 13460
+      },
+      {
+        "name": "page.IvKoM_B8.js",
+        "bytes": 45
+      },
+      {
+        "name": "31-59-imgIconPixelArrowDownRight.svg",
+        "bytes": 807
+      },
+      {
+        "name": "488-7974-imgIconGlobe.svg",
+        "bytes": 858
+      },
+      {
+        "name": "Preferences.astro_astro_type_script_index_0_lang.4N3Mammb.js",
+        "bytes": 674
+      },
+      {
+        "name": "FooterCtaZoom.astro_astro_type_script_index_0_lang.ZvX1tGuq.js",
+        "bytes": 12674
+      },
+      {
+        "name": "Navbar.astro_astro_type_script_index_0_lang.BsQGzNZr.js",
+        "bytes": 29629
+      },
+      {
+        "name": "Base.astro_astro_type_script_index_0_lang.CHGPEZYz.js",
+        "bytes": 2611
+      },
+      {
+        "name": "LegalModals.astro_astro_type_script_index_0_lang.COuaO1kl.js",
+        "bytes": 10669
+      },
+      {
+        "name": "index.BbWtjHji.js",
+        "bytes": 1045
+      },
+      {
+        "name": "silkscreen-latin-400-normal.woff2",
+        "bytes": 8404
+      },
+      {
+        "name": "hanken-grotesk-latin-500-normal.woff2",
+        "bytes": 13796
+      },
+      {
+        "name": "departure-mono-latin-400-normal.woff2",
+        "bytes": 22496
+      },
+      {
+        "name": "pixelify-sans-latin-400-normal.woff2",
+        "bytes": 7692
+      },
+      {
+        "name": "wordpress.svg",
+        "bytes": 974
+      },
+      {
+        "name": "webflow.svg",
+        "bytes": 646
+      },
+      {
+        "name": "framer.svg",
+        "bytes": 361
+      },
+      {
+        "name": "shopify.svg",
+        "bytes": 1100
+      },
+      {
+        "name": "claude.svg",
+        "bytes": 1401
+      },
+      {
+        "name": "react.svg",
+        "bytes": 2081
+      },
+      {
+        "name": "page-lifecycle.DAUuak2v.js",
+        "bytes": 785
+      },
+      {
+        "name": "transitions.IpgBFPiQ.js",
+        "bytes": 1825
+      },
+      {
+        "name": "preload-helper.BlTxHScW.js",
+        "bytes": 650
+      }
+    ],
+    "errors": []
+  }
+]
