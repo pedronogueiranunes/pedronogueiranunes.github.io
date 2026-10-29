@@ -88,6 +88,7 @@ const rowHref = (item: any, index: number) =>
         ? "/#thoughts"
         : "/projects?category=experiments");
 const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
+import LogoModel from "./LogoModel.astro";
 ---
 
 <a class="skip-link" href="#main">
@@ -95,16 +96,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
 </a>
 <header class="site-nav" transition:name="site-header" transition:persist="site-header" transition:animate="none">
   <a class="site-logo" transition:name="site-logo" transition:animate="none" href="/" aria-label="Pedr0 Nogueira home">
-    <span class="site-logo__model">
-      {/* Real 3D extrusion: the same lettering repeated in depth. Layer 0 is the front face. */}
-      {Array.from({ length: 56 }, (_, depth) => (
-        <span class="site-logo__layer" style={`--depth:${depth}`} aria-hidden={depth > 0 ? "true" : undefined}>
-          Pedr0
-          <br />
-          Nogueira
-        </span>
-      ))}
-    </span>
+    <LogoModel />
   </a>
   <nav class="desktop-nav" transition:name="site-navigation" transition:animate="none" aria-label="Main navigation">
     {menu.map((item) => (
@@ -189,10 +181,8 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
 </header>
 <dialog transition:name="mobile-menu" transition:persist="mobile-menu" transition:animate="none" id="mobile-menu" class="mobile-dialog" tabindex="-1" aria-label="Main navigation">
   <div class="mobile-menu-header">
-    <a class="site-logo" href="/">
-      Pedr0
-      <br />
-      Nogueira
+    <a class="site-logo" href="/" aria-label="Pedr0 Nogueira home">
+      <LogoModel />
     </a>
     <button class="menu-close" aria-label="Close menu">
       <Icon name="close" size={24} />
@@ -258,18 +248,54 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     model?.animate(
       [
         { transform: "none" },
-        { transform: "translate(3px, -4px) scale(.9) rotateX(7deg)", offset: .22 },
-        { transform: "translate(-1px, 1px) scale(1.03)", offset: .55 },
-        { transform: "scale(.995)", offset: .8 },
+        { transform: "translate(8px, -12px) scale(.74) rotateX(18deg) rotateY(-10deg)", offset: .18 },
+        { transform: "translate(-3px, 4px) scale(1.12) rotateX(-6deg)", offset: .42 },
+        { transform: "translate(1px, -2px) scale(.95) rotateX(3deg)", offset: .62 },
+        { transform: "scale(1.03)", offset: .8 },
         { transform: "none" },
       ],
-      { duration: 700, easing: "cubic-bezier(.2,.7,.2,1)", composite: "add" },
+      { duration: 950, easing: "cubic-bezier(.2,.7,.2,1)", composite: "add" },
     );
     face?.animate(
       [{ opacity: 1 }, { opacity: .45, offset: .18 }, { opacity: 1, offset: .4 }, { opacity: .8, offset: .55 }, { opacity: 1 }],
       { duration: 520, easing: "ease-out" },
     );
   }, { signal: scope.signal });
+  // Hover wave: letters sway back and forth in depth, in sequence, starting from the one closest to where the pointer came in.
+  const waveLogo = document.querySelector<HTMLElement>(".site-nav .site-logo");
+  const waveModel = waveLogo?.querySelector<HTMLElement>(".site-logo__model");
+  const faceChars = [...(waveLogo?.querySelectorAll<HTMLElement>(".site-logo__layer:first-child .site-logo__char") ?? [])];
+  let waves: Animation[] = [];
+  if (waveLogo && waveModel && faceChars.length && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    waveLogo.addEventListener("pointerenter", (event) => {
+      if (reducedMotion.matches) return;
+      // Re-entering while the letters are still settling keeps the current wave going.
+      const settling = waves.filter((wave) => wave.playState === "running");
+      if (settling.length) { settling.forEach((wave) => wave.effect?.updateTiming({ iterations: Infinity })); return; }
+      waves = faceChars.map((char, index) => {
+        const box = char.getBoundingClientRect();
+        const distance = Math.hypot(event.clientX - (box.left + box.width / 2), event.clientY - (box.top + box.height / 2));
+        // ponytail: 6ms of delay per px from the pointer; raise it for a slower ripple.
+        return waveModel.animate(
+          [
+            { [`--w${index}`]: "0px", easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "-12px", offset: .4, easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "4px", offset: .75, easing: "cubic-bezier(.45, 0, .55, 1)" },
+            { [`--w${index}`]: "0px" },
+          ],
+          { duration: 1400, delay: distance * 6, iterations: Infinity },
+        );
+      });
+    }, { signal: scope.signal });
+    // On leave each letter finishes the bob it is in, so nothing snaps.
+    waveLogo.addEventListener("pointerleave", () => {
+      waves.forEach((wave) => {
+        const iteration = wave.effect?.getComputedTiming().currentIteration ?? 0;
+        wave.effect?.updateTiming({ iterations: (iteration ?? 0) + 1 });
+      });
+    }, { signal: scope.signal });
+    scope.cleanup(() => waves.forEach((wave) => wave.cancel()));
+  }
   // Light magnetic pull on the 3D logo: it leans toward a nearby pointer. CSS eases the motion.
   const logo = document.querySelector<HTMLElement>(".site-nav .site-logo");
   if (logo && matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -280,12 +306,12 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
       const box = logo.getBoundingClientRect();
       const dx = pointer.x - (box.left + box.width / 2);
       const dy = pointer.y - (box.top + box.height / 2);
-      // ponytail: linear falloff over 320px; tune RANGE/strength here.
-      const pull = reducedMotion.matches ? 0 : Math.max(0, 1 - Math.hypot(dx, dy) / 320);
-      logo.style.setProperty("--logo-tilt-x", `${(-dy / 40) * pull}deg`);
-      logo.style.setProperty("--logo-tilt-y", `${(dx / 30) * pull}deg`);
-      logo.style.setProperty("--logo-shift-x", `${(dx / 25) * pull}px`);
-      logo.style.setProperty("--logo-shift-y", `${(dy / 25) * pull}px`);
+      // ponytail: linear falloff over 420px; tune RANGE/strength here.
+      const pull = reducedMotion.matches ? 0 : Math.max(0, 1 - Math.hypot(dx, dy) / 420);
+      logo.style.setProperty("--logo-tilt-x", `${(-dy / 14) * pull}deg`);
+      logo.style.setProperty("--logo-tilt-y", `${(dx / 10) * pull}deg`);
+      logo.style.setProperty("--logo-shift-x", `${(dx / 9) * pull}px`);
+      logo.style.setProperty("--logo-shift-y", `${(dy / 9) * pull}px`);
     };
     window.addEventListener("pointermove", (event) => {
       pointer = { x: event.clientX, y: event.clientY };
@@ -299,6 +325,7 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   }
   const mobileAnimations = new Set<Animation>();
   let closing = false;
+  const menuLogo = dialog.querySelector<HTMLElement>(".mobile-menu-header .site-logo");
   const stopMobileAnimations = () => {
     mobileAnimations.forEach(animation => animation.cancel());
     mobileAnimations.clear();
@@ -339,8 +366,10 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
     else dialog.querySelector<HTMLButtonElement>(".menu-close")?.focus({ preventScroll: true });
     trigger.setAttribute("aria-expanded", "true");
     document.body.style.overflow = "hidden";
+    // The menu's logo opens in the bar's isometric pose and turns to face the camera.
+    requestAnimationFrame(() => requestAnimationFrame(() => menuLogo?.classList.add("is-flat")));
     if (!reducedMotion.matches) {
-      const entries = dialog.querySelectorAll(".mobile-menu-header .site-logo, :scope > nav > details, .preferences-panel--inline > fieldset, :scope > .action");
+      const entries = dialog.querySelectorAll(":scope > nav > details, .preferences-panel--inline > fieldset, :scope > .action");
       entries.forEach((element, index) => animateMobile(element,
         [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "translateY(0)" }],
         { duration: 280, delay: index * 28, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" }));
@@ -355,6 +384,15 @@ const clean = (text: string) => text.replace(/[→↗←]/g, "").trim();
   reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) stopMobileAnimations(); }, { signal: scope.signal });
   scope.cleanup(() => { stopMobileAnimations(); if (dialog.open) dialog.close(); });
   dialog.addEventListener("close", () => {
+    menuLogo?.classList.remove("is-flat");
+    // Once the menu is gone, the bar's logo starts flat and turns back to its extruded pose.
+    const barLogo = document.querySelector<HTMLElement>(".site-nav .site-logo");
+    if (barLogo && !reducedMotion.matches) {
+      barLogo.classList.add("no-transition", "is-flat");
+      barLogo.getBoundingClientRect();
+      barLogo.classList.remove("no-transition");
+      requestAnimationFrame(() => requestAnimationFrame(() => barLogo.classList.remove("is-flat")));
+    }
     stopMobileAnimations();
     closing = false;
     trigger.setAttribute("aria-expanded", "false");
