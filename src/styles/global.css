@@ -7722,3 +7722,11 @@ main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 
     box-shadow: 0 0 0 max(16px, env(safe-area-inset-bottom)) var(--mobile-menu-bg, #ffffff);
   }
 }
+
+/* After a page change the router moves focus to the h1 (or main) so screen readers
+   announce the new page. That focus is not user-driven, so it shows no ring;
+   Safari otherwise draws the orange outline around the heading. */
+main[tabindex="-1"]:focus,
+main h1[tabindex="-1"]:focus {
+  outline: none;
+}
