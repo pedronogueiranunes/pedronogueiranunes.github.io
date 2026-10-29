@@ -9,12 +9,16 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
 ---
 <div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} data-world={world ? '' : undefined} data-world-origin={worldOrigin} aria-hidden="true">
   <canvas class="pixel-trail__rest"></canvas>
+  {world && <canvas class="pixel-trail__world"></canvas>}
   <canvas class="pixel-trail__trail"></canvas>
 </div>
 
 <style>
   .pixel-trail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
   .pixel-trail canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  /* The map only covers its own band and renders at 1x: square dots stay crisp and
+     the per-frame upload is a fraction of a full-resolution canvas. */
+  .pixel-trail canvas.pixel-trail__world { bottom: auto; height: 88%; image-rendering: pixelated; }
   .pixel-trail--green { inset: auto; top: calc(-1 * var(--opening-nav-height, var(--projects-nav-space, 103px))); left: 50%; transform: translateX(-50%); width: 100vw; height: calc(100% + var(--opening-nav-height, var(--projects-nav-space, 103px))); z-index: -1; mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); }
   @media (hover: none), (prefers-reduced-motion: reduce) { .pixel-trail { display: none; } }
 </style>
@@ -64,9 +68,36 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
     const HOME = { u: (180 - 39) / 360, v: (80 + 12) / 138 };
     let land: { x: number; y: number; d: number }[] = [];
     let worldFrame = 0, worldLast = 0;
-    // Live computed style: picks up the theme's ink when the theme flips.
-    const themeStyle = getComputedStyle(document.documentElement);
-    const paintRest = (now = 0) => {
+    const worldCanvas = root.querySelector<HTMLCanvasElement>('.pixel-trail__world');
+    const worldCtx = worldCanvas?.getContext('2d');
+    // Theme ink, cached and refreshed when the theme flips (reading styles every frame forces style work).
+    let ink = color;
+    const readInk = () => { ink = getComputedStyle(document.documentElement).getPropertyValue('--projects-control-ink').trim() || color; };
+    const BUCKETS = 10;
+    const paintWorld = (now: number) => {
+      if (!worldCtx || !worldCanvas || !land.length) return;
+      worldCtx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
+      worldCtx.fillStyle = ink;
+      // Dots are grouped into a few pulse levels, so each frame is ~10 fills instead of one per dot.
+      const groups: { x: number; y: number }[][] = Array.from({ length: BUCKETS }, () => []);
+      for (const dot of land) {
+        // ponytail: one cosine wave over distance from home; tune period (3600ms) and wavelength (d * 9) here.
+        const pulse = Math.pow(0.5 + 0.5 * Math.cos(dot.d * 9 - now / 3600 * Math.PI * 2), 2);
+        groups[Math.min(BUCKETS - 1, Math.floor(pulse * BUCKETS))].push(dot);
+      }
+      groups.forEach((dots, level) => {
+        if (!dots.length) return;
+        const pulse = (level + 0.5) / BUCKETS;
+        // Crest dots grow to the hover trail's pixel size.
+        const size = 2.5 + pulse * (pixelSize - 2.5);
+        worldCtx.globalAlpha = 0.0475 + pulse * 0.0684;
+        worldCtx.beginPath();
+        for (const dot of dots) worldCtx.rect(dot.x - size / 2, dot.y - size / 2, size, size);
+        worldCtx.fill();
+      });
+      worldCtx.globalAlpha = 1;
+    };
+    const paintRest = () => {
       restCtx.clearRect(0, 0, width, height);
       restCtx.fillStyle = color;
       restCtx.globalAlpha = 0.055;
@@ -76,21 +107,15 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
         if (world && land.length && isLand(x / width, y / (height * 0.88))) continue;
         restCtx.fillRect(x, y, 2, 2);
       }
-      if (land.length) restCtx.fillStyle = themeStyle.getPropertyValue('--projects-control-ink').trim() || color;
-      for (const dot of land) {
-        // ponytail: one cosine wave over distance from home; tune period (3600ms) and wavelength (d * 9) here.
-        const pulse = Math.pow(0.5 + 0.5 * Math.cos(dot.d * 9 - now / 3600 * Math.PI * 2), 2);
-        // Crest dots grow to the hover trail's pixel size.
-        const size = 2.5 + pulse * (pixelSize - 2.5);
-        restCtx.globalAlpha = 0.0475 + pulse * 0.0684;
-        restCtx.fillRect(dot.x - size / 2, dot.y - size / 2, size, size);
-      }
       restCtx.globalAlpha = 1;
     };
     const buildLand = () => {
       land = [];
-      if (!world) return;
+      if (!world || !worldCanvas) return;
       const mapHeight = height * 0.88;
+      worldCanvas.width = Math.round(width);
+      worldCanvas.height = Math.round(mapHeight);
+      readInk();
       let ox = HOME.u * width, oy = HOME.v * mapHeight;
       const originEl = root.dataset.worldOrigin ? panel.querySelector(root.dataset.worldOrigin) : null;
       if (originEl) {
@@ -108,7 +133,7 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
       // ponytail: ~20fps is plenty for a slow pulse and keeps the hero cheap.
       if (now - worldLast < 50 || !visible || document.hidden) return;
       worldLast = now;
-      paintRest(now);
+      paintWorld(now);
     };
     const startWorld = () => { if (world && worldMotion.matches && !worldFrame) worldFrame = requestAnimationFrame(worldTick); };
     const stopWorld = () => { cancelAnimationFrame(worldFrame); worldFrame = 0; };
@@ -185,7 +210,8 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       cells.clear(); previous = undefined; pending = undefined;
       buildLand();
-      paintRest(performance.now());
+      paintRest();
+      paintWorld(performance.now());
       requestPaint();
     });
     resize.observe(panel);
@@ -208,6 +234,13 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
     hero.addEventListener('pointerleave', () => { previous = undefined; pending = undefined; }, { signal: scope.signal });
     document.addEventListener('visibilitychange', () => { stop(); requestPaint(); }, { signal: scope.signal });
     media.addEventListener('change', () => { stop(); requestPaint(); }, { signal: scope.signal });
+    if (world) {
+      const themeObserver = new MutationObserver(() => { readInk(); paintWorld(performance.now()); });
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      const scheme = matchMedia('(prefers-color-scheme: dark)');
+      scheme.addEventListener('change', () => { readInk(); paintWorld(performance.now()); }, { signal: scope.signal });
+      scope.cleanup(() => themeObserver.disconnect());
+    }
     scope.cleanup(() => { stop(); stopWorld(); resize.disconnect(); observer.disconnect(); });
     });
   });
