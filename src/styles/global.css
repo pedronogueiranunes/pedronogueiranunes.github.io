@@ -420,31 +420,52 @@ img {
   /* Cut the extrusion at the bar's own outline, including its rounded left corners. */
   clip-path: inset(0 -100vw 0 calc(-1 * var(--nav-pad-x, 32px)) round var(--nav-radius-tl, 50px) 0 0 var(--nav-radius-bl, 50px));
 }
-.site-nav .site-logo__model {
+.site-logo__model {
   position: relative;
   display: block;
   transform-style: preserve-3d;
   /* Isometric (parallel) view, slightly from below. */
   transform:
     translate(var(--logo-shift-x, 0px), var(--logo-shift-y, 0px))
-    rotateX(calc(16deg + var(--logo-tilt-x, 0deg)))
-    rotateY(calc(24deg + var(--logo-tilt-y, 0deg)));
+    rotateX(calc(var(--logo-rx, 16deg) + var(--logo-tilt-x, 0deg)))
+    rotateY(calc(var(--logo-ry, 24deg) + var(--logo-tilt-y, 0deg)));
   transition: transform 450ms cubic-bezier(.16, 1, .3, 1);
 }
-.site-nav .site-logo__layer {
+.site-logo__layer {
   display: block;
   /* ponytail: 56 layers x 2px = 112px deep; fewer layers if text rendering ever gets heavy. */
   transform: translateZ(calc(var(--depth) * -2px));
   /* Light extrusion that fades into the bar, so the front face carries the weight. */
   color: color-mix(in srgb, var(--accent-ink) calc(max(8%, 34% - var(--depth) * .5%)), var(--surface));
 }
-.site-nav .site-logo__layer:not(:first-child) {
+.site-logo__layer:not(:first-child) {
   position: absolute;
   inset: 0;
 }
-.site-nav .site-logo__layer:first-child {
+.site-logo__layer:first-child {
   color: var(--accent-ink);
 }
+.site-logo__layer:not(:first-child) { transition: opacity 300ms ease 150ms; }
+/* Hover wave: one animated offset per letter index, shared by every depth layer. */
+@property --w0 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w1 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w2 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w3 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w4 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w5 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w6 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w7 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w8 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w9 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w10 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w11 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --w12 { syntax: "<length>"; inherits: true; initial-value: 0px; }
+.site-logo__char { display: inline-block; transform: translateY(var(--wave, 0px)); }
+/* Without this, an instant pose change skips the transition (used after the menu closes). */
+.site-logo.no-transition .site-logo__model, .site-logo.no-transition .site-logo__layer { transition: none !important; }
+/* Mobile menu open: the logo turns to face the camera and drops its extrusion. */
+.site-logo.is-flat .site-logo__model { --logo-rx: 0deg; --logo-ry: 0deg; transition-duration: 550ms; }
+.site-logo.is-flat .site-logo__layer:not(:first-child) { opacity: 0; transition-delay: 250ms; }
 .desktop-nav {
   display: flex;
   align-items: center;
