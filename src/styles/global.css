@@ -390,6 +390,10 @@ img {
   align-items: center;
   gap: 24px;
   margin: 15px 18px 0;
+  --nav-pad-y: 8px;
+  --nav-pad-x: 32px;
+  --nav-radius-tl: 50px;
+  --nav-radius-bl: 50px;
   padding: 8px 32px;
   min-height: 88px;
   border-radius: 50px;
@@ -404,6 +408,42 @@ img {
   color: var(--accent-ink);
   width: 170px;
   flex-shrink: 0;
+}
+/* 3D navbar logo: seen from below, the extrusion runs past the bar and is cut at its edge.
+   The link stretches to the bar's top and bottom edges and clips; the face carries the tilt. */
+.site-nav .site-logo {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  margin-block: calc(-1 * var(--nav-pad-y, 8px));
+  padding-block: 0;
+  /* Cut the extrusion at the bar's own outline, including its rounded left corners. */
+  clip-path: inset(0 -100vw 0 calc(-1 * var(--nav-pad-x, 32px)) round var(--nav-radius-tl, 50px) 0 0 var(--nav-radius-bl, 50px));
+}
+.site-nav .site-logo__model {
+  position: relative;
+  display: block;
+  transform-style: preserve-3d;
+  /* Isometric (parallel) view, slightly from below. */
+  transform:
+    translate(var(--logo-shift-x, 0px), var(--logo-shift-y, 0px))
+    rotateX(calc(16deg + var(--logo-tilt-x, 0deg)))
+    rotateY(calc(24deg + var(--logo-tilt-y, 0deg)));
+  transition: transform 450ms cubic-bezier(.16, 1, .3, 1);
+}
+.site-nav .site-logo__layer {
+  display: block;
+  /* ponytail: 56 layers x 2px = 112px deep; fewer layers if text rendering ever gets heavy. */
+  transform: translateZ(calc(var(--depth) * -2px));
+  /* Light extrusion that fades into the bar, so the front face carries the weight. */
+  color: color-mix(in srgb, var(--accent-ink) calc(max(8%, 34% - var(--depth) * .5%)), var(--surface));
+}
+.site-nav .site-logo__layer:not(:first-child) {
+  position: absolute;
+  inset: 0;
+}
+.site-nav .site-logo__layer:first-child {
+  color: var(--accent-ink);
 }
 .desktop-nav {
   display: flex;
@@ -1161,6 +1201,7 @@ details[open] > summary > .faq-plus:after {
 }
 @media (max-width: 1200px) {
   .site-nav {
+    --nav-pad-x: 24px;
     gap: 16px;
     padding-inline: 24px;
   }
@@ -1194,6 +1235,8 @@ details[open] > summary > .faq-plus:after {
   .site-nav {
     top: 12px;
     margin: 12px 20px 0;
+    --nav-pad-y: 16px;
+    --nav-pad-x: 20px;
     padding: 16px 20px;
     min-height: 76px;
   }
@@ -6403,6 +6446,10 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
     width: 100%;
     max-width: none;
     margin: 0;
+    --nav-pad-y: 12px;
+    --nav-pad-x: max(20px, env(safe-area-inset-left));
+    --nav-radius-tl: 0px;
+    --nav-radius-bl: 30px;
     padding: 12px max(20px, env(safe-area-inset-left)) 12px max(20px, env(safe-area-inset-right));
     border-radius: 0 0 30px 30px;
     background: color-mix(in srgb, var(--surface) 85%, transparent);
