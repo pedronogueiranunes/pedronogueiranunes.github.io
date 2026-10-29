@@ -1,8 +1,8 @@
 ---
-interface Props { tone?: 'orange' | 'green' }
-const { tone = 'orange' } = Astro.props;
+interface Props { tone?: 'orange' | 'green'; world?: boolean }
+const { tone = 'orange', world = false } = Astro.props;
 ---
-<div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} aria-hidden="true">
+<div class:list={["pixel-trail", { "pixel-trail--green": tone === 'green' }]} data-tone={tone} data-world={world ? '' : undefined} aria-hidden="true">
   <canvas class="pixel-trail__rest"></canvas>
   <canvas class="pixel-trail__trail"></canvas>
 </div>
@@ -16,6 +16,13 @@ const { tone = 'orange' } = Astro.props;
 
 <script>
   import { onPageLoad } from '../scripts/page-lifecycle';
+  import { WORLD_COLS, WORLD_ROWS, WORLD_LAND } from '../data/world-land';
+  const worldBits = Uint8Array.from(atob(WORLD_LAND), (c) => c.charCodeAt(0));
+  const isLand = (u: number, v: number) => {
+    if (u < 0 || v < 0 || u >= 1 || v >= 1) return false;
+    const i = Math.floor(v * WORLD_ROWS) * WORLD_COLS + Math.floor(u * WORLD_COLS);
+    return (worldBits[i >> 3] >> (7 - (i & 7))) & 1;
+  };
   onPageLoad((scope) => {
     document.querySelectorAll<HTMLElement>('.pixel-trail').forEach((root) => {
     const panel = root?.parentElement;
@@ -46,17 +53,53 @@ const { tone = 'orange' } = Astro.props;
     // pointermove (high-rate mice otherwise force a layout read per event).
     let pending: { x: number; y: number } | undefined;
     const stop = () => { cancelAnimationFrame(frame); frame = 0; cells.clear(); waves.length = 0; previous = undefined; pending = undefined; };
-    const paintRest = () => {
+    // World mode: land dots pulse in slow rings spreading from Bahia, which sits
+    // behind the portrait (lon -39 lands at ~39% of the width on a full -180..180 map).
+    const world = root.dataset.world !== undefined;
+    const HOME = { u: (180 - 39) / 360, v: (80 + 12) / 138 };
+    let land: { x: number; y: number; d: number }[] = [];
+    let worldFrame = 0, worldLast = 0;
+    // Live computed style: picks up the theme's ink when the theme flips.
+    const themeStyle = getComputedStyle(document.documentElement);
+    const paintRest = (now = 0) => {
       restCtx.clearRect(0, 0, width, height);
       restCtx.fillStyle = color;
       restCtx.globalAlpha = 0.055;
       // Sparse, quiet resting marks keep the field lighter than the content.
       for (let x = offset; x < width; x += step) for (let y = offset; y < height; y += step) {
         if ((Math.floor(x / step) * 7 + Math.floor(y / step) * 11) % 5 === 0) continue;
+        if (world && land.length && isLand(x / width, y / (height * 0.88))) continue;
         restCtx.fillRect(x, y, 2, 2);
+      }
+      if (land.length) restCtx.fillStyle = themeStyle.getPropertyValue('--projects-control-ink').trim() || color;
+      for (const dot of land) {
+        // ponytail: one cosine wave over distance from home; tune period (5200ms) and wavelength (d * 9) here.
+        const pulse = Math.pow(0.5 + 0.5 * Math.cos(dot.d * 9 - now / 5200 * Math.PI * 2), 2);
+        const size = 2.5 + pulse * 2.5;
+        restCtx.globalAlpha = 0.16 + pulse * 0.36;
+        restCtx.fillRect(dot.x - size / 2, dot.y - size / 2, size, size);
       }
       restCtx.globalAlpha = 1;
     };
+    const buildLand = () => {
+      land = [];
+      if (!world) return;
+      const mapHeight = height * 0.88;
+      for (let x = offset; x < width; x += step) for (let y = offset; y < mapHeight; y += step) {
+        const u = x / width, v = y / mapHeight;
+        if (isLand(u, v)) land.push({ x, y, d: Math.hypot((u - HOME.u) * 2, v - HOME.v) });
+      }
+    };
+    const worldMotion = matchMedia('(prefers-reduced-motion: no-preference)');
+    const worldTick = (now: number) => {
+      worldFrame = requestAnimationFrame(worldTick);
+      // ponytail: ~20fps is plenty for a slow pulse and keeps the hero cheap.
+      if (now - worldLast < 50 || !visible || document.hidden) return;
+      worldLast = now;
+      paintRest(now);
+    };
+    const startWorld = () => { if (world && worldMotion.matches && !worldFrame) worldFrame = requestAnimationFrame(worldTick); };
+    const stopWorld = () => { cancelAnimationFrame(worldFrame); worldFrame = 0; };
     const stamp = (point: { x: number; y: number }, rect: DOMRect, now: number) => {
       const local = { x: point.x - rect.left, y: point.y - rect.top };
       if (local.x < 0 || local.y < 0 || local.x > width || local.y > height) { previous = undefined; return; }
@@ -129,13 +172,14 @@ const { tone = 'orange' } = Astro.props;
       trail.width = Math.round(width * ratio); trail.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       cells.clear(); previous = undefined; pending = undefined;
-      paintRest();
+      buildLand();
+      paintRest(performance.now());
       requestPaint();
     });
     resize.observe(panel);
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (!visible) stop(); else requestPaint();
+      if (!visible) { stop(); stopWorld(); } else { requestPaint(); startWorld(); }
     });
     observer.observe(hero);
     hero.addEventListener('pointermove', (event) => {
@@ -152,7 +196,7 @@ const { tone = 'orange' } = Astro.props;
     hero.addEventListener('pointerleave', () => { previous = undefined; pending = undefined; }, { signal: scope.signal });
     document.addEventListener('visibilitychange', () => { stop(); requestPaint(); }, { signal: scope.signal });
     media.addEventListener('change', () => { stop(); requestPaint(); }, { signal: scope.signal });
-    scope.cleanup(() => { stop(); resize.disconnect(); observer.disconnect(); });
+    scope.cleanup(() => { stop(); stopWorld(); resize.disconnect(); observer.disconnect(); });
     });
   });
 </script>
