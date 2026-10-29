@@ -1,0 +1,7 @@
+[
+  { size: 128, differentBytes: 0 },
+  { size: 196, differentBytes: 0 },
+  { size: 240, differentBytes: 0 },
+  { size: 256, differentBytes: 0 },
+  { size: 400, differentBytes: 0 }
+]

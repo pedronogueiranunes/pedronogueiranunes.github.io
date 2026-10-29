@@ -42,6 +42,9 @@ const { source, invert = false } = Astro.props;
       const autoAnimate=()=>detailed && mobile.matches;
       const bayer = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
       let pixels: Uint8ClampedArray | undefined;
+      // Preserve double precision: these image-derived values never change
+      // between frames. Rebuild only when setup resamples the source image.
+      let alphaCache: Float64Array, toneCache: Float64Array;
       let width = 0, height = 0, frame = 0, active = false, visible = true, last = 0;
       let elapsed = 0, mouseX = 0, mouseY = 0;
       let output: ImageData | undefined;
@@ -63,13 +66,12 @@ const { source, invert = false } = Astro.props;
           const rowWave = phase ? Math.cos(y*.09 - phase*3.2 + mouseY*2)*.09 : 0;
           for (let x=0; x<width; x++) {
             const i = i0 + x*4;
-            const alpha = pixels[i+3]/255;
+            const pixel = i / 4;
+            const alpha = alphaCache[pixel];
             if (alpha < .04) continue;
-            const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
             // Keep highlights open and shade the existing 3D contours with orange ink.
             const wave = phase ? (sinX![x]*rowCos + cosX![x]*rowSin)*.22 + rowWave : 0;
-            const baseTone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
-            const tone = invert ? 1 - baseTone : baseTone;
+            const tone = toneCache[pixel];
             const ink = Math.max(0, Math.min(1, (tone + wave*(fineGrain ? .35 : 1))*alpha));
             if (ink > (bayer[(y%4)*4+x%4]+.5)/16) {
               output.data[i]=255; output.data[i+1]=90; output.data[i+2]=31; output.data[i+3]=255;
@@ -111,6 +113,15 @@ const { source, invert = false } = Astro.props;
           const sourceY=canvas.dataset.source ? height*.21 : (height-fittedHeight)/2;
           sourceCtx.drawImage(artwork,sourceX,sourceY,fittedWidth,fittedHeight);
           pixels=sourceCtx.getImageData(0,0,width,height).data;
+          alphaCache = new Float64Array(width * height);
+          toneCache = new Float64Array(width * height);
+          for (let pixel = 0; pixel < width * height; pixel++) {
+            const i = pixel * 4;
+            alphaCache[pixel] = pixels[i+3]/255;
+            const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
+            const baseTone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+            toneCache[pixel] = invert ? 1 - baseTone : baseTone;
+          }
           draw(0); art.dataset.ditherReady='true';
         } catch { /* Keep the original artwork if the source cannot be sampled. */ }
       };
