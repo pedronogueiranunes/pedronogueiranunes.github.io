@@ -339,7 +339,14 @@ const faqSchema = JSON.stringify({
       </div>
       {/* TODO: confirm with Pedro before publishing (2 weeks to first designs) */}
       <div class="schedule-intro">
-        <span>2</span>
+        <span class="schedule-number" data-magnetic-number>
+          {/* ponytail: 12 stacked copies x 2px give the extrusion, like the navbar logo. */}
+          <span class="schedule-number__model">
+            {Array.from({ length: 12 }, (_, depth) => (
+              <span class="schedule-number__layer" style={`--depth:${depth}`} aria-hidden={depth > 0 ? "true" : undefined}>2</span>
+            ))}
+          </span>
+        </span>
         <div>
           <small class="mono accent">weeks</small>
           <p>From yes to first designs.<br />You see the plan before you pay for the build.</p>
@@ -364,6 +371,31 @@ const faqSchema = JSON.stringify({
     <h2>Fair questions.</h2>
     <FAQ items={faq} />
   </section>
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  // The schedule "2" tilts toward the pointer when it comes close, then settles back.
+  onPageLoad((scope) => {
+    const number = document.querySelector<HTMLElement>("[data-magnetic-number]");
+    if (!number || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    addEventListener("pointermove", (event) => {
+      if (reduced.matches || frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = number.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2), dy = event.clientY - (box.top + box.height / 2);
+        // ponytail: 360px reach; pull and tilt fade with distance.
+        const pull = Math.max(0, 1 - Math.hypot(dx, dy) / 360);
+        number.style.setProperty("--num-x", `${(dx / 12) * pull}px`);
+        number.style.setProperty("--num-y", `${(dy / 12) * pull}px`);
+        number.style.setProperty("--num-ry", `${(dx / 6) * pull}deg`);
+        number.style.setProperty("--num-rx", `${(-dy / 6) * pull}deg`);
+      });
+    }, { signal: scope.signal, passive: true });
+    scope.cleanup(() => cancelAnimationFrame(frame));
+  });
+</script>
 </Base>
 
 <script>

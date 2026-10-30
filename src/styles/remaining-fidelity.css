@@ -288,11 +288,16 @@
  .services-page .deliverable-stats { flex-direction:column; gap:24px; }
 }
 
-/* Reserve the artwork's full painted height before the offer heading. */
-.services-page .offer-card { height:auto; }
-.services-page .offer-art { height:180px; }
-.services-page .offer-art--1 { height:224px; }
-.services-page .offer-art--2 { height:200px; }
+/* Offer cards align from the top: one art slot, one icon size, so the three icons and
+   headings line up across cards; price and link sit at the bottom. */
+.services-page .offer-card { height:auto; justify-content:flex-start; }
+.services-page .offer-card .offer-price { margin-top:auto; }
+.services-page .offer-art,
+.services-page .offer-art--1,
+.services-page .offer-art--2 { height:224px; }
+.services-page .offer-art img,
+.services-page .offer-art--1 img,
+.services-page .offer-art--2 img { width:220px; height:220px; left:-8px; top:0; }
 
 .services-page .offer-card:not(.offer-card--featured) {
   border:1px solid var(--border);

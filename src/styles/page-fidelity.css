@@ -56,7 +56,8 @@
 .services-page .service-result td, .services-page .service-result th { border:0; padding:8px 0; }
 .services-page .service-result thead th { font:400 11px/1.2 var(--font-mono); text-transform:uppercase; letter-spacing:.04em; color:var(--text-secondary); }
 .services-page .service-result :is(th,td):not(:first-child) { text-align:right; }
-.services-page .service-result .action { border:0; padding:0; min-height:24px; justify-content:flex-start; color:var(--accent-ink); background:transparent; font:400 13px/16px var(--font-label); }
+/* Padded so the hover fill reads as a pill; the negative margin keeps the label aligned with the copy. */
+.services-page .service-result .action { border:0; padding:12px 20px; margin-left:-20px; width:fit-content; min-height:44px; justify-content:flex-start; color:var(--accent-ink); background:transparent; font:400 13px/16px var(--font-label); }
 .services-page .offer-card { border-radius:24px; background:var(--bg-secondary); }
 .services-page .offer-card:not(.offer-card--featured) { background:color-mix(in srgb,var(--surface) 60%,var(--bg-secondary)); }
 .services-page .offer-card--featured { background:radial-gradient(ellipse at 6% 0%,#ff5a1f66,transparent 50%),#1c1e1d; box-shadow:none; }
@@ -210,3 +211,22 @@
 .services-page .ai-note__copy { padding-right: 190px; }
 @media (max-width:768px) { .services-page .ai-note__copy { padding-right: 120px; } }
 @media (max-width:480px) { .services-page .ai-note { padding-bottom: 100px; } .services-page .ai-note__copy { padding-right: 0; } .services-page .ai-note .research-robot { width:140px; height:140px; } }
+
+/* Schedule "2": extruded like the navbar logo, tilting toward the pointer. */
+.services-page .schedule-number { display:inline-block; flex-shrink:0; }
+.services-page .schedule-number__model {
+  display:grid;
+  transform-style:preserve-3d;
+  transform:
+    translate(var(--num-x,0px), var(--num-y,0px))
+    rotateX(calc(14deg + var(--num-rx,0deg)))
+    rotateY(calc(-24deg + var(--num-ry,0deg)));
+  transition:transform 450ms cubic-bezier(.16,1,.3,1);
+}
+.services-page .schedule-number__layer {
+  grid-area:1 / 1;
+  transform:translateZ(calc(var(--depth) * -2px));
+  color:color-mix(in srgb, var(--accent-ink) calc(max(8%, 40% - var(--depth) * 2.6%)), var(--surface));
+}
+.services-page .schedule-number__layer:first-child { color:var(--accent-ink); }
+@media (prefers-reduced-motion:reduce) { .services-page .schedule-number__model { transition:none; } }

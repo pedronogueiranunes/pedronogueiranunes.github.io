@@ -220,6 +220,14 @@ h6 {
   font-family: var(--font-display);
   text-wrap: balance;
 }
+/* Paragraphs avoid one-word last lines and awkward breaks where the browser supports it. */
+p {
+  text-wrap: pretty;
+}
+/* Short section intros split into even lines instead of a long line and a stub. */
+.section-heading > p {
+  text-wrap: balance;
+}
 h6 {
   font-weight: 500;
 }
@@ -7008,6 +7016,12 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   isolation: isolate;
   border-radius: 20px;
 }
+/* Related projects use a fixed-width image: the frame hugs it so the hover halo
+   never spills past a narrower image. */
+.related-projects .project-media-frame {
+  width: fit-content;
+  max-width: 100%;
+}
 .project-media-halo {
   position: absolute;
   inset: -5px;
@@ -7485,7 +7499,14 @@ body.projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 
    extruded icon occupies the right half of the content container. The right
    edge follows the same 1312px content line as the navigation CTA, so it never
    floats to the viewport edge on ultrawide screens. */
-.projects-page .category-glyph-slot { display: none; }
+/* Below desktop the sculpture sits under the copy, smaller, centred. */
+.projects-page .category-glyph-slot {
+  display: flex;
+  width: min(78vw, 340px);
+  aspect-ratio: 1;
+  margin: 8px auto 0;
+  pointer-events: none;
+}
 main.projects-page .projects-header-copy h1 { max-width: 100%; }
 main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 100%; }
 @media (min-width: 1024px) {

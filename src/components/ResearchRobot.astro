@@ -5,6 +5,7 @@
 <style is:global>
 .services-page .ai-note .research-robot { position:absolute; right:12px; bottom:-64px; width:220px; height:220px; pointer-events:none; }
 .research-robot canvas,.research-robot__fallback { position:absolute; inset:0; display:block; width:100%; height:100%; image-rendering:pixelated; }
+.research-robot canvas { transform-origin:50% 85%; will-change:transform; }
 .research-robot.is-ready .research-robot__fallback { visibility:hidden; }
 @media(max-width:768px){.services-page .ai-note .research-robot { width:160px; height:160px; bottom:-45px; right:0; }}
 </style>
@@ -12,6 +13,7 @@
 import { onPageLoad } from "../scripts/page-lifecycle";
 const N=24,SIZE=128,DEPTH=6;
 const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+const RAMP=[[150,42,14],[205,64,20],[238,80,27]];
 onPageLoad(scope=>{
   document.querySelectorAll<HTMLElement>(".research-robot").forEach(root=>{
     const canvas=root.querySelector<HTMLCanvasElement>("canvas"), ctx=canvas?.getContext("2d",{willReadFrequently:true});
@@ -22,10 +24,14 @@ onPageLoad(scope=>{
     const fill=(x:number,y:number,w:number,h:number)=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)mask[yy*N+xx]=1;};
     fill(10,1,4,3);fill(5,4,14,2);fill(3,6,18,12);fill(5,18,14,2);fill(8,20,2,3);fill(14,20,2,3);fill(1,10,2,5);fill(21,10,2,5);
     let raf=0,last=0,time=0,visible=false,lookX=0,lookY=0,targetX=0,targetY=0;
+    // Life: eyes wander when the pointer is away, blinks come at random intervals
+    // (sometimes doubled), and hovering the card makes the robot hop and smile.
+    let lastPointer=-10,nextWander=0,nextBlink=2.5,blinkUntil=0,doubleBlink=false,hop=0,happy=0;
     const render=()=>{
       ctx.clearRect(0,0,SIZE,SIZE);
-      const yaw=-0.33+lookX*.4+(reduced.matches?0:Math.sin(time*.8)*.05);
-      const pitch=0.14+lookY*.2;
+      const still=reduced.matches;
+      const yaw=-0.33+lookX*.4+(still?0:Math.sin(time*.9)*.1);
+      const pitch=0.14+lookY*.2+(still?0:Math.sin(time*1.3)*.04);
       const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);
       const project=(x:number,y:number,z:number)=>{
         const px=x-N/2,py=y-N/2,pz=z-DEPTH/2;
@@ -37,44 +43,71 @@ onPageLoad(scope=>{
       const has=(x:number,y:number)=>x>=0&&y>=0&&x<N&&y<N&&mask[y*N+x]!==0;
       for(let y=0;y<N;y++)for(let x=0;x<N;x++){
         if(!has(x,y))continue;
+        // Material ids in the grey channel; the palette pass maps them to flat colours.
         let shade=255;
-        if(y>=8&&y<=14&&x>=6&&x<=17)shade=240;
+        // Ids are spaced so anti-aliased blends land on a neighbour, never on the visor tone.
+        if(y>=8&&y<=14&&x>=6&&x<=17)shade=60;
         const eyeX=Math.round(lookX*3),eyeY=Math.round(lookY*3);
-        const blink=!reduced.matches && (time % 4.8 > 4.55 && time % 4.8 < 4.7);
-        const eyeTop=10+eyeY;
-        if(y>=eyeTop&&y<=eyeTop+(blink?0:1)&&((x>=8+eyeX&&x<=9+eyeX)||(x>=14+eyeX&&x<=15+eyeX)))shade=20;
-        if(y===14&&x>=10&&x<=13)shade=80;
-        add([project(x,y,DEPTH),project(x+1,y,DEPTH),project(x+1,y+1,DEPTH),project(x,y+1,DEPTH)],shade);
+        const blink=!still && time<blinkUntil;
+        const eyeTop=10+eyeY+(happy>.5?1:0);
+        const eyeRows=blink||happy>.5?0:1;
+        if(y>=eyeTop&&y<=eyeTop+eyeRows&&((x>=8+eyeX&&x<=9+eyeX)||(x>=14+eyeX&&x<=15+eyeX)))shade=20;
+        // Mouth: a flat line, curling into a smile while the card is hovered.
+        if(happy>.5 ? (y===14&&x>=10&&x<=13)||(y===13&&(x===9||x===14)) : (y===14&&x>=10&&x<=13))shade=20;
+        // Front faces grow by a hair so neighbours overlap and no seam shows between them.
+        const e=.04;
+        add([project(x-e,y-e,DEPTH),project(x+1+e,y-e,DEPTH),project(x+1+e,y+1+e,DEPTH),project(x-e,y+1+e,DEPTH)],shade);
         if(!has(x-1,y))add([project(x,y,0),project(x,y+1,0),project(x,y+1,DEPTH),project(x,y,DEPTH)],115);
         if(!has(x+1,y))add([project(x+1,y,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x+1,y,DEPTH)],145);
         if(!has(x,y-1))add([project(x,y,0),project(x+1,y,0),project(x+1,y,DEPTH),project(x,y,DEPTH)],180);
         if(!has(x,y+1))add([project(x,y+1,0),project(x+1,y+1,0),project(x+1,y+1,DEPTH),project(x,y+1,DEPTH)],90);
       }
       faces.sort((a,b)=>a.depth-b.depth);
-      for(const face of faces){ctx.beginPath();ctx.moveTo(face.points[0][0],face.points[0][1]);for(let i=1;i<4;i++)ctx.lineTo(face.points[i][0],face.points[i][1]);ctx.closePath();ctx.fillStyle=`rgb(${face.shade},${face.shade},${face.shade})`;ctx.fill();ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.4;ctx.stroke();}
+      for(const face of faces){ctx.beginPath();ctx.moveTo(face.points[0][0],face.points[0][1]);for(let i=1;i<4;i++)ctx.lineTo(face.points[i][0],face.points[i][1]);ctx.closePath();ctx.fillStyle=`rgb(${face.shade},${face.shade},${face.shade})`;ctx.fill();}
       const image=ctx.getImageData(0,0,SIZE,SIZE), data=image.data;
       for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){
-        const i=(y*SIZE+x)*4;if(!data[i+3])continue;const v=data[i];
-        if(v>248){data[i]=255;data[i+1]=90;data[i+2]=31;}
-        else if(v>225){data[i]=249;data[i+1]=215;data[i+2]=198;}
-        else if(v<35){data[i]=77;data[i+1]=93;data[i+2]=73;}
-        else {const light=v/255>(BAYER[(y%4)*4+x%4]+.5)/16;data[i]=light?255:183;data[i+1]=light?90:49;data[i+2]=light?31:16;}
+        const i=(y*SIZE+x)*4;
+        // Hard silhouette: partial alpha only lives on anti-aliased edges.
+        if(data[i+3]<128){data[i+3]=0;continue;}
+        data[i+3]=255;const v=data[i];
+        if(v>=190){data[i]=255;data[i+1]=90;data[i+2]=31;}
+        else if(v<40){data[i]=77;data[i+1]=93;data[i+2]=73;}
+        else if(v<85){data[i]=249;data[i+1]=215;data[i+2]=198;}
+        else {
+          // Sides: a three-tone ramp (deep, mid, lit orange) with ordered dither only
+          // between neighbouring tones, so the extrusion reads smooth instead of noisy.
+          const t=Math.min(1,Math.max(0,(v-90)/90))*2,band=Math.min(1,Math.floor(t)),f=t-band;
+          const tone=f>(BAYER[(y%4)*4+x%4]+.5)/16?band+1:band;
+          const c=RAMP[tone];data[i]=c[0];data[i+1]=c[1];data[i+2]=c[2];
+        }
       }
       ctx.putImageData(image,0,0);root.classList.add("is-ready");
     };
     const shouldRun=()=>visible&&!document.hidden&&!reduced.matches;
-    const tick=(now:number)=>{raf=0;if(!shouldRun())return;if(!last)last=now;if(now-last>=40){time+=Math.min(now-last,80)/1000;last=now;lookX+=(targetX-lookX)*.14;lookY+=(targetY-lookY)*.14;render();}raf=requestAnimationFrame(tick);};
+    const tick=(now:number)=>{raf=0;if(!shouldRun())return;if(!last)last=now;if(now-last>=33){
+      time+=Math.min(now-last,80)/1000;last=now;
+      // Idle gaze: with no recent pointer, glance at a new spot every couple of seconds.
+      if(time-lastPointer>2&&time>nextWander){targetX=(Math.random()*2-1)*.7;targetY=(Math.random()*2-1)*.45;nextWander=time+1.4+Math.random()*2;}
+      if(time>nextBlink){blinkUntil=time+.12;nextBlink=doubleBlink?time+.22:time+2.2+Math.random()*3.2;doubleBlink=!doubleBlink&&Math.random()<.3;}
+      lookX+=(targetX-lookX)*.16;lookY+=(targetY-lookY)*.16;
+      happy+=((section.matches(":hover")?1:0)-happy)*.2;
+      hop=Math.max(0,hop-.06);
+      // Body motion is a transform on the canvas: idle bob plus a squash-and-stretch hop.
+      const bob=Math.sin(time*2.6)*3, jump=Math.sin(hop*Math.PI)*-14, squash=1+Math.sin(hop*Math.PI*2)*.06;
+      canvas.style.transform=`translateY(${(bob+jump).toFixed(2)}px) rotate(${(Math.sin(time*1.1)*2+lookX*3).toFixed(2)}deg) scale(${(2-squash).toFixed(3)},${squash.toFixed(3)})`;
+      render();}raf=requestAnimationFrame(tick);};
+    section.addEventListener("pointerenter",()=>{if(!reduced.matches&&hop===0)hop=1;},{signal:scope.signal});
     const start=()=>{if(!raf&&shouldRun()){last=0;raf=requestAnimationFrame(tick);}};
     const stop=()=>{if(raf)cancelAnimationFrame(raf);raf=0;last=0;};
     window.addEventListener("pointermove",event=>{
       if(reduced.matches||!fine.matches||event.pointerType!=="mouse")return;
       const r=root.getBoundingClientRect(), dx=event.clientX-r.left-r.width/2,dy=event.clientY-r.top-r.height*.35;
       const distance=Math.hypot(dx,dy),strength=Math.max(0,1-distance/420);
-      targetX=Math.max(-1,Math.min(1,dx/150))*strength;targetY=Math.max(-1,Math.min(1,dy/150))*strength;
+      if(strength>0){lastPointer=time;targetX=Math.max(-1,Math.min(1,dx/150))*strength;targetY=Math.max(-1,Math.min(1,dy/150))*strength;}
     },{signal:scope.signal,passive:true});
     document.addEventListener("pointerleave",()=>{targetX=0;targetY=0;},{signal:scope.signal});
     const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(visible)start();else stop();});io.observe(section);
-    reduced.addEventListener("change",()=>{stop();targetX=targetY=lookX=lookY=0;render();start();},{signal:scope.signal});
+    reduced.addEventListener("change",()=>{stop();targetX=targetY=lookX=lookY=0;canvas.style.transform="";render();start();},{signal:scope.signal});
     document.addEventListener("visibilitychange",()=>document.hidden?stop():start(),{signal:scope.signal});
     scope.cleanup(()=>{stop();io.disconnect();root.classList.remove("is-ready");});
     render();
