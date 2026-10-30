@@ -49,6 +49,7 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
           ))}
         </ol>
       </div>
+      <div class="contact-meta">
       {hasTestimonial ? (
         <blockquote class="contact-testimonial">
           <span class="testimonial-avatar" aria-hidden="true"></span>
@@ -61,7 +62,7 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
           </div>
         </blockquote>
       ) : (
-        <p class="mono muted">
+        <p class="contact-client-note">
           Recent clients include BSA Legal, Molina Chambô and PineLake Broken Bow.
         </p>
       )}
@@ -83,6 +84,7 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
           <dd>Within one business day</dd>
         </div>
       </dl>
+      </div>
     </div>
     <ContactForm />
   </section>

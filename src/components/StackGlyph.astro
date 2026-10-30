@@ -19,7 +19,7 @@ onPageLoad((scope)=>{
   document.querySelectorAll<HTMLElement>(".stack-glyph").forEach((root)=>{
     const canvas=root.querySelector<HTMLCanvasElement>("canvas");
     const svg=root.querySelector<SVGSVGElement>("svg");
-    const card=root.closest<HTMLElement>("article");
+    const card=root.closest<HTMLElement>("article, a, button");
     const ctx=canvas?.getContext("2d",{willReadFrequently:true});
     if(!canvas||!svg||!card||!ctx) return;
     const reduced=matchMedia("(prefers-reduced-motion: reduce)");
@@ -97,6 +97,8 @@ onPageLoad((scope)=>{
     image.src=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(clone))}`;
     card.addEventListener("pointerenter",()=>{if(fine.matches){hovering=true;start();}},{signal:scope.signal});
     card.addEventListener("pointerleave",()=>{hovering=false;start();},{signal:scope.signal});
+    card.addEventListener("focusin",()=>{hovering=true;start();},{signal:scope.signal});
+    card.addEventListener("focusout",()=>{hovering=false;start();},{signal:scope.signal});
     const io=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;if(!visible)stop();else if(hovering||Math.abs(yaw)>.005)start();});io.observe(card);
     reduced.addEventListener("change",()=>{if(reduced.matches){stop();yaw=0;paint();}else start();},{signal:scope.signal});
     document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(hovering||Math.abs(yaw)>.005)start();},{signal:scope.signal});
