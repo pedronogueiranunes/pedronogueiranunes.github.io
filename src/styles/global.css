@@ -491,7 +491,7 @@ img {
   display: block;
   /* ponytail: 28 layers x 4px = 112px deep. 56 layers doubled scroll frame time on phones;
      go lower only if steps start to show between layers. */
-  transform: translateZ(calc(var(--depth) * -4px));
+  transform: translateZ(calc(var(--depth) * var(--logo-depth-step, 4px) * -1));
   /* Light extrusion that fades into the bar, so the front face carries the weight. */
   color: color-mix(in srgb, var(--accent-ink) calc(max(5%, 22% - var(--depth) * .64%)), var(--surface));
 }

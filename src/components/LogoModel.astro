@@ -1,11 +1,13 @@
 ---
 // 3D logo: the lettering repeated in depth. Layer 0 is the front face; the rest are hidden from assistive tech.
 // Each letter is its own span (same index in every layer) so the hover wave moves the whole extruded letter.
+interface Props { layers?: number; step?: number }
+const { layers = 28, step = 4 } = Astro.props;
 const lines = ["Pedr0", "Nogueira"];
 const letters = lines.map((line, row) => [...line].map((char, col) => ({ char, index: row === 0 ? col : lines[0].length + col })));
 ---
-<span class="site-logo__model">
-  {Array.from({ length: 28 }, (_, depth) => (
+<span class="site-logo__model" style={`--logo-depth-step:${step}px`}>
+  {Array.from({ length: layers }, (_, depth) => (
     <span class="site-logo__layer" style={`--depth:${depth}`} aria-hidden={depth > 0 ? "true" : undefined}>
       {letters.map((line, row) => (
         <>

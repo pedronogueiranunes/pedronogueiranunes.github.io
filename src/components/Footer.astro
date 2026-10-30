@@ -1,5 +1,6 @@
 ---
 import "../styles/footer-email.css";
+import LogoModel from "./LogoModel.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import FooterCtaZoom from "./FooterCtaZoom.astro";
@@ -37,9 +38,7 @@ const platforms = [
   <div class="footer-columns">
     <div class="footer-bio">
       <a class="footer-logo" href="/" aria-label="Pedro Nogueira home">
-        Pedr0
-        <br />
-        Nogueira
+        <LogoModel layers={10} step={1.5} />
       </a>
       <p>
         Senior web designer and developer. WordPress, Webflow, Framer, Shopify
