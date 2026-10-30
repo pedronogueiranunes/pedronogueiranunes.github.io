@@ -7083,8 +7083,8 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   .featured-project .featured-metrics dd { font-size: 20px; }
 }
 
-/* Figma 641:24179: mobile CTA and menu share one capsule. */
-@media (max-width: 768px) {
+/* Compact CTA and menu share one capsule on mobile and tablet. */
+@media (max-width: 1024px) {
   .site-nav .site-nav-actions {
     flex-shrink: 0;
     gap: 8px;
@@ -7807,3 +7807,34 @@ main h1[tabindex="-1"]:focus {
 .contact-page .contact-intro h1 > span { display: block; text-wrap: balance; }
 
 
+
+/* Screen the light through square pixels after diffusion, keeping media sharp. */
+:root {
+  --pixel-glow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='black' opacity='.42' d='M0 0h4v4H0z'/%3E%3Cpath fill='black' opacity='.7' d='M0 0h3v3H0z'/%3E%3C/svg%3E");
+}
+.action:not(.action--secondary) > .action-halo,
+.project-media-halo {
+  inset: -20px;
+  filter: blur(.45px);
+  mask-image: var(--pixel-glow-mask);
+  mask-size: 4px 4px;
+  mask-repeat: repeat;
+}
+.action-halo > span,
+.project-media-halo > span {
+  inset: 14px;
+  filter: blur(7px);
+}
+.project-media::after {
+  backdrop-filter: none;
+  mask-image: var(--pixel-glow-mask), linear-gradient(0deg, #000 45%, transparent);
+  mask-size: 4px 4px, 100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
+}
+/* Offset curves stay concentric: 20px surface + 20px halo expansion. */
+.project-media-halo { border-radius:40px; }
+.project-media-halo > span { border-radius:26px; }
+.project-card:is(:hover, :focus-within) .project-media {
+  box-shadow:0 4px 16px -5px rgb(255 90 31 / .25);
+}
