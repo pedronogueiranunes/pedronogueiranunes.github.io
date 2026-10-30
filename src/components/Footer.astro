@@ -38,7 +38,7 @@ const platforms = [
   <div class="footer-columns">
     <div class="footer-bio">
       <a class="footer-logo" href="/" aria-label="Pedro Nogueira home">
-        <LogoModel layers={10} step={1.5} />
+        <LogoModel layers={12} step={1.6} />
       </a>
       <p>
         Senior web designer and developer. WordPress, Webflow, Framer, Shopify
@@ -108,3 +108,30 @@ const platforms = [
     </div>
   </div>
 </footer>
+
+<script>
+import { onPageLoad } from '../scripts/page-lifecycle';
+onPageLoad(scope => {
+ const footer=document.querySelector<HTMLElement>('.site-footer');
+ const model=footer?.querySelector<HTMLElement>('.footer-logo .site-logo__model');
+ if(!footer||!model)return;
+ const motion=matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ let frame=0, x=0, y=0;
+ const reset=()=>{cancelAnimationFrame(frame);frame=0;model.style.setProperty('--logo-tilt-x','0deg');model.style.setProperty('--logo-tilt-y','0deg');};
+ footer.addEventListener('pointermove', event=>{
+  if(!motion.matches||event.pointerType!=='mouse')return;
+  x=event.clientX;y=event.clientY;
+  if(frame)return;
+  frame=requestAnimationFrame(()=>{
+   frame=0;const box=model.getBoundingClientRect();const dx=x-box.left-box.width/2,dy=y-box.top-box.height/2;
+   const strength=Math.max(0,1-Math.hypot(dx,dy)/420);
+   model.style.setProperty('--logo-tilt-x',`${(-Math.max(-1,Math.min(1,dy/100))*4*strength).toFixed(2)}deg`);
+   model.style.setProperty('--logo-tilt-y',`${(Math.max(-1,Math.min(1,dx/100))*5*strength).toFixed(2)}deg`);
+  });
+ }, {passive:true,signal:scope.signal});
+ footer.addEventListener('pointerleave',reset,{signal:scope.signal});
+ window.addEventListener('blur',reset,{signal:scope.signal});
+ motion.addEventListener('change',reset,{signal:scope.signal});
+ scope.cleanup(reset);
+});
+</script>

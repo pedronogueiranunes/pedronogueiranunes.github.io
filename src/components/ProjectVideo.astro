@@ -2,10 +2,13 @@
 interface Props { base: string; full?: boolean }
 const {base, full = false} = Astro.props;
 ---
-<video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video>
+{full ? (<video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video>) : (<span class="project-preview-surface"><video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video></span>)}
 <style is:global>
 .project-video { display:block; width:100%; height:100%; object-fit:cover; }
 .project-video[data-project-video="preview"] { object-fit:contain; object-position:center top; background:#fff; transition:opacity 180ms ease; }
+.project-preview-surface { position:relative; display:block; width:100%; aspect-ratio:8 / 5; }
+.project-preview-surface::after { content:""; position:absolute; inset:auto 0 0; height:clamp(28px, 18%, 76px); background:linear-gradient(to bottom, transparent, rgb(255 255 255 / .35) 45%, #fff); pointer-events:none; }
+.project-media-shot:has(.project-preview-surface) { background:#fff; }
 .project-video.is-resetting { opacity:0; }
 @media (prefers-reduced-motion:reduce) { .project-video { transition:none; } }
 .case-page .browser-mockup-viewport:has(.project-video) { height:auto; aspect-ratio:8 / 5; }

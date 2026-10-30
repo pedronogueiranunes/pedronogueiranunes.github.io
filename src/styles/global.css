@@ -7016,10 +7016,10 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
   isolation: isolate;
   border-radius: 20px;
 }
-/* Related projects use a fixed-width image: the frame hugs it so the hover halo
-   never spills past a narrower image. */
+/* Related cards have positioned media; their frame must follow the grid column,
+   rather than shrink-wrap a child that contributes no intrinsic width. */
 .related-projects .project-media-frame {
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
 }
 .project-media-halo {
@@ -7837,4 +7837,29 @@ main h1[tabindex="-1"]:focus {
 .project-media-halo > span { border-radius:26px; }
 .project-card:is(:hover, :focus-within) .project-media {
   box-shadow:0 4px 16px -5px rgb(255 90 31 / .25);
+}
+
+/* Open contact sequence: typography and spacing replace the boxed panel. */
+.contact-page .next-steps { border:0; border-radius:0; background:transparent; padding:8px 0 0; }
+.contact-page .next-steps > h2 { margin-bottom:24px; }
+.contact-page .next-steps ol { gap:24px; }
+.contact-page .next-steps li { gap:16px; align-items:flex-start; }
+.contact-page .next-steps li::before { border-radius:6px; font-family:var(--font-label); font-size:12px; margin-top:2px; }
+.contact-page .next-steps h3 { font-weight:600; margin-bottom:5px; }
+.calendar-alternative .stack-glyph { width:32px; height:32px; }
+.calendar-alternative .stack-glyph .pixel-icon { --icon-size:28px !important; }
+
+/* Give practical contact information its own quiet rhythm below the steps. */
+.contact-page .contact-meta { margin-top:48px; padding-top:28px; border-top:1px solid var(--border); }
+.contact-page .contact-client-note { margin:0 0 26px; max-width:48ch; font:400 14px/1.6 var(--font-body); color:var(--text-secondary); }
+.contact-page .contact-details { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:26px 32px; }
+.contact-page .contact-details > div:first-child { grid-column:1 / -1; }
+.contact-page .contact-details dt { margin:0 0 8px; padding:0; color:var(--text-secondary); }
+.contact-page .contact-details dd { line-height:1.55; font-weight:400; }
+.contact-page .contact-details > div:first-child dd { font-size:16px; font-weight:600; }
+.contact-page .contact-details a:is(:hover,:focus-visible) { color:var(--accent-ink); text-decoration:underline; text-underline-offset:4px; }
+@media (max-width:480px) {
+ .contact-page .contact-meta { margin-top:40px; padding-top:24px; }
+ .contact-page .contact-details { grid-template-columns:1fr; gap:22px; }
+ .contact-page .contact-details > div:first-child dd { font-size:15px; }
 }
