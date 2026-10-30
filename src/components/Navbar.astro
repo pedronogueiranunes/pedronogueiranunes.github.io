@@ -371,7 +371,10 @@ import LogoModel from "./LogoModel.astro";
       barLogo.classList.add("no-transition", "is-flat");
       barLogo.getBoundingClientRect();
       barLogo.classList.remove("no-transition");
+      barLogo.classList.add("is-unflattening");
       requestAnimationFrame(() => requestAnimationFrame(() => barLogo.classList.remove("is-flat")));
+      // ponytail: matches the longest unflatten transition (~900ms); hover/magnet go back to their quick timing after.
+      setTimeout(() => barLogo.classList.remove("is-unflattening"), 1000);
     }
     stopMobileAnimations();
     closing = false;
