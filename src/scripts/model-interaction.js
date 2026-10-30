@@ -77,8 +77,16 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   dizzy.classList.add("portrait-dizzy--front");
   const dizzyBack = dizzy.cloneNode(true);
   dizzyBack.classList.replace("portrait-dizzy--front", "portrait-dizzy--back");
-  viewport.append(dizzyBack, dizzy);
+  // Speech bubble shown with the stars.
+  const hey = document.createElement("div");
+  hey.className = "portrait-hey";
+  hey.setAttribute("aria-hidden", "true");
+  hey.textContent = "HEY!";
+  viewport.append(dizzyBack, dizzy, hey);
   let movements = [], lastDirection = 0, dizzyTimer = 0;
+  // Dizzy wobble: the model rocks side to side, fading out over the dizzy spell.
+  let dizzyStart = 0, wobble = 0;
+  const DIZZY_MS = 4200;
 
   // Custom drag cursor
   const dragCursor = document.createElement("div");
@@ -118,7 +126,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     const baseYaw = getBaseYaw();
     const finalYaw = baseYaw + dragYaw + magYaw * magneticBlend;
     const finalPitch = 180 + magPitch * magneticBlend;
-    rig.setLocalEulerAngles(finalPitch, finalYaw, 0);
+    rig.setLocalEulerAngles(finalPitch, finalYaw, wobble);
     requestRender();
   }
 
@@ -171,8 +179,10 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
           if (movements.reduce((sum, entry) => sum + entry.distance, 0) > 440 && movements.reduce((sum, entry) => sum + entry.turn, 0) >= 4) {
             dizzy.classList.add("is-visible");
             dizzyBack.classList.add("is-visible");
+            hey.classList.add("is-visible");
+            dizzyStart = performance.now();
             clearTimeout(dizzyTimer);
-            dizzyTimer = window.setTimeout(() => { dizzy.classList.remove("is-visible"); dizzyBack.classList.remove("is-visible"); }, 4200);
+            dizzyTimer = window.setTimeout(() => { dizzy.classList.remove("is-visible"); dizzyBack.classList.remove("is-visible"); hey.classList.remove("is-visible"); }, DIZZY_MS);
             movements = [];
           }
         }
@@ -274,6 +284,14 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
         orbitYaw = (orbitYaw + ambient * 12) % 360;
         active = true;
       }
+    }
+
+    // Dizzy wobble: ~1.5Hz roll, 7deg at first, easing out by the end of the spell.
+    if (dizzyStart) {
+      const t = (performance.now() - dizzyStart) / DIZZY_MS;
+      if (t >= 1 || motionQuery.matches) { dizzyStart = 0; wobble = 0; }
+      else wobble = Math.sin(t * DIZZY_MS / 1000 * Math.PI * 3) * 7 * (1 - t);
+      active = true;
     }
 
     // 1. Check pose change
@@ -403,5 +421,6 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     clearTimeout(dizzyTimer);
     dizzy.remove();
     dizzyBack.remove();
+    hey.remove();
   };
 }
