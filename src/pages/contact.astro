@@ -9,6 +9,11 @@ import Icon from "../components/Icon.astro";
 import { nextSteps, testimonial } from "../data/contact";
 import { faq } from "../data/services";
 import { site } from "../data/site";
+const faqSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+});
 const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
 ---
 
@@ -17,6 +22,7 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
   description="Start a website, brand or CRO project, talk about agency partnerships, or reach out about a senior design engineer role."
   pageClass="contact-page"
 >
+  <script type="application/ld+json" slot="head" set:html={faqSchema} />
   <section class="contact-hero page-section">
     <PixelTrail tone="green" world worldOrigin=".contact-form-wrap" />
     <div class="contact-intro">
