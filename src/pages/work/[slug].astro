@@ -13,6 +13,7 @@ import CaseShowcase from "../../components/CaseShowcase.astro";
 import RelatedProjects from "../../components/RelatedProjects.astro";
 import { bsaCase } from "../../data/cases";
 import { logoFor } from "../../data/home";
+import { PERSON_ID, ORIGIN, jsonLd } from "../../data/seo";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   return projects.map((project) => ({
@@ -39,6 +40,22 @@ const strategyTitles: Record<string, string> = {
   "waipono-farms": "Bring the farm identity into the online experience.",
 };
 const strategyTitle = p.strategyTitle || strategyTitles[project.slug] || p.title;
+const caseSlug = p.caseSlug || project.slug;
+// ponytail: metrics left out of schema until the TODO numbers are confirmed.
+const caseSchema = jsonLd({
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": `${ORIGIN}/work/${caseSlug}/#work`,
+  name: p.title,
+  description: p.summary,
+  url: `${ORIGIN}/work/${caseSlug}/`,
+  image: `${ORIGIN}/assets/og/${caseSlug}.jpg`,
+  dateCreated: p.year,
+  creator: { "@id": PERSON_ID },
+  keywords: [p.category, ...p.tools].join(", "),
+  locationCreated: p.country,
+  ...(liveUrl ? { sameAs: liveUrl } : {}),
+});
 const related = (await getCollection("projects"))
   .filter((other) => other.slug !== project.slug)
   .sort((a, b) => a.data.order - b.data.order);
@@ -47,7 +64,8 @@ const metrics = isBsa
   : p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`} pageClass="case-page">
+<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={`/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
+  <script type="application/ld+json" slot="head" set:html={caseSchema} />
   <section class="case-hero page-section">
     <PixelTrail tone="green" />
     <div class="case-hero-top">

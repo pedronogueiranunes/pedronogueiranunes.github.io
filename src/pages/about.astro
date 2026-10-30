@@ -19,33 +19,9 @@ const tapeCopy = [
 ];
 import { logoFor } from "../data/home";
 import { localeFromPath } from "../i18n/locales";
+import { person, jsonLd } from "../data/seo";
 const locale = localeFromPath(Astro.url.pathname);
-const personSchema = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Pedro Nogueira",
-  alternateName: "Pedro José Nogueira Nunes",
-  jobTitle: "Design Engineer",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Vitória da Conquista",
-    addressRegion: "BA",
-    addressCountry: "BR",
-  },
-  knowsLanguage: ["pt", "en", "es"],
-  knowsAbout: [
-    "Web design",
-    "Webflow",
-    "WordPress",
-    "React",
-    "Brand identity",
-    "Design systems",
-    "Conversion rate optimization",
-  ],
-  url: new URL("/about", Astro.site).href,
-  email: `mailto:${site.email}`,
-  sameAs: Object.values(site.socials).filter((url) => url.startsWith("http")),
-});
+const personSchema = jsonLd({ "@context": "https://schema.org", ...person });
 // Career roll for the approach section, oldest first. Videos are pre-baked boomerangs.
 const careerShots = [
   { src: "/assets/career/2018-07-desk.webp", video: "/assets/career/2018-07-desk.mp4" },
@@ -63,6 +39,8 @@ const careerShots = [
   title="About Pedro Nogueira: design engineer, brand and web"
   description="Pedro Nogueira is a senior designer and developer based in Brazil, working with agencies and brands in North America and Europe since 2015. Brand, design systems, Webflow, WordPress and React."
   pageClass="about-page"
+  image="/assets/og/default.jpg"
+  ogType="profile"
 >
   <script type="application/ld+json" slot="head" set:html={personSchema} />
   <section class="about-hero page-section">

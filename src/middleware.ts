@@ -5,6 +5,7 @@ import { localeFromPath, localizePath, locales } from "./i18n/locales";
 type Node = DefaultTreeAdapterMap["node"];
 type Element = DefaultTreeAdapterMap["element"];
 const translatedAttributes = new Set(["alt", "title", "placeholder", "aria-label"]);
+const translatedMeta = new Set(["description", "og:title", "og:description", "twitter:title", "twitter:description"]);
 export const onRequest = defineMiddleware(async (context, next) => {
   const response = await next();
   if (!response.headers.get("content-type")?.includes("text/html") || response.status !== 200) return response;
@@ -24,7 +25,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       for (const attr of element.attrs) {
         if (translatedAttributes.has(attr.name)) attr.value = translateText(attr.value, messages);
         if (element.tagName === "a" && attr.name === "href") attr.value = localizePath(attr.value, locale);
-        if (element.tagName === "meta" && attr.name === "content" && element.attrs.some(a => a.name === "name" && a.value === "description")) attr.value = translateText(attr.value, messages);
+        if (element.tagName === "meta" && attr.name === "content" && element.attrs.some(a => (a.name === "name" || a.name === "property") && translatedMeta.has(a.value))) attr.value = translateText(attr.value, messages);
       }
       if (element.tagName === "head") {
         const links = locales.map(lang => `<link rel="alternate" hreflang="${lang}" href="${new URL(localizePath(context.url.pathname, lang), context.site || context.url.origin)}">`).join("");

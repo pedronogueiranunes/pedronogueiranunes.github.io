@@ -14,6 +14,7 @@ import ProjectRail from "../components/ProjectRail.astro";
 import Comparison from "../components/Comparison.astro";
 import Process from "../components/Process.astro";
 import { problems } from "../data/home";
+import { homeGraph, jsonLd } from "../data/seo";
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -22,7 +23,8 @@ const posts = (await getCollection("posts")).sort(
 );
 ---
 
-<Base title="Pedro Nogueira | Web designer and developer" pageClass="home-page">
+<Base title="Pedro Nogueira | Web designer and developer" description="Design engineer in Brazil building brands, design systems and websites on Webflow, WordPress and React for agencies and companies in North America and Europe." pageClass="home-page">
+  <script type="application/ld+json" slot="head" set:html={jsonLd(homeGraph)} />
   <section class="home-hero">
     <div class="home-hero-panel">
       <PixelTrail />
@@ -159,7 +161,7 @@ const posts = (await getCollection("posts")).sort(
             height="14"
             alt=""
           />
-          Remote from Brazil, UTC-3
+          Remote from Brazil, UTC−3
         </span>
       </div>
       <a class="text-link" href="/about">

@@ -1,0 +1,30 @@
+# Pedro Nogueira
+
+> Design engineer based in Bahia, Brazil. Designs and builds brands, design systems and websites on Webflow, WordPress, Framer, Shopify and React for agencies and companies in North America and Europe. 12+ years of client work. Works in English and Portuguese.
+
+- Services: website design and build, brand identity and design systems, CRO audits and redesigns, white-label design and development for agencies.
+- Platforms: Webflow, WordPress, Framer, Shopify, React and Next.js.
+- Clients in the US, Canada, Germany and Brazil. Remote, calls overlap US Eastern time (UTC−3).
+- Site languages: English, Brazilian Portuguese, Spanish (Spain) and French (Canada). Spanish and French pages are translations.
+
+## Pages
+
+- [Home](https://pedronogueiranunes.github.io/): overview, selected work and how the process works
+- [Services](https://pedronogueiranunes.github.io/services/): offers, what is included, process and FAQ
+- [Projects](https://pedronogueiranunes.github.io/projects/): all case studies
+- [About](https://pedronogueiranunes.github.io/about/): background, principles, career and skills
+- [Contact](https://pedronogueiranunes.github.io/contact/): start a project, agency partnership or role
+
+## Case studies
+
+- [BSA Legal](https://pedronogueiranunes.github.io/work/bsa-legal/): brand and Webflow site for an entertainment law firm
+- [Molina Chambô](https://pedronogueiranunes.github.io/work/molina-chambo/): bilingual law firm website
+- [PineLake Broken Bow](https://pedronogueiranunes.github.io/work/pinelake-broken-bow/): direct-booking site for luxury cabins in Oklahoma
+- [Lemmbra Olympiad](https://pedronogueiranunes.github.io/work/lemmbra-olympiad/): identity and registration platform for a language olympiad
+- [Green Nation Collective](https://pedronogueiranunes.github.io/work/green-nation-collective/): campaign site for a social impact network
+- [Waipono Farms](https://pedronogueiranunes.github.io/work/waipono-farms/): brand and website for a regenerative farm community in Maui
+
+## Contact
+
+- Email: pedronogueiranunes@gmail.com
+- LinkedIn: https://www.linkedin.com/in/pedronogueiranunes/
