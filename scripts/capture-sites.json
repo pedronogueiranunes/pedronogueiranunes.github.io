@@ -1,0 +1,57 @@
+{
+  "viewport": {
+    "width": 1920,
+    "height": 1200
+  },
+  "scrollPixelsPerSecond": 320,
+  "holdMs": 1500,
+  "previewSeconds": 12,
+  "sites": [
+    {
+      "id": "green-nation-collective",
+      "url": "https://greennationcollective.webflow.io/"
+    },
+    {
+      "id": "pinelake-broken-bow",
+      "url": "https://pinelakebrokenbow.com/",
+      "hideSelectors": [
+        "#popup-jnOZwzvreyziFdgN55UV-overlay",
+        "#popup-jnOZwzvreyziFdgN55UV-div",
+        "#popup-jnOZwzvreyziFdgN55UV-wrapper"
+      ]
+    },
+    {
+      "id": "molina-chambo",
+      "url": "https://molinachambo.webflow.io/"
+    },
+    {
+      "id": "bsa-legal",
+      "url": "https://bsa-legal.webflow.io/",
+      "scrollEasing": {
+        "rampMs": 2400,
+        "heroDistance": 1200,
+        "heroSpeedFactor": 0.45,
+        "endDistance": 700
+      }
+    },
+    {
+      "id": "waipono-farms",
+      "url": "https://waipono-farms.webflow.io/",
+      "hideSelectors": [
+        ".cookie-notice-banner",
+        ".fs-cc_preference-component"
+      ]
+    },
+    {
+      "id": "lemmbra-olympiad",
+      "url": "https://olimpiadas-lemmbra.webflow.io/"
+    },
+    {
+      "id": "lemmbra",
+      "url": "https://lemmbraalemao.ufpr.br/",
+      "retryRequired": true
+    }
+  ],
+  "captureFps": 60,
+  "maxSeconds": 240
+}

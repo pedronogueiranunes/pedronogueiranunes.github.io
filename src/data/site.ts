@@ -16,12 +16,12 @@ export const site = {
   },
   legal: { notice: "", privacy: "", cookies: "" },
   projectUrls: {
-    "pinelake-broken-bow": "",
+    "pinelake-broken-bow": "https://pinelakebrokenbow.com/",
     "green-nation-collective": "https://greennationcollective.webflow.io/",
-    "molina-chambo": "",
-    "bsa-legal": "",
-    "waipono-farms": "",
-    "lemmbra-olympiad": "",
+    "molina-chambo": "https://molinachambo.webflow.io/",
+    "bsa-legal": "https://bsa-legal.webflow.io/",
+    "waipono-farms": "https://waipono-farms.webflow.io/",
+    "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
   } as Record<string, string>,
   availability: "Booking projects for November", // TODO: confirm current availability before publishing.
 };
