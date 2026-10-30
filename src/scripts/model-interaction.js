@@ -82,7 +82,37 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   hey.className = "portrait-hey";
   hey.setAttribute("aria-hidden", "true");
   hey.textContent = "HEY!";
-  viewport.append(dizzyBack, dizzy, hey);
+  // Orange pixel X over each eye while dizzy, projected from the model every frame.
+  const eyes = document.createElement("div");
+  eyes.className = "portrait-eyes";
+  eyes.setAttribute("aria-hidden", "true");
+  const eyeX = `<i><svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path fill="#ff5a1f" d="M0 0h2v1h1v1h1V1h1V0h2v2H6v1H5v1h1v1h1v2H5V6H4V5H3v1H2v1H0V5h1V4h1V3H1V2H0z"/></svg></i>`;
+  eyes.innerHTML = eyeX + eyeX;
+  const eyeEls = [...eyes.children];
+  viewport.append(dizzyBack, dizzy, hey, eyes);
+  const camera = app.root.findByName("camera");
+  // ponytail: eye anchors in rig space, calibrated on the front-facing pose; re-measure if the capture changes.
+  // z is negative: the rig is flipped 180deg on X, so the face looks down -z in rig space.
+  const EYE_ANCHORS = [new pc.Vec3(-0.03, -0.085, -0.13), new pc.Vec3(0.04, -0.085, -0.13)];
+  const eyeWorld = new pc.Vec3(), eyeScreen = new pc.Vec3(), headWorld = new pc.Vec3(), headLocal = new pc.Vec3(0.005, -0.085, 0);
+  function placeEyes() {
+    if (!camera) return;
+    const transform = rig.getWorldTransform();
+    const box = canvas.getBoundingClientRect(), host = viewport.getBoundingClientRect();
+    const camPos = camera.getPosition();
+    transform.transformPoint(headLocal, headWorld);
+    const headDistance = camPos.distance(headWorld);
+    let facing = true;
+    EYE_ANCHORS.forEach((anchor, index) => {
+      transform.transformPoint(anchor, eyeWorld);
+      // Eyes only show while they are on the camera side of the head.
+      if (camPos.distance(eyeWorld) > headDistance - 0.06) facing = false;
+      camera.camera.worldToScreen(eyeWorld, eyeScreen);
+      eyeEls[index].style.left = `${box.left - host.left + eyeScreen.x * box.width / canvas.clientWidth}px`;
+      eyeEls[index].style.top = `${box.top - host.top + eyeScreen.y * box.height / canvas.clientHeight}px`;
+    });
+    eyes.classList.toggle("is-visible", facing);
+  }
   let movements = [], lastDirection = 0, dizzyTimer = 0;
   // Dizzy wobble: the model rocks side to side, fading out over the dizzy spell.
   let dizzyStart = 0, wobble = 0;
@@ -289,8 +319,8 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     // Dizzy wobble: ~1.5Hz roll, 7deg at first, easing out by the end of the spell.
     if (dizzyStart) {
       const t = (performance.now() - dizzyStart) / DIZZY_MS;
-      if (t >= 1 || motionQuery.matches) { dizzyStart = 0; wobble = 0; }
-      else wobble = Math.sin(t * DIZZY_MS / 1000 * Math.PI * 3) * 7 * (1 - t);
+      if (t >= 1 || motionQuery.matches) { dizzyStart = 0; wobble = 0; eyes.classList.remove("is-visible"); }
+      else { wobble = Math.sin(t * DIZZY_MS / 1000 * Math.PI * 3) * 7 * (1 - t); placeEyes(); }
       active = true;
     }
 
@@ -422,5 +452,6 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     dizzy.remove();
     dizzyBack.remove();
     hey.remove();
+    eyes.remove();
   };
 }
