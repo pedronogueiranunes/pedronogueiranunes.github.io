@@ -7863,3 +7863,7 @@ main h1[tabindex="-1"]:focus {
  .contact-page .contact-details { grid-template-columns:1fr; gap:22px; }
  .contact-page .contact-details > div:first-child dd { font-size:15px; }
 }
+
+.calendar-alternative > a { transition:background-color 200ms ease; }
+.contact-page .calendar-alternative > a:is(:hover,:focus-visible) { background:color-mix(in srgb, var(--surface) 96%, var(--accent) 4%); }
+@media (prefers-reduced-motion:reduce) { .calendar-alternative > a { transition:none; } }
