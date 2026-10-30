@@ -661,3 +661,9 @@
 }
 .portrait-hey.is-visible { opacity: 1; transform: translateY(0) scale(1) rotate(-6deg); }
 @media (prefers-reduced-motion: reduce) { .portrait-hey { transition: none; } }
+
+/* Dizzy eyes: an orange pixel X over each eye, positioned from the 3D model. */
+.portrait-eyes { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 150ms ease; }
+.portrait-eyes.is-visible { opacity: 1; }
+.portrait-eyes i { position: absolute; width: 18px; height: 18px; transform: translate(-50%, -50%); }
+.portrait-eyes svg { display: block; width: 100%; height: 100%; }
