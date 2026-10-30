@@ -1,6 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
 import BlogListing from "../../components/BlogListing.astro";
+import { site } from "../../data/site";
+// Blog hidden until real posts exist: the listing URL sends visitors home.
+if (!site.blogEnabled) return Astro.redirect("/");
 ---
 
 <Base

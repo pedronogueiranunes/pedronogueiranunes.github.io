@@ -3,8 +3,10 @@ import { getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
 import BlogListing from "../../../components/BlogListing.astro";
 import { categories, categoryBySlug } from "../../../data/blog";
+import { site } from "../../../data/site";
 
 export async function getStaticPaths() {
+  if (!site.blogEnabled) return [];
   const posts = await getCollection("posts");
   return categories
     .filter((category) => posts.some((post) => post.data.category === category.slug))

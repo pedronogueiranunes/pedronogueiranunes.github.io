@@ -1,4 +1,5 @@
 ---
+import { site } from "../data/site";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import IconWaves from "../components/IconWaves.astro";
@@ -237,7 +238,7 @@ const posts = (await getCollection("posts")).sort(
   </section>
   <Comparison />
   <Process />
-  <section class="blog-section page-section" id="thoughts">
+  {site.blogEnabled && <section class="blog-section page-section" id="thoughts">
     <div class="section-heading">
       <div>
         <Eyebrow>blog</Eyebrow>
@@ -290,7 +291,7 @@ const posts = (await getCollection("posts")).sort(
         </article>
       ))}
     </div>
-  </section>
+  </section>}
   <!-- Hidden/OLD Figma sections retained in docs/legacy/home-before-redesign.astro.txt. -->
   <script>
   import { onPageLoad } from "../scripts/page-lifecycle";

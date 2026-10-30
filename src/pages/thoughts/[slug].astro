@@ -8,8 +8,11 @@ import BlogCta from "../../components/BlogCta.astro";
 import Icon from "../../components/Icon.astro";
 import { categoryBySlug, readingMinutes } from "../../data/blog";
 import "../../styles/blog.css";
+import { site } from "../../data/site";
 
 export async function getStaticPaths() {
+  // Blog hidden until real posts exist (site.blogEnabled).
+  if (!site.blogEnabled) return [];
   const posts = await getCollection("posts");
   return posts.map((post) => ({
     params: { slug: post.slug },

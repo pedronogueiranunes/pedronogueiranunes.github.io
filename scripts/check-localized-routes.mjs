@@ -10,7 +10,10 @@ scan(root);
 let count=0;
 for(const locale of ['pt-br','es','fr'])for(const route of paths){
  const file=path.join(root,locale,route);assert.ok(fs.existsSync(file),`Missing localized route: ${file}`);
- const html=fs.readFileSync(file,'utf8');const tree=parse(html);let canonical=false,alternates=0;
+ const html=fs.readFileSync(file,'utf8');
+ // Redirect stubs (e.g. /thoughts while the blog is off) carry no page chrome to check.
+ if(html.includes('http-equiv="refresh"'))continue;
+ const tree=parse(html);let canonical=false,alternates=0;
  function walk(node){const attrs=Object.fromEntries((node.attrs||[]).map(a=>[a.name,a.value]));
   if(node.tagName==='html')assert.equal(attrs.lang,locale);
   if(node.tagName==='a'&&attrs.href?.startsWith('/')&&!attrs.href.startsWith('//')&&!attrs.href.startsWith('/assets/'))assert.ok(attrs.href.startsWith(`/${locale}/`)||attrs.href===`/${locale}`,`Unlocalized link in ${file}: ${attrs.href}`);
