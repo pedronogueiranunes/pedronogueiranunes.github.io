@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import ProjectVideo from "../../components/ProjectVideo.astro";
+import { videoFor } from "../../data/project-videos";
 import PixelTrail from "../../components/PixelTrail.astro";
 import Base from "../../layouts/Base.astro";
 import { site } from "../../data/site";
@@ -20,6 +22,7 @@ export async function getStaticPaths() {
 }
 const { project } = Astro.props;
 const p = project.data;
+const video = videoFor(p.caseSlug || project.slug);
 const isBsa = project.slug === "bsa-legal";
 const liveUrl = site.projectUrls[project.slug];
 const archiveUrl = liveUrl ? `https://web.archive.org/web/*/${liveUrl}` : undefined;
@@ -127,6 +130,7 @@ const metrics = isBsa
         <small>Live since {p.year}</small>
       </div>
       <div class="browser-mockup-viewport">
+        {video ? <ProjectVideo base={video} full /> : (
         <div class="browser-mockup-track">
           <ResponsiveImage
             src={p.cover || p.image}
@@ -138,6 +142,7 @@ const metrics = isBsa
             fetchpriority="high"
           />
         </div>
+        )}
       </div>
     </div>
   </section>

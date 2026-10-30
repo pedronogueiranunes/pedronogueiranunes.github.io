@@ -1,4 +1,6 @@
 ---
+import ProjectVideo from "./ProjectVideo.astro";
+import { videoFor } from "../data/project-videos";
 import Icon from "./Icon.astro";
 import ResponsiveImage from "./ResponsiveImage.astro";
 import type { CollectionEntry } from "astro:content";
@@ -7,6 +9,7 @@ interface Props {
 }
 const { project } = Astro.props;
 const p = project.data;
+const video = videoFor(p.caseSlug || project.slug);
 ---
 
 <article class="project-card" data-category={p.category}>
@@ -18,6 +21,7 @@ const p = project.data;
     style={`--project-tint:${p.tint || p.color}`}
     aria-label={`View case study: ${p.title}`}
   >
+    {video ? <span class="project-media-shot"><ProjectVideo base={video} /></span> : (
     <span class="project-media-shot">
       <span class="project-media-track">
         <ResponsiveImage
@@ -31,6 +35,7 @@ const p = project.data;
         <span class="project-media-filler" aria-hidden="true"></span>
       </span>
     </span>
+    )}
     <span class="project-hover label">
       View case study <Icon name="arrow-up-right" />
     </span>

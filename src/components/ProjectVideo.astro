@@ -1,0 +1,67 @@
+---
+interface Props { base: string; full?: boolean }
+const {base, full = false} = Astro.props;
+---
+<video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video>
+<style is:global>
+.project-video { display:block; width:100%; height:100%; object-fit:cover; }
+.project-video[data-project-video="preview"] { object-fit:contain; object-position:center top; background:#fff; transition:opacity 180ms ease; }
+.project-video.is-resetting { opacity:0; }
+@media (prefers-reduced-motion:reduce) { .project-video { transition:none; } }
+.case-page .browser-mockup-viewport:has(.project-video) { height:auto; aspect-ratio:8 / 5; }
+.browser-mockup-viewport > .project-video { object-fit:contain; }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ .project-media:has(.project-video):is(:hover,:focus-visible) .project-media-shot { top:0;left:0;width:100%;height:100%;border-radius:20px;box-shadow:none; }
+}
+</style>
+<script>
+import { onPageLoad } from '../scripts/page-lifecycle';
+onPageLoad(scope => {
+ const videos=[...document.querySelectorAll<HTMLVideoElement>('[data-project-video]')];
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const touch=matchMedia('(hover: none)');
+ const visible=new Set<HTMLVideoElement>();
+ const hovered=new Set<HTMLVideoElement>();
+ const paused=new Set<HTMLVideoElement>();
+ let current: HTMLVideoElement | undefined;
+ const resetTokens=new WeakMap<HTMLVideoElement,number>();
+ const cancelReset=(video:HTMLVideoElement)=>{resetTokens.set(video,(resetTokens.get(video)??0)+1);video.classList.remove('is-resetting');};
+ const reset=(video:HTMLVideoElement)=>{
+  if(video.dataset.projectVideo!=='preview')return;
+  const token=(resetTokens.get(video)??0)+1;resetTokens.set(video,token);
+  video.pause();video.classList.add('is-resetting');
+  scope.timeout(()=>{
+   if(resetTokens.get(video)!==token)return;
+   const reveal=()=>{if(resetTokens.get(video)===token)video.classList.remove('is-resetting');};
+   if(video.readyState>0 && video.currentTime>0){video.addEventListener('seeked',reveal,{once:true,signal:scope.signal});video.currentTime=0;}else reveal();
+  },reduced.matches?0:180);
+ };
+ const load=(video:HTMLVideoElement)=>{if(!video.getAttribute('src')) {video.src=video.dataset.src!;video.load();}};
+ const play=(video:HTMLVideoElement)=>{if(document.hidden || reduced.matches || !visible.has(video) || paused.has(video))return; if(current && current!==video)current.pause(); current=video; load(video);video.playbackRate=video.dataset.projectVideo==='preview'?2:1;video.play().catch(()=>{});};
+ const update=()=>{
+  const eligible=videos.filter(v=>visible.has(v)&&!paused.has(v)&&(v.dataset.projectVideo==='full'||touch.matches||hovered.has(v)));
+  if(current&&!eligible.includes(current)){current.pause();current=undefined;}
+  if(eligible.length)play(eligible[0]);
+ };
+ const observer=new IntersectionObserver(entries=>{for(const e of entries){const v=e.target as HTMLVideoElement;if(e.isIntersecting&&e.intersectionRatio>=.25){visible.add(v);if(v.controls)load(v);}else{visible.delete(v);v.pause();}} update();},{threshold:[0,.25]});
+ videos.forEach(video=>{
+  observer.observe(video);
+  if(video.dataset.projectVideo==='preview'){
+   const frame=video.parentElement!;
+   frame.style.backgroundImage=`url("${video.poster}")`;
+   frame.style.backgroundSize='contain';frame.style.backgroundPosition='center top';frame.style.backgroundRepeat='no-repeat';frame.style.backgroundColor='#fff';
+   video.addEventListener('loadedmetadata',()=>{video.playbackRate=2;},{signal:scope.signal});
+  }
+  const card=video.closest('.project-card') ?? video;
+  card.addEventListener('pointerenter',()=>{cancelReset(video);hovered.add(video);update();},{signal:scope.signal});
+  card.addEventListener('pointerleave',()=>{hovered.delete(video);update();reset(video);},{signal:scope.signal});
+  card.addEventListener('focusin',()=>{cancelReset(video);hovered.add(video);update();},{signal:scope.signal});
+  card.addEventListener('focusout',()=>{hovered.delete(video);update();reset(video);},{signal:scope.signal});
+  video.addEventListener('pause',()=>{if(video.controls&&visible.has(video)&&current===video&&!document.hidden)paused.add(video);},{signal:scope.signal});
+  video.addEventListener('play',()=>{paused.delete(video);if(current&&current!==video)current.pause();current=video;},{signal:scope.signal});
+ });
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){current?.pause();current=undefined;}else update();},{signal:scope.signal});
+ reduced.addEventListener('change',()=>{if(reduced.matches){current?.pause();current=undefined;}else update();},{signal:scope.signal});
+ scope.cleanup(()=>{observer.disconnect();videos.forEach(v=>v.pause());});
+});
+</script>
