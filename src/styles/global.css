@@ -397,20 +397,57 @@ img {
   padding: 8px 32px;
   min-height: 88px;
   border-radius: 50px;
-  background: color-mix(in srgb, var(--surface) 85%, transparent);
-  box-shadow: inset -2px -2px 12px #64736226;
+  /* Liquid glass: a semi-opaque tint over a strong, saturated blur, with a bright rim
+     and a soft specular sheen on top. */
+  background: color-mix(in srgb, var(--surface) 68%, transparent);
+  box-shadow:
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 -1px 0 var(--glass-rim-low),
+    inset 0 0 0 1px var(--glass-edge),
+    inset -2px -2px 12px #64736226,
+    0 10px 30px -12px rgb(35 38 37 / 0.18);
+}
+:root {
+  --glass-rim: rgb(255 255 255 / 0.9);
+  --glass-rim-low: rgb(255 255 255 / 0.35);
+  --glass-edge: rgb(255 255 255 / 0.45);
+  --glass-sheen: rgb(255 255 255 / 0.45);
+}
+:root[data-theme="dark"] {
+  --glass-rim: rgb(255 255 255 / 0.16);
+  --glass-rim-low: rgb(255 255 255 / 0.05);
+  --glass-edge: rgb(255 255 255 / 0.08);
+  --glass-sheen: rgb(255 255 255 / 0.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --glass-rim: rgb(255 255 255 / 0.16);
+    --glass-rim-low: rgb(255 255 255 / 0.05);
+    --glass-edge: rgb(255 255 255 / 0.08);
+    --glass-sheen: rgb(255 255 255 / 0.07);
+  }
 }
 /* The bar's blur lives on a layer: a backdrop-filter on .site-nav itself would stop
    the megamenu panels from blurring the page behind them. */
-.site-nav::before {
+.site-nav::before,
+.site-nav::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  backdrop-filter: blur(12.4px);
-  -webkit-backdrop-filter: blur(12.4px);
   pointer-events: none;
+}
+.site-nav::before {
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.04);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.04);
+}
+/* Specular sheen: light catching the upper edge of the glass. */
+.site-nav::after {
+  background:
+    linear-gradient(180deg, var(--glass-sheen), transparent 55%),
+    radial-gradient(60% 120% at 12% 0%, var(--glass-sheen), transparent 70%);
+  opacity: 0.8;
 }
 
 .site-logo {
@@ -480,6 +517,13 @@ img {
 /* Mobile menu open: the logo turns to face the camera and drops its extrusion. */
 .site-logo.is-flat .site-logo__model { --logo-rx: 0deg; --logo-ry: 0deg; transition-duration: 550ms; }
 .site-logo.is-flat .site-logo__layer:not(:first-child) { opacity: 0; transition-delay: 250ms; }
+/* Back from flat (mobile menu closed): a slower turn, and the extrusion grows back
+   layer by layer from the face instead of popping in. */
+.site-logo.is-unflattening .site-logo__model { transition: transform 900ms cubic-bezier(.33, 1, .68, 1); }
+.site-logo.is-unflattening .site-logo__layer:not(:first-child) {
+  transition: opacity 420ms ease-out;
+  transition-delay: calc(120ms + var(--depth) * 14ms);
+}
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -557,15 +601,15 @@ img {
   padding: 24px 28px;
   border-radius: 16px;
   color: #f5f3ef;
-  background-color: rgb(32 35 34 / 0.8);
+  background-color: rgb(32 35 34 / 0.55);
   background-image:
     linear-gradient(180deg, #00000005, #0000001a),
     radial-gradient(
       155% 125% at var(--nav-glow-x, 26%) var(--nav-glow-y, 22%),
-      rgb(100 115 98 / 0.7) 6%,
+      rgb(100 115 98 / 0.55) 6%,
       rgb(189 217 185 / 0) 82%
     ),
-    linear-gradient(90deg, rgb(32 35 34 / 0.78), rgb(32 35 34 / 0.74));
+    linear-gradient(90deg, rgb(32 35 34 / 0.58), rgb(32 35 34 / 0.52));
   backdrop-filter: blur(8px) saturate(155%);
   -webkit-backdrop-filter: blur(8px) saturate(155%);
   box-shadow:
@@ -596,10 +640,10 @@ img {
     linear-gradient(140deg, #00000008 1.7143%, #0000004d 52.471%),
     radial-gradient(
       165% 130% at var(--nav-glow-x, 26%) var(--nav-glow-y, 22%),
-      rgb(100 115 98 / 0.72) 6%,
+      rgb(100 115 98 / 0.55) 6%,
       rgb(189 217 185 / 0) 84%
     ),
-    linear-gradient(90deg, rgb(32 35 34 / 0.78), rgb(32 35 34 / 0.74));
+    linear-gradient(90deg, rgb(32 35 34 / 0.58), rgb(32 35 34 / 0.52));
 }
 .nav-item.is-open .nav-panel {
   visibility: visible;
