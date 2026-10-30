@@ -1,5 +1,8 @@
 // Fill these later. Empty URLs render as unavailable text, never as fake destinations.
 export const site = {
+  // Blog off until real posts exist: hides nav, footer and home links and stops
+  // building /thoughts pages. Set to true to bring it all back.
+  blogEnabled: false,
   email: "pedronogueiranunes@gmail.com",
   bookingUrl: "",
   cvUrl: "/assets/Pedro_Nogueira_CV_2026_EN.pdf",

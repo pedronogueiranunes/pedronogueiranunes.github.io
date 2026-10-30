@@ -80,6 +80,7 @@ const menu = [
   },
 ];
 
+const visibleMenu = site.blogEnabled ? menu : menu.filter((item) => item.key !== "thoughts");
 const rowHref = (item: any, index: number) =>
   item.rows[index]?.href || (item.key === "about"
     ? ["/about", "/about#timeline", "/about#skills", "/about#how-i-work"][index]
@@ -102,7 +103,7 @@ import LogoModel from "./LogoModel.astro";
     <LogoModel />
   </a>
   <nav class="desktop-nav" transition:name="site-navigation" transition:animate="none" aria-label="Main navigation">
-    {menu.map((item) => (
+    {visibleMenu.map((item) => (
       <div class="nav-item" data-menu={item.key}>
         <a
           href={item.href}
@@ -192,7 +193,7 @@ import LogoModel from "./LogoModel.astro";
     </button>
   </div>
   <nav aria-label="Mobile navigation">
-    {menu.map((item) => (
+    {visibleMenu.map((item) => (
       <details>
         <summary>
           {item.label}

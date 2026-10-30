@@ -10,19 +10,24 @@ import Post from "../thoughts/[slug].astro";
 import Thoughts from "../thoughts/index.astro";
 import ThoughtsCategory from "../thoughts/category/[category].astro";
 import { categories } from "../../data/blog";
+import { site } from "../../data/site";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   const posts = await getCollection("posts");
   const paths = [
     ...[undefined, "projects", "about", "services", "contact"].map(path => ({ path, props: {} })),
     ...projects.map(project => ({ path: `work/${project.data.caseSlug || project.slug}`, props: { project } })),
-    ...posts.map(post => ({ path: `thoughts/${post.slug}`, props: { post } })),
+    // /thoughts always exists so old links land somewhere; it redirects home while the blog is off.
     { path: "thoughts", props: {} },
+    ...(!site.blogEnabled ? [] : [
+    ...posts.map(post => ({ path: `thoughts/${post.slug}`, props: { post } })),
     ...categories.filter(c => posts.some(post => post.data.category === c.slug)).map(c => ({ path: `thoughts/category/${c.slug}`, props: {} })),
+    ]),
   ];
   return ["pt-br", "es", "fr"].flatMap(locale => paths.map(({ path, props }) => ({ params: { locale, path }, props })));
 }
 const path = Astro.params.path || "";
+if (path === "thoughts" && !site.blogEnabled) return Astro.redirect(`/${Astro.params.locale}/`);
 const pages = { "": Home, projects: Projects, about: About, services: Services, contact: Contact, thoughts: Thoughts };
 const Page = path.startsWith("work/") ? Work
   : path.startsWith("thoughts/category/") ? ThoughtsCategory
