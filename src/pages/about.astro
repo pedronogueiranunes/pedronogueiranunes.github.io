@@ -44,6 +44,19 @@ const personSchema = JSON.stringify({
   email: `mailto:${site.email}`,
   sameAs: Object.values(site.socials).filter(Boolean),
 });
+// Career roll for the approach section, oldest first. Videos are pre-baked boomerangs.
+const careerShots = [
+  { year: "2018", label: "Jul 2018", src: "/assets/career/2018-07-desk.webp", video: "/assets/career/2018-07-desk.mp4" },
+  { year: "2018", label: "Jul 2018", src: "/assets/career/2018-07-timelapse.webp", video: "/assets/career/2018-07-timelapse.mp4" },
+  { year: "2018", label: "Sep 2018", src: "/assets/career/2018-09-selfie.webp" },
+  { year: "2023", label: "Jan 2023", src: "/assets/career/2023-01-desk.webp", video: "/assets/career/2023-01-desk.mp4" },
+  { year: "2023", label: "Apr 2023", src: "/assets/career/2023-04-coffee.webp", video: "/assets/career/2023-04-coffee.mp4" },
+  { year: "2024", label: "May 2024", src: "/assets/career/2024-05-park.webp" },
+  { year: "2024", label: "Sep 2024", src: "/assets/career/2024-09-selfie.webp" },
+  { year: "2025", label: "May 2025", src: "/assets/career/2025-05-selfie.webp" },
+  { year: "2026", label: "Feb 2026", src: "/assets/career/2026-02-balcony.webp", video: "/assets/career/2026-02-balcony.mp4" },
+  { year: "2026", label: "Jul 2026", src: "/assets/career/2026-07-selfie.webp" },
+];
 ---
 
 <Base
@@ -82,21 +95,26 @@ const personSchema = JSON.stringify({
     <div class="about-approach__inner">
       <div class="about-approach__lead">
         <h2 id="approach-title">From print shops to production code.</h2>
-        {/* TODO: mock polaroids. Swap the solid colours for Pedro's career photos and confirm the captions. */}
-        <button class="polaroid-stack" type="button" aria-label="Show the next photo" data-polaroid-stack>
-          {[
-            ["#d9c7a7", "[print shop]"],
-            ["#b9cbb4", "[agency years]"],
-            ["#e9b49a", "[first studio]"],
-            ["#a9b7c9", "[SUPERFLUID]"],
-            ["#cfd6c6", "[today]"],
-          ].map(([tone, caption], index) => (
-            <figure class="polaroid" style={`--tone:${tone}; --i:${index}`}>
-              <span class="polaroid__photo" aria-hidden="true"></span>
-              <figcaption>{caption}</figcaption>
-            </figure>
-          ))}
-        </button>
+        {/* Career roll: real photos and boomerang clips, oldest first. Dates come from each file's metadata. */}
+        <div class="polaroid-roll">
+          <button class="polaroid-stack" type="button" aria-label="Show the next photo" data-polaroid-stack>
+            {careerShots.map((shot, index) => (
+              <figure class="polaroid" style={`--i:${index % 5}`} data-year={shot.year}>
+                {shot.video ? (
+                  <video class="polaroid__photo" src={shot.video} poster={shot.src} muted loop playsinline preload="none" aria-hidden="true"></video>
+                ) : (
+                  <img class="polaroid__photo" src={shot.src} alt="" width="360" height="400" loading="lazy" decoding="async" />
+                )}
+                <figcaption>{shot.label}</figcaption>
+              </figure>
+            ))}
+          </button>
+          <div class="polaroid-years" role="group" aria-label="Jump to a year">
+            {[...new Set(careerShots.map((shot) => shot.year))].map((year) => (
+              <button type="button" data-year={year}>{year}</button>
+            ))}
+          </div>
+        </div>
       </div>
       <div class="about-approach__copy">
         <span class="about-approach__mark" aria-hidden="true"></span>
@@ -294,9 +312,24 @@ const personSchema = JSON.stringify({
     const stack = document.querySelector<HTMLElement>("[data-polaroid-stack]");
     if (!stack) return;
     const cards = [...stack.querySelectorAll<HTMLElement>(".polaroid")];
+    const years = [...document.querySelectorAll<HTMLButtonElement>(".polaroid-years button")];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let order = cards.map((_, index) => index), busy = false, timer = 0, visible = false;
-    const place = () => order.forEach((card, pos) => cards[card].style.setProperty("--pos", String(pos)));
+    const place = () => {
+      order.forEach((card, pos) => {
+        const el = cards[card];
+        // --pos drives the pile offset; anything past the fifth card is tucked away.
+        el.style.setProperty("--pos", String(Math.min(pos, 5)));
+        el.toggleAttribute("data-visible", pos < 5);
+        const video = el.querySelector("video");
+        if (video) {
+          if (pos === 0 && visible && !reduced.matches) { video.preload = "auto"; video.play().catch(() => {}); }
+          else video.pause();
+        }
+      });
+      const year = cards[order[0]].dataset.year;
+      years.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.year === year)));
+    };
     const next = () => {
       if (busy) return;
       busy = true;
@@ -309,10 +342,18 @@ const personSchema = JSON.stringify({
         busy = false;
       }, reduced.matches ? 0 : 420);
     };
+    // Jumping to a year rotates the pile so that year's first photo is on top.
+    years.forEach((button) => button.addEventListener("click", () => {
+      const target = cards.findIndex((card) => card.dataset.year === button.dataset.year);
+      const at = order.indexOf(target);
+      order = [...order.slice(at), ...order.slice(0, at)];
+      place();
+      loop();
+    }, { signal: scope.signal }));
     // ponytail: 3.2s per photo; tune here.
     const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (visible && !document.hidden && !reduced.matches) next(); }, 3200); };
     stack.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
-    const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; place(); });
     io.observe(stack);
     place();
     loop();
@@ -474,7 +515,22 @@ const personSchema = JSON.stringify({
       rotate(calc((var(--i) - 2) * 3.5deg));
     transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
   }
-  .polaroid__photo { background: var(--tone); border-radius: 1px; }
+  .polaroid__photo { width: 100%; height: 100%; min-height: 0; object-fit: cover; border-radius: 1px; background: #e8e6e1; display: block; }
+  .polaroid { visibility: hidden; }
+  /* Only the top five cards show; the rest wait their turn at the back. */
+  .polaroid[data-visible] { visibility: visible; }
+  .polaroid-years { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .polaroid-years button {
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--projects-control-bg);
+    color: var(--projects-control-ink);
+    font: 400 12px/1 var(--font-mono);
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .polaroid-years button[aria-pressed="true"] { background: var(--accent); color: #fff; }
   .polaroid figcaption {
     padding: 12px 4px 16px;
     color: var(--text-secondary);
