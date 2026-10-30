@@ -7,7 +7,13 @@ export const site = {
   bookingUrl: "",
   cvUrl: "/assets/Pedro_Nogueira_CV_2026_EN.pdf",
   sampleProposalUrl: "",
-  socials: { instagram: "", linkedin: "", behance: "", whatsapp: "" },
+  socials: {
+    dribbble: "https://dribbble.com/pedronogueira",
+    linkedin: "https://www.linkedin.com/in/pedronogueiranunes/",
+    vimeo: "https://vimeo.com/suprfluidmotion",
+    youtube: "https://www.youtube.com/@PedroNogueiranunes",
+    email: "mailto:pedronogueiranunes@gmail.com",
+  },
   legal: { notice: "", privacy: "", cookies: "" },
   projectUrls: {
     "pinelake-broken-bow": "",

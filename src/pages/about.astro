@@ -42,7 +42,7 @@ const personSchema = JSON.stringify({
   ],
   url: new URL("/about", Astro.site).href,
   email: `mailto:${site.email}`,
-  sameAs: Object.values(site.socials).filter(Boolean),
+  sameAs: Object.values(site.socials).filter((url) => url.startsWith("http")),
 });
 // Career roll for the approach section, oldest first. Videos are pre-baked boomerangs.
 const careerShots = [
