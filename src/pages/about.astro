@@ -310,6 +310,8 @@ const careerShots = [
     const cards = [...stack.querySelectorAll<HTMLElement>(".polaroid")];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let order = cards.map((_, index) => index), busy = false, timer = 0, visible = false;
+    // Measured on demand: the observer flag can lag behind after an in-site navigation.
+    const inView = () => { const box = stack.getBoundingClientRect(); return box.bottom > 0 && box.top < innerHeight; };
     const place = () => {
       order.forEach((card, pos) => {
         const el = cards[card];
@@ -318,7 +320,7 @@ const careerShots = [
         el.toggleAttribute("data-visible", pos < 5);
         const video = el.querySelector("video");
         if (video) {
-          if (pos === 0 && visible && !reduced.matches) {
+          if (pos === 0 && inView() && !reduced.matches) {
             video.preload = "auto";
             video.muted = true; // Safari checks the property, not just the attribute, before allowing autoplay.
             // Some browsers block autoplay (e.g. Safari in Low Power Mode): retry on the first interaction.
@@ -351,10 +353,14 @@ const careerShots = [
     }, { signal: scope.signal });
     document.querySelector("[data-polaroid-next]")?.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
     // ponytail: 3.2s per photo; tune here.
-    const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (visible && !document.hidden && !reduced.matches) next(); }, 3200); };
+    const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (inView() && !document.hidden && !reduced.matches) next(); }, 3200); };
     stack.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
     const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; place(); });
     io.observe(stack);
+    // After an in-site navigation the router parses the new page in a detached document,
+    // where media source selection fails ("no supported sources") and never reruns.
+    // load() restarts it on the live element.
+    for (const video of stack.querySelectorAll("video")) if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) video.load();
     place();
     loop();
     scope.cleanup(() => { clearInterval(timer); io.disconnect(); });
