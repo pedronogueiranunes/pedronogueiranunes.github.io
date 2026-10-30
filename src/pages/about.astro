@@ -46,16 +46,14 @@ const personSchema = JSON.stringify({
 });
 // Career roll for the approach section, oldest first. Videos are pre-baked boomerangs.
 const careerShots = [
-  { year: "2018", label: "Jul 2018", src: "/assets/career/2018-07-desk.webp", video: "/assets/career/2018-07-desk.mp4" },
-  { year: "2018", label: "Jul 2018", src: "/assets/career/2018-07-timelapse.webp", video: "/assets/career/2018-07-timelapse.mp4" },
-  { year: "2018", label: "Sep 2018", src: "/assets/career/2018-09-selfie.webp" },
-  { year: "2023", label: "Jan 2023", src: "/assets/career/2023-01-desk.webp", video: "/assets/career/2023-01-desk.mp4" },
-  { year: "2023", label: "Apr 2023", src: "/assets/career/2023-04-coffee.webp", video: "/assets/career/2023-04-coffee.mp4" },
-  { year: "2024", label: "May 2024", src: "/assets/career/2024-05-park.webp" },
-  { year: "2024", label: "Sep 2024", src: "/assets/career/2024-09-selfie.webp" },
-  { year: "2025", label: "May 2025", src: "/assets/career/2025-05-selfie.webp" },
-  { year: "2026", label: "Feb 2026", src: "/assets/career/2026-02-balcony.webp", video: "/assets/career/2026-02-balcony.mp4" },
-  { year: "2026", label: "Jul 2026", src: "/assets/career/2026-07-selfie.webp" },
+  { src: "/assets/career/2018-07-desk.webp", video: "/assets/career/2018-07-desk.mp4" },
+  { src: "/assets/career/2018-09-selfie.webp" },
+  { src: "/assets/career/2023-01-desk.webp", video: "/assets/career/2023-01-desk.mp4" },
+  { src: "/assets/career/2023-04-coffee.webp", video: "/assets/career/2023-04-coffee.mp4" },
+  { src: "/assets/career/2024-05-park.webp" },
+  { src: "/assets/career/2024-09-selfie.webp" },
+  { src: "/assets/career/2025-05-selfie.webp" },
+  { src: "/assets/career/2026-02-balcony.webp", video: "/assets/career/2026-02-balcony.mp4" },
 ];
 ---
 
@@ -99,20 +97,18 @@ const careerShots = [
         <div class="polaroid-roll">
           <button class="polaroid-stack" type="button" aria-label="Show the next photo" data-polaroid-stack>
             {careerShots.map((shot, index) => (
-              <figure class="polaroid" style={`--i:${index % 5}`} data-year={shot.year}>
+              <figure class="polaroid" style={`--i:${index % 5}`}>
                 {shot.video ? (
                   <video class="polaroid__photo" src={shot.video} poster={shot.src} muted loop playsinline preload="none" aria-hidden="true"></video>
                 ) : (
                   <img class="polaroid__photo" src={shot.src} alt="" width="360" height="400" loading="lazy" decoding="async" />
                 )}
-                <figcaption>{shot.label}</figcaption>
               </figure>
             ))}
           </button>
-          <div class="polaroid-years" role="group" aria-label="Jump to a year">
-            {[...new Set(careerShots.map((shot) => shot.year))].map((year) => (
-              <button type="button" data-year={year}>{year}</button>
-            ))}
+          <div class="polaroid-nav">
+            <button type="button" aria-label="Previous photo" data-polaroid-prev><Icon name="arrow-left" /></button>
+            <button type="button" aria-label="Next photo" data-polaroid-next><Icon name="arrow-right" /></button>
           </div>
         </div>
       </div>
@@ -312,7 +308,6 @@ const careerShots = [
     const stack = document.querySelector<HTMLElement>("[data-polaroid-stack]");
     if (!stack) return;
     const cards = [...stack.querySelectorAll<HTMLElement>(".polaroid")];
-    const years = [...document.querySelectorAll<HTMLButtonElement>(".polaroid-years button")];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let order = cards.map((_, index) => index), busy = false, timer = 0, visible = false;
     const place = () => {
@@ -327,8 +322,6 @@ const careerShots = [
           else video.pause();
         }
       });
-      const year = cards[order[0]].dataset.year;
-      years.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.year === year)));
     };
     const next = () => {
       if (busy) return;
@@ -342,14 +335,13 @@ const careerShots = [
         busy = false;
       }, reduced.matches ? 0 : 420);
     };
-    // Jumping to a year rotates the pile so that year's first photo is on top.
-    years.forEach((button) => button.addEventListener("click", () => {
-      const target = cards.findIndex((card) => card.dataset.year === button.dataset.year);
-      const at = order.indexOf(target);
-      order = [...order.slice(at), ...order.slice(0, at)];
+    // Previous brings the back card to the front, without the fly-out.
+    document.querySelector("[data-polaroid-prev]")?.addEventListener("click", () => {
+      order = [order[order.length - 1], ...order.slice(0, -1)];
       place();
       loop();
-    }, { signal: scope.signal }));
+    }, { signal: scope.signal });
+    document.querySelector("[data-polaroid-next]")?.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
     // ponytail: 3.2s per photo; tune here.
     const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (visible && !document.hidden && !reduced.matches) next(); }, 3200); };
     stack.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
@@ -503,9 +495,8 @@ const careerShots = [
     position: absolute;
     inset: 0 12% 6% 6%;
     margin: 0;
-    padding: 12px 12px 0;
+    padding: 12px 12px 44px;
     display: grid;
-    grid-template-rows: 1fr auto;
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 14px 30px -12px rgb(35 38 37 / .35);
@@ -519,24 +510,20 @@ const careerShots = [
   .polaroid { visibility: hidden; }
   /* Only the top five cards show; the rest wait their turn at the back. */
   .polaroid[data-visible] { visibility: visible; }
-  .polaroid-years { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
-  .polaroid-years button {
-    padding: 6px 12px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--projects-control-bg);
-    color: var(--projects-control-ink);
-    font: 400 12px/1 var(--font-mono);
+  .polaroid-nav { display: flex; gap: 8px; margin-top: 18px; }
+  .polaroid-nav button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
     cursor: pointer;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
   }
-  .polaroid-years button[aria-pressed="true"] { background: var(--accent); color: #fff; }
-  .polaroid figcaption {
-    padding: 12px 4px 16px;
-    color: var(--text-secondary);
-    font: 400 13px/1 var(--font-mono);
-    text-align: left;
-  }
+  .polaroid-nav button:is(:hover, :focus-visible) { background: var(--accent); border-color: var(--accent); color: #fff; }
   /* The leaving card flies up and out before it tucks in at the back. */
   .polaroid.is-leaving {
     transform: translate(55%, 4%) rotate(12deg);
