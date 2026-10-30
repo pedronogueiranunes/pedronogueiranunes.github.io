@@ -105,6 +105,18 @@ export const toolkit = [
 export const logoFor = (tool: string) =>
   (
     ({
+      "Variables": "variables",
+      "Storybook": "storybook",
+      "GTM": "googletagmanager",
+      "Clarity": "microsoftclarity",
+      "Ableton": "abletonlive",
+      "Next.js": "nextdotjs",
+      "GSAP": "gsap",
+      "GA4": "googleanalytics",
+      "Google Tag Manager": "googletagmanager",
+      "Microsoft Clarity": "microsoftclarity",
+      "Hotjar": "hotjar",
+      "Ableton Live": "abletonlive",
       "Shopify Hydrogen": "shopify",
       "HTML/CSS/JS": "javascript",
       "AI-assisted workflows": "claude",

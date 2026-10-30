@@ -310,6 +310,9 @@ const careerShots = [
     const cards = [...stack.querySelectorAll<HTMLElement>(".polaroid")];
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let order = cards.map((_, index) => index), busy = false, timer = 0, visible = false;
+    let manual = false, hovered = false;
+    const roll = stack.closest<HTMLElement>(".polaroid-roll")!;
+    const stopAutoplay = () => { manual = true; clearInterval(timer); };
     // Measured on demand: the observer flag can lag behind after an in-site navigation.
     const inView = () => { const box = stack.getBoundingClientRect(); return box.bottom > 0 && box.top < innerHeight; };
     const place = () => {
@@ -347,14 +350,18 @@ const careerShots = [
     };
     // Previous brings the back card to the front, without the fly-out.
     document.querySelector("[data-polaroid-prev]")?.addEventListener("click", () => {
+      stopAutoplay();
+      if (busy) return;
       order = [order[order.length - 1], ...order.slice(0, -1)];
       place();
-      loop();
     }, { signal: scope.signal });
-    document.querySelector("[data-polaroid-next]")?.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
-    // ponytail: 3.2s per photo; tune here.
-    const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (inView() && !document.hidden && !reduced.matches) next(); }, 3200); };
-    stack.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
+    document.querySelector("[data-polaroid-next]")?.addEventListener("click", () => { stopAutoplay(); next(); }, { signal: scope.signal });
+    roll.addEventListener("pointerenter", (event) => { if (event.pointerType !== "touch") { hovered = true; clearInterval(timer); } }, { signal: scope.signal });
+    roll.addEventListener("pointerleave", () => { hovered = false; if (!manual) loop(); }, { signal: scope.signal });
+    // Resume a fresh interval after hover; manual navigation stays paused.
+    // 3.2s per photo; tune here.
+    const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (!manual && !hovered && !roll.contains(document.activeElement) && inView() && !document.hidden && !reduced.matches) next(); }, 3200); };
+    stack.addEventListener("click", () => { stopAutoplay(); next(); }, { signal: scope.signal });
     const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; place(); });
     io.observe(stack);
     // After an in-site navigation the router parses the new page in a detached document,

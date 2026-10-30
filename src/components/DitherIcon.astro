@@ -33,7 +33,7 @@ const { source, invert = false } = Astro.props;
       // comparison and offer art also use the open-highlight tone curve; the Home
       // problem art keeps its denser ink so it does not wash out.
       const fineGrain = detailed || offer || problem || promise || footer;
-      const fineTone = detailed || offer || promise || footer;
+      const fineTone = detailed || offer || footer;
       const artwork = canvas.dataset.source ? new Image() : image;
       if (canvas.dataset.source) artwork.src = canvas.dataset.source;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -95,8 +95,8 @@ const { source, invert = false } = Astro.props;
         if (detailed) { canvas.style.top='0px'; canvas.style.left='0px'; }
         // Fine-grain canvases use one CSS pixel per dot so the artwork's shapes
         // stay legible; anything else keeps the bolder two-pixel texture.
-        // Promise icons use a finer grid to preserve the new sculptural details.
-        const dotSize=promise ? .65 : fineGrain ? 1 : 2;
+        // Promise icons share the Home icons' grid and denser tone curve.
+        const dotSize=fineGrain ? 1 : 2;
         width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
         height=Math.max(1,Math.round(parseFloat(style.height)/dotSize));
         canvas.width=width; canvas.height=height;
@@ -120,7 +120,8 @@ const { source, invert = false } = Astro.props;
             const i = pixel * 4;
             alphaCache[pixel] = pixels[i+3]/255;
             const luminance = (pixels[i]*.2126 + pixels[i+1]*.7152 + pixels[i+2]*.0722)/255;
-            const baseTone = growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
+            // Expand the orange source's narrow luminance range for readable depth.
+            const baseTone = promise ? .5 + (.47-luminance)*3.8 : growth ? .08 + luminance*2.6 : fineTone ? .5 + (.52-luminance)*1.8 : .98-luminance*.85;
             toneCache[pixel] = invert ? 1 - baseTone : baseTone;
           }
           draw(0); art.dataset.ditherReady='true';
