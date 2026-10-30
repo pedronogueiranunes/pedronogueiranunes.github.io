@@ -21,6 +21,9 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
   .pixel-trail canvas.pixel-trail__world { bottom: auto; height: 88%; image-rendering: pixelated; }
   .pixel-trail--green { inset: auto; top: calc(-1 * var(--opening-nav-height, var(--projects-nav-space, 103px))); left: 50%; transform: translateX(-50%); width: 100vw; height: calc(100% + var(--opening-nav-height, var(--projects-nav-space, 103px))); z-index: -1; mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); }
   @media (hover: none), (prefers-reduced-motion: reduce) { .pixel-trail { display: none; } }
+  @media (hover: none) and (prefers-reduced-motion: no-preference) {
+    :global(.projects-header) .pixel-trail { display:block; }
+  }
 </style>
 
 <script>
@@ -45,6 +48,7 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
     const ctx = trail?.getContext('2d');
     if (!root || !panel || !hero || !rest || !trail || !restCtx || !ctx) return;
     const media = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    const motion = matchMedia('(prefers-reduced-motion: no-preference)');
     const color = root.dataset.tone === 'green' ? '#BDD4B5' : '#FF5A1F';
     const lettering = panel.querySelector<HTMLElement>('.hero-lettering');
     // Pixelify Sans uses a 0.1em square for each pixel in its glyphs.
@@ -157,7 +161,7 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
     };
     const paint = (now: number) => {
       frame = 0;
-      if (!media.matches || !visible || document.hidden) { ctx.clearRect(0, 0, width, height); return; }
+      if (!motion.matches || !visible || document.hidden) { ctx.clearRect(0, 0, width, height); return; }
       if (pending) {
         const point = pending;
         pending = undefined;
@@ -231,6 +235,15 @@ const { tone = 'orange', world = false, worldOrigin } = Astro.props;
       waves.push({ x: event.clientX - rect.left, y: event.clientY - rect.top, at: performance.now() });
       requestPaint();
     }, { signal: scope.signal, passive: true });
+    document.addEventListener('portfolio:glyph-pulse', (event) => {
+      const detail = (event as CustomEvent<{source:HTMLElement;x:number;y:number}>).detail;
+      if (!detail || !hero.contains(detail.source) || !motion.matches || !visible || document.hidden) return;
+      const rect = trail.getBoundingClientRect();
+      if (waves.length >= 4) waves.shift();
+      waves.push({x:detail.x - rect.left, y:detail.y - rect.top, at:performance.now()});
+      requestPaint();
+    }, {signal:scope.signal});
+    motion.addEventListener('change', () => { stop(); requestPaint(); }, {signal:scope.signal});
     hero.addEventListener('pointerleave', () => { previous = undefined; pending = undefined; }, { signal: scope.signal });
     document.addEventListener('visibilitychange', () => { stop(); requestPaint(); }, { signal: scope.signal });
     media.addEventListener('change', () => { stop(); requestPaint(); }, { signal: scope.signal });

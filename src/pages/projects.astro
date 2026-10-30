@@ -351,8 +351,10 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
     };
     buttons.forEach((button) =>
       button.addEventListener("click", () => {
+        if (category === button.dataset.category) return;
         category = button.dataset.category!;
         update();
+        animateItems();
       }, { signal: scope.signal }),
     );
     facets.forEach(select => select.addEventListener("change", update, { signal: scope.signal }));
@@ -372,13 +374,9 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
     const layoutAnimations = new Set<Animation>();
     scope.cleanup(() => layoutAnimations.forEach(animation => animation.cancel()));
     reducedMotion.addEventListener("change", () => { if(reducedMotion.matches) layoutAnimations.forEach(animation => animation.cancel()); }, {signal:scope.signal});
-    root.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((button) =>
-      button.addEventListener("click", () => {
-        if ((root.dataset.view || "3") === button.dataset.view) return;
-        layoutAnimations.forEach(animation => animation.cancel());
-        layoutAnimations.clear();
-        root.dataset.view = button.dataset.view;
-        updateTimeline();
+    const animateItems = () => {
+      layoutAnimations.forEach(animation => animation.cancel());
+      layoutAnimations.clear();
         if (!reducedMotion.matches) {
           items.filter(item => !item.hidden).forEach((item, index) => {
             const animation = item.animate([
@@ -389,6 +387,16 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
             animation.onfinish = () => layoutAnimations.delete(animation);
           });
         }
+    };
+    root.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((button) =>
+      button.addEventListener("click", () => {
+        if ((root.dataset.view || "3") === button.dataset.view) return;
+        layoutAnimations.forEach(animation => animation.cancel());
+        layoutAnimations.clear();
+        root.dataset.view = button.dataset.view;
+        updateTimeline();
+        animateItems();
+        document.dispatchEvent(new CustomEvent("portfolio:view-change", {detail:{view:button.dataset.view}}));
         root
           .querySelectorAll("[data-view]")
           .forEach((control) =>
