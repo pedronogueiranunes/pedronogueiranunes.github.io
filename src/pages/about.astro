@@ -511,14 +511,34 @@ const careerShots = [
     margin: 0;
     padding: 12px 12px 44px;
     display: grid;
-    background: #fff;
+    background: transparent;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 14px 30px -12px rgb(35 38 37 / .35);
+    isolation: isolate;
     z-index: calc(10 - var(--pos));
     transform:
       translate(calc(var(--pos) * 7px), calc(var(--pos) * 5px))
       rotate(calc((var(--i) - 2) * 3.5deg));
     transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
+  }
+  /* Separate paper and shadow layers keep the original media untouched. */
+  .polaroid::before {
+    content: "";
+    position: absolute;
+    inset: -32px;
+    z-index: -2;
+    pointer-events: none;
+    background: url("/assets/about-icons/polaroid-dither-shadow.svg") center / 100% 100% no-repeat;
+  }
+  .polaroid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: #fff;
+    background-image: radial-gradient(circle, rgb(100 115 98 / .22) .5px, transparent .7px);
+    background-size: 2px 2px;
+    pointer-events: none;
   }
   .polaroid__photo { width: 100%; height: 100%; min-height: 0; object-fit: cover; border-radius: 1px; background: #e8e6e1; display: block; }
   .polaroid { visibility: hidden; }
