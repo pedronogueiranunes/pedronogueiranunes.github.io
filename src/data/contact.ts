@@ -26,7 +26,7 @@ export const startDates = ["ASAP", "This month", "Next quarter"];
 export const nextSteps = [
   // TODO: confirm with Pedro before publishing (reply time)
   ["Within one business day", "I reply by email with a couple of quick questions."],
-  ["A 30 minute call", "We go through your goals on a screen share, in US or European hours."],
+  ["A 30-minute call", "We go through your goals on a screen share, in US or European hours."],
   [
     "You decide",
     "You get a written scope and price range. Hire me or take it elsewhere, no pressure.",

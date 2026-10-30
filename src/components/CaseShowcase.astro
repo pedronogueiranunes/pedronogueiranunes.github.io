@@ -45,7 +45,7 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
   </dialog>
 </section>}
 {ds && <section class="case-design-system case-section page-section" style={`--project-primary:${ds.colors[0]?.value || "#173B30"};--project-surface:${ds.colors[1]?.value || "#F4F7F0"};--project-ink:${ds.colors[2]?.value || "#18251E"};--project-radius:${ds.radius}px;--project-font:${ds.fontFamily};--project-weight:${ds.headingWeight}`}>
-  <header class="case-section-heading"><h2>Design System</h2><Icon name="grid2"/></header>
+  <header class="case-section-heading"><h2>Design system</h2><Icon name="grid2"/></header>
   {dsMock && <p class="case-fixture-note">Sample tokens for layout review. Replace with project values.</p>}
   <div class="case-ds-grid">
     <article class="case-ds-colors"><h3>Color palette</h3><div>{ds.colors.map(color=><figure><div style={`background:${color.value}`}></div><figcaption><span>{color.name}</span><code>{color.value}</code></figcaption></figure>)}</div></article>
@@ -55,12 +55,12 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
   </div>
 </section>}
 {architecture.length > 0 && <section class="case-system-map case-section page-section">
-  <header class="case-section-heading"><h2>Architecture &amp; Integrations</h2><Icon name="category-web"/></header>
+  <header class="case-section-heading"><h2>Architecture &amp; integrations</h2><Icon name="category-web"/></header>
   {architectureMock && <p class="case-fixture-note">Illustrative architecture. Confirm the project implementation.</p>}
   <ol class="case-architecture-flow">{architecture.map((node,index)=><li><div class="case-node-icon"><Icon name={node.icon} size={24}/></div><small>{String(index+1).padStart(2,"0")}</small><h3>{node.title}</h3><p>{node.body}</p>{index < architecture.length-1 && <span class="case-node-arrow"><Icon name="arrow-right"/></span>}</li>)}</ol>
 </section>}
 <section class="case-devices case-section page-section">
-  <header class="case-section-heading"><h2>Responsive</h2><Icon name="expand"/></header>
+  <header class="case-section-heading"><h2>On every screen</h2><Icon name="expand"/></header>
   <div class="case-device-grid">
     {[{name:"Desktop",width:1440,height:900},{name:"Mobile",width:390,height:720}].map(device=><article class:list={["case-device",{"case-device--mobile":device.name==="Mobile"}]} data-device-width={device.width} data-device-height={device.height}>
       <header><h3>{device.name}</h3><small>{device.width}px</small></header>

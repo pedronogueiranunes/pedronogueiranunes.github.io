@@ -22,7 +22,7 @@ export const bsaCase = {
       baseline: "[before] / [after] / month",
     },
   ],
-  challengeTitle: "A respected firm with a site that did not show it.",
+  challengeTitle: "A respected firm with a site that didn't show it.",
   challenge:
     "BSA Legal needed a website that reflected the firm's sophistication and brought in qualified contacts. The old site was outdated, hard to update and generated no real leads.",
   strategy: [
