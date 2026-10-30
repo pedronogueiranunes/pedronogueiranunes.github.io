@@ -571,7 +571,8 @@
 .portrait-dizzy--front { z-index: 2; }
 .portrait-dizzy.is-visible { opacity: 1; }
 .portrait-dizzy__orbit {
-  position: absolute; left: 50%; top: 27%; width: 47%; height: 18%;
+  /* A flat halo just above the top of the head. */
+  position: absolute; left: 50%; top: 13%; width: 42%; height: 11%;
   transform: translate(-50%, -50%);
 }
 .portrait-dizzy__orbit i {
@@ -636,3 +637,27 @@
 
 .about-page .career-cv { display: inline-flex; margin: 0 0 28px; min-height: 44px; }
 
+
+/* "HEY!" bubble beside the head while the stars spin. */
+.portrait-hey {
+  position: absolute; left: 66%; top: 6%; z-index: 3;
+  padding: 8px 12px 7px;
+  border-radius: 10px;
+  background: #fff;
+  color: #ff5a1f;
+  font: 400 15px/1 var(--font-label);
+  letter-spacing: .04em;
+  box-shadow: 0 6px 18px -6px rgb(35 38 37 / .35);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px) scale(.6) rotate(-6deg);
+  transform-origin: 0 100%;
+  transition: opacity 200ms ease, transform 360ms cubic-bezier(.34, 1.56, .64, 1);
+}
+.portrait-hey::after {
+  content: ""; position: absolute; left: 6px; bottom: -6px;
+  width: 10px; height: 8px; background: inherit;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.portrait-hey.is-visible { opacity: 1; transform: translateY(0) scale(1) rotate(-6deg); }
+@media (prefers-reduced-motion: reduce) { .portrait-hey { transition: none; } }
