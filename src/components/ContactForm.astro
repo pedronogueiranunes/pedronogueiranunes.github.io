@@ -326,7 +326,13 @@ const budgetGroups = [
     subject.value = subjects[active];
     if (!sending) submit.querySelector("span")!.textContent = submitLabel();
   };
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const stepAnimations = new Set<Animation>();
+  const stopStepAnimations = () => {stepAnimations.forEach(animation => animation.cancel());stepAnimations.clear();};
+  reducedMotion.addEventListener('change', () => {if(reducedMotion.matches)stopStepAnimations();}, {signal:scope.signal});
+  scope.cleanup(stopStepAnimations);
   const show = (step: number) => {
+    stopStepAnimations();
     current = step;
     steps.forEach((node, i) => (node.hidden = i !== step));
     status.hidden = true;
@@ -335,6 +341,17 @@ const budgetGroups = [
       ? `, ${name.value.trim().split(/\s+/)[0]}`
       : "";
     steps[step].querySelector<HTMLElement>("h2")?.focus();
+    if (!reducedMotion.matches) {
+      [...steps[step].children].filter((element) => element instanceof HTMLElement && !element.hidden && element.getClientRects().length).forEach((element,index) => {
+        const animation=element.animate([
+          {opacity:0,transform:'translateY(10px)'},
+          {opacity:1,transform:'translateY(0)'},
+        ], {duration:320,delay:Math.min(index*40,240),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
+        stepAnimations.add(animation);
+        const remove=()=>stepAnimations.delete(animation);
+        animation.onfinish=remove;animation.oncancel=remove;
+      });
+    }
   };
   const validateField = (input: HTMLInputElement) => {
     input.value = input.value.trim();
