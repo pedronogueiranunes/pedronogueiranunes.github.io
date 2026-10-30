@@ -39,7 +39,7 @@ export const comparison = [
     "The one tool they know",
     "Their house stack, fit or not",
   ],
-  ["Time to start", "Within 2 weeks", "Unclear", "4 to 8 weeks"],
+  ["How soon we start", "Within 2 weeks", "Unclear", "4 to 8 weeks"],
   [
     "Communication",
     "Async daily, overlap with US and Canada hours",

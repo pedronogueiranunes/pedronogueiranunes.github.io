@@ -222,7 +222,7 @@ export const caseResults: CaseResult[] = [
   {
     slug: "green-nation-collective",
     alt: "",
-    headline: "Green Nation Collective: a site for an impact ecosystem.",
+    headline: "Green Nation Collective: a home for a social impact network.",
     rows: [
       ["Role", "Design, design system, Webflow build"],
       ["Engagement", "Subcontractor for Qodeture"],

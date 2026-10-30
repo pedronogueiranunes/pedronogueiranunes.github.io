@@ -120,7 +120,7 @@ const careerShots = [
   </section>
   <section class="promises-section page-section" id="how-i-work">
     <Eyebrow>How I work</Eyebrow>
-    <h2>From the first idea to the finished experience.</h2>
+    <h2>How I work.</h2>
     <p>I connect the visual and technical details, collaborating with teams to bring thoughtful work to life.</p>
     <div class="promises-grid">
       {promises.map(([title, body], i) => {
@@ -163,7 +163,7 @@ const careerShots = [
     </div>
   </section>
   <section class="career-section page-section" id="timeline">
-    <h2>Experience across teams and disciplines</h2>
+    <h2>Where I've worked</h2>
     {site.cvUrl ? <a class="text-link career-cv" href={site.cvUrl} download>Download CV <Icon name="download" /></a> : <a class="text-link career-cv" href={`mailto:${site.email}?subject=CV%20request`}>Request my CV <Icon name="arrow-right" /></a>}
     <ol class="career-timeline">
       {timeline.map(([date, title, description], index) => (
