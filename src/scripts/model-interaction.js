@@ -93,8 +93,8 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   const camera = app.root.findByName("camera");
   // ponytail: eye anchors in rig space, calibrated on the front-facing pose; re-measure if the capture changes.
   // z is negative: the rig is flipped 180deg on X, so the face looks down -z in rig space.
-  const EYE_ANCHORS = [new pc.Vec3(-0.03, -0.085, -0.13), new pc.Vec3(0.04, -0.085, -0.13)];
-  const eyeWorld = new pc.Vec3(), eyeScreen = new pc.Vec3(), headWorld = new pc.Vec3(), headLocal = new pc.Vec3(0.005, -0.085, 0);
+  const EYE_ANCHORS = [new pc.Vec3(-0.03, -0.103, -0.13), new pc.Vec3(0.04, -0.103, -0.13)];
+  const eyeWorld = new pc.Vec3(), eyeScreen = new pc.Vec3(), headWorld = new pc.Vec3(), headLocal = new pc.Vec3(0.005, -0.103, 0);
   function placeEyes() {
     if (!camera) return;
     const transform = rig.getWorldTransform();
