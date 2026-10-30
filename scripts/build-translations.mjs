@@ -16,7 +16,7 @@ const titles=[
  ['PineLake Broken Bow: luxury cabin rentals','PineLake Broken Bow: aluguel de cabanas de luxo','PineLake Broken Bow: alquiler de cabañas de lujo','PineLake Broken Bow : location de chalets de luxe'],
  ['Waipono Farms: brand and website','Waipono Farms: marca e site','Waipono Farms: marca y sitio web','Waipono Farms : marque et site web'],
 ];
-const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa del sitio','aperçu du site web'];
+const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa de la web','aperçu du site web'];
 for(const [en,...tr]of titles)for(let i=0;i<3;i++){
  const d=messages[locales[i]];d[en]=tr[i];d[en+' website']=tr[i]+' · '+altWebsite[i];d[en+' website preview']=tr[i]+' · '+altPreview[i];d[en+' | Pedro Nogueira']=tr[i]+' | Pedro Nogueira';d['View case study: '+en]=d['View case study']+': '+tr[i];
 }

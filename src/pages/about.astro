@@ -18,6 +18,8 @@ const tapeCopy = [
   "Better together",
 ];
 import { logoFor } from "../data/home";
+import { localeFromPath } from "../i18n/locales";
+const locale = localeFromPath(Astro.url.pathname);
 const personSchema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
@@ -83,6 +85,8 @@ const careerShots = [
       <h1>I design it, then I build it.</h1>
       {/* TODO: confirm with Pedro before publishing ("lead" vs "work on" at BT Marketing) */}
       <p>I'm Pedro Nogueira, a design engineer based in Bahia, Brazil. For 12+ years I have taken brands and websites from the first sketch to production, for clients in the US, Canada, Germany and Brazil. Today I lead web design and CRO at BT Marketing, a Toronto agency, and take on a few projects of my own.</p>
+      {locale === "fr" && <p class="language-note">Heads-up: I don't speak French. This page was translated, and I work in English and Portuguese.</p>}
+      {locale === "es" && <p class="language-note">Heads-up: I don't speak Spanish fluently. I can read some, but I work in English and Portuguese.</p>}
       <div class="about-hero__actions">
         <a class="text-link" href="/contact">Start a project <Icon name="arrow-right" /></a>
         {site.cvUrl ? <a class="text-link" href={site.cvUrl} download>Download CV <Icon name="download" /></a> : <a class="text-link" href={`mailto:${site.email}?subject=CV%20request`}>Request my CV <Icon name="arrow-right" /></a>}
@@ -157,7 +161,7 @@ const careerShots = [
     </div>
     <div class="promise-facts">
       <p><span class="mono">Based in</span>Bahia, Brazil · Remote</p>
-      <p><span class="mono">Languages</span>Portuguese (native), English (professional), Spanish (advanced)</p>
+      <p><span class="mono">Languages</span>Portuguese (native), English (professional), Spanish (basic)</p>
       {/* TODO: confirm with Pedro before publishing */}
       <p><span class="mono">Working hours</span>Overlaps US Eastern and Pacific</p>
     </div>
