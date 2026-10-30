@@ -604,6 +604,13 @@ const glyphs = [
       });
       window.addEventListener("blur", resetPointer, { signal: scope.signal });
 
+      const emitWave = () => {
+        const box = canvas.getBoundingClientRect();
+        document.dispatchEvent(new CustomEvent("portfolio:glyph-pulse", {
+          detail: { source: root, x: box.left + box.width / 2, y: box.top + box.height / 2 },
+        }));
+      };
+
       const onCategoryChange = (event: Event) => {
         const next = normalizeKey(
           (event as CustomEvent<{ category?: string }>).detail?.category,
@@ -623,6 +630,13 @@ const glyphs = [
           transition = null;
           return;
         }
+        // Category changes swing sideways as the silhouette morphs.
+        emitWave();
+        velocity.yaw = .065;
+        velocity.pitch = -.015;
+        velocity.x = -1.2;
+        velocity.y = -.35;
+        velocity.scale = .0018;
         transition = { from, to, start: performance.now() };
         startLoop();
       };
@@ -630,6 +644,18 @@ const glyphs = [
       document.addEventListener("portfolio:category-change", onCategoryChange, {
         signal: scope.signal,
       });
+
+      // Layout switches push the sculpture back and tip it upward, then release.
+      document.addEventListener("portfolio:view-change", () => {
+        if (!ready || reduced.matches || !visible || document.hidden) return;
+        emitWave();
+        velocity.yaw = -.022;
+        velocity.pitch = .055;
+        velocity.x = .3;
+        velocity.y = -.95;
+        velocity.scale = -.004;
+        startLoop();
+      }, { signal: scope.signal });
 
       const observer =
         "IntersectionObserver" in window
