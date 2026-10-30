@@ -7637,13 +7637,13 @@ main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 
 }
 .about-page .promise-art {
   position: relative;
-  width: 114px;
-  height: 114px;
+  width: 132px;
+  height: 132px;
   flex-shrink: 0;
 }
 .about-page .promise-art img {
-  width: 114px;
-  height: 114px;
+  width: 132px;
+  height: 132px;
   object-fit: contain;
 }
 /* Optical alignment: the unlocked padlock sits ~3px higher and ~22px to the
