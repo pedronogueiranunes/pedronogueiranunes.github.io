@@ -318,7 +318,15 @@ const careerShots = [
         el.toggleAttribute("data-visible", pos < 5);
         const video = el.querySelector("video");
         if (video) {
-          if (pos === 0 && visible && !reduced.matches) { video.preload = "auto"; video.play().catch(() => {}); }
+          if (pos === 0 && visible && !reduced.matches) {
+            video.preload = "auto";
+            video.muted = true; // Safari checks the property, not just the attribute, before allowing autoplay.
+            // Some browsers block autoplay (e.g. Safari in Low Power Mode): retry on the first interaction.
+            video.play().catch(() => {
+              const retry = () => { if (cards[order[0]].contains(video)) video.play().catch(() => {}); };
+              for (const type of ["pointerdown", "keydown", "touchstart"]) addEventListener(type, retry, { once: true, signal: scope.signal });
+            });
+          }
           else video.pause();
         }
       });
