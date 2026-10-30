@@ -3969,6 +3969,18 @@ html.js .article-cover img:not(.is-loaded) {
   font-size: 18px;
   line-height: 1.6;
 }
+/* FR/ES only: says Pedro works in English and Portuguese. */
+.about-hero > div > p.language-note {
+  display: inline-block;
+  margin: 4px 0 8px;
+  padding: 8px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+}
 .about-stats {
   padding-top: 40px;
   padding-bottom: 40px;
