@@ -7797,3 +7797,13 @@ main[tabindex="-1"]:focus,
 main h1[tabindex="-1"]:focus {
   outline: none;
 }
+
+/* Contact heading: sized so "Tell me what you're working on." holds one line on
+   desktop; each sentence balances its own lines when it has to wrap. */
+.contact-page .contact-intro h1 {
+  font-size: clamp(34px, 3.5vw, 50px);
+  text-wrap: balance;
+}
+.contact-page .contact-intro h1 > span { display: block; text-wrap: balance; }
+
+
