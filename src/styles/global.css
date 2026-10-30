@@ -7504,7 +7504,8 @@ body.projects-page .projects-header-copy > p:not(.section-eyebrow) { font-size: 
   display: flex;
   width: min(78vw, 340px);
   aspect-ratio: 1;
-  margin: 8px auto 0;
+  /* The extruded icon never fills the bottom of its square: pull the next block up. */
+  margin: 8px auto -48px;
   pointer-events: none;
 }
 main.projects-page .projects-header-copy h1 { max-width: 100%; }
@@ -7526,6 +7527,7 @@ main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 
     align-self: center;
     width: min(100%, 560px);
     aspect-ratio: 1;
+    margin: 0;
     pointer-events: none;
   }
 }
