@@ -95,7 +95,8 @@ const { source, invert = false } = Astro.props;
         if (detailed) { canvas.style.top='0px'; canvas.style.left='0px'; }
         // Fine-grain canvases use one CSS pixel per dot so the artwork's shapes
         // stay legible; anything else keeps the bolder two-pixel texture.
-        const dotSize=fineGrain ? 1 : 2;
+        // Promise icons use a finer grid to preserve the new sculptural details.
+        const dotSize=promise ? .65 : fineGrain ? 1 : 2;
         width=Math.max(1,Math.round(parseFloat(style.width)/dotSize));
         height=Math.max(1,Math.round(parseFloat(style.height)/dotSize));
         canvas.width=width; canvas.height=height;
