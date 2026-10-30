@@ -80,7 +80,24 @@ const personSchema = JSON.stringify({
   </section>
   <section class="about-approach page-section" aria-labelledby="approach-title">
     <div class="about-approach__inner">
-      <h2 id="approach-title">From print shops to production code.</h2>
+      <div class="about-approach__lead">
+        <h2 id="approach-title">From print shops to production code.</h2>
+        {/* TODO: mock polaroids. Swap the solid colours for Pedro's career photos and confirm the captions. */}
+        <button class="polaroid-stack" type="button" aria-label="Show the next photo" data-polaroid-stack>
+          {[
+            ["#d9c7a7", "[print shop]"],
+            ["#b9cbb4", "[agency years]"],
+            ["#e9b49a", "[first studio]"],
+            ["#a9b7c9", "[SUPERFLUID]"],
+            ["#cfd6c6", "[today]"],
+          ].map(([tone, caption], index) => (
+            <figure class="polaroid" style={`--tone:${tone}; --i:${index}`}>
+              <span class="polaroid__photo" aria-hidden="true"></span>
+              <figcaption>{caption}</figcaption>
+            </figure>
+          ))}
+        </button>
+      </div>
       <div class="about-approach__copy">
         <span class="about-approach__mark" aria-hidden="true"></span>
         <p>I started in graphic design for print, preparing films and plates, and moved to the web soon after. Along the way I spent years in an agency doing art direction, video and motion, then went all in on front-end. From 2021 to 2025 I ran SUPERFLUID, my own studio, designing and building brands, sites and web apps for clients abroad. Since then I have worked inside agencies and consultancies on enterprise Webflow builds, landing pages and conversion work. That mix is the point: I can sit with a brand team in the morning and review a pull request in the afternoon.</p>
@@ -257,6 +274,39 @@ const personSchema = JSON.stringify({
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !connection?.saveData) scope.idle(load);
     });
   </script>
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  // Polaroid stack: every few seconds (and on click) the top photo flicks away
+  // and slides to the back of the pile.
+  onPageLoad((scope) => {
+    const stack = document.querySelector<HTMLElement>("[data-polaroid-stack]");
+    if (!stack) return;
+    const cards = [...stack.querySelectorAll<HTMLElement>(".polaroid")];
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    let order = cards.map((_, index) => index), busy = false, timer = 0, visible = false;
+    const place = () => order.forEach((card, pos) => cards[card].style.setProperty("--pos", String(pos)));
+    const next = () => {
+      if (busy) return;
+      busy = true;
+      const top = cards[order[0]];
+      top.classList.add("is-leaving");
+      scope.timeout(() => {
+        order = [...order.slice(1), order[0]];
+        top.classList.remove("is-leaving");
+        place();
+        busy = false;
+      }, reduced.matches ? 0 : 420);
+    };
+    // ponytail: 3.2s per photo; tune here.
+    const loop = () => { clearInterval(timer); timer = window.setInterval(() => { if (visible && !document.hidden && !reduced.matches) next(); }, 3200); };
+    stack.addEventListener("click", () => { next(); loop(); }, { signal: scope.signal });
+    const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    io.observe(stack);
+    place();
+    loop();
+    scope.cleanup(() => { clearInterval(timer); io.disconnect(); });
+  });
+</script>
 </Base>
 
 <style>
@@ -307,6 +357,50 @@ const personSchema = JSON.stringify({
     .about-approach :global(.approach-word__segment.is-resolved .approach-word__alternate) { opacity: 0; }
   }
   .about-approach__copy { padding-top: 7px; }
+  /* Polaroid stack: cards sit in a loose pile; the top one flicks away and slides
+     to the back on a timer or on click. --pos is 0 for the top card. */
+  .polaroid-stack {
+    position: relative;
+    display: block;
+    width: min(100%, 360px);
+    aspect-ratio: 1 / 1.1;
+    margin-top: 48px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .polaroid {
+    --pos: var(--i);
+    position: absolute;
+    inset: 0 12% 6% 6%;
+    margin: 0;
+    padding: 12px 12px 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 14px 30px -12px rgb(35 38 37 / .35);
+    z-index: calc(10 - var(--pos));
+    transform:
+      translate(calc(var(--pos) * 7px), calc(var(--pos) * 5px))
+      rotate(calc((var(--i) - 2) * 3.5deg));
+    transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .polaroid__photo { background: var(--tone); border-radius: 1px; }
+  .polaroid figcaption {
+    padding: 12px 4px 16px;
+    color: var(--text-secondary);
+    font: 400 13px/1 var(--font-mono);
+    text-align: left;
+  }
+  /* The leaving card flies up and out before it tucks in at the back. */
+  .polaroid.is-leaving {
+    transform: translate(55%, 4%) rotate(12deg);
+    transition-duration: 420ms;
+  }
+  .polaroid-stack:focus-visible { outline: 2px solid var(--accent); outline-offset: 8px; }
+  @media (prefers-reduced-motion: reduce) { .polaroid { transition: none; } }
   .about-approach__mark {
     display: block;
     width: 42px;
@@ -327,6 +421,7 @@ const personSchema = JSON.stringify({
     .about-approach__inner { grid-template-columns: 1fr; gap: 30px; padding-top: 28px; }
     .about-approach h2 { max-width: 14ch; font-size: clamp(26px, 8vw, 44px); }
     .about-approach__copy { padding-top: 0; }
+    .polaroid-stack { width: min(78vw, 320px); margin-top: 32px; }
     .about-approach__mark { margin-bottom: 20px; }
     .about-approach__copy p { font-size: 18px; }
   }
