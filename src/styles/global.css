@@ -692,9 +692,9 @@ img {
 .nav-row:focus-visible {
   color: var(--accent-ink);
 }
-/* The divider under a hovered row and its number turn orange with the title. */
+/* The lower divider highlights in white; the title and number stay orange. */
 .nav-row:is(:hover, :focus-visible) + .nav-row {
-  box-shadow: inset 0 1px var(--accent-ink);
+  box-shadow: inset 0 1px #fff;
 }
 .nav-row:is(:hover, :focus-visible) small {
   color: var(--accent-ink);

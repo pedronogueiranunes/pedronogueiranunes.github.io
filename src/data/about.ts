@@ -12,7 +12,7 @@ export const timeline = [
   ["2025–26", "Senior Graphic & Web Designer", "On The Map, Inc. (Miami): landing pages and design systems for a US marketing agency"],
   ["2021–25", "Founder, design engineer", "SUPERFLUID, my independent studio: brands, sites and web apps for clients in the US, Europe and Brazil"],
   ["2019–21", "Art Director & Motion Designer", "VASTA: design systems, campaigns, video and motion for digital and TV"],
-  ["2017–18", "Front-End Developer & Visual Designer", "FERTILI: mobile app front end, UI, Shopify and WordPress for agency clients"],
+  ["2017–18", "Front-End Developer & Visual Designer", "FERTILI, a subsidiary of Grupo VASTA: mobile app front end, UI, Shopify, WordPress, motion design and video production for agency clients"],
   ["2015–16", "Junior Front-End Developer", "Agência Vilaça Comunicação: promotional sites and first UI work"],
 ];
 export const skills = [
