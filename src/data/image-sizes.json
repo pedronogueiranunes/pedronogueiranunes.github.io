@@ -223,5 +223,35 @@
     "width": 1200,
     "height": 667,
     "srcset": "/assets/career/fertili-search--w320.webp 320w, /assets/career/fertili-search--w640.webp 640w, /assets/career/fertili-search.webp 1200w"
+  },
+  "/assets/career/on-the-map-thanksgiving.webp": {
+    "width": 720,
+    "height": 756,
+    "srcset": "/assets/career/on-the-map-thanksgiving--w360.webp 360w, /assets/career/on-the-map-thanksgiving.webp 720w"
+  },
+  "/assets/career/on-the-map-georgia.webp": {
+    "width": 720,
+    "height": 756,
+    "srcset": "/assets/career/on-the-map-georgia--w360.webp 360w, /assets/career/on-the-map-georgia.webp 720w"
+  },
+  "/assets/career/on-the-map-issa-castro.webp": {
+    "width": 720,
+    "height": 756,
+    "srcset": "/assets/career/on-the-map-issa-castro--w360.webp 360w, /assets/career/on-the-map-issa-castro.webp 720w"
+  },
+  "/assets/career/vasta-seumenu-supere-limites.webp": {
+    "width": 720,
+    "height": 473,
+    "srcset": "/assets/career/vasta-seumenu-supere-limites--w360.webp 360w, /assets/career/vasta-seumenu-supere-limites.webp 720w"
+  },
+  "/assets/career/vasta-seumenu-personagens.webp": {
+    "width": 720,
+    "height": 540,
+    "srcset": "/assets/career/vasta-seumenu-personagens--w360.webp 360w, /assets/career/vasta-seumenu-personagens.webp 720w"
+  },
+  "/assets/career/vasta-seumenu-pizza-pool.webp": {
+    "width": 720,
+    "height": 540,
+    "srcset": "/assets/career/vasta-seumenu-pizza-pool--w360.webp 360w, /assets/career/vasta-seumenu-pizza-pool.webp 720w"
   }
 }

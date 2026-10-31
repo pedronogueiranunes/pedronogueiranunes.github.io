@@ -11,7 +11,11 @@ import { promises, timeline, skills } from "../data/about";
 import { site } from "../data/site";
 // Short complementary lines for the police tapes, one per promise card.
 const careerPreviews: Record<string, string[]> = {
-  "2017–18": ["app.webp", "market.webp", "search.webp", "motion.mp4"].map(name => `/assets/career/fertili-${name}`),
+  "2026": ["waipono-farms", "green-nation-collective"].map(slug => `/assets/project-videos/${slug}/preview.mp4`),
+  "2025–26": ["thanksgiving", "georgia", "issa-castro"].map(name => `/assets/career/on-the-map-${name}.webp`),
+  "2021–25": ["bsa-legal", "molina-chambo", "lemmbra-olympiad"].map(slug => `/assets/project-videos/${slug}/preview.mp4`),
+  "2019–21": ["ei-voce.mp4", "v6.mp4", "supere-limites.webp", "personagens.webp", "pizza-pool.webp"].map(name => `/assets/career/vasta-seumenu-${name}`),
+  "2017–18": ["motion.mp4", "app.webp", "market.webp", "search.webp"].map(name => `/assets/career/fertili-${name}`),
   "2015–16": ["team", "content", "calendar"].map(name => `/assets/career/vilaca-2016-${name}.webp`),
 };
 const promiseIcons = ["design", "development", "motion", "collaboration"];
@@ -167,9 +171,9 @@ const careerShots = [
       {timeline.map(([date], index) => (
         <div class="career-preview__set" data-set={index}>
           {(careerPreviews[date] ?? [null, null, null]).map((media, shot) => (
-            <span class="career-preview__shot" style={`--tone:${["#e9b49a", "#b9cbb4", "#a9b7c9", "#d9c7a7", "#cfd6c6", "#f0c9a8", "#c3cdd8"][(index + shot * 2) % 7]}`}>
+            <span class:list={["career-preview__shot", { "career-preview__shot--page": media?.includes("on-the-map-"), "career-preview__shot--illustration": media?.includes("vasta-seumenu-") && media?.endsWith(".webp") }]} style={`--tone:${["#e9b49a", "#b9cbb4", "#a9b7c9", "#d9c7a7", "#cfd6c6", "#f0c9a8", "#c3cdd8"][(index + shot * 2) % 7]}`}>
               {media?.endsWith('.mp4') ? (
-                <video data-src={media} poster="/assets/career/fertili-motion-poster.webp" width="960" height="534" muted playsinline preload="none" aria-hidden="true"></video>
+                <video data-src={media} poster={media.includes("/project-videos/") ? media.replace("preview.mp4", "poster.webp") : media.replace(".mp4", "-poster.webp")} width="960" height="534" muted playsinline preload="none" aria-hidden="true"></video>
               ) : media ? (
                 <ResponsiveImage src={media} alt="" sizes="360px" loading="lazy" />
               ) : <small>[{String(index + 1).padStart(2, "0")} / {shot + 1}]</small>}
@@ -376,31 +380,98 @@ const careerShots = [
     scope.cleanup(() => home.append(preview));
     const sets = [...preview.querySelectorAll<HTMLElement>(".career-preview__set")];
     let x = 0, y = 0, tx = 0, ty = 0, frame = 0, timer = 0, current = -1, shot = 0;
-    const show = (setIndex: number, shotIndex: number) => {
+    let transitionId = 0;
+    let displayedSet = -1;
+    const show = async (setIndex: number, shotIndex: number) => {
+      const request = ++transitionId;
       clearTimeout(timer);
-      preview.querySelectorAll('video').forEach(video => video.pause());
-      const hasImages=!!sets[setIndex]?.querySelector('img, video');
-      preview.style.width=hasImages?'360px':'260px';
-      preview.style.aspectRatio=hasImages?'9 / 5':'4 / 3';
-      sets.forEach((set, i) => set.classList.toggle("is-current", i === setIndex));
-      sets[setIndex]?.querySelectorAll(".career-preview__shot").forEach((el, i) => el.classList.toggle("is-on", i === shotIndex));
-      const video=sets[setIndex]?.querySelector<HTMLVideoElement>('.career-preview__shot.is-on video');
-      if(video){
-        if(!video.getAttribute('src')){video.src=video.dataset.src!;video.load();}
-        video.muted=true;video.currentTime=0;video.play().catch(()=>{});
+      const set = sets[setIndex];
+      const next = set?.querySelectorAll<HTMLElement>(".career-preview__shot")[shotIndex];
+      if (!next) return;
+      if (displayedSet !== setIndex) {
+        preview.style.width = '360px';
+        preview.style.aspectRatio = '9 / 5';
+        sets.forEach((item, i) => item.classList.toggle('is-current', i === setIndex));
+        // Show this job's image/poster immediately while its video prepares.
+        next.classList.add('is-cut', 'is-on');
       }
-      timer=window.setTimeout(()=>{
-        const count=sets[setIndex]?.querySelectorAll('.career-preview__shot').length ?? 0;
-        if(current!==setIndex || !count)return;
-        shot=(shot+1)%count;show(current,shot);
-      },video?11500:hasImages?2200:900);
+      const image = next.querySelector('img');
+      const video = next.querySelector('video');
+      // Decode first; keep the outgoing media intact while the next one loads.
+      if (image) await image.decode().catch(() => {});
+      if (video) {
+        if (!video.getAttribute('src')) { video.src = video.dataset.src!; video.load(); }
+        video.muted = true;
+        const speed = video.dataset.src?.includes("/project-videos/") ? 3 : 1;
+        video.defaultPlaybackRate = speed;
+        video.playbackRate = speed;
+        video.loop = false;
+        video.currentTime = 0;
+        if (video.readyState < 2) await new Promise<void>(resolve => {
+          video.addEventListener('loadeddata', () => resolve(), { once: true, signal: scope.signal });
+          video.addEventListener('error', () => resolve(), { once: true, signal: scope.signal });
+          scope.timeout(resolve, 2000);
+        });
+      }
+      if (request !== transitionId || current !== setIndex) return;
+      if (video) {
+        await video.play().catch(() => {});
+        // Present a decoded frame before exposing the incoming layer. Seeking
+        // after the fade started used to flash the poster/blank video surface.
+        if ('requestVideoFrameCallback' in video) await new Promise<void>(resolve => {
+          video.requestVideoFrameCallback(() => resolve());
+          scope.timeout(resolve, 500);
+        });
+      }
+      if (request !== transitionId || current !== setIndex) {
+        if (!next.classList.contains('is-on')) video?.pause();
+        return;
+      }
+      const sameJob = displayedSet === setIndex;
+      const previous = [...preview.querySelectorAll<HTMLElement>('.career-preview__shot.is-on')].filter(el => el !== next);
+      if (sameJob) previous.forEach(el => el.classList.add('is-leaving'));
+      else previous.forEach(el => {
+        el.classList.remove('is-on', 'is-leaving', 'is-cut');
+        el.querySelector('video')?.pause();
+      });
+      displayedSet = setIndex;
+      const hasImages = !!set.querySelector('img, video');
+      preview.style.width = '360px';
+      preview.style.aspectRatio = '9 / 5';
+      sets.forEach((item, i) => item.classList.toggle('is-current', i === setIndex));
+      next.classList.remove('is-leaving');
+      next.classList.toggle('is-cut', !sameJob);
+      next.classList.add('is-on');
+      // Warm just the next clip in this role so the crossfade can overlap playback.
+      const shots = [...set.querySelectorAll<HTMLElement>('.career-preview__shot')];
+      const upcoming = shots[(shotIndex + 1) % shots.length]?.querySelector('video');
+      if (upcoming && !upcoming.getAttribute('src')) {
+        upcoming.preload = 'auto'; upcoming.src = upcoming.dataset.src!; upcoming.load();
+      }
+      scope.timeout(() => {
+        previous.forEach(el => {
+          if (!el.classList.contains('is-leaving')) return;
+          el.classList.remove('is-on', 'is-leaving');
+          el.querySelector('video')?.pause();
+        });
+      }, 740);
+      // Start the crossfade before the outgoing clip reaches its last frame.
+      const videoDuration = video && Number.isFinite(video.duration) ? video.duration / video.playbackRate * 1000 : 4000;
+      const dwell = video ? Math.max(1800, videoDuration - 750)
+        : set.querySelector('.career-preview__shot--page') ? 4800 : hasImages ? 2800 : 1200;
+      timer = window.setTimeout(() => {
+        const count = set.querySelectorAll('.career-preview__shot').length;
+        if (current !== setIndex || !count) return;
+        shot = (shot + 1) % count;
+        show(current, shot);
+      }, dwell);
     };
     const follow = () => {
       x += (tx - x) * .18; y += (ty - y) * .18;
       // Offset so the card sits beside the cursor; tilt slightly with horizontal speed.
       const px=Math.max(16,Math.min(innerWidth-preview.offsetWidth-16,x+24));
       const py=Math.max(16,Math.min(innerHeight-preview.offsetHeight-16,y-90));
-      preview.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) rotate(${((tx - x) * .05).toFixed(2)}deg)`;
+      preview.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) rotate(${Math.max(-2, Math.min(2, (tx - x) * .025)).toFixed(2)}deg)`;
       frame = Math.abs(tx - x) + Math.abs(ty - y) > .3 ? requestAnimationFrame(follow) : 0;
     };
     list.addEventListener("pointermove", (event) => {
@@ -409,14 +480,24 @@ const careerShots = [
       const row = (event.target as Element).closest<HTMLElement>("[data-preview]");
       const index = row ? Number(row.dataset.preview) : -1;
       if (index !== current && index >= 0) {
+        // Switching jobs is a deliberate hard cut; crossfades belong only to
+        // the media carousel inside a single job.
+        ++transitionId;
+        clearTimeout(timer);
+        preview.querySelectorAll<HTMLElement>('.career-preview__shot.is-on').forEach(el => {
+          el.classList.remove('is-on', 'is-leaving', 'is-cut');
+          el.querySelector('video')?.pause();
+        });
+        displayedSet = -1;
         current = index; shot = 0; show(current, shot);
 
       }
-      preview.classList.toggle("is-active", index >= 0);
+      // Keep the container steady while crossing the spaces between timeline rows.
+      if (index >= 0) preview.classList.add("is-active");
       if (!frame) frame = requestAnimationFrame(follow);
     }, { signal: scope.signal });
-    list.addEventListener("pointerleave", () => { preview.classList.remove("is-active"); clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; }, { signal: scope.signal });
-    scope.cleanup(() => { clearTimeout(timer); cancelAnimationFrame(frame); preview.querySelectorAll('video').forEach(video=>video.pause()); });
+    list.addEventListener("pointerleave", () => { preview.classList.remove("is-active"); ++transitionId; clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; }, { signal: scope.signal });
+    scope.cleanup(() => { ++transitionId; clearTimeout(timer); cancelAnimationFrame(frame); preview.querySelectorAll('video').forEach(video=>video.pause()); });
   });
 </script>
 </Base>
@@ -476,8 +557,8 @@ const careerShots = [
     left: 0;
     top: 0;
     z-index: 40;
-    width: 260px;
-    aspect-ratio: 4 / 3;
+    width: 360px;
+    aspect-ratio: 9 / 5;
     border-radius: 14px;
     overflow: hidden;
     pointer-events: none;
@@ -488,7 +569,7 @@ const careerShots = [
     will-change: transform;
   }
   .career-preview.is-active { opacity: 1; scale: 1; }
-  .career-preview__set { position: absolute; inset: 0; visibility: hidden; }
+  .career-preview__set { position: absolute; inset: 0; }
   .career-preview__set.is-current { visibility: visible; }
   .career-preview__shot {
     position: absolute;
@@ -498,11 +579,34 @@ const careerShots = [
     padding: 12px;
     background: var(--tone);
     opacity: 0;
-    transition: opacity 260ms ease;
+    transition: none;
   }
   .career-preview__shot:has(img, video) { padding:0; background:#20303d; }
   .career-preview__shot :is(img, video) { display:block; width:100%; height:100%; object-fit:contain; }
-  .career-preview__shot.is-on { opacity: 1; }
+  .career-preview__shot video { object-fit: cover; object-position: center; }
+  .career-preview__shot video[data-src*="/project-videos/"] { object-position: center top; }
+  .career-preview__shot--illustration:has(img) { background: #f5f3ef; }
+  .career-preview__shot.is-on { opacity: 1; z-index: 2; }
+  .career-preview__shot.is-on:not(.is-leaving):not(.is-cut) { animation: career-media-fade 720ms ease-in-out both; }
+  @keyframes career-media-fade { from { opacity: 0; } to { opacity: 1; } }
+  /* Only the incoming shot fades; the previous shot stays opaque underneath. */
+  .career-preview__shot.is-leaving { z-index: 1; transition: none; }
+  .career-preview__shot:not(.is-on) { transition: none; }
+  .career-preview__shot--page { overflow: hidden; }
+  .career-preview__shot--page :global(img) {
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: top;
+    align-self: flex-start;
+  }
+  .career-preview__shot--page.is-on :global(img) {
+    animation: career-page-scroll 4.8s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  @keyframes career-page-scroll {
+    0%, 18% { transform: translateY(0); }
+    82%, 100% { transform: translateY(-72px); }
+  }
   .career-preview__shot small { color: rgb(35 38 37 / .6); font: 400 11px/1 var(--font-mono); }
   @media (hover: none), (prefers-reduced-motion: reduce) { .career-preview { display: none; } }
   /* Polaroid stack: cards sit in a loose pile; the top one flicks away and slides
