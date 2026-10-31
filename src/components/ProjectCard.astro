@@ -12,7 +12,7 @@ const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
 ---
 
-<article class="project-card" data-category={p.category}>
+<article class:list={["project-card", { "project-card--collection": p.collection }]} data-category={p.category}>
   <div class="project-media-frame">
   <span class="project-media-halo" aria-hidden="true"><span></span></span>
   <a
@@ -45,9 +45,9 @@ const video = videoFor(p.caseSlug || project.slug);
     <div class="project-heading">
       <p class="project-meta">
         <span>{p.category}</span>
-        <span>
-          · {p.year} · {p.location || p.country}
-        </span>
+        {(p.year || p.location || p.country) && <span>
+          · {[p.year, p.location || p.country].filter(Boolean).join(" · ")}
+        </span>}
       </p>
       <h3>
         <a href={`/work/${p.caseSlug || project.slug}`}>{p.title}</a>
@@ -72,3 +72,17 @@ const video = videoFor(p.caseSlug || project.slug);
 
   </div>
 </article>
+
+<style>
+  .project-card--collection .project-media-shot { inset: 0; width: 100%; height: 100%; border-radius: 20px; box-shadow: none; }
+  .project-card--collection .project-media-track { min-height: 0; height: 100%; }
+  .project-card--collection .project-media-track :global(img) { width: 100%; height: 100%; object-fit: contain; transform: scale(1); transition: transform 520ms cubic-bezier(.22, 1, .36, 1); }
+  .project-card--collection .project-media-filler { display: none; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .project-card--collection .project-media:hover .project-media-track :global(img),
+    .project-card--collection .project-media:focus-visible .project-media-track :global(img) { transform: scale(1.08); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-card--collection .project-media-track :global(img) { transition: none; }
+  }
+</style>

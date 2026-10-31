@@ -22,8 +22,8 @@ const categories = [
   "Experiments",
 ];
 const categoryIcons = ["category-web", "category-brand", "category-art", "category-music", "category-experiment"];
-const gridOrder = [0, 1, 2, 3, 4, 5];
-const years = [...new Set(projects.map(project => project.data.year))].sort((a,b) => Number(b)-Number(a));
+const gridOrder = projects.map((_, index) => index);
+const years = [...new Set(projects.map(project => project.data.year).filter(Boolean))].sort((a,b) => Number(b)-Number(a));
 const platforms = new Set(["Webflow", "WordPress", "Next.js", "JavaScript", "Shopify Lite"]);
 const unique = (values: string[]) => [...new Set(values)].sort();
 const stacks = unique(projects.flatMap(p => p.data.tools.filter(tool => platforms.has(tool))));
@@ -147,7 +147,7 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
         {gridOrder.map((i) => (
           <div
             data-project
-            data-kind={i === 4 || i === 5 ? "0,1" : "0"}
+            data-kind={projects[i].data.collection ? "2" : i === 4 || i === 5 ? "0,1" : "0"}
             data-year={projects[i].data.year}
             data-location={projects[i].data.location}
             data-stack={JSON.stringify(projects[i].data.tools.filter(tool => platforms.has(tool)))}

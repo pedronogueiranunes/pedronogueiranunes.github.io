@@ -49,8 +49,8 @@ const caseSchema = jsonLd({
   name: p.title,
   description: p.summary,
   url: `${ORIGIN}/work/${caseSlug}/`,
-  image: `${ORIGIN}/assets/og/${caseSlug}.jpg`,
-  dateCreated: p.year,
+  image: p.collection ? `${ORIGIN}${p.cover || p.image}` : `${ORIGIN}/assets/og/${caseSlug}.jpg`,
+  ...(p.year ? { dateCreated: p.year } : {}),
   creator: { "@id": PERSON_ID },
   keywords: [p.category, ...p.tools].join(", "),
   locationCreated: p.country,
@@ -64,8 +64,28 @@ const metrics = isBsa
   : p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={`/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
+<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={p.collection ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
   <script type="application/ld+json" slot="head" set:html={caseSchema} />
+  {p.collection ? (
+    <>
+      <section class="art-collection page-section">
+        <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href="/projects?category=2">Projects</a><span>/</span><span>{p.category}</span></nav>
+        <h1>{p.title}</h1>
+        <div class="art-collection-grid">
+          {p.gallery.map((piece) => (
+            <figure>
+              <a href={piece.src} target="_blank" rel="noopener" aria-label={piece.alt}>
+                <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), 50vw" loading="lazy" />
+              </a>
+              {piece.caption && <figcaption>{piece.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+      <RelatedProjects projects={related.filter(other => other.data.collection)} />
+    </>
+  ) : (
+    <>
   <section class="case-hero page-section">
     <PixelTrail tone="green" />
     <div class="case-hero-top">
@@ -279,4 +299,17 @@ const metrics = isBsa
   </div>
   <CaseShowcase project={p} liveUrl={liveUrl} />
   <RelatedProjects projects={related} />
+    </>
+  )}
 </Base>
+
+<style>
+  .art-collection { padding-top: clamp(128px, 14vw, 184px); padding-bottom: 80px; }
+  .art-collection h1 { margin: 24px 0 48px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
+  .art-collection-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+  .art-collection-grid figure { margin: 0; }
+  .art-collection-grid a { display: block; border-radius: 14px; overflow: hidden; }
+  .art-collection-grid :global(img) { display: block; width: 100%; height: auto; }
+  .art-collection-grid figcaption { padding-top: 12px; }
+  @media (max-width: 768px) { .art-collection-grid { grid-template-columns: 1fr; gap: 24px; } }
+</style>

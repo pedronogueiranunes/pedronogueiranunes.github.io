@@ -10,6 +10,7 @@ const projects = defineCollection({
     image: z.string(),
     color: z.string().optional(),
     featured: z.boolean().default(false),
+    collection: z.boolean().default(false),
     trail: z.string().optional(),
     order: z.number(),
     summary: z.string().default(""),
