@@ -572,7 +572,7 @@
 .portrait-dizzy.is-visible { opacity: 1; }
 .portrait-dizzy__orbit {
   /* A flat halo just above the top of the head. */
-  position: absolute; left: 50%; top: 13%; width: 42%; height: 11%;
+  position: absolute; left: 47%; top: 2%; width: 42%; height: 5%;
   transform: translate(-50%, -50%);
 }
 .portrait-dizzy__orbit i {
@@ -640,7 +640,7 @@
 
 /* "HEY!" bubble beside the head while the stars spin. */
 .portrait-hey {
-  position: absolute; left: 66%; top: 6%; z-index: 3;
+  position: absolute; left: 72%; top: 6%; z-index: 3;
   padding: 8px 12px 7px;
   border-radius: 10px;
   background: #fff;

@@ -25,13 +25,14 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     lights.addChild(entity);
   };
   light("soft upper-left key", [1, 0.94, 0.86], 1.05, [55, -35, 0]);
-  light("broad cool fill", [0.86, 0.92, 1], 0.35, [15, 140, 0]);
+  light("broad cool fill", [0.86, 0.92, 1], 0.42, [15, 140, 0]);
+  light("soft edge light", [1, 0.78, 0.58], 0.3, [-25, -145, 0]);
   const meshes = [];
   // Rounded cuboid: project a subdivided box onto a smaller box plus a small
   // sphere. Analytic normals keep the broad faces flat and the edge highlights soft.
   const roundedStroke = (size) => {
     const half = size.map(v => v * radius / 2);
-    const bevel = Math.min(...half) * 0.38;
+    const bevel = Math.min(...half) * 0.28;
     const core = half.map(v => v - bevel);
     const positions = [], normals = [], indices = [];
     for (let axis = 0; axis < 3; axis++) for (const sign of [-1, 1]) {
@@ -104,10 +105,10 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
       }
       if (!clipped) throw new Error("Invalid orbit glyph outline");
     }
-    // Three bevel bands spread a soft highlight across the face/edge transition.
+    // Six bevel bands keep a continuous satin highlight without softening the pixel steps.
     const profiles = [];
     for (const sign of [-1, 1]) {
-      const angles = sign < 0 ? [0, Math.PI / 6, Math.PI / 3, Math.PI / 2] : [Math.PI / 2, Math.PI / 3, Math.PI / 6, 0];
+      const angles = Array.from({ length: 7 }, (_, i) => (sign < 0 ? i : 6 - i) * Math.PI / 12);
       for (const angle of angles) {
         const contour = inset.map((p, i) => p.map((n, j) => n + (outline[i][j] - n) * Math.sin(angle)));
         profiles.push([contour, sign * (depth / 2 - bevel + Math.cos(angle) * bevel)]);
@@ -147,8 +148,8 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     value.useLighting = lit;
     value.useMetalness = true;
     value.metalness = 0;
-    value.shininess = 55;
-    value.specular = new pc.Color(0.38, 0.38, 0.38);
+    value.shininess = 42;
+    value.specular = new pc.Color(0.3, 0.3, 0.3);
     // Opacity is shared by the icon coverage fade and the unlit ring.
     value.opacity = opacity;
     // Screen-door opacity keeps the icons in the opaque depth pass. Splats then
@@ -198,8 +199,8 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   const brackets = glyph("code-brackets", 0);
   const bracketOutline = [[-0.071, -0.066], [-0.025, -0.066], [-0.025, -0.054], [-0.059, -0.054],
     [-0.059, 0.054], [-0.025, 0.054], [-0.025, 0.066], [-0.071, 0.066]];
-  solidGlyph(brackets, "left-bracket", bracketOutline, 0.022, 0.002, glyphOrange);
-  solidGlyph(brackets, "right-bracket", bracketOutline.map(([x, y]) => [-x, y]).reverse(), 0.022, 0.002, glyphOrange);
+  solidGlyph(brackets, "left-bracket", bracketOutline, 0.038, 0.002, glyphOrange);
+  solidGlyph(brackets, "right-bracket", bracketOutline.map(([x, y]) => [-x, y]).reverse(), 0.038, 0.002, glyphOrange);
   const cursor = glyph("pixel-cursor", Math.PI / 2);
   // One connected pointer and stem, with slightly deeper satin acrylic edges.
   const outline = [[-0.045, -0.056], [-0.013, -0.056], [-0.004, -0.04],
@@ -207,18 +208,51 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     [0.035, -0.008], [0.035, 0.008], [0.019, 0.008], [0.019, 0.024],
     [0.003, 0.024], [0.003, 0.04], [-0.013, 0.04], [-0.013, 0.056],
     [-0.029, 0.056], [-0.029, 0.072], [-0.045, 0.072]];
-  solidGlyph(cursor, "beveled-pixel-pointer", outline, 0.038, 0.003, glyphOrange);
+  solidGlyph(cursor, "beveled-pixel-pointer", outline, 0.046, 0.003, glyphOrange);
   const design = glyph("design-selection-frame", Math.PI);
+  // Hollow resize handles read as selection controls rather than solid toy blocks.
+  // One shared mesh, still one draw submission per handle.
+  const handlePositions = [], handleNormals = [], handleIndices = [];
+  const outer = 0.014, inner = 0.007, halfDepth = 0.009;
+  const corners = (r, z) => [[-r, -r, z], [r, -r, z], [r, r, z], [-r, r, z]];
+  const frontOuter = corners(outer, halfDepth), frontInner = corners(inner, halfDepth);
+  const backOuter = corners(outer, -halfDepth), backInner = corners(inner, -halfDepth);
+  const quad = (points, normal) => {
+    const start = handlePositions.length / 3;
+    points.forEach(point => { handlePositions.push(...point.map(v => v * radius)); handleNormals.push(...normal); });
+    handleIndices.push(start, start + 1, start + 2, start, start + 2, start + 3);
+  };
+  for (let i = 0; i < 4; i++) {
+    const j = (i + 1) % 4;
+    quad([frontOuter[i], frontOuter[j], frontInner[j], frontInner[i]], [0, 0, 1]);
+    quad([backOuter[j], backOuter[i], backInner[i], backInner[j]], [0, 0, -1]);
+    const normal = [[0, -1, 0], [1, 0, 0], [0, 1, 0], [-1, 0, 0]][i];
+    quad([backOuter[i], backOuter[j], frontOuter[j], frontOuter[i]], normal);
+    quad([backInner[j], backInner[i], frontInner[i], frontInner[j]], normal.map(v => -v));
+  }
+  const handleMesh = new pc.Mesh(app.graphicsDevice);
+  handleMesh.setPositions(handlePositions); handleMesh.setNormals(handleNormals);
+  handleMesh.setIndices(handleIndices); handleMesh.update();
+  meshes.push(handleMesh);
   for (const side of [-1, 1]) {
-    stroke(design, [0.15, 0.006, 0.012], [0, side * 0.055, 0], glyphGreen);
-    stroke(design, [0.006, 0.11, 0.012], [side * 0.075, 0, 0], glyphGreen);
-    for (const y of [-1, 1]) stroke(design, [0.025, 0.025, 0.018], [side * 0.075, y * 0.055, 0.005], glyphOrange);
+    // End the rails beneath each handle's rim, leaving its centre genuinely open.
+    stroke(design, [0.129, 0.007, 0.016], [0, side * 0.055, 0], glyphGreen);
+    stroke(design, [0.007, 0.089, 0.016], [side * 0.075, 0, 0], glyphGreen);
+    for (const y of [-1, 1]) {
+      const handle = new pc.Entity("selection-resize-handle");
+      handle.addComponent("render", {
+        meshInstances: [new pc.MeshInstance(handleMesh, glyphOrange, handle)],
+        layers: [iconLayer.id], castShadows: false, receiveShadows: false,
+      });
+      handle.setLocalPosition(side * 0.075 * radius, y * 0.055 * radius, 0.005 * radius);
+      design.addChild(handle);
+    }
   }
   const slash = glyph("code-slash", Math.PI * 1.5);
-  stroke(slash, [0.012, 0.13, 0.016], [0, 0, 0], glyphGreen, -25);
+  stroke(slash, [0.011, 0.118, 0.022], [0, 0, 0], glyphGreen, -20);
   const chevron = [[-0.09, 0], [-0.043, -0.046], [-0.036, -0.039], [-0.076, 0], [-0.036, 0.039], [-0.043, 0.046]];
-  solidGlyph(slash, "left-chevron", chevron, 0.02, 0.0015, glyphOrange);
-  solidGlyph(slash, "right-chevron", chevron.map(([x, y]) => [-x, y]).reverse(), 0.02, 0.0015, glyphOrange);
+  solidGlyph(slash, "left-chevron", chevron, 0.024, 0.0015, glyphOrange);
+  solidGlyph(slash, "right-chevron", chevron.map(([x, y]) => [-x, y]).reverse(), 0.024, 0.0015, glyphOrange);
   // Dotted ring at shoulder height, spinning with the portrait (12°/s, same as model-interaction).
   // The 96 dots used to be 96 render entities. Baking them into one merged mesh keeps the
   // same silhouette and saves 95 scene nodes and draw submissions for sub-pixel geometry.
@@ -274,21 +308,59 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
   const compact = matchMedia("(max-width: 768px)");
   const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
   observer.observe(viewport);
-  const positionGlyphs = () => {
+  // Reuse the capped orbit tick: no extra animation loop or render pass.
+  const pointer = { x: 0, y: 0, active: false };
+  const hover = matchMedia("(hover: hover) and (pointer: fine)");
+  const projected = new pc.Vec3();
+  const offsets = glyphs.map(() => ({ x: 0, y: 0 }));
+  let entrance = 0;
+  const onPointerMove = (event) => {
+    if (!hover.matches || motion.matches || !visible || !root.enabled) return;
+    const box = viewport.getBoundingClientRect();
+    pointer.x = event.clientX - box.left;
+    pointer.y = event.clientY - box.top;
+    pointer.active = true;
+  };
+  const onPointerLeave = () => { pointer.active = false; };
+  viewport.addEventListener("pointermove", onPointerMove, { passive: true });
+  viewport.addEventListener("pointerleave", onPointerLeave);
+  const positionGlyphs = (step = 0) => {
+    const box = viewport.getBoundingClientRect();
+    const canvas = app.graphicsDevice.canvas;
+    const blend = 1 - Math.exp(-step * 9);
+
     glyphs.forEach(({ group, phase }, index) => {
-      group.setLocalScale(0.91, 0.91, 0.91);
+      const progress = motion.matches ? 1 : Math.max(0, Math.min(1, (entrance - index * 0.13) / 0.7));
+      const settle = 1 - (1 - progress) ** 3;
+      const scale = 1.06 * (0.55 + 0.45 * settle);
+      group.enabled = progress > 0;
+      group.setLocalScale(scale, scale, scale);
+      let pushX = 0, pushY = 0;
+      if (pointer.active && progress >= 1) {
+        camera.worldToScreen(group.getPosition(), projected);
+        const dx = projected.x * box.width / canvas.clientWidth - pointer.x;
+        const dy = projected.y * box.height / canvas.clientHeight - pointer.y;
+        const distance = Math.hypot(dx, dy);
+        const reach = Math.min(box.width, box.height) * 0.3;
+        const force = Math.max(0, 1 - distance / reach) ** 2 * radius * 0.13;
+        pushX = dx / Math.max(distance, 1) * force;
+        pushY = -dy / Math.max(distance, 1) * force;
+      }
+      const offset = offsets[index];
+      offset.x += (pushX - offset.x) * blend;
+      offset.y += (pushY - offset.y) * blend;
       // Counter-rotate around the head, at chin height.
       // A deep orbit keeps front/back passes clear of the rotating splat.
       const angle = time * 0.35 + phase; // portrait yaw is +Y; +angle traces the opposite way
       group.setLocalPosition(
-        Math.cos(angle) * radius * 0.52,
-        ([0.13, -0.04, 0.22, 0.04][index] + Math.sin(time * (0.18 + index * 0.05) + phase * 1.7) * 0.05) * radius, // staggered heights, slow drift
+        Math.cos(angle) * radius * 0.52 + offset.x,
+        ([0.13, -0.04, 0.22, 0.04][index] + Math.sin(time * (0.18 + index * 0.05) + phase * 1.7) * 0.05) * radius + offset.y - (1 - settle) * radius * 0.1, // staggered arrival and slow drift
         Math.sin(angle) * radius * 0.65,
       );
       // Face the viewer while gently tilting, so glyphs stay readable.
       group.setLocalEulerAngles(
-        Math.sin(time * (0.28 + index * 0.035) + phase) * (index % 2 ? 12 : 6),
-        Math.sin(time * (0.3 + index * 0.045) + phase) * (index % 2 ? 22 : 14),
+        -8 + (1 - settle) * 25 + Math.sin(time * (0.28 + index * 0.035) + phase) * 6,
+        [18, -22, 20, -12][index] + Math.sin(time * (0.3 + index * 0.045) + phase) * 10,
         Math.sin(time * (0.4 + index * 0.03) + phase) * (index % 2 ? 9 : 5),
       );
     });
@@ -302,7 +374,7 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     // Smoothstep fade with a slight settle in scale, so the orbit eases in rather than popping.
     const k = shown * shown * (3 - 2 * shown);
     // Follow the enlarged mobile About portrait without changing relative orbit
-    // dimensions, the individual 0.91 glyph scale, or the Home reveal scale.
+    // dimensions, the individual glyph scale, or the Home reveal scale.
     const mobileScale = compact.matches && viewport.dataset.autoRotate === "true" ? ABOUT_MOBILE_SCALE : 1;
     const scale = (0.9 + 0.1 * k) * mobileScale;
     root.setLocalScale(scale, scale, scale);
@@ -332,7 +404,12 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
       applyReveal();
       app.renderNextFrame = true;
     }
-    if (motion.matches || !root.enabled) return;
+    if (!root.enabled) {
+      entrance = 0;
+      pointer.active = false;
+      return;
+    }
+    if (motion.matches) { positionGlyphs(); return; }
     // The orbit never stops while it is on screen, so redraw it on the shared
     // capped ambient cadence instead of on every display frame. The drift is slow
     // enough that 30 Hz is indistinguishable from 60/120 Hz, while the reveal fade
@@ -340,14 +417,17 @@ export function setupAboutEnvironment(app, viewport, radius, { revealOnPose = fa
     const step = ambientStep();
     if (!step) return;
     time += step;
+    entrance = Math.min(1.2, entrance + step);
     ringYaw = (ringYaw + step * 12) % 360;
     ring.setLocalEulerAngles(0, ringYaw, 0);
-    positionGlyphs();
+    positionGlyphs(step);
     app.renderNextFrame = true;
   };
   app.on("update", update);
   return () => {
     observer.disconnect();
+    viewport.removeEventListener("pointermove", onPointerMove);
+    viewport.removeEventListener("pointerleave", onPointerLeave);
     compact.removeEventListener("change", applyReveal);
     viewport.removeEventListener("portraitpose", onPose);
     app.off("update", update);

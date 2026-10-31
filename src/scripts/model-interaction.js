@@ -91,7 +91,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
   const eyeEls = [...eyes.children];
   viewport.append(dizzyBack, dizzy, hey, eyes);
   const camera = app.root.findByName("camera");
-  // ponytail: eye anchors in rig space, calibrated on the front-facing pose; re-measure if the capture changes.
+  // Eye anchors in rig space, calibrated for the two portrait framings.
   // z is negative: the rig is flipped 180deg on X, so the face looks down -z in rig space.
   const EYE_ANCHORS = [new pc.Vec3(-0.03, -0.103, -0.13), new pc.Vec3(0.028, -0.103, -0.13)];
   const eyeWorld = new pc.Vec3(), eyeScreen = new pc.Vec3(), headWorld = new pc.Vec3(), headLocal = new pc.Vec3(0.005, -0.103, 0);
@@ -99,17 +99,25 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     if (!camera) return;
     const transform = rig.getWorldTransform();
     const box = canvas.getBoundingClientRect(), host = viewport.getBoundingClientRect();
+    // The travelling stage is CSS-scaled between Home and About. Convert the
+    // screen projection back to its local CSS pixels before placing the overlay.
+    const localX = viewport.clientWidth / host.width;
+    const localY = viewport.clientHeight / host.height;
     const camPos = camera.getPosition();
     transform.transformPoint(headLocal, headWorld);
     const headDistance = camPos.distance(headWorld);
     let facing = true;
+    // Preserve the Home calibration and blend the vertical correction with the
+    // same pose that drives the camera framing, including intermediate scroll states.
+    const eyeHeight = -0.103 + 0.016 * Math.max(0, Math.min(1, pose));
     EYE_ANCHORS.forEach((anchor, index) => {
+      anchor.y = eyeHeight;
       transform.transformPoint(anchor, eyeWorld);
       // Eyes only show while they are on the camera side of the head.
       if (camPos.distance(eyeWorld) > headDistance - 0.06) facing = false;
       camera.camera.worldToScreen(eyeWorld, eyeScreen);
-      eyeEls[index].style.left = `${box.left - host.left + eyeScreen.x * box.width / canvas.clientWidth}px`;
-      eyeEls[index].style.top = `${box.top - host.top + eyeScreen.y * box.height / canvas.clientHeight}px`;
+      eyeEls[index].style.left = `${(box.left - host.left + eyeScreen.x * box.width / canvas.clientWidth) * localX}px`;
+      eyeEls[index].style.top = `${(box.top - host.top + eyeScreen.y * box.height / canvas.clientHeight) * localY}px`;
     });
     eyes.classList.toggle("is-visible", facing);
   }
@@ -320,7 +328,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     if (dizzyStart) {
       const t = (performance.now() - dizzyStart) / DIZZY_MS;
       if (t >= 1 || motionQuery.matches) { dizzyStart = 0; wobble = 0; eyes.classList.remove("is-visible"); }
-      else { wobble = Math.sin(t * DIZZY_MS / 1000 * Math.PI * 3) * 7 * (1 - t); placeEyes(); }
+      else { wobble = Math.sin(t * DIZZY_MS / 1000 * Math.PI * 3) * 7 * (1 - t); }
       active = true;
     }
 
@@ -401,6 +409,7 @@ export function setupModelInteractions({ app, rig, canvas, viewport }) {
     // 6. Apply rotation and request frame if active
     if (active) {
       applyOrientation();
+      if (dizzyStart) placeEyes();
     }
   }
 
