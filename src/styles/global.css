@@ -913,10 +913,9 @@ img {
   min-width: 0;
 }
 .project-media {
-  /* Rectangular frame, ~10% shorter than 4:3: the inset screenshot runs
-     to the bottom edge and expands to fill the frame on hover. */
+  /* Compact landscape preview keeps the page header prominent with less blank space. */
   height: auto;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   container-type: inline-size;
   display: block;
   overflow: hidden;
