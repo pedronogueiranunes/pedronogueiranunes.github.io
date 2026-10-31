@@ -22,7 +22,9 @@ import { onPageLoad } from '../scripts/page-lifecycle';
 onPageLoad(scope => {
  const videos=[...document.querySelectorAll<HTMLVideoElement>('[data-project-video]')];
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const touch=matchMedia('(hover: none)');
+ const touch=matchMedia('(max-width: 768px), (hover: none)');
+ const exposure=new Map<HTMLVideoElement,number>();
+ const targets=new Map<Element,HTMLVideoElement>();
  const visible=new Set<HTMLVideoElement>();
  const hovered=new Set<HTMLVideoElement>();
  const paused=new Set<HTMLVideoElement>();
@@ -40,15 +42,30 @@ onPageLoad(scope => {
   },reduced.matches?0:180);
  };
  const load=(video:HTMLVideoElement)=>{if(!video.getAttribute('src')) {video.src=video.dataset.src!;video.load();}};
- const play=(video:HTMLVideoElement)=>{if(document.hidden || reduced.matches || !visible.has(video) || paused.has(video))return; if(current && current!==video)current.pause(); current=video; load(video);video.playbackRate=video.dataset.projectVideo==='preview'?2:1;video.play().catch(()=>{});};
+ const play=(video:HTMLVideoElement)=>{if(document.hidden || reduced.matches || !visible.has(video) || paused.has(video))return; if(current && current!==video)current.pause(); if(current===video&&!video.paused)return; current=video; cancelReset(video); load(video);video.playbackRate=video.dataset.projectVideo==='preview'?2:1;video.play().catch(()=>{});};
  const update=()=>{
   const eligible=videos.filter(v=>visible.has(v)&&!paused.has(v)&&(v.dataset.projectVideo==='full'||touch.matches||hovered.has(v)));
-  if(current&&!eligible.includes(current)){current.pause();current=undefined;}
-  if(eligible.length)play(eligible[0]);
+  // Mobile follows the most exposed thumbnail, rather than DOM order. Keep
+  // the current video on equal exposure to avoid flicker between adjacent cards.
+  if(touch.matches)eligible.sort((a,b)=>(exposure.get(b)??0)-(exposure.get(a)??0)||(a===current?-1:b===current?1:0));
+  const next=eligible[0];
+  if(current&&current!==next){current.pause();current=undefined;}
+  if(next)play(next);
  };
- const observer=new IntersectionObserver(entries=>{for(const e of entries){const v=e.target as HTMLVideoElement;if(e.isIntersecting&&e.intersectionRatio>=.25){visible.add(v);if(v.controls)load(v);}else{visible.delete(v);v.pause();}} update();},{threshold:[0,.25]});
+ const observer=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+   const video=targets.get(entry.target);
+   if(!video)continue;
+   exposure.set(video,entry.intersectionRatio);
+   if(entry.isIntersecting&&entry.intersectionRatio>=.25){visible.add(video);if(video.controls)load(video);}
+   else{visible.delete(video);video.pause();}
+  }
+  update();
+ },{threshold:Array.from({length:21},(_,i)=>i/20)});
  videos.forEach(video=>{
-  observer.observe(video);
+  const target=video.closest('.project-media') ?? video;
+  targets.set(target,video);
+  observer.observe(target);
   if(video.dataset.projectVideo==='preview'){
    const frame=video.parentElement!;
    frame.style.backgroundImage=`url("${video.poster}")`;
@@ -57,14 +74,15 @@ onPageLoad(scope => {
   }
   const card=video.closest('.project-card') ?? video;
   card.addEventListener('pointerenter',()=>{cancelReset(video);hovered.add(video);update();},{signal:scope.signal});
-  card.addEventListener('pointerleave',()=>{hovered.delete(video);update();reset(video);},{signal:scope.signal});
+  card.addEventListener('pointerleave',()=>{hovered.delete(video);update();if(!touch.matches)reset(video);},{signal:scope.signal});
   card.addEventListener('focusin',()=>{cancelReset(video);hovered.add(video);update();},{signal:scope.signal});
-  card.addEventListener('focusout',()=>{hovered.delete(video);update();reset(video);},{signal:scope.signal});
+  card.addEventListener('focusout',()=>{hovered.delete(video);update();if(!touch.matches)reset(video);},{signal:scope.signal});
   video.addEventListener('pause',()=>{if(video.controls&&visible.has(video)&&current===video&&!document.hidden)paused.add(video);},{signal:scope.signal});
   video.addEventListener('play',()=>{paused.delete(video);if(current&&current!==video)current.pause();current=video;},{signal:scope.signal});
  });
  document.addEventListener('visibilitychange',()=>{if(document.hidden){current?.pause();current=undefined;}else update();},{signal:scope.signal});
  reduced.addEventListener('change',()=>{if(reduced.matches){current?.pause();current=undefined;}else update();},{signal:scope.signal});
+ touch.addEventListener('change',update,{signal:scope.signal});
  scope.cleanup(()=>{observer.disconnect();videos.forEach(v=>v.pause());});
 });
 </script>
