@@ -15,7 +15,7 @@ import Comparison from "../components/Comparison.astro";
 import Process from "../components/Process.astro";
 import { problems } from "../data/home";
 import { homeGraph, jsonLd } from "../data/seo";
-const projects = (await getCollection("projects")).sort(
+const projects = (await getCollection("projects")).filter(project => !project.data.collection).sort(
   (a, b) => a.data.order - b.data.order,
 );
 const posts = (await getCollection("posts")).sort(
