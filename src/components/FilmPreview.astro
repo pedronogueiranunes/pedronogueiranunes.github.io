@@ -1,0 +1,85 @@
+---
+interface Film { youtubeId: string; title: string; duration: string; poster: string }
+interface Props { films: Film[]; type: string }
+const { films, type } = Astro.props;
+const first = films[0];
+---
+<span class="film-preview" data-film-preview data-films={JSON.stringify(films)}>
+  <span hidden>{films.map(film => <span data-film-label>{film.title}</span>)}</span>
+  <img class="film-preview__image" src={first.poster} width="960" height="540" alt="" loading="lazy" decoding="async" />
+  <span class="film-preview__top"><span>{type}</span><span data-film-duration>{first.duration}</span></span>
+  <span class="film-preview__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="m9 5 11 7-11 7Z" fill="currentColor" /></svg></span>
+  <span class="film-preview__bottom">
+    <span class="film-preview__title" data-film-title>{first.title}</span>
+    <span class="film-preview__navigation"><span>{films.length > 1 ? "Move to browse" : "View film"}</span><span><span data-film-index>01</span> / {String(films.length).padStart(2, '0')}</span></span>
+    <span class="film-preview__segments" aria-hidden="true">{films.map((_, i) => <span class:list={{ 'is-current': i === 0 }} />)}</span>
+  </span>
+  {films.length > 1 && <span class="sr-only">Use left and right arrows to browse videos.</span>}
+</span>
+<style is:global>
+.project-card--film .project-media { aspect-ratio: 16 / 9; background: #111; }
+.project-card--film .project-media::before { display: none; }
+.film-preview { position: absolute; inset: 0; display: block; overflow: hidden; color: #fff; background: #111; }
+.film-preview__image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 400ms cubic-bezier(.16,1,.3,1); }
+.film-preview::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(0 0 0 / .65), transparent 35%, transparent 45%, rgb(0 0 0 / .85)); pointer-events: none; }
+.film-preview__top, .film-preview__bottom { position: absolute; z-index: 1; left: 16px; right: 16px; }
+.film-preview__top { top: 14px; display: flex; justify-content: space-between; gap: 12px; font: 500 11px/1.4 var(--font-mono); }
+.film-preview__bottom { bottom: 14px; }
+.film-preview__title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 600 15px/1.3 var(--font-body); max-width: 85%; margin-bottom: 8px; }
+.film-preview__navigation { display: flex; justify-content: space-between; gap: 12px; font: 500 10px/1.4 var(--font-mono); }
+.film-preview__segments { display: flex; gap: 4px; margin-top: 9px; }
+.film-preview__segments > span { flex: 1; height: 3px; background: rgb(255 255 255 / .35); transition: background 150ms; }
+.film-preview__segments > .is-current { background: #fff; }
+.film-preview__play { position: absolute; z-index: 2; left: var(--film-x, 50%); top: var(--film-y, 46%); transform: translate(-50%,-50%); display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid rgb(255 255 255 / .85); border-radius: 50%; background: rgb(0 0 0 / .6); pointer-events: none; transition: background 180ms; }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .project-card--film .project-media:is(:hover,:focus-visible) .film-preview__image { transform: scale(1.035); }
+  .project-card--film .project-media:is(:hover,:focus-visible) .film-preview__play { background: var(--accent); }
+}
+@media (prefers-reduced-motion:reduce) { .film-preview *, .film-preview::after { transition: none; } }
+@media (max-width:768px) {
+  [data-view="list"] .film-preview__top, [data-view="list"] .film-preview__bottom { display: none; }
+  [data-view="list"] .film-preview__play { width: 32px; height: 32px; }
+}
+</style>
+<script>
+import { onPageLoad } from '../scripts/page-lifecycle';
+onPageLoad(scope => {
+ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+ document.querySelectorAll<HTMLElement>('[data-film-preview]').forEach(preview => {
+  const films = JSON.parse(preview.dataset.films!) as { title: string; duration: string; poster: string }[];
+  preview.querySelectorAll('[data-film-label]').forEach((label, i) => { films[i].title = label.textContent || films[i].title; });
+  const link = preview.closest('a')!;
+  const image = preview.querySelector<HTMLImageElement>('img')!;
+  let selected = 0, token = 0;
+  const show = async (index: number) => {
+   selected = index;
+   const version = ++token;
+   const next = new Image(); next.src = films[index].poster;
+   try { await next.decode(); } catch { return; }
+   if (version !== token || scope.signal.aborted) return;
+   image.src = next.src;
+   preview.querySelector('[data-film-title]')!.textContent = films[index].title;
+   preview.querySelector('[data-film-duration]')!.textContent = films[index].duration;
+   preview.querySelector('[data-film-index]')!.textContent = String(index + 1).padStart(2, '0');
+   preview.querySelectorAll('.film-preview__segments > span').forEach((el, i) => el.classList.toggle('is-current', i === index));
+  };
+  link.addEventListener('pointermove', e => {
+   if (e.pointerType !== 'mouse' || reduced.matches) return;
+   const r = preview.getBoundingClientRect();
+   const x = Math.max(0, Math.min(r.width, e.clientX - r.left));
+   preview.style.setProperty('--film-x', `${Math.max(28, Math.min(r.width - 28, x))}px`);
+   preview.style.setProperty('--film-y', `${Math.max(55, Math.min(r.height - 80, e.clientY - r.top))}px`);
+   const index = Math.min(films.length - 1, Math.floor(x / r.width * films.length));
+   if (index !== selected) void show(index);
+  }, { signal: scope.signal });
+  const reset = () => { ++token; selected = -1; void show(0); preview.style.removeProperty('--film-x'); preview.style.removeProperty('--film-y'); };
+  link.addEventListener('pointerleave', reset, { signal: scope.signal });
+  link.addEventListener('blur', reset, { signal: scope.signal });
+  link.addEventListener('keydown', e => {
+   if (films.length < 2 || !['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+   e.preventDefault();
+   void show(e.key === 'Home' ? 0 : e.key === 'End' ? films.length - 1 : (selected + (e.key === 'ArrowRight' ? 1 : -1) + films.length) % films.length);
+  }, { signal: scope.signal });
+ });
+});
+</script>
