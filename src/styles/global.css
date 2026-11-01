@@ -4965,8 +4965,9 @@ details[open] > summary .faq-icon-minus {
 }
 [data-projects-filter][data-view="list"] .all-projects .project-card {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 32px;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
 }
 [data-projects-filter][data-view="list"] .all-projects .project-heading {
   min-height: 0;
@@ -7878,3 +7879,15 @@ main h1[tabindex="-1"]:focus {
 .calendar-alternative > a { transition:background-color 200ms ease; }
 .contact-page .calendar-alternative > a:is(:hover,:focus-visible) { background:color-mix(in srgb, var(--surface) 96%, var(--accent) 4%); }
 @media (prefers-reduced-motion:reduce) { .calendar-alternative > a { transition:none; } }
+
+/* Compact horizontal rows in the Projects list. */
+[data-projects-filter][data-view="list"] .all-projects .project-card h3 { font-size: 24px; }
+[data-projects-filter][data-view="list"] .all-projects .project-metrics { padding-top: 10px; }
+[data-projects-filter][data-view="list"] .all-projects .project-metrics dd { font-size: 28px; }
+@media (max-width: 768px) {
+  [data-projects-filter][data-view="list"] .all-projects .project-card { display: grid; grid-template-columns: minmax(100px, 30%) minmax(0, 1fr); gap: 16px; align-items: start; }
+  [data-projects-filter][data-view="list"] .all-projects .project-card h3 { font-size: 20px; }
+  [data-projects-filter][data-view="list"] .all-projects .project-body { padding: 0; gap: 12px; }
+  [data-projects-filter][data-view="list"] .all-projects .project-metrics { gap: 12px; }
+  [data-projects-filter][data-view="list"] .all-projects .project-metrics dd { font-size: 24px; }
+}

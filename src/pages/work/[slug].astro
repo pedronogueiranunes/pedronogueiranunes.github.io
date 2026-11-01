@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import FilmGallery from "../../components/FilmGallery.astro";
 import ProjectVideo from "../../components/ProjectVideo.astro";
 import { videoFor } from "../../data/project-videos";
 import PixelTrail from "../../components/PixelTrail.astro";
@@ -49,7 +50,7 @@ const caseSchema = jsonLd({
   name: p.title,
   description: p.summary,
   url: `${ORIGIN}/work/${caseSlug}/`,
-  image: p.collection ? `${ORIGIN}${p.cover || p.image}` : `${ORIGIN}/assets/og/${caseSlug}.jpg`,
+  image: (p.collection || p.archivedWebsite || p.films.length > 0) ? `${ORIGIN}${p.cover || p.image}` : `${ORIGIN}/assets/og/${caseSlug}.jpg`,
   ...(p.year ? { dateCreated: p.year } : {}),
   creator: { "@id": PERSON_ID },
   keywords: [p.category, ...p.tools].join(", "),
@@ -64,25 +65,42 @@ const metrics = isBsa
   : p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={p.collection ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
+<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={(p.collection || p.archivedWebsite || p.films.length > 0) ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
   <script type="application/ld+json" slot="head" set:html={caseSchema} />
-  {p.collection ? (
+  {p.films.length > 0 ? (
     <>
-      <section class="art-collection page-section">
-        <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href="/projects?category=2">Projects</a><span>/</span><span>{p.category}</span></nav>
+      <section class="film-case page-section">
+        <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href="/projects?category=3">Projects</a><span>/</span><span>Music &amp; Audiovisual</span></nav>
         <h1>{p.title}</h1>
+        <div class="film-case__details"><span>{p.filmType}</span><span>{p.practice}</span>{p.year && <span>{p.year}</span>}</div>
+        <p class="film-case__summary">{p.summary}</p>
+        <FilmGallery films={p.films} />
+      </section>
+      <RelatedProjects title="More films and performances." eyebrow="Music & Audiovisual" projects={related.filter(other => other.data.films.length > 0).sort((a,b) => Number(b.data.filmType === p.filmType) - Number(a.data.filmType === p.filmType))} />
+    </>
+  ) : (p.collection || p.archivedWebsite) ? (
+    <>
+      <section class:list={["art-collection page-section", { "archived-website-case": p.archivedWebsite }]}>
+        <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href={`/projects?category=${p.kinds?.[0] || "2"}`}>Projects</a><span>/</span><span>{p.category}</span></nav>
+        <h1>{p.title}</h1>
+        {p.studio && <p class="case-studio mono">{p.studio}</p>}
+        {p.summary && <p>{p.summary}</p>}
         <div class="art-collection-grid">
           {p.gallery.map((piece) => (
             <figure>
-              <a href={piece.src} target="_blank" rel="noopener" aria-label={piece.alt}>
+              {piece.video ? (
+                <video controls playsinline preload="none" poster={piece.src} aria-label={piece.alt}>
+                  <source src={piece.video} type="video/mp4" />
+                </video>
+              ) : <a href={piece.src} target="_blank" rel="noopener" aria-label={piece.alt}>
                 <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), 50vw" loading="lazy" />
-              </a>
+              </a>}
               {piece.caption && <figcaption>{piece.caption}</figcaption>}
             </figure>
           ))}
         </div>
       </section>
-      <RelatedProjects projects={related.filter(other => other.data.collection)} />
+      <RelatedProjects title={p.archivedWebsite ? "More websites from SUPERFLUID." : undefined} eyebrow={p.archivedWebsite ? "SUPERFLUID" : undefined} projects={related.filter(other => p.archivedWebsite ? other.data.archivedWebsite : other.data.collection)} />
     </>
   ) : (
     <>
@@ -304,12 +322,20 @@ const metrics = isBsa
 </Base>
 
 <style>
+  .film-case { padding-top: clamp(140px, 15vw, 190px); padding-bottom: 80px; max-width: 1160px; margin-inline: auto; }
+  .film-case h1 { margin: 28px 0 24px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
+  .film-case__details { display: flex; flex-wrap: wrap; gap: 12px 24px; color: var(--text-secondary); font: 500 13px/1.5 var(--font-mono); margin-bottom: 20px; }
+  .film-case__summary { max-width: 70ch; margin-bottom: 40px; }
   .art-collection { padding-top: clamp(128px, 14vw, 184px); padding-bottom: 80px; }
   .art-collection h1 { margin: 24px 0 48px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
   .art-collection-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+  .archived-website-case .art-collection-grid { grid-template-columns: minmax(0, 1fr); }
+  .archived-website-case .case-studio { margin: -24px 0 12px; }
+  .archived-website-case > p:last-of-type { margin-bottom: 32px; }
   .art-collection-grid figure { margin: 0; }
   .art-collection-grid a { display: block; border-radius: 14px; overflow: hidden; }
   .art-collection-grid :global(img) { display: block; width: 100%; height: auto; }
+  .art-collection-grid video { display: block; width: 100%; height: auto; border-radius: 14px; }
   .art-collection-grid figcaption { padding-top: 12px; }
   @media (max-width: 768px) { .art-collection-grid { grid-template-columns: 1fr; gap: 24px; } }
 </style>

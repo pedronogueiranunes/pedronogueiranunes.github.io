@@ -257,17 +257,20 @@
   "/assets/collections/seumenu-post-art/18499878.webp": {
     "width": 1600,
     "height": 1052,
-    "srcset": "/assets/collections/seumenu-post-art/18499878--w640.webp 640w, /assets/collections/seumenu-post-art/18499878--w960.webp 960w, /assets/collections/seumenu-post-art/18499878.webp 1600w"
+    "srcset": "/assets/collections/seumenu-post-art/18499878--w640.webp 640w, /assets/collections/seumenu-post-art/18499878--w960.webp 960w, /assets/collections/seumenu-post-art/18499878.webp 1600w",
+    "dominant": "#f80818"
   },
   "/assets/collections/seumenu-post-art/18499847.webp": {
     "width": 1600,
     "height": 1600,
-    "srcset": "/assets/collections/seumenu-post-art/18499847--w640.webp 640w, /assets/collections/seumenu-post-art/18499847--w960.webp 960w, /assets/collections/seumenu-post-art/18499847.webp 1600w"
+    "srcset": "/assets/collections/seumenu-post-art/18499847--w640.webp 640w, /assets/collections/seumenu-post-art/18499847--w960.webp 960w, /assets/collections/seumenu-post-art/18499847.webp 1600w",
+    "dominant": "#f80828"
   },
   "/assets/collections/seumenu-post-art/16087797.webp": {
     "width": 1600,
     "height": 1600,
-    "srcset": "/assets/collections/seumenu-post-art/16087797--w640.webp 640w, /assets/collections/seumenu-post-art/16087797--w960.webp 960w, /assets/collections/seumenu-post-art/16087797.webp 1600w"
+    "srcset": "/assets/collections/seumenu-post-art/16087797--w640.webp 640w, /assets/collections/seumenu-post-art/16087797--w960.webp 960w, /assets/collections/seumenu-post-art/16087797.webp 1600w",
+    "dominant": "#080808"
   },
   "/assets/collections/seumenu-post-art/6985383.webp": {
     "width": 1600,
@@ -332,27 +335,32 @@
   "/assets/collections/seumenu-stickers/6733853.webp": {
     "width": 1600,
     "height": 1200,
-    "srcset": "/assets/collections/seumenu-stickers/6733853--w640.webp 640w, /assets/collections/seumenu-stickers/6733853--w960.webp 960w, /assets/collections/seumenu-stickers/6733853.webp 1600w"
+    "srcset": "/assets/collections/seumenu-stickers/6733853--w640.webp 640w, /assets/collections/seumenu-stickers/6733853--w960.webp 960w, /assets/collections/seumenu-stickers/6733853.webp 1600w",
+    "dominant": "#f8b878"
   },
   "/assets/collections/seumenu-stickers/6733851.webp": {
     "width": 1600,
     "height": 1200,
-    "srcset": "/assets/collections/seumenu-stickers/6733851--w640.webp 640w, /assets/collections/seumenu-stickers/6733851--w960.webp 960w, /assets/collections/seumenu-stickers/6733851.webp 1600w"
+    "srcset": "/assets/collections/seumenu-stickers/6733851--w640.webp 640w, /assets/collections/seumenu-stickers/6733851--w960.webp 960w, /assets/collections/seumenu-stickers/6733851.webp 1600w",
+    "dominant": "#f8e8a8"
   },
   "/assets/collections/seumenu-stickers/6733846.webp": {
     "width": 1600,
     "height": 1200,
-    "srcset": "/assets/collections/seumenu-stickers/6733846--w640.webp 640w, /assets/collections/seumenu-stickers/6733846--w960.webp 960w, /assets/collections/seumenu-stickers/6733846.webp 1600w"
+    "srcset": "/assets/collections/seumenu-stickers/6733846--w640.webp 640w, /assets/collections/seumenu-stickers/6733846--w960.webp 960w, /assets/collections/seumenu-stickers/6733846.webp 1600w",
+    "dominant": "#f8b8b8"
   },
   "/assets/collections/fertili-digital-art/18499614.webp": {
     "width": 1500,
     "height": 500,
-    "srcset": "/assets/collections/fertili-digital-art/18499614--w640.webp 640w, /assets/collections/fertili-digital-art/18499614--w960.webp 960w, /assets/collections/fertili-digital-art/18499614.webp 1500w"
+    "srcset": "/assets/collections/fertili-digital-art/18499614--w640.webp 640w, /assets/collections/fertili-digital-art/18499614--w960.webp 960w, /assets/collections/fertili-digital-art/18499614.webp 1500w",
+    "dominant": "#f8f8f8"
   },
   "/assets/collections/fertili-digital-art/18499512.webp": {
     "width": 1600,
     "height": 1600,
-    "srcset": "/assets/collections/fertili-digital-art/18499512--w640.webp 640w, /assets/collections/fertili-digital-art/18499512--w960.webp 960w, /assets/collections/fertili-digital-art/18499512.webp 1600w"
+    "srcset": "/assets/collections/fertili-digital-art/18499512--w640.webp 640w, /assets/collections/fertili-digital-art/18499512--w960.webp 960w, /assets/collections/fertili-digital-art/18499512.webp 1600w",
+    "dominant": "#f8f8f8"
   },
   "/assets/collections/fertili-digital-art/18498523.webp": {
     "width": 1600,
@@ -382,6 +390,236 @@
   "/assets/collections/fertili-digital-art/5685482.webp": {
     "width": 1600,
     "height": 1200,
-    "srcset": "/assets/collections/fertili-digital-art/5685482--w640.webp 640w, /assets/collections/fertili-digital-art/5685482--w960.webp 960w, /assets/collections/fertili-digital-art/5685482.webp 1600w"
+    "srcset": "/assets/collections/fertili-digital-art/5685482--w640.webp 640w, /assets/collections/fertili-digital-art/5685482--w960.webp 960w, /assets/collections/fertili-digital-art/5685482.webp 1600w",
+    "dominant": "#081838"
+  },
+  "/assets/collections/vasta-illustrations/18499918.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/vasta-illustrations/18499918--w640.webp 640w, /assets/collections/vasta-illustrations/18499918--w960.webp 960w, /assets/collections/vasta-illustrations/18499918.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/vasta-illustrations/6620006.webp": {
+    "width": 1600,
+    "height": 1200,
+    "srcset": "/assets/collections/vasta-illustrations/6620006--w640.webp 640w, /assets/collections/vasta-illustrations/6620006--w960.webp 960w, /assets/collections/vasta-illustrations/6620006.webp 1600w",
+    "dominant": "#f8d868"
+  },
+  "/assets/collections/vasta-illustrations/6620001.webp": {
+    "width": 1600,
+    "height": 1200,
+    "srcset": "/assets/collections/vasta-illustrations/6620001--w640.webp 640w, /assets/collections/vasta-illustrations/6620001--w960.webp 960w, /assets/collections/vasta-illustrations/6620001.webp 1600w",
+    "dominant": "#082858"
+  },
+  "/assets/collections/vasta-illustrations/6620000.webp": {
+    "width": 1600,
+    "height": 1200,
+    "srcset": "/assets/collections/vasta-illustrations/6620000--w640.webp 640w, /assets/collections/vasta-illustrations/6620000--w960.webp 960w, /assets/collections/vasta-illustrations/6620000.webp 1600w",
+    "dominant": "#185898"
+  },
+  "/assets/collections/fertili-app-campaigns/app-launch.webp": {
+    "width": 1600,
+    "height": 1147,
+    "srcset": "/assets/collections/fertili-app-campaigns/app-launch--w640.webp 640w, /assets/collections/fertili-app-campaigns/app-launch--w960.webp 960w, /assets/collections/fertili-app-campaigns/app-launch.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-app-campaigns/weighing.webp": {
+    "width": 1600,
+    "height": 1600,
+    "srcset": "/assets/collections/fertili-app-campaigns/weighing--w640.webp 640w, /assets/collections/fertili-app-campaigns/weighing--w960.webp 960w, /assets/collections/fertili-app-campaigns/weighing.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-app-campaigns/areas.webp": {
+    "width": 1600,
+    "height": 1600,
+    "srcset": "/assets/collections/fertili-app-campaigns/areas--w640.webp 640w, /assets/collections/fertili-app-campaigns/areas--w960.webp 960w, /assets/collections/fertili-app-campaigns/areas.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-app-campaigns/inteligencia-pecuaria.webp": {
+    "width": 1500,
+    "height": 500,
+    "srcset": "/assets/collections/fertili-app-campaigns/inteligencia-pecuaria--w640.webp 640w, /assets/collections/fertili-app-campaigns/inteligencia-pecuaria--w960.webp 960w, /assets/collections/fertili-app-campaigns/inteligencia-pecuaria.webp 1500w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-mercado-campaigns/market-ad.webp": {
+    "width": 1600,
+    "height": 1147,
+    "srcset": "/assets/collections/fertili-mercado-campaigns/market-ad--w640.webp 640w, /assets/collections/fertili-mercado-campaigns/market-ad--w960.webp 960w, /assets/collections/fertili-mercado-campaigns/market-ad.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-mercado-campaigns/market-ad-variant.webp": {
+    "width": 1600,
+    "height": 1147,
+    "srcset": "/assets/collections/fertili-mercado-campaigns/market-ad-variant--w640.webp 640w, /assets/collections/fertili-mercado-campaigns/market-ad-variant--w960.webp 960w, /assets/collections/fertili-mercado-campaigns/market-ad-variant.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-product-web/reports.webp": {
+    "width": 1600,
+    "height": 2265,
+    "srcset": "/assets/collections/fertili-product-web/reports--w640.webp 640w, /assets/collections/fertili-product-web/reports--w960.webp 960w, /assets/collections/fertili-product-web/reports.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-product-web/livestock.webp": {
+    "width": 1600,
+    "height": 2265,
+    "srcset": "/assets/collections/fertili-product-web/livestock--w640.webp 640w, /assets/collections/fertili-product-web/livestock--w960.webp 960w, /assets/collections/fertili-product-web/livestock.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-product-web/website.webp": {
+    "width": 1600,
+    "height": 2868,
+    "srcset": "/assets/collections/fertili-product-web/website--w640.webp 640w, /assets/collections/fertili-product-web/website--w960.webp 960w, /assets/collections/fertili-product-web/website.webp 1600w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/collections/fertili-mercado-campaigns/commercial-poster.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/collections/fertili-mercado-campaigns/commercial-poster--w640.webp 640w, /assets/collections/fertili-mercado-campaigns/commercial-poster.webp 1280w",
+    "dominant": "#f8f8f8"
+  },
+  "/assets/projects/digitale-enfermagem/website.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/digitale-enfermagem/website-640.webp 640w, /assets/projects/digitale-enfermagem/website-960.webp 960w, /assets/projects/digitale-enfermagem/website.webp 1600w"
+  },
+  "/assets/projects/instituto-dea/website.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/instituto-dea/website-640.webp 640w, /assets/projects/instituto-dea/website-960.webp 960w, /assets/projects/instituto-dea/website.webp 1600w"
+  },
+  "/assets/projects/digitale-steinbeis/website.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/digitale-steinbeis/website-640.webp 640w, /assets/projects/digitale-steinbeis/website-960.webp 960w, /assets/projects/digitale-steinbeis/website.webp 1600w"
+  },
+  "/assets/projects/clube-humboldt/website.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/clube-humboldt/website-640.webp 640w, /assets/projects/clube-humboldt/website-960.webp 960w, /assets/projects/clube-humboldt/website.webp 1600w"
+  },
+  "/assets/projects/digitale-brasil/website.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/digitale-brasil/website-640.webp 640w, /assets/projects/digitale-brasil/website-960.webp 960w, /assets/projects/digitale-brasil/website.webp 1600w"
+  },
+  "/assets/films/UOSxOHvN-V8.webp": {
+    "width": 336,
+    "height": 189,
+    "srcset": "/assets/films/UOSxOHvN-V8-320.webp 320w, /assets/films/UOSxOHvN-V8.webp 336w"
+  },
+  "/assets/films/_bv3XKMFNWM.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/_bv3XKMFNWM-320.webp 320w, /assets/films/_bv3XKMFNWM-640.webp 640w, /assets/films/_bv3XKMFNWM-960.webp 960w, /assets/films/_bv3XKMFNWM.webp 1280w"
+  },
+  "/assets/films/CApRuQGe0Xc.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/CApRuQGe0Xc-320.webp 320w, /assets/films/CApRuQGe0Xc-640.webp 640w, /assets/films/CApRuQGe0Xc-960.webp 960w, /assets/films/CApRuQGe0Xc.webp 1280w"
+  },
+  "/assets/films/5LAvc_T9Lj4.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/5LAvc_T9Lj4-320.webp 320w, /assets/films/5LAvc_T9Lj4-640.webp 640w, /assets/films/5LAvc_T9Lj4-960.webp 960w, /assets/films/5LAvc_T9Lj4.webp 1280w"
+  },
+  "/assets/films/PIdjvgO7i-M.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/PIdjvgO7i-M-320.webp 320w, /assets/films/PIdjvgO7i-M-640.webp 640w, /assets/films/PIdjvgO7i-M-960.webp 960w, /assets/films/PIdjvgO7i-M.webp 1280w"
+  },
+  "/assets/films/oJXLGAU99oc.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/oJXLGAU99oc-320.webp 320w, /assets/films/oJXLGAU99oc-640.webp 640w, /assets/films/oJXLGAU99oc-960.webp 960w, /assets/films/oJXLGAU99oc.webp 1280w"
+  },
+  "/assets/films/j-093biuUs4.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/j-093biuUs4-320.webp 320w, /assets/films/j-093biuUs4-640.webp 640w, /assets/films/j-093biuUs4-960.webp 960w, /assets/films/j-093biuUs4.webp 1280w"
+  },
+  "/assets/films/3f7U-Lh_OYQ.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/3f7U-Lh_OYQ-320.webp 320w, /assets/films/3f7U-Lh_OYQ-640.webp 640w, /assets/films/3f7U-Lh_OYQ-960.webp 960w, /assets/films/3f7U-Lh_OYQ.webp 1280w"
+  },
+  "/assets/films/sHSGUtiRf1E.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/sHSGUtiRf1E-320.webp 320w, /assets/films/sHSGUtiRf1E-640.webp 640w, /assets/films/sHSGUtiRf1E-960.webp 960w, /assets/films/sHSGUtiRf1E.webp 1280w"
+  },
+  "/assets/films/5cWQCRhFdcg.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/5cWQCRhFdcg-320.webp 320w, /assets/films/5cWQCRhFdcg-640.webp 640w, /assets/films/5cWQCRhFdcg-960.webp 960w, /assets/films/5cWQCRhFdcg.webp 1280w"
+  },
+  "/assets/films/RnAlv3XgKPo.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/RnAlv3XgKPo-320.webp 320w, /assets/films/RnAlv3XgKPo-640.webp 640w, /assets/films/RnAlv3XgKPo-960.webp 960w, /assets/films/RnAlv3XgKPo.webp 1280w"
+  },
+  "/assets/films/iTyiydyVVVM.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/iTyiydyVVVM-320.webp 320w, /assets/films/iTyiydyVVVM-640.webp 640w, /assets/films/iTyiydyVVVM-960.webp 960w, /assets/films/iTyiydyVVVM.webp 1280w"
+  },
+  "/assets/films/jspMl9LtyZ8.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/jspMl9LtyZ8-320.webp 320w, /assets/films/jspMl9LtyZ8-640.webp 640w, /assets/films/jspMl9LtyZ8-960.webp 960w, /assets/films/jspMl9LtyZ8.webp 1280w"
+  },
+  "/assets/films/MBk7290eMAM.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/MBk7290eMAM-320.webp 320w, /assets/films/MBk7290eMAM-640.webp 640w, /assets/films/MBk7290eMAM-960.webp 960w, /assets/films/MBk7290eMAM.webp 1280w"
+  },
+  "/assets/films/F6JByk61fXA.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/F6JByk61fXA-320.webp 320w, /assets/films/F6JByk61fXA-640.webp 640w, /assets/films/F6JByk61fXA-960.webp 960w, /assets/films/F6JByk61fXA.webp 1280w"
+  },
+  "/assets/films/CNedVLkszb4.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/CNedVLkszb4-320.webp 320w, /assets/films/CNedVLkszb4-640.webp 640w, /assets/films/CNedVLkszb4-960.webp 960w, /assets/films/CNedVLkszb4.webp 1280w"
+  },
+  "/assets/films/LEMo_L7eRBc.webp": {
+    "width": 336,
+    "height": 189,
+    "srcset": "/assets/films/LEMo_L7eRBc-320.webp 320w, /assets/films/LEMo_L7eRBc.webp 336w"
+  },
+  "/assets/films/-CPQCH5USZQ.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/-CPQCH5USZQ-320.webp 320w, /assets/films/-CPQCH5USZQ-640.webp 640w, /assets/films/-CPQCH5USZQ-960.webp 960w, /assets/films/-CPQCH5USZQ.webp 1280w"
+  },
+  "/assets/films/kG71QRTZ9Ag.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/kG71QRTZ9Ag-320.webp 320w, /assets/films/kG71QRTZ9Ag-640.webp 640w, /assets/films/kG71QRTZ9Ag-960.webp 960w, /assets/films/kG71QRTZ9Ag.webp 1280w"
+  },
+  "/assets/films/c3ifw2XVwYw.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/c3ifw2XVwYw-320.webp 320w, /assets/films/c3ifw2XVwYw-640.webp 640w, /assets/films/c3ifw2XVwYw-960.webp 960w, /assets/films/c3ifw2XVwYw.webp 1280w"
+  },
+  "/assets/films/PNJ1Xo7BtZc.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/PNJ1Xo7BtZc-320.webp 320w, /assets/films/PNJ1Xo7BtZc-640.webp 640w, /assets/films/PNJ1Xo7BtZc-960.webp 960w, /assets/films/PNJ1Xo7BtZc.webp 1280w"
+  },
+  "/assets/films/RuyR6ut9dDE.webp": {
+    "width": 336,
+    "height": 189,
+    "srcset": "/assets/films/RuyR6ut9dDE-320.webp 320w, /assets/films/RuyR6ut9dDE.webp 336w"
+  },
+  "/assets/films/biIo85MPX58.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/biIo85MPX58-320.webp 320w, /assets/films/biIo85MPX58-640.webp 640w, /assets/films/biIo85MPX58-960.webp 960w, /assets/films/biIo85MPX58.webp 1280w"
+  },
+  "/assets/films/4cY8-A0Q45M.webp": {
+    "width": 1280,
+    "height": 720,
+    "srcset": "/assets/films/4cY8-A0Q45M-320.webp 320w, /assets/films/4cY8-A0Q45M-640.webp 640w, /assets/films/4cY8-A0Q45M-960.webp 960w, /assets/films/4cY8-A0Q45M.webp 1280w"
   }
 }

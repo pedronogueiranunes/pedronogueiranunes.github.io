@@ -1,0 +1,51 @@
+---
+import Icon from "./Icon.astro";
+interface Film { youtubeId: string; title: string; duration: string; poster: string; credits?: string }
+interface Props { films: Film[] }
+const { films } = Astro.props;
+---
+<div class="film-gallery">
+ {films.map(film => <figure>
+   <div class="film-player" data-film-player>
+    <button type="button" data-youtube-id={film.youtubeId} aria-label={`Play video: ${film.title}`}>
+      <img src={film.poster} alt="" width="960" height="540" loading="lazy" decoding="async" />
+      <span class="film-player__cta"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m9 5 11 7-11 7Z" fill="currentColor" /></svg> Play video <span>{film.duration}</span></span>
+    </button>
+   </div>
+   <figcaption><h2>{film.title}</h2>{film.credits && <p>{film.credits}</p>}<a href={`https://www.youtube.com/watch?v=${film.youtubeId}`} target="_blank" rel="noopener">Watch on YouTube <Icon name="arrow-up-right" size={16} /></a></figcaption>
+ </figure>)}
+</div>
+<style>
+ .film-gallery { display: grid; gap: 48px; }
+ figure { margin: 0; }
+ .film-player { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #111; border-radius: 16px; overflow: hidden; }
+ .film-player button { display: block; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer; color: #fff; background: #111; }
+ .film-player button[hidden] { display: none; }
+ .film-player img, .film-player :global(iframe) { display: block; width: 100%; height: 100%; border: 0; object-fit: contain; }
+ .film-player__cta { position: absolute; inset: auto 20px 20px; display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: rgb(0 0 0 / .85); border-radius: 8px; font: 600 16px/1.4 var(--font-body); }
+ .film-player__cta > span { margin-left: auto; font-family: var(--font-mono); font-size: 13px; }
+ figcaption { padding-top: 16px; }
+ figcaption h2 { font-size: clamp(20px, 3vw, 28px); margin: 0 0 10px; }
+ figcaption p { max-width: 70ch; margin-bottom: 12px; }
+ figcaption a { text-decoration: underline; text-underline-offset: 4px; display: inline-flex; min-height: 44px; align-items: center; gap: 6px; }
+</style>
+<script>
+import { onPageLoad } from '../scripts/page-lifecycle';
+onPageLoad(scope => {
+ const frames: HTMLIFrameElement[] = [];
+ document.querySelectorAll<HTMLButtonElement>('[data-youtube-id]').forEach(button => {
+  button.addEventListener('click', () => {
+   const player = button.closest<HTMLElement>('[data-film-player]')!;
+   const frame = document.createElement('iframe');
+   frame.title = button.getAttribute('aria-label')!;
+   frame.src = `https://www.youtube-nocookie.com/embed/${button.dataset.youtubeId}?autoplay=1&rel=0&origin=${encodeURIComponent(location.origin)}`;
+   frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+   frame.allowFullscreen = true;
+   frame.referrerPolicy = 'strict-origin-when-cross-origin';
+   frames.forEach(other => { if (other.isConnected) { const original = other.parentElement!.querySelector<HTMLButtonElement>('button')!; other.remove(); original.hidden = false; } });
+   frames.push(frame); player.append(frame); button.hidden = true; frame.focus();
+  }, { signal: scope.signal });
+ });
+ scope.cleanup(() => frames.forEach(frame => frame.remove()));
+});
+</script>

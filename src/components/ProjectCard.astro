@@ -1,8 +1,10 @@
 ---
 import ProjectVideo from "./ProjectVideo.astro";
+import FilmPreview from "./FilmPreview.astro";
 import { videoFor } from "../data/project-videos";
 import Icon from "./Icon.astro";
 import ResponsiveImage from "./ResponsiveImage.astro";
+import imageSizes from "../data/image-sizes.json";
 import type { CollectionEntry } from "astro:content";
 interface Props {
   project: CollectionEntry<"projects">;
@@ -10,9 +12,15 @@ interface Props {
 const { project } = Astro.props;
 const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
+const cover = p.cover || p.image;
+const artPreviews = [
+  { src: cover, alt: p.gallery.find(piece => piece.src === cover)?.alt || p.title },
+  ...p.gallery.filter(piece => piece.src !== cover),
+].slice(0, 3);
+const artColors = imageSizes as Record<string, { dominant?: string }>;
 ---
 
-<article class:list={["project-card", { "project-card--collection": p.collection }]} data-category={p.category}>
+<article class:list={["project-card", { "project-card--collection": p.collection, "project-card--film": p.films.length > 0, "project-card--website": !p.collection && p.films.length === 0 }]} data-category={p.category}>
   <div class="project-media-frame">
   <span class="project-media-halo" aria-hidden="true"><span></span></span>
   <a
@@ -21,7 +29,13 @@ const video = videoFor(p.caseSlug || project.slug);
     style={`--project-tint:${p.tint || p.color}`}
     aria-label={`View case study: ${p.title}`}
   >
-    {video ? <span class="project-media-shot"><ProjectVideo base={video} /></span> : (
+    {p.films.length > 0 ? <FilmPreview films={p.films} type={p.filmType || p.category} /> : p.archivedWebsite ? <span class="archived-website-preview"><ResponsiveImage src={cover} alt={p.title} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" /></span> : p.collection ? <span class="art-preview" data-art-preview>
+      {artPreviews.map((piece, index) => (
+        <span class:list={["art-preview__slide", { "is-current": index === 0 }]} style={`background:${artColors[piece.src]?.dominant || p.tint || p.color}`} aria-hidden={index > 0 ? "true" : undefined}>
+          <ResponsiveImage src={piece.src} alt={index === 0 ? piece.alt : ""} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" />
+        </span>
+      ))}
+    </span> : video ? <span class="project-media-shot"><ProjectVideo base={video} /></span> : (
     <span class="project-media-shot">
       <span class="project-media-track">
         <ResponsiveImage
@@ -36,7 +50,7 @@ const video = videoFor(p.caseSlug || project.slug);
       </span>
     </span>
     )}
-    <span class="project-hover label">
+    <span class:list={["project-hover label", { "sr-only": p.films.length > 0 }]}>
       View case study <Icon name="arrow-up-right" />
     </span>
   </a>
@@ -74,9 +88,12 @@ const video = videoFor(p.caseSlug || project.slug);
 </article>
 
 <style>
+  .archived-website-preview { display: block; position: absolute; inset: 0; overflow: hidden; }
+  .archived-website-preview :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  .project-card--collection .project-media { aspect-ratio: 4 / 3; }
   .project-card--collection .project-media-shot { inset: 0; width: 100%; height: 100%; border-radius: 20px; box-shadow: none; }
   .project-card--collection .project-media-track { min-height: 0; height: 100%; }
-  .project-card--collection .project-media-track :global(img) { width: 100%; height: 100%; object-fit: contain; transform: scale(1); transition: transform 520ms cubic-bezier(.22, 1, .36, 1); }
+  .project-card--collection .project-media-track :global(img) { width: 100%; height: 100%; object-fit: cover; transform: scale(1); transition: transform 520ms cubic-bezier(.22, 1, .36, 1); }
   .project-card--collection .project-media-filler { display: none; }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .project-card--collection .project-media:hover .project-media-track :global(img),
@@ -86,3 +103,124 @@ const video = videoFor(p.caseSlug || project.slug);
     .project-card--collection .project-media-track :global(img) { transition: none; }
   }
 </style>
+
+<style>
+  .art-preview, .art-preview__slide { position: absolute; inset: 0; overflow: hidden; }
+  .art-preview__slide { opacity: 0; z-index: 0; transition: opacity 700ms ease-in-out; }
+  .art-preview__slide.is-current { opacity: 1; z-index: 2; }
+  .art-preview__slide.is-outgoing { opacity: 1; z-index: 1; }
+  .art-preview__slide :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1); transition: transform 900ms cubic-bezier(.22, 1, .36, 1); }
+  .art-preview.is-active .art-preview__slide.is-current :global(img),
+  .art-preview.is-active .art-preview__slide.is-outgoing :global(img) { transform: scale(1.09); }
+  @media (prefers-reduced-motion: reduce) {
+    .art-preview__slide, .art-preview__slide :global(img) { transition: none; }
+  }
+</style>
+<script>
+  import { onPageLoad } from '../scripts/page-lifecycle';
+  onPageLoad(scope => {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const hover = matchMedia('(hover: hover) and (pointer: fine)');
+    document.querySelectorAll<HTMLElement>('[data-art-preview]').forEach(preview => {
+      const card = preview.closest<HTMLElement>('.project-card')!;
+      const slides = [...preview.querySelectorAll<HTMLElement>('.art-preview__slide')];
+      let active = false, index = 0, timer = 0, version = 0;
+      const activate = (next: number) => {
+        const old = slides[index];
+        slides.forEach(slide => slide.classList.remove('is-current', 'is-outgoing'));
+        if (old !== slides[next]) old.classList.add('is-outgoing');
+        slides[next].classList.add('is-current');
+        index = next;
+        scope.timeout(() => { if (!old.classList.contains('is-current')) old.classList.remove('is-outgoing'); }, 740);
+      };
+      const advance = async () => {
+        const request = version;
+        const next = (index + 1) % slides.length;
+        await slides[next].querySelector('img')?.decode().catch(() => {});
+        if (!active || request !== version) return;
+        activate(next);
+        timer = window.setTimeout(advance, 2800);
+      };
+      const start = () => {
+        if (active || reduced.matches || !hover.matches || slides.length < 2) return;
+        active = true; ++version; preview.classList.add('is-active');
+        timer = window.setTimeout(advance, 2200);
+      };
+      const stop = () => {
+        if (card.matches(':hover') || card.contains(document.activeElement)) return;
+        active = false; ++version; clearTimeout(timer);
+        preview.classList.remove('is-active'); activate(0);
+      };
+      card.addEventListener('pointerenter', start, { signal: scope.signal });
+      card.addEventListener('pointerleave', stop, { signal: scope.signal });
+      card.addEventListener('focusin', start, { signal: scope.signal });
+      card.addEventListener('focusout', () => scope.timeout(stop, 0), { signal: scope.signal });
+      const observer = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) { active = false; ++version; clearTimeout(timer); preview.classList.remove('is-active'); activate(0); }
+      });
+      observer.observe(card);
+      scope.cleanup(() => { ++version; clearTimeout(timer); observer.disconnect(); });
+    });
+  });
+</script>
+
+<style>
+  .project-card--website .project-media { aspect-ratio: 2 / 1; }
+  .project-card--website .project-media-shot { top: 20px; left: 18px; width: calc(100% - 36px); height: calc(100% - 20px); }
+  .project-card--website :global(.project-preview-surface) { height: 100%; aspect-ratio: auto; transform: scale(1); transform-origin: center top; }
+  .project-card--website :global(.project-video[data-project-video="preview"]) { object-fit: cover; object-position: center top; }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project-card--website[data-web-ready] { display: flex; flex-direction: column; height: var(--web-card-height); }
+    .project-card--website[data-web-ready] .project-media-frame { flex: none; height: var(--web-rest-height); transition: height 400ms cubic-bezier(.45, 0, .55, 1); }
+    /* Keep the inset and frame on the same curve: every intermediate viewport
+       stays wider than the source ratio, so cover never crops the sides. */
+    .project-card--website[data-web-ready] .project-media-shot { transition: top 400ms cubic-bezier(.45, 0, .55, 1), left 400ms cubic-bezier(.45, 0, .55, 1), width 400ms cubic-bezier(.45, 0, .55, 1), height 400ms cubic-bezier(.45, 0, .55, 1), border-radius 400ms ease, box-shadow 400ms ease; }
+    .project-card--website[data-web-ready] .project-media { height: 100%; aspect-ratio: auto; }
+    .project-card--website[data-web-ready] .project-body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding-top: 22px; transition: gap 400ms ease-in-out, padding 400ms ease-in-out; }
+    .project-card--website[data-web-ready] .project-heading { min-height: 0; gap: 12px; transition: gap 400ms ease-in-out; }
+    .project-card--website[data-web-ready] .project-tools { margin-top: 8px; transition: margin 400ms ease-in-out; }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-media-shot { top: 0; left: 0; width: 100%; height: 100%; }
+    .project-card--website:is(:hover, :focus-within) :global(.project-preview-surface::after) { display: none; }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-media-frame { height: var(--web-open-height); }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-body { gap: 8px; padding-top: 10px; }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-heading { gap: 4px; }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-tools { margin-top: 4px; }
+    .project-card--website[data-web-ready] .project-metrics { padding-top: 12px; transition: padding 400ms ease-in-out; }
+    .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-metrics { padding-top: 6px; }
+    :global([data-view="timeline"]) .project-card--website[data-web-ready] { height: auto; display: block; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] { height: auto; display: grid; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] .project-body { padding: 0; gap: 14px; justify-content: center; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] .project-heading { gap: 8px; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] .project-media-frame,
+    :global([data-view="timeline"]) .project-card--website[data-web-ready] .project-media-frame { height: auto; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] .project-media,
+    :global([data-view="timeline"]) .project-card--website[data-web-ready] .project-media { aspect-ratio: 2 / 1; height: auto; }
+  }
+</style>
+<script>
+  import { onPageLoad as onWebCardLoad } from '../scripts/page-lifecycle';
+  onWebCardLoad(scope => {
+    const cards = [...document.querySelectorAll<HTMLElement>('.project-card--website')];
+    const measure = (card: HTMLElement) => {
+      const width = card.getBoundingClientRect().width;
+      if (!width) return;
+      const heading = card.querySelector<HTMLElement>('.project-heading')!;
+      const metrics = card.querySelector<HTMLElement>('.project-metrics');
+      const children = [...heading.children] as HTMLElement[];
+      const headingHeight = children.reduce((sum, el) => sum + el.getBoundingClientRect().height, 0) + Math.max(0, children.length - 1) * 4 + (heading.querySelector('.project-tools') ? 4 : 0);
+      const metricHeight = metrics ? metrics.getBoundingClientRect().height - parseFloat(getComputedStyle(metrics).paddingTop) + 6 : 0;
+      const compactBody = headingHeight + metricHeight + (metrics ? 8 : 0) + 14;
+      card.style.setProperty('--web-rest-height', `${width / 2}px`);
+      const video = card.querySelector<HTMLVideoElement>('[data-project-video="preview"]');
+      // Match the source aspect ratio so the open preview has neither crop nor letterboxing.
+      const openHeight = video ? width * video.height / video.width : width * .75;
+      card.style.setProperty('--web-open-height', `${openHeight}px`);
+      card.style.setProperty('--web-card-height', `${width * .75 + compactBody}px`);
+      card.dataset.webReady = 'true';
+    };
+    const observer = new ResizeObserver(entries => entries.forEach(entry => measure(entry.target as HTMLElement)));
+    cards.forEach(card => observer.observe(card));
+    document.fonts.ready.then(() => { if (!scope.signal.aborted) cards.forEach(measure); });
+    scope.cleanup(() => observer.disconnect());
+  });
+</script>
