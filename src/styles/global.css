@@ -750,10 +750,43 @@ img {
 }
 .nav-feature-thumb {
   width: 100%;
-  height: 100px;
+  height: 110px;
   flex-shrink: 0;
   background: var(--olive);
   border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.nav-feature-thumb > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+/* Three-photo cross-fade: each image holds ~3s, fades ~1s, 12s loop. */
+.nav-feature-thumb > :nth-child(n + 2) {
+  opacity: 0;
+  animation: nav-thumb-fade 12s infinite;
+  animation-delay: calc(var(--slide) * 4s - 4s);
+}
+.nav-feature-thumb > :first-child:not(:only-child) {
+  animation: nav-thumb-fade-first 12s infinite;
+}
+@keyframes nav-thumb-fade {
+  0%, 25% { opacity: 0; }
+  33%, 58% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+@keyframes nav-thumb-fade-first {
+  0%, 25% { opacity: 1; }
+  33%, 91% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-feature-thumb > * { animation: none !important; }
+  .nav-feature-thumb > :not(:first-child) { opacity: 0; }
 }
 .nav-feature .nav-feature-cta {
   display: flex;

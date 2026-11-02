@@ -21,9 +21,11 @@ const menu = [
     ],
     feature: {
       eyebrow: "FEATURED CASE",
-      title: "Green Nation Collective",
-      meta: "Web Design & Dev · 2025–26",
+      title: "Lemmbra Olympiad",
+      meta: "Web Design & Dev · 2024",
       cta: "See case",
+      href: "/work/lemmbra-olympiad",
+      images: [{ src: "/assets/cases/lemmbra-olympiad-cover.webp", focus: "center top" }],
     },
   },
   {
@@ -41,6 +43,14 @@ const menu = [
       eyebrow: "ABOUT ME",
       title: "12+ years creating for international agencies and brands",
       cta: "Download CV",
+      href: site.cvUrl || undefined,
+      // ponytail: three about-page photos, cross-faded in CSS.
+      // Focus points keep the face in the short thumbnail.
+      images: [
+        { src: "/assets/career/2024-09-selfie.webp", focus: "62% 18%" },
+        { src: "/assets/career/2023-04-coffee.webp", video: "/assets/career/2023-04-coffee.mp4", focus: "45% 16%" },
+        { src: "/assets/career/2023-01-desk.webp", video: "/assets/career/2023-01-desk.mp4", focus: "50% 60%" },
+      ],
     },
   },
   {
@@ -54,11 +64,6 @@ const menu = [
       { title: "Prototypes", num: "03" },
       { title: "Music", num: "04" },
     ],
-    feature: {
-      eyebrow: "RECENT EXPERIMENT",
-      title: "[placeholder title]",
-      cta: "See experiment",
-    },
   },
   {
     key: "thoughts",
@@ -140,20 +145,17 @@ import LogoModel from "./LogoModel.astro";
               </a>
             ))}
           </div>
+          {item.feature && (
           <a
-            href={
-              item.key === "about"
-                ? site.cvUrl || undefined
-                : item.key === "projects"
-                  ? "/work/green-nation-collective"
-                  : (item.feature as { href?: string }).href || item.href
-            }
+            href={item.key === "about" ? item.feature.href : item.feature.href || item.href}
             aria-disabled={
               item.key === "about" && !site.cvUrl ? "true" : undefined
             }
             class="nav-feature"
           >
-            <div class="nav-feature-thumb"></div>
+            <div class="nav-feature-thumb">{item.feature.images?.map((image: { src: string; focus: string; video?: string }, n: number) => image.video
+              ? <video src={image.video} poster={image.src} muted loop autoplay playsinline aria-hidden="true" style={`--slide:${n};object-position:${image.focus}`} />
+              : <img src={image.src} alt="" loading="lazy" decoding="async" style={`--slide:${n};object-position:${image.focus}`} />)}</div>
             <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
             {item.feature.meta && <small>{item.feature.meta}</small>}
@@ -161,6 +163,7 @@ import LogoModel from "./LogoModel.astro";
               {clean(item.feature.cta)} <Icon name="arrow-right" />
             </span>
           </a>
+          )}
         </div>
       </div>
     ))}
@@ -207,20 +210,17 @@ import LogoModel from "./LogoModel.astro";
               <small>{row.num}</small>
             </a>
           ))}
+          {item.feature && (
           <a
             class="nav-feature"
-            href={
-              item.key === "about"
-                ? site.cvUrl || undefined
-                : item.key === "projects"
-                  ? "/work/green-nation-collective"
-                  : (item.feature as { href?: string }).href || item.href
-            }
+            href={item.key === "about" ? item.feature.href : item.feature.href || item.href}
             aria-disabled={
               item.key === "about" && !site.cvUrl ? "true" : undefined
             }
           >
-            <div class="nav-feature-thumb"></div>
+            <div class="nav-feature-thumb">{item.feature.images?.map((image: { src: string; focus: string; video?: string }, n: number) => image.video
+              ? <video src={image.video} poster={image.src} muted loop autoplay playsinline aria-hidden="true" style={`--slide:${n};object-position:${image.focus}`} />
+              : <img src={image.src} alt="" loading="lazy" decoding="async" style={`--slide:${n};object-position:${image.focus}`} />)}</div>
             <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
             {item.feature.meta && <small>{item.feature.meta}</small>}
@@ -228,6 +228,7 @@ import LogoModel from "./LogoModel.astro";
               {clean(item.feature.cta)} <Icon name="arrow-right" />
             </span>
           </a>
+          )}
         </div>
       </details>
     ))}
