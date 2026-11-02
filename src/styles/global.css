@@ -750,7 +750,7 @@ img {
 }
 .nav-feature-thumb {
   width: 100%;
-  height: 100px;
+  height: 110px;
   flex-shrink: 0;
   background: var(--olive);
   border-radius: 6px;
