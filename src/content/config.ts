@@ -30,6 +30,8 @@ const projects = defineCollection({
       .array(z.object({ value: z.string(), label: z.string() }))
       .default([]),
     tools: z.array(z.string()).default([]),
+    services: z.array(z.string()).default([]),
+    duration: z.string().optional(),
     cover: z.string().optional(),
     tint: z.string().optional(),
     location: z.string().optional(),

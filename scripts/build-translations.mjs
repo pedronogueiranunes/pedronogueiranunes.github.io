@@ -14,7 +14,9 @@ const titles=[
  ['Lemmbra Olympiad: identity and registration','Lemmbra Olympiad: identidade e inscrições','Lemmbra Olympiad: identidad e inscripción','Lemmbra Olympiad : identité et inscriptions'],
  ['Molina Chambô: law firm website','Molina Chambô: site de advocacia','Molina Chambô: sitio de abogados',"Molina Chambô : site de cabinet d'avocats"],
  ['PineLake Broken Bow: luxury cabin rentals','PineLake Broken Bow: aluguel de cabanas de luxo','PineLake Broken Bow: alquiler de cabañas de lujo','PineLake Broken Bow : location de chalets de luxe'],
- ['Waipono Farms: brand and website','Waipono Farms: marca e site','Waipono Farms: marca y sitio web','Waipono Farms : marque et site web'],
+ ['Waipono Farms: website','Waipono Farms: site','Waipono Farms: sitio web','Waipono Farms : site web'],
+ ['Molina Chambô: visual identity','Molina Chambô: identidade visual','Molina Chambô: identidad visual','Molina Chambô : identité visuelle'],
+ ['BSA Legal: brand system','BSA Legal: sistema de marca','BSA Legal: sistema de marca','BSA Legal : système de marque'],
 ];
 const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa de la web','aperçu du site web'];
 for(const [en,...tr]of titles)for(let i=0;i<3;i++){
