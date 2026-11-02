@@ -11,6 +11,7 @@ order: 15
 caseSlug: "digitale-brasil"
 archivedWebsite: true
 studio: "SUPERFLUID"
+tools: ["React", "Moodle"]
 summary: "Website created at SUPERFLUID."
 gallery: [{"src":"/assets/projects/digitale-brasil/website.webp","alt":"digitALE Brasil: main website","caption":""}]
 ---

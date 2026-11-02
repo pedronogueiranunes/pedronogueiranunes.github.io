@@ -11,6 +11,7 @@ order: 17
 caseSlug: "instituto-dea"
 archivedWebsite: true
 studio: "SUPERFLUID"
+tools: ["WordPress", "Page builder"]
 summary: "Website created at SUPERFLUID."
 gallery: [{"src":"/assets/projects/instituto-dea/website.webp","alt":"Instituto DEA: website","caption":""}]
 ---

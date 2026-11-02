@@ -13,6 +13,9 @@ const { project } = Astro.props;
 const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
 const cover = p.cover || p.image;
+// ponytail: page edges (px) measured in each 1600px SUPERFLUID mockup, 2px inside to skip the shadow: [left, width, top].
+const archivedPage: Record<string, [number, number, number]> = { "clube-humboldt": [249, 1103, 157], "digitale-brasil": [255, 1091, 142], "digitale-enfermagem": [249, 1103, 102], "digitale-steinbeis": [248, 1104, 128], "instituto-dea": [249, 1103, 127] };
+const [pageX, pageW, pageTop] = archivedPage[project.slug] ?? [0, 1600, 0];
 // ponytail: releases reuse the film preview; "Single · 2026" sits where a film shows its duration.
 const media = p.films.length > 0 ? p.films : p.releases.map(r => ({ youtubeId: "", title: r.title, duration: `${r.type} · ${r.year}`, poster: r.cover }));
 const artPreviews = [
@@ -31,13 +34,13 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
     style={`--project-tint:${p.tint || p.color}`}
     aria-label={`View case study: ${p.title}`}
   >
-    {media.length > 0 ? <FilmPreview films={media} type={p.filmType || p.category} square={p.releases.length > 0} /> : p.archivedWebsite ? <span class="archived-website-preview"><ResponsiveImage src={cover} alt={p.title} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" /></span> : p.collection ? <span class="art-preview" data-art-preview>
+    {media.length > 0 ? <FilmPreview films={media} type={p.filmType || p.category} square={p.releases.length > 0} /> : p.archivedWebsite ? <span class="archived-website-preview" style={`--x:${pageX};--pw:${pageW};--top:${pageTop}`}><ResponsiveImage src={cover} alt={p.title} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" /></span> : p.collection ? <span class="art-preview" data-art-preview>
       {artPreviews.map((piece, index) => (
         <span class:list={["art-preview__slide", { "is-current": index === 0 }]} style={`background:${artColors[piece.src]?.dominant || p.tint || p.color}`} aria-hidden={index > 0 ? "true" : undefined}>
           <ResponsiveImage src={piece.src} alt={index === 0 ? piece.alt : ""} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" />
         </span>
       ))}
-    </span> : video ? <span class="project-media-shot"><ProjectVideo base={video} /></span> : (
+    </span>: video ? <span class="project-media-shot"><ProjectVideo base={video} /></span> : (
     <span class="project-media-shot">
       <span class="project-media-track">
         <ResponsiveImage
@@ -91,7 +94,10 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
 
 <style>
   .archived-website-preview { display: block; position: absolute; inset: 0; overflow: hidden; }
-  .archived-website-preview :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  /* Rest: page at 88% width, inset like the other site cards. Hover: page fills 100% of the width. */
+  .archived-website-preview :global(img) { display: block; position: absolute; top: 0; height: auto; max-width: none; width: calc(1600 / var(--pw) * 88%); left: calc(6% - var(--x) / var(--pw) * 88%); margin-top: calc(7% - var(--top) / var(--pw) * 88%); transition: left 400ms cubic-bezier(.45, 0, .55, 1), width 400ms cubic-bezier(.45, 0, .55, 1), margin-top 400ms cubic-bezier(.45, 0, .55, 1); }
+  .project-card:is(:hover, :focus-within) .archived-website-preview :global(img) { width: calc(1600 / var(--pw) * 100%); left: calc(var(--x) / var(--pw) * -100%); margin-top: calc(var(--top) / var(--pw) * -100%); }
+  @media (prefers-reduced-motion: reduce) { .archived-website-preview :global(img) { transition: none; } }
   .project-card--collection .project-media { aspect-ratio: 4 / 3; }
   .project-card--collection .project-media-shot { inset: 0; width: 100%; height: 100%; border-radius: 20px; box-shadow: none; }
   .project-card--collection .project-media-track { min-height: 0; height: 100%; }
@@ -172,7 +178,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
   .project-card--website :global(.project-preview-surface) { height: 100%; aspect-ratio: auto; transform: scale(1); transform-origin: center top; }
   .project-card--website :global(.project-video[data-project-video="preview"]) { object-fit: cover; object-position: center top; }
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .project-card--website[data-web-ready] { display: flex; flex-direction: column; height: var(--web-card-height); }
+    .project-card--website[data-web-ready] { display: flex; flex-direction: column; min-height: var(--web-card-height); } /* ponytail: min-height, so a short JS measurement grows the card instead of clipping copy */
     .project-card--website[data-web-ready] .project-media-frame { flex: none; height: var(--web-rest-height); transition: height 400ms cubic-bezier(.45, 0, .55, 1); }
     /* Keep the inset and frame on the same curve: every intermediate viewport
        stays wider than the source ratio, so cover never crops the sides. */
@@ -189,8 +195,8 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
     .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-tools { margin-top: 4px; }
     .project-card--website[data-web-ready] .project-metrics { padding-top: 12px; transition: padding 400ms ease-in-out; }
     .project-card--website[data-web-ready]:is(:hover, :focus-within) .project-metrics { padding-top: 6px; }
-    :global([data-view="timeline"]) .project-card--website[data-web-ready] { height: auto; display: block; }
-    :global([data-view="list"]) .project-card--website[data-web-ready] { height: auto; display: grid; }
+    :global([data-view="timeline"]) .project-card--website[data-web-ready] { min-height: 0; display: block; }
+    :global([data-view="list"]) .project-card--website[data-web-ready] { min-height: 0; display: grid; }
     :global([data-view="list"]) .project-card--website[data-web-ready] .project-body { padding: 0; gap: 14px; justify-content: center; }
     :global([data-view="list"]) .project-card--website[data-web-ready] .project-heading { gap: 8px; }
     :global([data-view="list"]) .project-card--website[data-web-ready] .project-media-frame,
@@ -215,7 +221,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
       card.style.setProperty('--web-rest-height', `${width / 2}px`);
       const video = card.querySelector<HTMLVideoElement>('[data-project-video="preview"]');
       // Match the source aspect ratio so the open preview has neither crop nor letterboxing.
-      const openHeight = video ? width * video.height / video.width : width * .75;
+      const openHeight = width * (video ? video.height / video.width : 600 / 960); // no video: same 8:5 as the preview videos
       card.style.setProperty('--web-open-height', `${openHeight}px`);
       card.style.setProperty('--web-card-height', `${width * .75 + compactBody}px`);
       card.dataset.webReady = 'true';

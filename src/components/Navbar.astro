@@ -538,7 +538,7 @@ import LogoModel from "./LogoModel.astro";
   }
   // The lighter gradient centre follows the pointer with a soft ease so the
   // panel feels lit rather than highlighted in a fixed corner.
-  document.querySelectorAll<HTMLElement>(".nav-panel").forEach((panel) => {
+  document.querySelectorAll<HTMLElement>(".nav-panel, .footer-cta").forEach((panel) => {
     let frame = 0;
     let currentX = 24;
     let currentY = 20;

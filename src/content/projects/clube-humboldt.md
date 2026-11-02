@@ -11,6 +11,7 @@ order: 14
 caseSlug: "clube-humboldt"
 archivedWebsite: true
 studio: "SUPERFLUID"
+tools: ["WordPress", "Page builder"]
 summary: "Website created at SUPERFLUID."
 gallery: [{"src":"/assets/projects/clube-humboldt/website.webp","alt":"Clube Humboldt: website redesign","caption":""}]
 ---
