@@ -123,8 +123,8 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
         <p>{p.summary}</p>
         <div class="chips">
           <ToolChip label={p.category} icon="category-web" />
-          <ToolChip label={p.location} icon="location" />
-          <ToolChip label={p.year} icon="calendar" />
+          {p.location && <ToolChip label={p.location} icon="location" />}
+          {p.year && <ToolChip label={p.year} icon="calendar" />}
         </div>
         <div class="case-identity-group">
         <div class="case-client-row">
@@ -175,8 +175,8 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
           <i></i>
           <i></i>
         </div>
-        <span class="mono">{liveUrl ? new URL(liveUrl).hostname : "[client-domain.com]"}</span>
-        <small>Live since {p.year}</small>
+        <span class="mono">{liveUrl ? new URL(liveUrl).hostname : p.title.split(":")[0]}</span>
+        {p.year && <small>Live since {p.year}</small>}
       </div>
       <div class="browser-mockup-viewport">
         {video ? <ProjectVideo base={video} full /> : (
@@ -228,6 +228,17 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
           ))}
         </dl>
       </section>}
+      {p.gallery.length > 0 && <section>
+        <h2>Screens</h2>
+        <div class="art-collection-grid" data-lightbox-group>
+          {p.gallery.map((piece) => (
+            <figure><a href={piece.src} data-gallery-src={piece.src} data-gallery-alt={piece.alt} data-gallery-caption={piece.caption} aria-label={piece.alt}>
+              <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), 40vw" loading="lazy" />
+            </a>{piece.caption && <figcaption>{piece.caption}</figcaption>}</figure>
+          ))}
+        </div>
+        <ImageLightbox />
+      </section>}
       {showMock && <blockquote class="case-testimonial">
         <small class="case-testimonial-note">Fictional quote for layout review</small>
         <span aria-hidden="true">“</span>
@@ -252,10 +263,10 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
             </div>
           ))}
         </dl>
-        <div class="snapshot-stack">
+        {stack.length > 0 && <div class="snapshot-stack">
           <h3><Icon name="category-web" />Stack</h3>
           <div class="chips">{stack.map((tool) => <ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool) ? undefined : toolIcon(tool)} />)}</div>
-        </div>
+        </div>}
       </div>
       <div class="case-sidebar-cta">
         <h2>Need a site that brings in qualified leads?</h2>

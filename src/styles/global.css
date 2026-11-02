@@ -775,14 +775,16 @@ img {
   animation: nav-thumb-fade-first 12s infinite;
 }
 @keyframes nav-thumb-fade {
-  0%, 25% { opacity: 0; }
+  0%, 25% { opacity: 0; transform: scale(1.08); }
   33%, 58% { opacity: 1; }
-  66%, 100% { opacity: 0; }
+  66%, 100% { opacity: 0; transform: scale(1); }
 }
 @keyframes nav-thumb-fade-first {
-  0%, 25% { opacity: 1; }
-  33%, 91% { opacity: 0; }
-  100% { opacity: 1; }
+  0% { opacity: 1; transform: scale(1.06); }
+  25% { opacity: 1; }
+  33% { opacity: 0; transform: scale(1); }
+  91% { opacity: 0; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1.06); }
 }
 @media (prefers-reduced-motion: reduce) {
   .nav-feature-thumb > * { animation: none !important; }
@@ -7923,4 +7925,24 @@ main h1[tabindex="-1"]:focus {
   [data-projects-filter][data-view="list"] .all-projects .project-body { padding: 0; gap: 12px; }
   [data-projects-filter][data-view="list"] .all-projects .project-metrics { gap: 12px; }
   [data-projects-filter][data-view="list"] .all-projects .project-metrics dd { font-size: 24px; }
+}
+/* Projects CTA: circle sized from its own column so the icon stays inside and the edge never reaches the copy. */
+main.projects-page .your-turn-card { overflow: hidden; }
+/* ponytail: % margins resolve against width, so top:50% + margin-top keeps everything relative to the column width. */
+main.projects-page .your-turn-card .your-turn-orbit { width: 140%; height: auto; aspect-ratio: 1; left: calc(-40% - 16px); top: 50%; margin-top: -70%; }
+main.projects-page .your-turn-card .your-turn-growth { width: 44%; height: auto; aspect-ratio: 1; left: calc(12% - 16px); right: auto; top: 50%; margin-top: -4%; }
+@media (max-width:1024px) {
+  /* Stacked: circle hangs from the top and ends 16px above the copy. */
+  main.projects-page .your-turn-card .your-turn-orbit { width: 560px; height: 560px; left: calc(50% - 280px); top: calc(100% - 576px); margin-top: 0; }
+  main.projects-page .your-turn-card .your-turn-growth { width: 150px; height: 150px; left: calc(50% - 55px); top: calc(100% - 206px); margin-top: 0; }
+}
+/* Footer CTA reuses the nav panel's trailing glow: footer background at the pointer, fading to the box colour. */
+footer.site-footer .footer-cta { background-image: radial-gradient(155% 125% at var(--nav-glow-x, 26%) var(--nav-glow-y, 22%), color-mix(in srgb, var(--footer-bg) 80%, transparent) 6%, transparent 82%); }
+/* Top inset matches the side gutter (capped so very wide screens keep the old 64px). */
+footer.site-footer { padding-top: min(var(--footer-gutter), 64px); }
+/* Tablet menu: highlight card as thumb | content instead of one stretched column. */
+@media (min-width: 600px) and (max-width: 1024px) {
+  .mobile-submenu .nav-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; row-gap: 6px; align-content: center; }
+  .mobile-submenu .nav-feature > * { grid-column: 2; }
+  .mobile-submenu .nav-feature > .nav-feature-thumb { grid-column: 1; grid-row: 1 / span 6; height: 100%; min-height: 180px; align-self: stretch; }
 }
