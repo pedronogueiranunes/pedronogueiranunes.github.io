@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import FilmGallery from "../../components/FilmGallery.astro";
 import MusicCase from "../../components/MusicCase.astro";
+import ImageLightbox from "../../components/ImageLightbox.astro";
 import ProjectVideo from "../../components/ProjectVideo.astro";
 import { videoFor } from "../../data/project-videos";
 import PixelTrail from "../../components/PixelTrail.astro";
@@ -87,20 +88,21 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
         <h1>{p.title}</h1>
         {p.studio && <p class="case-studio mono">{p.studio}</p>}
         {p.summary && <p>{p.summary}</p>}
-        <div class="art-collection-grid">
+        <div class="art-collection-grid" data-lightbox-group>
           {p.gallery.map((piece) => (
             <figure>
               {piece.video ? (
                 <video controls playsinline preload="none" poster={piece.src} aria-label={piece.alt}>
                   <source src={piece.video} type="video/mp4" />
                 </video>
-              ) : <a href={piece.src} target="_blank" rel="noopener" aria-label={piece.alt}>
+              ) : <a href={piece.src} data-gallery-src={piece.src} data-gallery-alt={piece.alt} data-gallery-caption={piece.caption} aria-label={piece.alt}>
                 <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), 50vw" loading="lazy" />
               </a>}
               {piece.caption && <figcaption>{piece.caption}</figcaption>}
             </figure>
           ))}
         </div>
+        <ImageLightbox />
       </section>
       <RelatedProjects title={p.archivedWebsite ? "More websites from SUPERFLUID." : undefined} eyebrow={p.archivedWebsite ? "SUPERFLUID" : undefined} projects={related.filter(other => p.archivedWebsite ? other.data.archivedWebsite : other.data.collection)} />
     </>

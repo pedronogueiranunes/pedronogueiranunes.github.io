@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import Icon from "./Icon.astro";
 import ToolChip from "./ToolChip.astro";
 import ResponsiveImage from "./ResponsiveImage.astro";
+import ImageLightbox from "./ImageLightbox.astro";
 import { logoFor } from "../data/home";
 interface Props { project: CollectionEntry<"projects">["data"]; liveUrl?: string; }
 const { project: p, liveUrl } = Astro.props;
@@ -26,7 +27,7 @@ const architecture = p.architecture.length ? p.architecture : preview ? [
 const roleFor = (tool: string) => /figma|illustrator/i.test(tool) ? "Design" : /gsap|javascript/i.test(tool) ? "Interactions" : /ga4|gtm/i.test(tool) ? "Measurement" : /hubspot|zapier|memberstack/i.test(tool) ? "Integrations" : "Development";
 const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test(tool) ? "category-experiment" : "category-web";
 ---
-{gallery.length > 0 && <section class="case-gallery case-section page-section" data-case-gallery>
+{gallery.length > 0 && <section class="case-gallery case-section page-section" data-case-gallery data-lightbox-group>
   <header class="case-section-heading"><h2>Asset gallery</h2><span class="case-section-meta">{String(gallery.length).padStart(2,"0")}</span></header>
   {galleryMock && <p class="case-fixture-note">Layout preview using crops of the existing screenshot.</p>}
   <div class="case-gallery-grid">
@@ -38,11 +39,7 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
       <figcaption><span>{asset.caption}</span><small>{String(index+1).padStart(2,"0")}</small></figcaption>
     </figure>)}
   </div>
-  <dialog class="case-lightbox" aria-label="Image viewer">
-    <div class="case-lightbox-bar"><p data-gallery-caption></p><button type="button" data-gallery-close aria-label="Close image"><Icon name="close" size={20}/></button></div>
-    <div class="case-lightbox-image"><img alt="" /></div>
-    <div class="case-lightbox-controls"><button type="button" data-gallery-prev aria-label="Previous image"><Icon name="arrow-left"/></button><output data-gallery-counter></output><button type="button" data-gallery-next aria-label="Next image"><Icon name="arrow-right"/></button><button type="button" data-gallery-fullscreen aria-label="Full screen"><Icon name="fullscreen"/></button></div>
-  </dialog>
+  <ImageLightbox />
 </section>}
 {ds && <section class="case-design-system case-section page-section" style={`--project-primary:${ds.colors[0]?.value || "#173B30"};--project-surface:${ds.colors[1]?.value || "#F4F7F0"};--project-ink:${ds.colors[2]?.value || "#18251E"};--project-radius:${ds.radius}px;--project-font:${ds.fontFamily};--project-weight:${ds.headingWeight}`}>
   <header class="case-section-heading"><h2>Design system</h2><Icon name="grid2"/></header>
@@ -80,25 +77,6 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
 <script>
   import { onPageLoad } from "../scripts/page-lifecycle";
   onPageLoad(scope=>{
-    const gallery = document.querySelector<HTMLElement>("[data-case-gallery]");
-    const dialog = gallery?.querySelector<HTMLDialogElement>("dialog");
-    if(gallery && dialog){
-      const triggers = Array.from(gallery.querySelectorAll<HTMLButtonElement>("[data-gallery-src]"));
-      const image=dialog.querySelector<HTMLImageElement>(".case-lightbox-image img")!;
-      let active=0; let opener:HTMLButtonElement|undefined;
-      const show=(index:number)=>{active=(index+triggers.length)%triggers.length;const item=triggers[active];image.src=item.dataset.gallerySrc!;image.alt=item.dataset.galleryAlt!;dialog.querySelector("[data-gallery-caption]")!.textContent=item.dataset.galleryCaption!;dialog.querySelector("[data-gallery-counter]")!.textContent=`${active+1} / ${triggers.length}`;};
-      triggers.forEach((button,index)=>button.addEventListener("click",()=>{opener=button;show(index);dialog.showModal();},{signal:scope.signal}));
-      dialog.querySelector("[data-gallery-close]")?.addEventListener("click",()=>dialog.close(),{signal:scope.signal});
-      dialog.querySelector("[data-gallery-prev]")?.addEventListener("click",()=>show(active-1),{signal:scope.signal});
-      dialog.querySelector("[data-gallery-next]")?.addEventListener("click",()=>show(active+1),{signal:scope.signal});
-      const fullscreenButton=dialog.querySelector<HTMLButtonElement>("[data-gallery-fullscreen]")!;
-      fullscreenButton.hidden=!document.fullscreenEnabled;
-      fullscreenButton.addEventListener("click",async()=>{try {if(document.fullscreenElement)await document.exitFullscreen();else await dialog.requestFullscreen();}catch{/* The dialog remains usable when fullscreen is unavailable. */}},{signal:scope.signal});
-      dialog.addEventListener("keydown",event=>{if(event.key==="ArrowRight"){event.preventDefault();show(active+1);}if(event.key==="ArrowLeft"){event.preventDefault();show(active-1);}},{signal:scope.signal});
-      dialog.addEventListener("close",()=>{if(document.fullscreenElement===dialog)void document.exitFullscreen().catch(()=>{});image.removeAttribute("src");opener?.focus();},{signal:scope.signal});
-      dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();},{signal:scope.signal});
-      scope.cleanup(()=>{if(dialog.open)dialog.close();});
-    }
     document.querySelectorAll<HTMLElement>(".case-device").forEach(device=>{
       const container=device.querySelector<HTMLElement>(".case-device-viewport")!;
       const button=device.querySelector<HTMLButtonElement>("[data-embed-url]")!;
