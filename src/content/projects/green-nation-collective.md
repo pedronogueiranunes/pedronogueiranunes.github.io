@@ -4,7 +4,7 @@ order: 1
 category: "Campaign site"
 country: "USA"
 location: "USA"
-image: "/assets/project-2.png"
+image: "/assets/project-2.webp"
 color: "#dce6de"
 tint: "#dce6de"
 cover: "/assets/cases/green-nation-collective-cover.webp"

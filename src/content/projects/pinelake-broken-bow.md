@@ -4,7 +4,7 @@ order: 4
 category: "Web design & dev"
 country: "USA"
 location: "USA"
-image: "/assets/project-1.png"
+image: "/assets/project-1.webp"
 color: "#e6e9d8"
 tint: "#e6e9d8"
 cover: "/assets/cases/pinelake-broken-bow-cover.webp"

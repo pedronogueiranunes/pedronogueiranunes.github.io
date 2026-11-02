@@ -4,7 +4,7 @@ order: 3
 category: "Web design & dev"
 country: "Brazil"
 location: "Brazil"
-image: "/assets/project-3.png"
+image: "/assets/project-3.webp"
 color: "#dde2ec"
 tint: "#dde2ec"
 cover: "/assets/cases/molina-chambo-cover.webp"

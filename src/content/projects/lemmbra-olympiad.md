@@ -3,7 +3,7 @@ title: "Lemmbra Olympiad: identity and registration"
 order: 2
 category: "Identity & platform"
 year: "2024"
-image: "/assets/project-6.png"
+image: "/assets/project-6.webp"
 color: "#e6e3ef"
 tint: "#e6e3ef"
 cover: "/assets/cases/lemmbra-olympiad-cover.webp"

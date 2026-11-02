@@ -13,7 +13,8 @@
 // displays while still skipping work on most frames. The clock advances by
 // elapsed time, so the rotation speed stays correct even when a tick lands
 // between two display frames.
-const AMBIENT_HZ = 45;
+// Touch devices drop to 30 Hz: the splat redraw is the main GPU cost on phones.
+const AMBIENT_HZ = matchMedia("(pointer: coarse)").matches ? 30 : 45;
 const TICK_MS = 1000 / AMBIENT_HZ;
 // After a pause (hidden tab, offscreen viewport) resume with a short step
 // instead of replaying the whole gap as one visible jump.

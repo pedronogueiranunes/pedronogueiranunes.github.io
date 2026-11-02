@@ -6,7 +6,8 @@ export default defineConfig({
   vite: { plugins: [devtoolsJson()] },
   prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   site: "https://pedronogueiranunes.github.io",
-  build: { inlineStylesheets: "always" },
+  // "auto" inlines only small sheets; the big global CSS becomes a cached file.
+  build: { inlineStylesheets: "auto" },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "pt-br"],

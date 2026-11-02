@@ -41,7 +41,18 @@ onPageLoad(scope => {
    if(video.readyState>0 && video.currentTime>0){video.addEventListener('seeked',reveal,{once:true,signal:scope.signal});video.currentTime=0;}else reveal();
   },reduced.matches?0:180);
  };
- const load=(video:HTMLVideoElement)=>{if(!video.getAttribute('src')) {video.src=video.dataset.src!;video.load();}};
+ // Phones get the 720p encode of the full case video (about a third of the bytes).
+ // Cases without a mobile.mp4 fall back to full.mp4 on the load error.
+ const small=matchMedia('(max-width: 768px)');
+ const load=(video:HTMLVideoElement)=>{
+  if(video.getAttribute('src'))return;
+  const full=video.dataset.src!;
+  if(small.matches&&video.dataset.projectVideo==='full'&&full.endsWith('/full.mp4')){
+   video.addEventListener('error',()=>{video.src=full;video.load();if(current===video)video.play().catch(()=>{});},{once:true,signal:scope.signal});
+   video.src=full.replace(/full\.mp4$/,'mobile.mp4');
+  } else video.src=full;
+  video.load();
+ };
  const scrollRate=(video:HTMLVideoElement)=>{
   if(video.dataset.projectVideo!=='preview')return 1;
   const progress=video.duration>0?Math.min(1,video.currentTime/video.duration):0;

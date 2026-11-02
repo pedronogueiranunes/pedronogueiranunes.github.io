@@ -7946,3 +7946,21 @@ footer.site-footer { padding-top: min(var(--footer-gutter), 64px); }
   .mobile-submenu .nav-feature > * { grid-column: 2; }
   .mobile-submenu .nav-feature > .nav-feature-thumb { grid-column: 1; grid-row: 1 / span 6; height: 100%; min-height: 180px; align-self: stretch; }
 }
+
+/* Phones: a full-width blurred sticky bar re-blurs the page on every scroll frame.
+   A denser tint keeps the glass look without the per-frame cost. */
+@media (max-width: 768px), (pointer: coarse) {
+  .site-nav { background: color-mix(in srgb, var(--surface) 94%, transparent); }
+  .site-nav::before,
+  .site-nav .site-logo,
+  .project-media::after {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+/* Sections out of view (see scripts/offscreen-pause.ts). The travelling portrait
+   is excluded: it leaves its origin section while still on screen. */
+.offscreen-paused,
+.offscreen-paused :not(#splat-viewport, #splat-viewport *) {
+  animation-play-state: paused !important;
+}

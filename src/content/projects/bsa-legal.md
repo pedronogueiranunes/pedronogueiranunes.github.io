@@ -4,7 +4,7 @@ order: 6
 category: "Web design & dev"
 country: "Brazil"
 location: "Brazil"
-image: "/assets/project-4.png"
+image: "/assets/project-4.webp"
 color: "#f3e8c6"
 tint: "#f3e8c6"
 cover: "/assets/cases/bsa-legal-cover.webp"

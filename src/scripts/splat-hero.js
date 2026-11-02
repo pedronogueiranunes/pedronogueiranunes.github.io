@@ -42,9 +42,12 @@ export function initSplat() {
       console.debug("[portrait] active apps", window.__portraitApps);
     }
   };
+  // ponytail: phones/tablets render at 1x; desktop budget unchanged.
+  const compactDevice = matchMedia("(pointer: coarse), (max-width: 768px)").matches;
   try {
     app = new pc.Application(canvas, {
-      graphicsDeviceOptions: { alpha: true, antialias: true },
+      // MSAA buys little on a splat and costs a lot of fill rate on phone GPUs.
+      graphicsDeviceOptions: { alpha: true, antialias: !compactDevice },
     });
     if (!app.graphicsDevice) {
       viewport.dataset.failed = "true";
@@ -60,7 +63,7 @@ export function initSplat() {
     window.devicePixelRatio || 1,
     // High-density desktops can afford the sharper bevels; constrain touch/mobile
     // GPUs and Save-Data clients to the previous budget.
-    matchMedia("(pointer: fine) and (min-width: 1025px)").matches &&
+    compactDevice ? 1 : matchMedia("(pointer: fine) and (min-width: 1025px)").matches &&
       (navigator.hardwareConcurrency || 0) >= 8 && !navigator.connection?.saveData ? 2 : 1.5,
   );
   // Render on demand to prevent battery/GPU drain when idle

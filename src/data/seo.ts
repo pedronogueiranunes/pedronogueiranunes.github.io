@@ -15,7 +15,7 @@ export const person = {
   jobTitle: "Design Engineer",
   description:
     "Design engineer in Bahia, Brazil. Designs and builds brands, design systems and websites on Webflow, WordPress and React for agencies and companies in North America and Europe.",
-  image: `${ORIGIN}/assets/head-about.png`,
+  image: `${ORIGIN}/assets/head-about.webp`,
   url: `${ORIGIN}/about/`,
   email: `mailto:${site.email}`,
   address: { "@type": "PostalAddress", addressRegion: "Bahia", addressCountry: "BR" },
