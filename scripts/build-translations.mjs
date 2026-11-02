@@ -16,6 +16,7 @@ const titles=[
  ['PineLake Broken Bow: luxury cabin rentals','PineLake Broken Bow: aluguel de cabanas de luxo','PineLake Broken Bow: alquiler de cabañas de lujo','PineLake Broken Bow : location de chalets de luxe'],
  ['Waipono Farms: website','Waipono Farms: site','Waipono Farms: sitio web','Waipono Farms : site web'],
  ['Molina Chambô: visual identity','Molina Chambô: identidade visual','Molina Chambô: identidad visual','Molina Chambô : identité visuelle'],
+ ['Peeeo: music releases','Peeeo: lançamentos musicais','Peeeo: lanzamientos musicales','Peeeo : sorties musicales'],
  ['BSA Legal: brand system','BSA Legal: sistema de marca','BSA Legal: sistema de marca','BSA Legal : système de marque'],
 ];
 const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa de la web','aperçu du site web'];

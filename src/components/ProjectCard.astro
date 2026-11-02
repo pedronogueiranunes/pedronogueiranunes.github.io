@@ -13,6 +13,8 @@ const { project } = Astro.props;
 const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
 const cover = p.cover || p.image;
+// ponytail: releases reuse the film preview; "Single · 2026" sits where a film shows its duration.
+const media = p.films.length > 0 ? p.films : p.releases.map(r => ({ youtubeId: "", title: r.title, duration: `${r.type} · ${r.year}`, poster: r.cover }));
 const artPreviews = [
   { src: cover, alt: p.gallery.find(piece => piece.src === cover)?.alt || p.title },
   ...p.gallery.filter(piece => piece.src !== cover),
@@ -20,7 +22,7 @@ const artPreviews = [
 const artColors = imageSizes as Record<string, { dominant?: string }>;
 ---
 
-<article class:list={["project-card", { "project-card--collection": p.collection, "project-card--film": p.films.length > 0, "project-card--website": !p.collection && p.films.length === 0 }]} data-category={p.category}>
+<article class:list={["project-card", { "project-card--collection": p.collection, "project-card--film": media.length > 0, "project-card--music": p.releases.length > 0, "project-card--website": !p.collection && media.length === 0 }]} data-category={p.category}>
   <div class="project-media-frame">
   <span class="project-media-halo" aria-hidden="true"><span></span></span>
   <a
@@ -29,7 +31,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
     style={`--project-tint:${p.tint || p.color}`}
     aria-label={`View case study: ${p.title}`}
   >
-    {p.films.length > 0 ? <FilmPreview films={p.films} type={p.filmType || p.category} /> : p.archivedWebsite ? <span class="archived-website-preview"><ResponsiveImage src={cover} alt={p.title} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" /></span> : p.collection ? <span class="art-preview" data-art-preview>
+    {media.length > 0 ? <FilmPreview films={media} type={p.filmType || p.category} square={p.releases.length > 0} /> : p.archivedWebsite ? <span class="archived-website-preview"><ResponsiveImage src={cover} alt={p.title} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" /></span> : p.collection ? <span class="art-preview" data-art-preview>
       {artPreviews.map((piece, index) => (
         <span class:list={["art-preview__slide", { "is-current": index === 0 }]} style={`background:${artColors[piece.src]?.dominant || p.tint || p.color}`} aria-hidden={index > 0 ? "true" : undefined}>
           <ResponsiveImage src={piece.src} alt={index === 0 ? piece.alt : ""} sizes="(max-width: 768px) 90vw, 40vw" loading="lazy" />
@@ -50,7 +52,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
       </span>
     </span>
     )}
-    <span class:list={["project-hover label", { "sr-only": p.films.length > 0 }]}>
+    <span class:list={["project-hover label", { "sr-only": media.length > 0 }]}>
       View case study <Icon name="arrow-up-right" />
     </span>
   </a>

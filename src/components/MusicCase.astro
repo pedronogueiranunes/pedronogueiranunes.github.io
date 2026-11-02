@@ -1,0 +1,70 @@
+---
+import Icon from "./Icon.astro";
+interface Release { title: string; type: string; year: string; cover: string; spotifyId: string }
+interface Props { project: { title: string; summary: string; filmType?: string; practice?: string; year: string; releases: Release[]; listenOn: { platform: string; url: string }[] } }
+const { project: p } = Astro.props;
+---
+<section class="music-case page-section">
+  <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href="/projects?category=3">Projects</a><span>/</span><span>Music &amp; Audiovisual</span></nav>
+  <h1>{p.title}</h1>
+  <div class="music-case__details"><span>{p.filmType}</span><span>{p.practice}</span>{p.year && <span>{p.year}</span>}</div>
+  <p class="music-case__summary">{p.summary}</p>
+  {p.listenOn.length > 0 && <div class="music-case__platforms">
+    <span class="mono">Listen on</span>
+    {p.listenOn.map(link => <a href={link.url} target="_blank" rel="noopener">{link.platform}<Icon name="arrow-up-right" size={16} /></a>)}
+  </div>}
+  <div class="music-stage" data-music-stage aria-live="polite" hidden></div>
+  <ul class="music-releases">
+    {p.releases.map(release => <li>
+      <div class="music-player" data-music-player>
+        <button type="button" data-spotify-id={release.spotifyId} aria-label={`Play on Spotify: ${release.title}`}>
+          <img src={release.cover} alt="" width="640" height="640" loading="lazy" decoding="async" />
+          <span class="music-player__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="m9 5 11 7-11 7Z" fill="currentColor" /></svg></span>
+        </button>
+      </div>
+      <h2>{release.title}</h2>
+      <p class="mono">{release.type} · {release.year}</p>
+    </li>)}
+  </ul>
+</section>
+<style>
+  .music-case { padding-top: clamp(140px, 15vw, 190px); padding-bottom: 80px; max-width: 1160px; margin-inline: auto; }
+  h1 { margin: 28px 0 24px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
+  .music-case__details { display: flex; flex-wrap: wrap; gap: 12px 24px; color: var(--text-secondary); font: 500 13px/1.5 var(--font-mono); margin-bottom: 20px; }
+  .music-case__summary { max-width: 70ch; margin-bottom: 28px; }
+  .music-case__platforms { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-bottom: 48px; }
+  .music-case__platforms .mono { color: var(--text-secondary); font-size: 12px; margin-right: 4px; }
+  .music-case__platforms a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px; border: 1px solid currentColor; border-radius: 999px; font-weight: 600; }
+  .music-case__platforms a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .music-releases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 40px 28px; align-items: start; }
+  .music-player { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #111; }
+  .music-stage { position: sticky; top: 110px; z-index: 2; margin-bottom: 32px; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgb(0 0 0 / .12); }
+  .music-stage :global(iframe) { display: block; width: 100%; height: 152px; border: 0; }
+  .music-player.is-current { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .music-player button { display: block; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer; background: #111; }
+  .music-player img { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .music-player__play { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: #fff; background: rgb(0 0 0 / .7); transition: background 180ms; }
+  .music-player button:is(:hover, :focus-visible) .music-player__play { background: var(--accent); }
+  h2 { font-size: 20px; margin: 14px 0 4px; }
+  li p { color: var(--text-secondary); font-size: 12px; margin: 0; }
+</style>
+<script>
+import { onPageLoad } from '../scripts/page-lifecycle';
+onPageLoad(scope => {
+ // One shared player above the grid; covers only choose what it plays.
+ const stage = document.querySelector<HTMLElement>('[data-music-stage]');
+ if (!stage) return;
+ document.querySelectorAll<HTMLButtonElement>('[data-spotify-id]').forEach(button => {
+  button.addEventListener('click', () => {
+   const frame = document.createElement('iframe');
+   frame.title = button.getAttribute('aria-label')!;
+   frame.src = `https://open.spotify.com/embed/album/${button.dataset.spotifyId}?utm_source=generator&theme=0`;
+   frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+   stage.replaceChildren(frame); stage.hidden = false;
+   document.querySelectorAll('[data-music-player]').forEach(el => el.classList.toggle('is-current', el.contains(button)));
+   if (stage.getBoundingClientRect().top < 0) stage.scrollIntoView({ block: 'nearest' });
+  }, { signal: scope.signal });
+ });
+ scope.cleanup(() => stage.replaceChildren());
+});
+</script>
