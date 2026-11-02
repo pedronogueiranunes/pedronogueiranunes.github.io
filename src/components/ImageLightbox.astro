@@ -1,0 +1,68 @@
+---
+// Shared image viewer. Any element with [data-gallery-src] inside a [data-lightbox-group]
+// opens here instead of navigating to the file (the href stays as the no-JS fallback).
+import Icon from "./Icon.astro";
+---
+<dialog class="case-lightbox" aria-label="Image viewer" data-lightbox>
+  <div class="case-lightbox-bar"><p data-gallery-caption></p><button type="button" data-gallery-close aria-label="Close image"><Icon name="close" size={20}/></button></div>
+  <div class="case-lightbox-image"><img alt="" /></div>
+  <div class="case-lightbox-controls">
+    <button type="button" data-gallery-prev aria-label="Previous image"><Icon name="arrow-left"/></button>
+    <output data-gallery-counter></output>
+    <button type="button" data-gallery-next aria-label="Next image"><Icon name="arrow-right"/></button>
+    <a class="case-lightbox-download" data-gallery-download download><Icon name="download"/><span>Download</span></a>
+    <button type="button" data-gallery-fullscreen aria-label="Full screen"><Icon name="fullscreen"/></button>
+  </div>
+</dialog>
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  onPageLoad(scope => {
+    const dialog = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+    if (!dialog) return;
+    const image = dialog.querySelector<HTMLImageElement>(".case-lightbox-image img")!;
+    const download = dialog.querySelector<HTMLAnchorElement>("[data-gallery-download]")!;
+    let triggers: HTMLElement[] = [];
+    let active = 0;
+    let opener: HTMLElement | undefined;
+    const show = (index: number) => {
+      active = (index + triggers.length) % triggers.length;
+      const item = triggers[active];
+      image.src = item.dataset.gallerySrc!;
+      // Read visible (already translated) text; data-* attributes are not localized.
+      const alt = item.querySelector("img")?.alt || item.dataset.galleryAlt || "";
+      const caption = item.closest("figure")?.querySelector("figcaption")?.textContent?.trim();
+      image.alt = alt;
+      download.href = item.dataset.gallerySrc!;
+      download.setAttribute("download", item.dataset.gallerySrc!.split("/").pop()!);
+      dialog.querySelector("[data-gallery-caption]")!.textContent = caption || alt;
+      dialog.querySelector("[data-gallery-counter]")!.textContent = `${active + 1} / ${triggers.length}`;
+      const single = triggers.length < 2;
+      dialog.querySelectorAll<HTMLElement>("[data-gallery-prev],[data-gallery-next],[data-gallery-counter]").forEach(el => el.hidden = single);
+    };
+    document.querySelectorAll<HTMLElement>("[data-gallery-src]").forEach(trigger => trigger.addEventListener("click", event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey) return; // let modified clicks open the file
+      event.preventDefault();
+      const group = trigger.closest("[data-lightbox-group]") || document;
+      triggers = Array.from(group.querySelectorAll<HTMLElement>("[data-gallery-src]"));
+      opener = trigger;
+      show(triggers.indexOf(trigger));
+      dialog.showModal();
+    }, { signal: scope.signal }));
+    dialog.querySelector("[data-gallery-close]")!.addEventListener("click", () => dialog.close(), { signal: scope.signal });
+    dialog.querySelector("[data-gallery-prev]")!.addEventListener("click", () => show(active - 1), { signal: scope.signal });
+    dialog.querySelector("[data-gallery-next]")!.addEventListener("click", () => show(active + 1), { signal: scope.signal });
+    const fullscreen = dialog.querySelector<HTMLButtonElement>("[data-gallery-fullscreen]")!;
+    fullscreen.hidden = !document.fullscreenEnabled;
+    fullscreen.addEventListener("click", async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await dialog.requestFullscreen(); } catch { /* dialog stays usable */ } }, { signal: scope.signal });
+    dialog.addEventListener("keydown", event => {
+      if (triggers.length < 2) return;
+      if (event.key === "ArrowRight") { event.preventDefault(); show(active + 1); }
+      if (event.key === "ArrowLeft") { event.preventDefault(); show(active - 1); }
+      if (event.key === "Home") { event.preventDefault(); show(0); }
+      if (event.key === "End") { event.preventDefault(); show(triggers.length - 1); }
+    }, { signal: scope.signal });
+    dialog.addEventListener("close", () => { if (document.fullscreenElement === dialog) void document.exitFullscreen().catch(() => {}); image.removeAttribute("src"); opener?.focus(); }, { signal: scope.signal });
+    dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); }, { signal: scope.signal });
+    scope.cleanup(() => { if (dialog.open) dialog.close(); });
+  });
+</script>
