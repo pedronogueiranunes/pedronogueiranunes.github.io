@@ -1,23 +1,24 @@
 ---
 interface Film { youtubeId: string; title: string; duration: string; poster: string }
-interface Props { films: Film[]; type: string }
-const { films, type } = Astro.props;
+interface Props { films: Film[]; type: string; square?: boolean }
+const { films, type, square = false } = Astro.props;
 const first = films[0];
 ---
 <span class="film-preview" data-film-preview data-films={JSON.stringify(films)}>
   <span hidden>{films.map(film => <span data-film-label>{film.title}</span>)}</span>
-  <img class="film-preview__image" src={first.poster} width="960" height="540" alt="" loading="lazy" decoding="async" />
+  <img class="film-preview__image" src={first.poster} width={square ? 640 : 960} height={square ? 640 : 540} alt="" loading="lazy" decoding="async" />
   <span class="film-preview__top"><span>{type}</span><span data-film-duration>{first.duration}</span></span>
   <span class="film-preview__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="m9 5 11 7-11 7Z" fill="currentColor" /></svg></span>
   <span class="film-preview__bottom">
     <span class="film-preview__title" data-film-title>{first.title}</span>
-    <span class="film-preview__navigation"><span>{films.length > 1 ? "Move to browse" : "View film"}</span><span><span data-film-index>01</span> / {String(films.length).padStart(2, '0')}</span></span>
+    <span class="film-preview__navigation"><span>{films.length > 1 ? "Move to browse" : square ? "Listen" : "View film"}</span><span><span data-film-index>01</span> / {String(films.length).padStart(2, '0')}</span></span>
     <span class="film-preview__segments" aria-hidden="true">{films.map((_, i) => <span class:list={{ 'is-current': i === 0 }} />)}</span>
   </span>
-  {films.length > 1 && <span class="sr-only">Use left and right arrows to browse videos.</span>}
+  {films.length > 1 && <span class="sr-only">{square ? "Use left and right arrows to browse releases." : "Use left and right arrows to browse videos."}</span>}
 </span>
 <style is:global>
 .project-card--film .project-media { aspect-ratio: 16 / 9; background: #111; }
+.project-card--music .project-media { aspect-ratio: 1; }
 .project-card--film .project-media::before { display: none; }
 .film-preview { position: absolute; inset: 0; display: block; overflow: hidden; color: #fff; background: #111; }
 .film-preview__image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 400ms cubic-bezier(.16,1,.3,1); }

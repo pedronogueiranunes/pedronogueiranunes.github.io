@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import FilmGallery from "../../components/FilmGallery.astro";
+import MusicCase from "../../components/MusicCase.astro";
 import ProjectVideo from "../../components/ProjectVideo.astro";
 import { videoFor } from "../../data/project-videos";
 import PixelTrail from "../../components/PixelTrail.astro";
@@ -48,7 +49,7 @@ const caseSchema = jsonLd({
   name: p.title,
   description: p.summary,
   url: `${ORIGIN}/work/${caseSlug}/`,
-  image: (p.collection || p.archivedWebsite || p.films.length > 0) ? `${ORIGIN}${p.cover || p.image}` : `${ORIGIN}/assets/og/${caseSlug}.jpg`,
+  image: (p.collection || p.archivedWebsite || p.films.length > 0 || p.releases.length > 0) ? `${ORIGIN}${p.cover || p.image}` : `${ORIGIN}/assets/og/${caseSlug}.jpg`,
   ...(p.year ? { dateCreated: p.year } : {}),
   creator: { "@id": PERSON_ID },
   keywords: [p.category, ...p.tools].join(", "),
@@ -61,9 +62,14 @@ const related = (await getCollection("projects"))
 const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={(p.collection || p.archivedWebsite || p.films.length > 0) ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
+<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={(p.collection || p.archivedWebsite || p.films.length > 0 || p.releases.length > 0) ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
   <script type="application/ld+json" slot="head" set:html={caseSchema} />
-  {p.films.length > 0 ? (
+  {p.releases.length > 0 ? (
+    <>
+      <MusicCase project={p} />
+      <RelatedProjects title="More music and audiovisual." eyebrow="Music & Audiovisual" projects={related.filter(other => other.data.films.length > 0 || other.data.releases.length > 0)} />
+    </>
+  ) : p.films.length > 0 ? (
     <>
       <section class="film-case page-section">
         <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href="/projects?category=3">Projects</a><span>/</span><span>Music &amp; Audiovisual</span></nav>
@@ -72,7 +78,7 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
         <p class="film-case__summary">{p.summary}</p>
         <FilmGallery films={p.films} />
       </section>
-      <RelatedProjects title="More films and performances." eyebrow="Music & Audiovisual" projects={related.filter(other => other.data.films.length > 0).sort((a,b) => Number(b.data.filmType === p.filmType) - Number(a.data.filmType === p.filmType))} />
+      <RelatedProjects title="More films and performances." eyebrow="Music & Audiovisual" projects={related.filter(other => other.data.films.length > 0 || other.data.releases.length > 0).sort((a,b) => Number(b.data.filmType === p.filmType) - Number(a.data.filmType === p.filmType))} />
     </>
   ) : (p.collection || p.archivedWebsite) ? (
     <>
