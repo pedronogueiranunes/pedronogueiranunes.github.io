@@ -71,7 +71,7 @@ const ogLocale = { en: "en_US", "pt-br": "pt_BR", es: "es_ES", fr: "fr_CA" }[loc
       // Restore an explicitly selected language on unprefixed entry URLs.
       try {
         const language = localStorage.getItem("language");
-        if (["pt-br", "es", "fr"].includes(language || "") && !/^\/(pt-br|es|fr)(\/|$)/.test(location.pathname)) {
+        if (language === "pt-br" && !/^\/pt-br(\/|$)/.test(location.pathname)) {
           location.replace(`/${language}${location.pathname}${location.search}${location.hash}`);
         }
       } catch {}

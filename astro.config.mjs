@@ -9,7 +9,7 @@ export default defineConfig({
   build: { inlineStylesheets: "always" },
   i18n: {
     defaultLocale: "en",
-    locales: ["en", "pt-br", "es", "fr"],
+    locales: ["en", "pt-br"],
     routing: { prefixDefaultLocale: false },
   },
 });

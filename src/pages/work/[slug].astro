@@ -12,7 +12,6 @@ import ToolChip from "../../components/ToolChip.astro";
 import Icon from "../../components/Icon.astro";
 import CaseShowcase from "../../components/CaseShowcase.astro";
 import RelatedProjects from "../../components/RelatedProjects.astro";
-import { bsaCase } from "../../data/cases";
 import { logoFor } from "../../data/home";
 import { PERSON_ID, ORIGIN, jsonLd } from "../../data/seo";
 export async function getStaticPaths() {
@@ -25,14 +24,13 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
-const isBsa = project.slug === "bsa-legal";
 const liveUrl = site.projectUrls[project.slug];
 const archiveUrl = liveUrl ? `https://web.archive.org/web/*/${liveUrl}` : undefined;
-const stack = isBsa ? bsaCase.stack : p.tools;
+const stack = p.tools;
 const toolIcon = (tool: string) => /GA4|GTM|analytics/i.test(tool) ? "chart" : /GSAP/i.test(tool) ? "category-experiment" : "category-web";
 // TODO: Replace layout fixtures with verified project narratives before publishing.
 // Fixtures are intentionally excluded from production output.
-const showMock = import.meta.env.DEV && !isBsa;
+const showMock = import.meta.env.DEV;
 const strategyTitles: Record<string, string> = {
   "green-nation-collective": "From a collective idea to a campaign ready to launch.",
   "lemmbra-olympiad": "One registration journey across two countries.",
@@ -60,9 +58,7 @@ const caseSchema = jsonLd({
 const related = (await getCollection("projects"))
   .filter((other) => other.slug !== project.slug)
   .sort((a, b) => a.data.order - b.data.order);
-const metrics = isBsa
-  ? bsaCase.heroMetrics
-  : p.metrics.map((m) => ({ ...m, baseline: "" }));
+const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
 ---
 
 <Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={(p.collection || p.archivedWebsite || p.films.length > 0) ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
@@ -113,23 +109,12 @@ const metrics = isBsa
           <span>/</span>
           <span>{p.category}</span>
           <span>/</span>
-          <span>{isBsa ? "BSA Legal" : p.title.split(":")[0]}</span>
+          <span>{p.title.split(":")[0]}</span>
         </nav>
-        <h1>
-          {isBsa ? (
-            <>
-              {bsaCase.title.split(" in ")[0]}
-              <br />
-              in three months.
-            </>
-          ) : (
-            p.title
-          )}
-        </h1>
-        <p>{isBsa ? bsaCase.summary : p.summary}</p>
+        <h1>{p.title}</h1>
+        <p>{p.summary}</p>
         <div class="chips">
           <ToolChip label={p.category} icon="category-web" />
-          {isBsa && <ToolChip label="CMS + forms" icon="grid2" />}
           <ToolChip label={p.location} icon="location" />
           <ToolChip label={p.year} icon="calendar" />
         </div>
@@ -139,7 +124,7 @@ const metrics = isBsa
             <span class="case-client-avatar" aria-hidden="true"><Icon name="category-brand" size={18} /></span>
             <div>
               <p class="case-client">
-                {isBsa ? bsaCase.client : p.title.split(":")[0]}
+                {p.title.split(":")[0]}
               </p>
             </div>
           </div>
@@ -160,8 +145,8 @@ const metrics = isBsa
           <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>
         </div>
       </div>
-      <div class="case-result-card">
-        <p class="mono accent"><Icon name="chart" size={16} />{isBsa ? "Results in 3 months" : "Results"}</p>
+      {metrics.length > 0 && <div class="case-result-card">
+        <p class="mono accent"><Icon name="chart" size={16} />Results</p>
         <dl>
           {metrics.map((metric) => (
             <div>
@@ -173,7 +158,7 @@ const metrics = isBsa
             </div>
           ))}
         </dl>
-      </div>
+      </div>}
     </div>
     <div class="browser-mockup" tabindex="0" aria-label="Website preview">
       <div class="browser-toolbar">
@@ -207,93 +192,55 @@ const metrics = isBsa
       {showMock && <p class="case-mock-notice"><Icon name="category-experiment" />Mock content for layout review. Development preview only.</p>}
       <section>
         <h2>The challenge</h2>
-        <h3>{isBsa ? bsaCase.challengeTitle : p.title}</h3>
-        <p>{isBsa ? bsaCase.challenge : p.summary}</p>
+        <h3>{p.title}</h3>
+        <p>{p.summary}</p>
         {showMock && <>
           <p>This sample brief explores how a growing team could present a complex offer clearly, support different audiences and keep the next step easy to find. It is a layout fixture, not a verified description of this project.</p>
           <p>A longer narrative needs room for context, constraints and competing priorities. This paragraph tests reading rhythm, line length and the spacing between ideas before the final case copy is available.</p>
         </>}
       </section>
-      <section>
+      {showMock && <section>
         <h2>The strategy</h2>
-        <h3>{isBsa ? "Three moves, in this order." : strategyTitle}</h3>
-        {isBsa ? (
-          <ol class="strategy-list">
-            {bsaCase.strategy.map((row) => (
-              <li>
-                <h4>{row[0]}</h4>
-                <p>{row[1]}</p>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          showMock ? <ol class="strategy-list">
-            <li><h4>Clarify the journey</h4><p>Map the questions a visitor may bring, group related information and establish a clear path through the page. This is sample strategy content for reviewing the template.</p></li>
-            <li><h4>Build a flexible system</h4><p>Explore reusable sections, readable typography and a consistent set of controls. Test both short and long content across desktop, tablet and mobile layouts.</p></li>
-            <li><h4>Review before launch</h4><p>Check navigation, forms and responsive behavior, then document what still needs real content or validation. No project outcome is implied by this mock narrative.</p></li>
-          </ol> : <div class="case-copy-placeholder" aria-label="Project-specific strategy awaiting content"></div>
-        )}
-      </section>
-      <section>
+        <h3>{strategyTitle}</h3>
+        <ol class="strategy-list">
+          <li><h4>Clarify the journey</h4><p>Map the questions a visitor may bring, group related information and establish a clear path through the page. This is sample strategy content for reviewing the template.</p></li>
+          <li><h4>Build a flexible system</h4><p>Explore reusable sections, readable typography and a consistent set of controls. Test both short and long content across desktop, tablet and mobile layouts.</p></li>
+          <li><h4>Review before launch</h4><p>Check navigation, forms and responsive behavior, then document what still needs real content or validation. No project outcome is implied by this mock narrative.</p></li>
+        </ol>
+      </section>}
+      {p.metrics.length > 0 && <section>
         <h2>The results</h2>
-        <h3>{isBsa ? "Three months later." : p.title.split(":")[0]}</h3>
-        {showMock && <p>This sample results section tests how narrative and metric cards sit together. Replace placeholder figures and explanations with verified evidence before presenting this case publicly.</p>}
-        {isBsa ? (
-          <table class="results-table">
-            <thead>
-              <tr>
-                {["Metric", "Before", "After", "Change"].map((label) => (
-                  <th scope="col">{label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {bsaCase.results.map((row) => (
-                <tr>
-                  {row.map((value, i) =>
-                    i === 0 ? <th scope="row">{value}</th> : <td>{value}</td>,
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <dl class="featured-metrics">
-            {p.metrics.map((metric) => (
-              <div>
-                <dt>{metric.label}</dt>
-                <dd>{metric.value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
-      </section>
-      <blockquote class="case-testimonial">
-        {showMock && <small class="case-testimonial-note">Fictional quote for layout review</small>}
+        <h3>{p.title.split(":")[0]}</h3>
+        <dl class="featured-metrics">
+          {p.metrics.map((metric) => (
+            <div>
+              <dt>{metric.label}</dt>
+              <dd>{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>}
+      {showMock && <blockquote class="case-testimonial">
+        <small class="case-testimonial-note">Fictional quote for layout review</small>
         <span aria-hidden="true">“</span>
-        <p>
-          {isBsa
-            ? bsaCase.quote
-            : showMock ? "We needed a website that made the idea easy to understand and gave our team the confidence to keep it moving. The result feels clear, considered and easy to build on." : "[Client quote about working together and the result. Two or three lines.]"}
-        </p>
-        <cite><Icon name="chat" />{isBsa ? bsaCase.quoteAttribution : showMock ? "Sample client, fictional testimonial" : "[Name], [Role]"}</cite>
-      </blockquote>
+        <p>We needed a website that made the idea easy to understand and gave our team the confidence to keep it moving. The result feels clear, considered and easy to build on.</p>
+        <cite><Icon name="chat" />Sample client, fictional testimonial</cite>
+      </blockquote>}
     </div>
     <aside class="case-sidebar">
       <div class="snapshot">
         <h2>Project snapshot</h2>
         <dl>
           {[
-            ["Client", isBsa ? bsaCase.client : p.title.split(":")[0]],
-            ["Industry", isBsa ? bsaCase.industry : p.category],
+            ["Client", p.title.split(":")[0]],
+            ["Studio", p.studio],
             ["Market", p.location],
-            ["Services", isBsa ? bsaCase.services : p.category],
-            ["Timeline", isBsa ? bsaCase.timeline : "[X] weeks"],
-
-          ].map(([key, value]) => (
+            ["Services", p.services],
+            ["Timeline", p.duration],
+          ].filter(([, value]) => value?.length).map(([key, value]) => (
             <div>
               <dt>{key}</dt>
-              <dd>{value}</dd>
+              <dd>{Array.isArray(value) ? value.map((item, n) => <>{n > 0 && ", "}<span>{item}</span></>) : value}</dd>
             </div>
           ))}
         </dl>

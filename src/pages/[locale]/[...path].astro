@@ -11,6 +11,7 @@ import Thoughts from "../thoughts/index.astro";
 import ThoughtsCategory from "../thoughts/category/[category].astro";
 import { categories } from "../../data/blog";
 import { site } from "../../data/site";
+import { locales } from "../../i18n/locales";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
   const posts = await getCollection("posts");
@@ -24,7 +25,7 @@ export async function getStaticPaths() {
     ...categories.filter(c => posts.some(post => post.data.category === c.slug)).map(c => ({ path: `thoughts/category/${c.slug}`, props: {} })),
     ]),
   ];
-  return ["pt-br", "es", "fr"].flatMap(locale => paths.map(({ path, props }) => ({ params: { locale, path }, props })));
+  return locales.filter(l => l !== "en").flatMap(locale => paths.map(({ path, props }) => ({ params: { locale, path }, props })));
 }
 const path = Astro.params.path || "";
 if (path === "thoughts" && !site.blogEnabled) return Astro.redirect(`/${Astro.params.locale}/`);
