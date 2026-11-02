@@ -22,6 +22,7 @@ export const site = {
     "bsa-legal": "https://bsa-legal.webflow.io/",
     "waipono-farms": "https://waipono-farms.webflow.io/",
     "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
+    "dither-lab": "https://pedronogueiranunes.github.io/dither-lab/",
   } as Record<string, string>,
   availability: "Booking projects for November", // TODO: confirm current availability before publishing.
 };

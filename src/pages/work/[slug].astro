@@ -27,7 +27,8 @@ const { project } = Astro.props;
 const p = project.data;
 const video = videoFor(p.caseSlug || project.slug);
 const liveUrl = site.projectUrls[project.slug];
-const archiveUrl = liveUrl ? `https://web.archive.org/web/*/${liveUrl}` : undefined;
+const isExperiment = p.kinds?.includes("4");
+const archiveUrl = liveUrl && !isExperiment ? `https://web.archive.org/web/*/${liveUrl}` : undefined;
 const stack = p.tools;
 const toolIcon = (tool: string) => /GA4|GTM|analytics/i.test(tool) ? "chart" : /GSAP/i.test(tool) ? "category-experiment" : "category-web";
 // TODO: Replace layout fixtures with verified project narratives before publishing.
@@ -122,7 +123,7 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
         <h1>{p.title}</h1>
         <p>{p.summary}</p>
         <div class="chips">
-          <ToolChip label={p.category} icon="category-web" />
+          <ToolChip label={p.category} icon={isExperiment ? "category-experiment" : "category-web"} />
           {p.location && <ToolChip label={p.location} icon="location" />}
           {p.year && <ToolChip label={p.year} icon="calendar" />}
         </div>
@@ -148,9 +149,9 @@ const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
             secondary
             icon="arrow-up-right"
           >
-            Visit live site
+            {isExperiment ? "Open the lab" : "Visit live site"}
           </Button>
-          <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>
+          {!isExperiment && <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>}
         </div>
       </div>
       {metrics.length > 0 && <div class="case-result-card">
