@@ -757,7 +757,7 @@ img {
   position: relative;
   overflow: hidden;
 }
-.nav-feature-thumb img {
+.nav-feature-thumb > * {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -766,12 +766,12 @@ img {
   object-position: center top;
 }
 /* Three-photo cross-fade: each image holds ~3s, fades ~1s, 12s loop. */
-.nav-feature-thumb img:nth-child(n + 2):nth-last-child(n) {
+.nav-feature-thumb > :nth-child(n + 2) {
   opacity: 0;
   animation: nav-thumb-fade 12s infinite;
   animation-delay: calc(var(--slide) * 4s - 4s);
 }
-.nav-feature-thumb img:first-child:not(:only-child) {
+.nav-feature-thumb > :first-child:not(:only-child) {
   animation: nav-thumb-fade-first 12s infinite;
 }
 @keyframes nav-thumb-fade {
@@ -785,8 +785,8 @@ img {
   100% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav-feature-thumb img { animation: none !important; }
-  .nav-feature-thumb img:not(:first-child) { opacity: 0; }
+  .nav-feature-thumb > * { animation: none !important; }
+  .nav-feature-thumb > :not(:first-child) { opacity: 0; }
 }
 .nav-feature .nav-feature-cta {
   display: flex;
