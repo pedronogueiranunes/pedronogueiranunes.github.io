@@ -25,7 +25,7 @@ const menu = [
       meta: "Web Design & Dev · 2024",
       cta: "See case",
       href: "/work/lemmbra-olympiad",
-      images: ["/assets/cases/lemmbra-olympiad-cover.webp"],
+      images: [{ src: "/assets/cases/lemmbra-olympiad-cover.webp", focus: "center top" }],
     },
   },
   {
@@ -45,7 +45,12 @@ const menu = [
       cta: "Download CV",
       href: site.cvUrl || undefined,
       // ponytail: three about-page photos, cross-faded in CSS.
-      images: ["/assets/career/2024-05-park.webp", "/assets/career/2018-09-selfie.webp", "/assets/career/2025-05-selfie.webp"],
+      // Focus points keep the face in the short thumbnail.
+      images: [
+        { src: "/assets/career/2024-09-selfie.webp", focus: "62% 18%" },
+        { src: "/assets/career/2023-04-coffee.webp", focus: "45% 16%" },
+        { src: "/assets/career/2023-01-desk.webp", focus: "50% 60%" },
+      ],
     },
   },
   {
@@ -148,7 +153,7 @@ import LogoModel from "./LogoModel.astro";
             }
             class="nav-feature"
           >
-            <div class="nav-feature-thumb">{item.feature.images?.map((src, n) => <img src={src} alt="" loading="lazy" decoding="async" style={`--slide:${n}`} />)}</div>
+            <div class="nav-feature-thumb">{item.feature.images?.map((image, n) => <img src={image.src} alt="" loading="lazy" decoding="async" style={`--slide:${n};object-position:${image.focus}`} />)}</div>
             <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
             {item.feature.meta && <small>{item.feature.meta}</small>}
@@ -211,7 +216,7 @@ import LogoModel from "./LogoModel.astro";
               item.key === "about" && !site.cvUrl ? "true" : undefined
             }
           >
-            <div class="nav-feature-thumb">{item.feature.images?.map((src, n) => <img src={src} alt="" loading="lazy" decoding="async" style={`--slide:${n}`} />)}</div>
+            <div class="nav-feature-thumb">{item.feature.images?.map((image, n) => <img src={image.src} alt="" loading="lazy" decoding="async" style={`--slide:${n};object-position:${image.focus}`} />)}</div>
             <small class="nav-feature-eyebrow">{item.feature.eyebrow}</small>
             <p>{item.feature.title}</p>
             {item.feature.meta && <small>{item.feature.meta}</small>}
