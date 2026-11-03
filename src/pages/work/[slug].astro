@@ -62,9 +62,12 @@ const related = (await getCollection("projects"))
   .filter((other) => other.slug !== project.slug)
   .sort((a, b) => a.data.order - b.data.order);
 const metrics = p.metrics.map((m) => ({ ...m, baseline: "" }));
+// Collection, archived and film/music cases use a cover image that is not a
+// dedicated 1200x630 OG asset, so the declared og:image dimensions are omitted.
+const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 || p.releases.length > 0;
 ---
 
-<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={(p.collection || p.archivedWebsite || p.films.length > 0 || p.releases.length > 0) ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} ogType="article" pageClass="case-page">
+<Base title={`${p.title} | Pedro Nogueira`} description={p.summary || undefined} image={usesCoverImage ? p.cover || p.image : `/assets/og/${caseSlug}.jpg`} {...(usesCoverImage ? { imageWidth: null, imageHeight: null } : {})} ogType="article" pageClass="case-page">
   <script type="application/ld+json" slot="head" set:html={caseSchema} />
   {p.releases.length > 0 ? (
     <>
