@@ -4,7 +4,7 @@ export const site = {
   // building /thoughts pages. Set to true to bring it all back.
   blogEnabled: false,
   email: "pedronogueiranunes@gmail.com",
-  bookingUrl: "",
+  bookingUrl: "https://calendly.com/pedronogueiranunes/30min",
   cvUrl: "/assets/Pedro_Nogueira_CV_2026_EN.pdf",
   sampleProposalUrl: "",
   socials: {
