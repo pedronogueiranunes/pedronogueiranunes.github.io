@@ -496,6 +496,17 @@ const careerShots = [
       if (index >= 0) preview.classList.add("is-active");
       if (!frame) frame = requestAnimationFrame(follow);
     }, { signal: scope.signal });
+    // Warm each role's first clip before the first hover so the preview doesn't wait on the network.
+    const warm = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      warm.disconnect();
+      sets.forEach(set => {
+        const first = set.querySelector('video');
+        if (first && !first.getAttribute('src')) { first.preload = 'auto'; first.src = first.dataset.src!; first.load(); }
+      });
+    }, { rootMargin: '600px' });
+    warm.observe(list);
+    scope.cleanup(() => warm.disconnect());
     const hide = () => { preview.classList.remove("is-active"); ++transitionId; clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; };
     list.addEventListener("pointerleave", hide, { signal: scope.signal });
     // pointerleave doesn't fire when scrolling moves the list out from under a still cursor.
