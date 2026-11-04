@@ -496,7 +496,11 @@ const careerShots = [
       if (index >= 0) preview.classList.add("is-active");
       if (!frame) frame = requestAnimationFrame(follow);
     }, { signal: scope.signal });
-    list.addEventListener("pointerleave", () => { preview.classList.remove("is-active"); ++transitionId; clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; }, { signal: scope.signal });
+    const hide = () => { preview.classList.remove("is-active"); ++transitionId; clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; };
+    list.addEventListener("pointerleave", hide, { signal: scope.signal });
+    // pointerleave doesn't fire when scrolling moves the list out from under a still cursor.
+    addEventListener("scroll", () => { if (current >= 0 && !document.elementFromPoint(tx, ty)?.closest(".career-timeline")) hide(); }, { passive: true, signal: scope.signal });
+    document.documentElement.addEventListener("pointerleave", hide, { signal: scope.signal });
     scope.cleanup(() => { ++transitionId; clearTimeout(timer); cancelAnimationFrame(frame); preview.querySelectorAll('video').forEach(video=>video.pause()); });
   });
 </script>
