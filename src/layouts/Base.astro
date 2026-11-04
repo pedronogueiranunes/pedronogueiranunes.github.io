@@ -16,6 +16,9 @@ interface Props {
   /** Social preview image path, 1200x630. */
   image?: string;
   ogType?: "website" | "article" | "profile";
+  /** Social image pixel dimensions. Pass null when the source is not 1200x630. */
+  imageWidth?: number | null;
+  imageHeight?: number | null;
 }
 const {
   title,
@@ -23,6 +26,8 @@ const {
   pageClass,
   image = "/assets/og/default.jpg",
   ogType = "website",
+  imageWidth = 1200,
+  imageHeight = 630,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogLocale = { en: "en_US", "pt-br": "pt_BR", es: "es_ES", fr: "fr_CA" }[localeFromPath(Astro.url.pathname)];
@@ -45,11 +50,16 @@ const ogLocale = { en: "en_US", "pt-br": "pt_BR", es: "es_ES", fr: "fr_CA" }[loc
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site).href} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    {imageWidth && imageHeight && (
+      <>
+        <meta property="og:image:width" content={String(imageWidth)} />
+        <meta property="og:image:height" content={String(imageHeight)} />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site).href} />
     <slot name="head" />
     <link
       rel="preload"
