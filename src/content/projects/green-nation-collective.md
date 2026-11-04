@@ -10,7 +10,7 @@ tint: "#dce6de"
 cover: "/assets/cases/green-nation-collective-cover.webp"
 caseSlug: "green-nation-collective"
 featured: false
-summary: "Website for an innovation ecosystem connecting founders, mentors and investors building sustainable solutions in wellness, energy, food, water, technology and real estate."
+summary: "Website for an innovation ecosystem connecting founders, mentors and investors building sustainable solutions in wellness, energy, food and water."
 tools: ["Figma", "Webflow", "JavaScript", "Google Analytics", "Tag Manager"]
 services: ["Design", "Design system", "Webflow development", "Integrations"]
 studio: "Qodeture"
