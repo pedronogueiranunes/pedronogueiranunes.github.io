@@ -3,7 +3,7 @@ import { site } from "../data/site";
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import IconWaves from "../components/IconWaves.astro";
-import DitherIcon from "../components/DitherIcon.astro";
+import DitherVideo from "../components/DitherVideo.astro";
 import PixelTrail from "../components/PixelTrail.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
 import Button from "../components/Button.astro";
@@ -204,18 +204,8 @@ const posts = (await getCollection("posts")).sort(
           class="problem-card"
         >
           <IconWaves />
-          <div
-            class="problem-art"
-            style={`--art-mask:url('/assets/figma/488-6789-${problem.mask}.svg')`}
-          >
-            <ResponsiveImage
-              src={`/assets/figma/488-6789-${problem.image}.webp`}
-              width="412"
-              height="412"
-              loading="lazy"
-              alt=""
-            />
-            <DitherIcon source={i === 1 ? "/assets/experiments/dither-website-3d.webp" : undefined} />
+          <div class="problem-art problem-video-art">
+            <DitherVideo name={["conversion", "website", "partnership"][i]} />
           </div>
           <div class="problem-top">
             <span>{String(i + 1).padStart(2, "0")}</span>

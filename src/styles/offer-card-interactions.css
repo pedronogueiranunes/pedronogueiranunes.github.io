@@ -1,0 +1,26 @@
+.services-page .offer-grid > article.offer-card {
+  color: var(--text);
+  transition: background-color 240ms ease, color 240ms ease, border-color 240ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .services-page .offer-grid > article.offer-card:hover {
+    --text: #ffffff;
+    --text-secondary: #c3c3bb;
+    --border: #ffffff35;
+    background: radial-gradient(ellipse at 6% 0%, #ff5a1f66, transparent 50%), #1c1e1d;
+    border-color: transparent;
+  }
+}
+
+.services-page .offer-grid > article.offer-card:has(:focus-visible) {
+  --text: #ffffff;
+  --text-secondary: #c3c3bb;
+  --border: #ffffff35;
+  background: radial-gradient(ellipse at 6% 0%, #ff5a1f66, transparent 50%), #1c1e1d;
+  border-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-page .offer-grid > article.offer-card { transition: none; }
+}
