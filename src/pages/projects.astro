@@ -240,6 +240,8 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
       scope.cleanup(() => { introObserver.disconnect(); introAnimations.forEach((animation) => animation.cancel()); });
     }
     let category = "0";
+    const wanted = new URLSearchParams(window.location.search).get("category");
+    if (wanted && root.querySelector(`button[data-category="${wanted}"]`)) category = wanted;
     let dispatchedCategory: string | null = null;
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       "button[data-category]",

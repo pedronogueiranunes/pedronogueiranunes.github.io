@@ -25,7 +25,7 @@ const artPreviews = [
 const artColors = imageSizes as Record<string, { dominant?: string }>;
 ---
 
-<article class:list={["project-card", { "project-card--collection": p.collection, "project-card--film": media.length > 0, "project-card--music": p.releases.length > 0, "project-card--website": !p.collection && media.length === 0 }]} data-category={p.category}>
+<article class:list={["project-card", { "project-card--collection": p.collection, "project-card--film": media.length > 0, "project-card--music": p.releases.length > 0, "project-card--website": !p.collection && media.length === 0 }]} data-category={p.category} data-kinds={(p.kinds?.join(" ") || (p.collection ? "2" : "0"))}>
   <div class="project-media-frame">
   <span class="project-media-halo" aria-hidden="true"><span></span></span>
   <a
@@ -223,7 +223,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
       // Match the source aspect ratio so the open preview has neither crop nor letterboxing.
       const openHeight = width * (video ? video.height / video.width : 600 / 960); // no video: same 8:5 as the preview videos
       card.style.setProperty('--web-open-height', `${openHeight}px`);
-      card.style.setProperty('--web-card-height', `${width * .75 + compactBody}px`);
+      card.style.setProperty('--web-card-height', `${openHeight + compactBody + (card.closest('.project-rail') ? 44 : 0) /* rail cards keep their spacing on hover */}px`);
       card.dataset.webReady = 'true';
     };
     const observer = new ResizeObserver(entries => entries.forEach(entry => measure(entry.target as HTMLElement)));

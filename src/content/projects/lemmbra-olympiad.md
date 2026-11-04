@@ -9,7 +9,7 @@ tint: "#e6e3ef"
 cover: "/assets/cases/lemmbra-olympiad-cover.webp"
 caseSlug: "lemmbra-olympiad"
 featured: false
-summary: "Website for a linguistics olympiad sponsored by the German Embassy in Brazil and run by UFF, UFPR and Lemmbra, connected to the olympiad web app."
+summary: "Website for a linguistics olympiad sponsored by the German Embassy in Brazil, connected to its registration web app."
 tools: ["Webflow", "JavaScript", "GSAP", "Memberstack", "Google Analytics", "Tag Manager"]
 services: ["Branding", "Design system", "Website", "API integration with the olympiad web app"]
 country: "Brazil"

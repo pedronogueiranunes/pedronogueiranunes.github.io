@@ -19,10 +19,10 @@ const {
   <div class="section-heading">
     <div>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2>{title}</h2>
+      <h2><slot name="title">{title}</slot></h2>
     </div>
     <div class="rail-controls">
-      <a class="text-link" href="/projects">
+      <a class="text-link" href="/projects" data-see-all>
         See all projects <Icon name="arrow-right" />
       </a>
       <div class="rail-arrows">
