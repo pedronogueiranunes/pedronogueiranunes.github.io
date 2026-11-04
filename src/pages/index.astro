@@ -15,9 +15,12 @@ import Comparison from "../components/Comparison.astro";
 import Process from "../components/Process.astro";
 import { problems } from "../data/home";
 import { homeGraph, jsonLd } from "../data/seo";
-const projects = (await getCollection("projects")).filter(project => !project.data.collection && !project.data.archivedWebsite && project.data.films.length === 0 && project.data.releases.length === 0).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const kindsOf = (project: (typeof all)[number]) => project.data.kinds ?? [project.data.collection ? "2" : "0"];
+// ponytail: the latest 6 per category share one rail; CSS shows the selected category's cards.
+const projects = all.filter(project => [0, 1, 2, 3, 4].some(k => all.filter(p => kindsOf(p).includes(String(k))).slice(0, 6).includes(project)));
+// ponytail: same order as the category buttons on /projects (?category=index).
+const disciplines = ["Web Design & Dev", "Branding & Graphic Design", "Digital Art & Illustration", "Music & Audiovisual", "Experiments"];
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
@@ -170,7 +173,19 @@ const posts = (await getCollection("posts")).sort(
     </div>
   </section>
   <div id="work">
-    <ProjectRail projects={projects} />
+    <ProjectRail projects={projects}>
+      <Fragment slot="title">
+        <span>I design</span>
+        <span class="discipline-picker">
+          <button type="button" id="discipline" aria-haspopup="listbox" aria-expanded="false" data-value="0">
+            <span>{disciplines[0]}</span>
+          </button>
+          <ul role="listbox" aria-label="Project category" hidden>
+            {disciplines.map((name, i) => <li role="option" tabindex="-1" data-value={i} aria-selected={i === 0}>{name}</li>)}
+          </ul>
+        </span>
+      </Fragment>
+    </ProjectRail>
   </div>
   <section class="problems-section page-section" id="where-to-start">
     <div class="section-heading">
@@ -308,6 +323,47 @@ const posts = (await getCollection("posts")).sort(
     const stopTravel = initPortraitTravel();
     if (stopTravel) scope.cleanup(stopTravel);
     scope.cleanup(initReveal());
+    const trigger = document.querySelector<HTMLButtonElement>("#discipline");
+    const menu = trigger?.nextElementSibling as HTMLUListElement | null;
+    const rail = document.querySelector<HTMLElement>(".project-rail");
+    const go = document.querySelector<HTMLAnchorElement>("[data-see-all]");
+    if (trigger && menu && rail) {
+      const options = [...menu.querySelectorAll<HTMLElement>("[role=option]")];
+      const setOpen = (open: boolean) => {
+        menu.hidden = !open;
+        trigger.setAttribute("aria-expanded", String(open));
+        if (open) (options.find((o) => o.getAttribute("aria-selected") === "true") ?? options[0]).focus();
+      };
+      const choose = (option: HTMLElement) => {
+        const value = option.dataset.value!;
+        options.forEach((o) => o.setAttribute("aria-selected", String(o === option)));
+        trigger.firstElementChild!.textContent = option.textContent;
+        setOpen(false);
+        trigger.focus();
+        if (rail.dataset.active === value) return;
+        rail.dataset.active = value;
+        if (go) go.search = `?category=${value}`;
+        rail.scrollLeft = 0;
+        rail.dispatchEvent(new Event("scroll"));
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        // Stagger the new set in, one card after another.
+        [...rail.querySelectorAll<HTMLElement>(".project-card")].filter((c) => c.offsetParent).forEach((card, i) =>
+          card.animate([{ opacity: 0, transform: "translateY(28px)" }, { opacity: 1, transform: "none" }], { duration: 560, delay: i * 90, easing: "cubic-bezier(.22,1,.36,1)", fill: "backwards" }));
+      };
+      trigger.addEventListener("click", () => setOpen(menu.hidden), { signal: scope.signal });
+      menu.addEventListener("click", (e) => { const o = (e.target as HTMLElement).closest<HTMLElement>("[role=option]"); if (o) choose(o); }, { signal: scope.signal });
+      menu.addEventListener("keydown", (e) => {
+        const i = options.indexOf(document.activeElement as HTMLElement);
+        if (e.key === "ArrowDown") options[(i + 1) % options.length].focus();
+        else if (e.key === "ArrowUp") options[(i - 1 + options.length) % options.length].focus();
+        else if (e.key === "Enter" || e.key === " ") choose(options[i]);
+        else if (e.key === "Escape") { setOpen(false); trigger.focus(); }
+        else if (e.key === "Tab") setOpen(false);
+        else return;
+        e.preventDefault();
+      }, { signal: scope.signal });
+      document.addEventListener("pointerdown", (e) => { if (!menu.hidden && !(e.target as HTMLElement).closest(".discipline-picker")) setOpen(false); }, { signal: scope.signal });
+    }
     // Fade the article covers in once decoded instead of letting them pop in.
     document.querySelectorAll<HTMLImageElement>(".article-cover img").forEach((image) => {
       const reveal = () => requestAnimationFrame(() => requestAnimationFrame(() => image.classList.add("is-loaded")));
