@@ -13,15 +13,16 @@
       const card=canvas.parentElement!;
       const offer=card.classList.contains('offer-card');
       const growth=card.classList.contains('your-turn-card');
+      const videoArt=card.querySelector<HTMLElement>('.home-dither-video');
       const mobile=matchMedia('(max-width:768px)');
       // Touch screens have no hover: the effect plays on its own while the card is in view.
-      const autoAnimate=()=>!hover.matches || (growth && mobile.matches);
+      const autoAnimate=()=>!hover.matches || mobile.matches;
       const icon=card.querySelector<HTMLCanvasElement>('.dither-icon');
       // The offer orbit follows the original image box: it is laid out before the
       // dither canvas replaces the artwork.
-      const art=offer ? card.querySelector<HTMLImageElement>('.offer-art img') ?? icon : icon;
+      const art=offer ? card.querySelector<HTMLImageElement>('.offer-art img') ?? icon : videoArt ?? icon;
       const ctx=canvas.getContext('2d');
-      if(!ctx || !icon || !art) return;
+      if(!ctx || !art) return;
       let maskX=0,maskY=0,maskRadius=0;
       let iconRadius=0;
       let width=0,height=0,x=0,y=0,radius=0,frame=0,last=0,elapsed=0,visible=false,active=false;
@@ -48,7 +49,7 @@
         if(offer){
           // Inclined ellipse: dots travel around the icon like a ring around a
           // planet, slightly past the artwork on every side.
-          orbitX=x;orbitY=y+artBounds.height*.02;
+          orbitX=x;orbitY=y-16;
           orbitRX=artBounds.width*.75;orbitRY=artBounds.width*.55;
           iconLeft=artBounds.left-bounds.left;
           iconTop=artBounds.top-bounds.top;
@@ -62,7 +63,7 @@
         radius=Math.max(Math.hypot(x,y),Math.hypot(width-x,y),Math.hypot(x,height-y),Math.hypot(width-x,height-y));
       };
       const buildMask=()=>{
-        if(!offer || iconMask || !art.hasAttribute('data-dither-ready')) return;
+        if(!offer || !icon || iconMask || !art.hasAttribute('data-dither-ready')) return;
         try{
           iconMaskW=icon.width;iconMaskH=icon.height;
           if(!iconMaskW || !iconMaskH) return;

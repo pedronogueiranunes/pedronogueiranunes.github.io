@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import "../styles/page-fidelity.css";
+import "../styles/offer-card-interactions.css";
 import PixelTrail from "../components/PixelTrail.astro";
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
@@ -11,7 +12,7 @@ import ToolChip from "../components/ToolChip.astro";
 import CheckList from "../components/CheckList.astro";
 import RelatedProjects from "../components/RelatedProjects.astro";
 import FAQ from "../components/FAQ.astro";
-import DitherIcon from "../components/DitherIcon.astro";
+import OfferVideo from "../components/OfferVideo.astro";
 import IconWaves from "../components/IconWaves.astro";
 import StackGlyph from "../components/StackGlyph.astro";
 import BlueprintPixels from "../components/BlueprintPixels.astro";
@@ -182,22 +183,10 @@ const faqSchema = JSON.stringify({
     </div>
     <div class="offer-grid">
       {offers.map((offer, index) => (
-        <article
-          class:list={[
-            "offer-card",
-            { "offer-card--featured": offer.featured },
-          ]}
-        >
+        <article class="offer-card">
           <IconWaves />
           <div class:list={["offer-art", `offer-art--${index}`]}>
-            <ResponsiveImage
-              src={`/assets/figma/488-10107-imgImage${index || ""}.webp`}
-              width="254"
-              height="254"
-              sizes="254px"
-              alt=""
-            />
-            <DitherIcon />
+            <OfferVideo name={["website", "brand", "cro"][index]} />
           </div>
           <h3>{offer.title}</h3>
           <p>{offer.description}</p>

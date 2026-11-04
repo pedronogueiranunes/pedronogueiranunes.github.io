@@ -1,0 +1,26 @@
+---
+interface Props { name: string }
+const { name } = Astro.props;
+const root = `/assets/service-icons/${name}`;
+---
+<div class="offer-dither-video" aria-hidden="true">
+  <img src={`${root}-poster.png`} width="220" height="220" loading="lazy" alt="" />
+  <video data-hover-src={`${root}-dither.webm`} muted playsinline loop preload="none" disablepictureinpicture></video>
+</div>
+<style is:global>
+  .offer-dither-video { position:absolute; width:220px; height:220px; left:-8px; top:0; pointer-events:none; transform-origin:center; transition:transform 320ms cubic-bezier(.22,1,.36,1); }
+  .services-page .offer-art .offer-dither-video :is(img,video) { position:absolute; inset:0; width:100%; height:100%; max-width:100%; object-fit:contain; transform:none; image-rendering:pixelated; }
+  .services-page .offer-card:is(:hover,:focus-within) .offer-art .offer-dither-video img { transform:none; }
+  .offer-dither-video video { opacity:0; }
+  .offer-dither-video[data-playing] video { opacity:1; }
+  .offer-dither-video[data-playing] img { visibility:hidden; }
+  @media (hover:hover) and (pointer:fine) {
+    .offer-card:hover .offer-dither-video { transform:scale(1.04) translateY(-2px); }
+  }
+  .offer-card:focus-within .offer-dither-video { transform:scale(1.04) translateY(-2px); }
+  @media (max-width:768px) { .offer-dither-video { left:0; } }
+  @media (prefers-reduced-motion:reduce) { .offer-dither-video { transition:none; } .offer-card:is(:hover,:focus-within) .offer-dither-video { transform:none; } }
+</style>
+<script>
+  import '../scripts/hover-icon-videos';
+</script>

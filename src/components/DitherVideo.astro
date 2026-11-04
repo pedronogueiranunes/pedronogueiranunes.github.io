@@ -1,0 +1,22 @@
+---
+interface Props { name: string }
+const { name } = Astro.props;
+const root = `/assets/home-icons/${name}`;
+---
+<div class="home-dither-video" aria-hidden="true">
+  <img src={`${root}-poster.png`} width="240" height="240" loading="lazy" alt="" />
+  <video data-hover-src={`${root}-dither.webm`} muted playsinline loop preload="none" disablepictureinpicture></video>
+</div>
+<style is:global>
+  .home-page .problem-card .problem-art.problem-video-art { top:0; left:0; width:240px; height:240px; }
+  .home-page .problem-card:nth-child(2) .problem-art.problem-video-art { top:8px; }
+  .home-dither-video { position:relative; width:100%; height:100%; pointer-events:none; -webkit-mask-image:linear-gradient(to bottom, #000 50%, rgb(0 0 0 / .55) 70%, transparent 88%); mask-image:linear-gradient(to bottom, #000 50%, rgb(0 0 0 / .55) 70%, transparent 88%); }
+  .home-page .problem-video-art .home-dither-video :is(img, video) { position:absolute; inset:0; width:100%; height:100%; max-width:100%; object-fit:contain; mask-image:none; scale:1; transform:none; image-rendering:pixelated; }
+  .home-page .problem-card:is(:hover,:focus-within) .problem-video-art img { transform:none; }
+  .home-dither-video video { opacity:0; }
+  .home-dither-video[data-playing] video { opacity:1; }
+  .home-dither-video[data-playing] img { visibility:hidden; }
+</style>
+<script>
+  import '../scripts/hover-icon-videos';
+</script>

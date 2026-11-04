@@ -39,7 +39,7 @@ const { source, invert = false } = Astro.props;
       const reduced = matchMedia('(prefers-reduced-motion: reduce)');
       const fine = matchMedia('(hover: hover) and (pointer: fine)');
       const mobile = matchMedia('(max-width: 768px)');
-      const autoAnimate=()=>detailed && mobile.matches;
+      const autoAnimate=()=>!fine.matches || mobile.matches;
       const bayer = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
       let pixels: Uint8ClampedArray | undefined;
       // Preserve double precision: these image-derived values never change
