@@ -16,7 +16,9 @@ onPageLoad((scope) => {
     if (!card || !video || !image) return;
     const poster = image.src;
     const source = video.dataset.hoverSrc!;
-    const fallback = source.replace('-dither.webm', '-hover.webp');
+    const offer = art.classList.contains('offer-dither-video');
+    const fallback = source.replace('-dither.webm', offer ? '-hover-fast.webp' : '-hover.webp');
+    if (offer) video.defaultPlaybackRate = 1.4;
     let hovered = false, focused = false, visible = false, version = 0, pending = false;
     const wanted = () => visible && (automatic() || hovered || focused)
       && !reduced.matches && !connection?.saveData && !document.hidden && !scope.signal.aborted;
