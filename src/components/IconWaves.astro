@@ -12,6 +12,8 @@
     document.querySelectorAll<HTMLCanvasElement>('.icon-waves').forEach((canvas)=>{
       const card=canvas.parentElement!;
       const offer=card.classList.contains('offer-card');
+      // Keep the offer orbit available while it is temporarily hidden.
+      if (offer && card.closest('.services-page')) return;
       const growth=card.classList.contains('your-turn-card');
       const videoArt=card.querySelector<HTMLElement>('.home-dither-video');
       const mobile=matchMedia('(max-width:768px)');
