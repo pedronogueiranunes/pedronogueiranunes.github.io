@@ -40,7 +40,10 @@ const ogLocale = { en: "en_US", "pt-br": "pt_BR", es: "es_ES", fr: "fr_CA" }[loc
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    {/^\/(?:pt-br\/?|es\/?|fr\/?)?$/.test(Astro.url.pathname) && <link rel="icon" href="data:," /> }
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#FF5A1F" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content={ogType} />

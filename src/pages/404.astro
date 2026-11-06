@@ -1,0 +1,118 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+// GitHub Pages serves this for every missing URL, so the copy switches to PT-BR on /pt-br paths (script below).
+const digits = ["4", "0", "4"];
+---
+
+<Base title="Page not found | Pedro Nogueira" description="This page does not exist. Head back to the portfolio." pageClass="not-found-page">
+  <meta name="robots" content="noindex" slot="head" />
+  <section class="not-found page-section">
+    <div class="not-found__stage" data-magnetic-404>
+      {/* ponytail: 14 stacked copies x 3px give the extrusion, same recipe as the navbar logo and the services "2". */}
+      <span class="not-found__model" role="img" aria-label="404">
+        {Array.from({ length: 14 }, (_, depth) => (
+          <span class="not-found__layer" style={`--depth:${depth}`} aria-hidden="true">
+            {digits.map((d, i) => <span class="not-found__digit" style={`--i:${i}`}>{d}</span>)}
+          </span>
+        ))}
+      </span>
+    </div>
+    <div class="not-found__copy">
+      <Eyebrow><span data-pt="Página não encontrada">Page not found</span></Eyebrow>
+      <h1 data-pt="Essa página saiu flutuando.">This page floated away.</h1>
+      <p data-pt="O link pode estar antigo ou com algum erro de digitação. Tente um destes caminhos.">The link may be old or mistyped. Try one of these instead.</p>
+      <div class="not-found__actions">
+        <Button href="/" class="not-found__home"><span data-pt="Voltar ao início">Back to home</span></Button>
+        <Button href="/projects" secondary><span data-pt="Ver projetos">See projects</span></Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    display: grid;
+    place-items: center;
+    gap: 48px;
+    text-align: center;
+    padding-block: clamp(120px, 16vh, 180px) 96px;
+  }
+  .not-found__stage { perspective: 1400px; }
+  /* Float: the whole model bobs; the pointer tilt rides on top of it. */
+  .not-found__model {
+    display: grid;
+    transform-style: preserve-3d;
+    font: 400 clamp(110px, 24vw, 260px) / 0.78 var(--font-label);
+    letter-spacing: -0.06em;
+    transform:
+      translate(var(--nf-x, 0px), var(--nf-y, 0px))
+      rotateX(calc(16deg + var(--nf-rx, 0deg)))
+      rotateY(calc(-22deg + var(--nf-ry, 0deg)));
+    transition: transform 500ms cubic-bezier(.16, 1, .3, 1);
+    animation: nf-float 6s ease-in-out infinite;
+  }
+  .not-found__layer {
+    grid-area: 1 / 1;
+    display: flex;
+    transform-style: preserve-3d;
+    transform: translateZ(calc(var(--depth) * -3px));
+    color: color-mix(in srgb, var(--accent-ink) calc(max(8%, 40% - var(--depth) * 2.4%)), var(--surface));
+  }
+  .not-found__layer:first-child { color: var(--accent-ink); }
+  /* Each digit drifts on its own phase so the number never moves as one flat block. */
+  .not-found__digit { display: inline-block; animation: nf-digit 4.8s ease-in-out infinite; animation-delay: calc(var(--i) * -1.6s); }
+  @keyframes nf-float {
+    0%, 100% { translate: 0 -10px; }
+    50% { translate: 0 10px; }
+  }
+  @keyframes nf-digit {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -0.06em; }
+  }
+  .not-found__copy { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 34rem; }
+  .not-found__copy h1 { margin: 0; text-wrap: balance; }
+  .not-found__copy p { margin: 0; color: var(--text-secondary); }
+  .not-found__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+  @media (prefers-reduced-motion: reduce) {
+    .not-found__model, .not-found__digit { animation: none; transition: none; }
+  }
+</style>
+
+<script>
+  import { onPageLoad } from "../scripts/page-lifecycle";
+  onPageLoad((scope) => {
+    const stage = document.querySelector<HTMLElement>("[data-magnetic-404]");
+    if (!stage) return;
+    // PT-BR copy for /pt-br/... misses; links keep the visitor in Portuguese.
+    if (/^\/pt-br(\/|$)/.test(location.pathname)) {
+      document.documentElement.lang = "pt-br";
+      document.title = "Página não encontrada | Pedro Nogueira";
+      document.querySelectorAll<HTMLElement>(".not-found [data-pt]").forEach((el) => { el.textContent = el.dataset.pt!; });
+      document.querySelectorAll<HTMLAnchorElement>(".not-found a[href^='/']").forEach((a) => {
+        a.href = `/pt-br${a.getAttribute("href") === "/" ? "/" : a.getAttribute("href")}`;
+      });
+    }
+    // Magnetic tilt: the number leans toward a nearby pointer, like the services "2".
+    if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const model = stage.querySelector<HTMLElement>(".not-found__model")!;
+    let frame = 0;
+    addEventListener("pointermove", (event) => {
+      if (reduced.matches || frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const box = stage.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2), dy = event.clientY - (box.top + box.height / 2);
+        // ponytail: 520px reach; pull and tilt fade with distance.
+        const pull = Math.max(0, 1 - Math.hypot(dx, dy) / 520);
+        model.style.setProperty("--nf-x", `${(dx / 10) * pull}px`);
+        model.style.setProperty("--nf-y", `${(dy / 10) * pull}px`);
+        model.style.setProperty("--nf-ry", `${(dx / 8) * pull}deg`);
+        model.style.setProperty("--nf-rx", `${(-dy / 8) * pull}deg`);
+      });
+    }, { signal: scope.signal, passive: true });
+    scope.cleanup(() => cancelAnimationFrame(frame));
+  });
+</script>

@@ -1,0 +1,263 @@
+<title>Lançamento do portfólio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Silkscreen&display=swap">
+<style id="app-style">
+/* Layout: one reading column; a progress header, then priority sections of tick rows. */
+:root {
+  --bg: #F5F1EA; --surface: #FFFFFF; --fg: #111111; --muted: #6B6660; --line: #DDD6C8;
+  --accent: #FF5A1F; --accent-ink: #C8410E; --chip: #F6EAE6; --ok: #53634F; --ok-bg: #E6EBE2;
+  --warn: #9A5B00; --warn-bg: #F7EBD3;
+  --display: "Silkscreen", ui-monospace, monospace;
+  --body: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1B1D1C; --surface: #232625; --fg: #F1EDE6; --muted: #A39E96; --line: #3A3D3B;
+  --accent: #FF6A33; --accent-ink: #FF8A5C; --chip: #3A2A24; --ok: #B5C7AE; --ok-bg: #2C3529;
+  --warn: #F2C27A; --warn-bg: #3A3020; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #1B1D1C; --surface: #232625; --fg: #F1EDE6; --muted: #A39E96; --line: #3A3D3B;
+  --accent: #FF6A33; --accent-ink: #FF8A5C; --chip: #3A2A24; --ok: #B5C7AE; --ok-bg: #2C3529;
+  --warn: #F2C27A; --warn-bg: #3A3020; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 14px; }
+.eyebrow { font-family: var(--display); font-size: 12px; letter-spacing: .08em; color: var(--accent-ink); text-transform: uppercase; }
+h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.05; margin: 0; font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+.lede a { color: inherit; }
+.meter { display: flex; flex-direction: column; gap: 8px; }
+.meter-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.count { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+.count strong { font-size: 22px; font-weight: 500; }
+.bar { height: 10px; background: var(--line); position: relative; overflow: hidden; }
+.bar > i { position: absolute; inset: 0 auto 0 0; background: var(--accent); transition: width .3s ease; }
+.toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.status { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border: 1px solid var(--line); color: var(--muted); }
+.status[data-tone="ok"] { color: var(--ok); background: var(--ok-bg); border-color: transparent; }
+.status[data-tone="busy"] { color: var(--accent-ink); background: var(--chip); border-color: transparent; }
+.status[data-tone="warn"] { color: var(--warn); background: var(--warn-bg); border-color: transparent; }
+.toggle { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); cursor: pointer; min-height: 44px; }
+.toggle input { accent-color: var(--accent); width: 18px; height: 18px; }
+
+section { display: flex; flex-direction: column; }
+.sec-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--fg); flex-wrap: wrap; }
+.sec-head h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.sec-meta { display: flex; gap: 10px; align-items: center; }
+.pri { font-family: var(--display); font-size: 11px; letter-spacing: .06em; padding: 3px 8px; text-transform: uppercase; }
+.pri[data-p="block"] { background: var(--accent); color: #fff; }
+.pri[data-p="before"] { background: var(--warn-bg); color: var(--warn); }
+.pri[data-p="seo"] { background: var(--chip); color: var(--accent-ink); }
+.pri[data-p="later"], .pri[data-p="done"] { background: var(--ok-bg); color: var(--ok); }
+.sec-count { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sec-note { margin: 10px 0 0; font-size: 14px; color: var(--muted); max-width: 62ch; }
+
+ul { list-style: none; margin: 0; padding: 0; }
+li { border-bottom: 1px solid var(--line); }
+li label { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 4px; cursor: pointer; align-items: start; }
+li label:hover { background: color-mix(in srgb, var(--surface) 70%, transparent); }
+li input { accent-color: var(--accent); width: 20px; height: 20px; margin: 2px 0 0; cursor: pointer; }
+li input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+li input:disabled { cursor: not-allowed; }
+.txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.t { font-weight: 600; }
+.d { font-size: 14px; color: var(--muted); }
+code { font-family: var(--mono); font-size: 12.5px; background: var(--chip); color: var(--accent-ink); padding: 1px 5px; overflow-wrap: anywhere; }
+li.done .t { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
+body.hide-done li.done { display: none; }
+footer { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap" id="app">
+  <header>
+    <span class="eyebrow">pedronogueiranunes.github.io</span>
+    <h1>Lançamento do portfólio</h1>
+    <p class="lede">O que falta para divulgar o site novo. O site já está publicado e o código esconde o conteúdo de exemplo em produção, então o que trava são principalmente informações que só você pode confirmar. Marque cada item quando terminar. O progresso fica salvo nesta página.</p>
+    <div class="meter">
+      <div class="meter-top">
+        <span class="count" id="count"><strong>0</strong> de 0 concluídos</span>
+        <div class="toolbar">
+          <span class="status" id="status">Carregando</span>
+          <label class="toggle"><input type="checkbox" id="hide-done"> Esconder concluídos</label>
+        </div>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="bar" style="width:0%"></i></div>
+    </div>
+  </header>
+  <div id="sections" style="display:flex;flex-direction:column;gap:40px"></div>
+  <footer id="foot">Levantamento feito em 6 nov. 2026 a partir do main (commit e2bf02e).</footer>
+</div>
+
+<script type="application/json" id="state">{"done":["r1","r2","r3","r4","r5","r6","r7","t1","t2","t3","t4","t5","t6","t7"],"updated":"2026-11-06T13:30:00.000Z"}</script>
+
+<script id="main">
+(function () {
+  var SECTIONS = [
+    { id: "content", title: "Conteúdo dos serviços, About e contato", p: "block", pl: "Bloqueia",
+      items: [
+        ["c1", "Confirmar preços dos serviços", "Hoje: From $9,000, From $5,000, From $1,800 e o preço do pacote. São exemplos. <code>src/data/services.ts</code>"],
+        ["c2", "Confirmar prazos dos serviços", "6 a 10, 3 a 6 e 2 a 3 semanas."],
+        ["c3", "Confirmar respostas do FAQ", "NDA, horário das calls, propriedade dos arquivos, início em cerca de 2 semanas, 30 dias de correções, Storybook."],
+        ["c4", "Autorizar ou remover os nomes dos apoiadores", "<code>src/data/services.ts:218</code>"],
+        ["c5", "Confirmar estatísticas do About", "12+ anos e os demais números. <code>src/data/about.ts</code>"],
+        ["c6", "Confirmar compromissos de trabalho", "Updates semanais e calls no horário dos EUA."],
+        ["c7", "Revisar a timeline do About", "Incluir Seu.Menu 2018–19? Incluir formação?"],
+        ["c8", "Definir o prazo de resposta do formulário", "<code>src/data/contact.ts:27</code> e <code>src/components/ContactForm.astro:115</code>"],
+        ["c9", "Atualizar a disponibilidade no footer", "Hoje diz Booking projects for November. <code>src/data/site.ts:27</code>"],
+        ["c10", "Depoimento da página Contato", "Texto, nome, empresa e autorização. Hoje o bloco fica escondido."],
+        ["c11", "Revisar números ilustrativos da Home", "Vieram do Figma, não são resultados medidos. <code>src/data/home.ts:88</code> e <code>:149</code>"]
+      ] },
+    { id: "cases", title: "Cases", p: "block", pl: "Bloqueia",
+      note: "Em produção cada case mostra só resumo, vídeo e ficha técnica. Para cada um: desafio, estratégia, resultados com fonte, prazo real, depoimento autorizado, imagens de galeria e tokens do design system. Roteiro em docs/itens-para-preencher.md.",
+      items: [
+        ["k1", "BSA Legal", "Também substituir [X] semanas e [antes]/[depois]."],
+        ["k2", "PineLake Broken Bow", ""],
+        ["k3", "Green Nation Collective", ""],
+        ["k4", "Molina Chambô", ""],
+        ["k5", "Waipono Farms", ""],
+        ["k6", "Lemmbra Olympiad", ""],
+        ["k7", "Dither Lab", ""]
+      ] },
+    { id: "tech", title: "Técnico", p: "before", pl: "Antes de divulgar",
+      items: [
+        ["t1", "Criar favicon e apple-touch-icon", "P em 3D sobre laranja. <code>scripts/build-icons.mjs</code> gera de novo (passe <code>white</code> para fundo branco)."],
+        ["t2", "Criar página 404", "404 em 3D flutuante e magnético, em PT-BR nas URLs /pt-br. <code>src/pages/404.astro</code>"],
+        ["t3", "Testar o formulário no site publicado", "Testado: funciona."],
+        ["t4", "Decidir os idiomas do lançamento", "EN e PT-BR."],
+        ["t5", "Comprimir os vídeos dos cases", "AV1 onde vale a pena (até 61% menor, VMAF 97) e H.264 recomprimido como reserva. <code>scripts/encode-videos.sh</code>"],
+        ["t6", "Verificar os avisos do build", "Inofensivos: os 3 SVGs do OfferVideo existem e o CSS final aponta certo."],
+        ["t7", "Revisar alertas de dependências", "sharp atualizado. Os do Astro não se aplicam a site estático; corrigir exigiria Astro 7."],
+        ["t8", "Domínio próprio (opcional)", "Se usar, trocar <code>site</code> no astro.config.mjs, o robots.txt e o sitemap."]
+      ] },
+    { id: "seo", title: "SEO e divulgação", p: "seo", pl: "Na divulgação",
+      items: [
+        ["s1", "Enviar o sitemap ao Google Search Console", "84 URLs em /sitemap.xml."],
+        ["s2", "Enviar o sitemap ao Bing Webmaster Tools", ""],
+        ["s3", "Testar a imagem de compartilhamento", "Ver <code>og/default.jpg</code> no LinkedIn e no WhatsApp. Avaliar uma por case."],
+        ["s4", "Decidir sobre analytics", "Nenhum está instalado. Se instalar, atualizar privacidade e aviso de cookies."],
+        ["s5", "Atualizar o link do site nos perfis", "LinkedIn, Dribbble, Vimeo e YouTube."]
+      ] },
+    { id: "later", title: "Pode ficar para depois", p: "later", pl: "Depois",
+      items: [
+        ["l1", "Escrever posts reais e ligar o blog", "Os 3 posts atuais são mock. <code>blogEnabled</code> em <code>src/data/site.ts</code>"],
+        ["l2", "Exemplo de proposta para download", "<code>sampleProposalUrl</code> está vazio."]
+      ] },
+    { id: "ready", title: "Já está pronto", p: "done", pl: "Verificado",
+      items: [
+        ["r1", "Build sem erros e check de idiomas passando", "42 rotas traduzidas validadas."],
+        ["r2", "Textos legais, privacidade e aviso de cookies", ""],
+        ["r3", "robots.txt, sitemap, canonical e hreflang", ""],
+        ["r4", "Meta tags, Open Graph e JSON-LD", ""],
+        ["r5", "Chave Web3Forms configurada no GitHub", ""],
+        ["r6", "CV em PDF, links sociais e Calendly", ""],
+        ["r7", "Deploy automático do main no GitHub Pages", ""]
+      ] }
+  ];
+
+  var stateEl = document.getElementById("state");
+  var state;
+  try { state = JSON.parse(stateEl.textContent); } catch (e) { state = { done: [], updated: "" }; }
+  var done = new Set(state.done || []);
+  var api = null, readOnly = false, saveTimer = null, saving = false;
+
+  var statusEl = document.getElementById("status");
+  function setStatus(text, tone) { statusEl.textContent = text; statusEl.dataset.tone = tone || ""; }
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+  function render() {
+    var total = 0, count = 0, html = "";
+    SECTIONS.forEach(function (s) {
+      var n = 0;
+      s.items.forEach(function (it) { if (done.has(it[0])) n++; });
+      total += s.items.length; count += n;
+      html += '<section aria-labelledby="h-' + s.id + '"><div class="sec-head"><h2 id="h-' + s.id + '">' + esc(s.title) + '</h2>' +
+        '<div class="sec-meta"><span class="pri" data-p="' + s.p + '">' + esc(s.pl) + '</span><span class="sec-count">' + n + "/" + s.items.length + "</span></div></div>" +
+        (s.note ? '<p class="sec-note">' + esc(s.note) + "</p>" : "") + "<ul>";
+      s.items.forEach(function (it) {
+        var on = done.has(it[0]);
+        html += '<li class="' + (on ? "done" : "") + '"><label for="i-' + it[0] + '"><input type="checkbox" id="i-' + it[0] + '" data-id="' + it[0] + '"' +
+          (on ? " checked" : "") + (readOnly ? " disabled" : "") + '><span class="txt"><span class="t">' + esc(it[1]) + "</span>" +
+          (it[2] ? '<span class="d">' + it[2] + "</span>" : "") + "</span></label></li>";
+      });
+      html += "</ul></section>";
+    });
+    document.getElementById("sections").innerHTML = html;
+    document.getElementById("count").innerHTML = "<strong>" + count + "</strong> de " + total + " concluídos";
+    document.getElementById("bar").style.width = (total ? Math.round(count / total * 100) : 0) + "%";
+    if (state.updated) {
+      var d = new Date(state.updated);
+      if (!isNaN(d)) document.getElementById("foot").textContent = "Levantamento feito em 6 nov. 2026 a partir do main (commit e2bf02e). Última marcação: " + d.toLocaleString("pt-BR", { dateStyle: "medium", timeStyle: "short" }) + ".";
+    }
+  }
+
+  document.getElementById("sections").addEventListener("change", function (e) {
+    var id = e.target && e.target.dataset && e.target.dataset.id;
+    if (!id || readOnly) return;
+    if (e.target.checked) done.add(id); else done.delete(id);
+    e.target.closest("li").classList.toggle("done", e.target.checked);
+    render();
+    var el = document.getElementById("i-" + id); if (el) el.focus();
+    if (!api) { setStatus("Progresso não é salvo nesta visualização", "warn"); return; }
+    setStatus("Salvando…", "busy");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 1500);
+  });
+
+  function buildDoc() {
+    var reset = ":root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}";
+    var headStyle = document.head && document.head.querySelector("style");
+    if (headStyle && headStyle.textContent.trim()) reset = headStyle.textContent;
+    var next = { done: Array.from(done), updated: new Date().toISOString() };
+    var json = JSON.stringify(next).replace(/</g, "\\u003c");
+    var fonts = document.querySelector('link[href*="fonts.googleapis.com"]');
+    return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' + reset + "</style></head><body>" +
+      "<title>Lançamento do portfólio</title>\n" +
+      '<meta name="claude:viewport-fit-sides" content="cover">\n' +
+      (fonts ? fonts.outerHTML + "\n" : "") +
+      document.getElementById("app-style").outerHTML + "\n\n" +
+      APP_SHELL + "\n\n" +
+      '<script type="application/json" id="state">' + json + "<\/script>\n\n" +
+      document.getElementById("main").outerHTML + "\n</body></html>";
+  }
+
+  // Captured before render() fills the sections, so the saved page always starts clean.
+  var APP_SHELL = document.getElementById("app").outerHTML;
+
+  function save() {
+    if (saving || !api) return;
+    saving = true;
+    api.publish(buildDoc()).then(function () {
+      setStatus("Salvo", "ok");
+    }, function (err) {
+      var code = err && err.code;
+      if (code === "conflict") { setStatus("Atualizando", "busy"); return; }
+      if (code === "not_writer" || code === "not_granted" || code === "not_declared" || code === "consent_required" || code === "capability_disabled" || code === "capability_removed") {
+        readOnly = true; render(); setStatus("Somente leitura", "warn"); return;
+      }
+      setStatus("Não foi possível salvar. Marque de novo em instantes.", "warn");
+    }).then(function () { saving = false; });
+  }
+
+  var hide = document.getElementById("hide-done");
+  try { hide.checked = localStorage.getItem("hide-done") === "1"; } catch (e) {}
+  document.body.classList.toggle("hide-done", hide.checked);
+  hide.addEventListener("change", function () {
+    document.body.classList.toggle("hide-done", hide.checked);
+    try { localStorage.setItem("hide-done", hide.checked ? "1" : "0"); } catch (e) {}
+  });
+
+  render();
+  setStatus("Progresso não é salvo nesta visualização", "warn");
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("artifact").then(function (a) {
+      api = a;
+      if (a) setStatus("Salvo", "ok");
+    }, function () {});
+  }
+})();
+</script>
