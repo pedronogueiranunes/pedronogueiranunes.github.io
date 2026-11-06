@@ -70,11 +70,11 @@ const root = `/assets/service-icons/${name}`;
   }
   @media (hover:hover) and (pointer:fine) {
     .offer-card:hover .offer-icon-glow { opacity:.86; }
-    .offer-card:hover .offer-dither-video :is(img,video) { filter:url('/assets/service-icons/service-icon-warm.svg#warm') brightness(.92); }
+    .offer-card:hover .offer-dither-video :is(img,video) { filter:url(#offer-warm) brightness(.92); }
     .offer-card:hover .offer-icon-glow > span { animation-play-state:running; }
   }
   .offer-card:has(:focus-visible) .offer-icon-glow { opacity:.86; }
-  .offer-card:has(:focus-visible) .offer-dither-video :is(img,video) { filter:url('/assets/service-icons/service-icon-warm.svg#warm') brightness(.92); }
+  .offer-card:has(:focus-visible) .offer-dither-video :is(img,video) { filter:url(#offer-warm) brightness(.92); }
   .offer-card:has(:focus-visible) .offer-icon-glow > span { animation-play-state:running; }
   @media (prefers-reduced-motion:reduce) {
     .offer-icon-glow { transition:none; }
