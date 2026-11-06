@@ -369,6 +369,7 @@ const careerShots = [
 </script>
 <script>
   import { onPageLoad } from "../scripts/page-lifecycle";
+  import { loadVideo } from "../scripts/video-source";
   // Career preview: follows the cursor with a little lag and cycles the hovered role's shots.
   onPageLoad((scope) => {
     const preview = document.querySelector<HTMLElement>("[data-career-preview]");
@@ -400,7 +401,7 @@ const careerShots = [
       // Decode first; keep the outgoing media intact while the next one loads.
       if (image) await image.decode().catch(() => {});
       if (video) {
-        if (!video.getAttribute('src')) { video.src = video.dataset.src!; video.load(); }
+        if (!video.getAttribute('src')) loadVideo(video, [video.dataset.src!]);
         video.muted = true;
         const speed = video.dataset.src?.includes("/project-videos/") ? 3 : 1;
         video.defaultPlaybackRate = speed;
@@ -446,7 +447,7 @@ const careerShots = [
       const shots = [...set.querySelectorAll<HTMLElement>('.career-preview__shot')];
       const upcoming = shots[(shotIndex + 1) % shots.length]?.querySelector('video');
       if (upcoming && !upcoming.getAttribute('src')) {
-        upcoming.preload = 'auto'; upcoming.src = upcoming.dataset.src!; upcoming.load();
+        upcoming.preload = 'auto'; loadVideo(upcoming, [upcoming.dataset.src!]);
       }
       scope.timeout(() => {
         previous.forEach(el => {
@@ -502,7 +503,7 @@ const careerShots = [
       warm.disconnect();
       sets.forEach(set => {
         const first = set.querySelector('video');
-        if (first && !first.getAttribute('src')) { first.preload = 'auto'; first.src = first.dataset.src!; first.load(); }
+        if (first && !first.getAttribute('src')) { first.preload = 'auto'; loadVideo(first, [first.dataset.src!]); }
       });
     }, { rootMargin: '600px' });
     warm.observe(list);

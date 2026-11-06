@@ -19,6 +19,7 @@ const {base, full = false} = Astro.props;
 </style>
 <script>
 import { onPageLoad } from '../scripts/page-lifecycle';
+import { loadVideo } from '../scripts/video-source';
 onPageLoad(scope => {
  const videos=[...document.querySelectorAll<HTMLVideoElement>('[data-project-video]')];
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -47,11 +48,8 @@ onPageLoad(scope => {
  const load=(video:HTMLVideoElement)=>{
   if(video.getAttribute('src'))return;
   const full=video.dataset.src!;
-  if(small.matches&&video.dataset.projectVideo==='full'&&full.endsWith('/full.mp4')){
-   video.addEventListener('error',()=>{video.src=full;video.load();if(current===video)video.play().catch(()=>{});},{once:true,signal:scope.signal});
-   video.src=full.replace(/full\.mp4$/,'mobile.mp4');
-  } else video.src=full;
-  video.load();
+  const urls=small.matches&&video.dataset.projectVideo==='full'&&full.endsWith('/full.mp4')?[full.replace(/full\.mp4$/,'mobile.mp4'),full]:[full];
+  loadVideo(video,urls,()=>{if(current===video)video.play().catch(()=>{});});
  };
  const scrollRate=(video:HTMLVideoElement)=>{
   if(video.dataset.projectVideo!=='preview')return 1;
