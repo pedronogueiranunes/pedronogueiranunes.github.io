@@ -62,6 +62,12 @@ onPageLoad((scope) => {
     }, { signal: scope.signal });
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting && entry.intersectionRatio >= .01;
+      // Fetch the hover animation once the card is on screen, so the first hover
+      // plays at once instead of showing the still under the glow while it downloads.
+      if (visible && !connection?.saveData && !reduced.matches) {
+        if (webkit) new Image().src = fallback;
+        else if (!video.src) { video.preload = 'auto'; video.src = source; }
+      }
       sync();
     }, { threshold: .01 });
     observer.observe(card);
