@@ -5,7 +5,7 @@ import devtoolsJson from "vite-plugin-devtools-json";
 export default defineConfig({
   vite: { plugins: [devtoolsJson()] },
   prefetch: { prefetchAll: true, defaultStrategy: "hover" },
-  site: "https://pedronogueiranunes.github.io",
+  site: "https://pedronogueira.dev",
   // "auto" inlines only small sheets; the big global CSS becomes a cached file.
   build: { inlineStylesheets: "auto" },
   i18n: {

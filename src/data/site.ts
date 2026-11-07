@@ -22,7 +22,7 @@ export const site = {
     "bsa-legal": "https://bsa-legal.webflow.io/",
     "waipono-farms": "https://waipono-farms.webflow.io/",
     "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
-    "dither-lab": "https://pedronogueiranunes.github.io/dither-lab/",
+    "dither-lab": "https://pedronogueira.dev/dither-lab/",
   } as Record<string, string>,
   availability: "Taking on new projects", // No month, so it never goes stale.
 };

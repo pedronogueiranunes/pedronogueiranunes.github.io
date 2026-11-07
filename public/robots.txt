@@ -11,4 +11,4 @@ User-agent: PerplexityBot
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://pedronogueiranunes.github.io/sitemap.xml
+Sitemap: https://pedronogueira.dev/sitemap.xml

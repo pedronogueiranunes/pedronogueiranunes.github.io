@@ -2,7 +2,7 @@
 // through PERSON_ID so search and AI engines treat them as one entity.
 import { site } from "./site";
 
-export const ORIGIN = "https://pedronogueiranunes.github.io";
+export const ORIGIN = "https://pedronogueira.dev";
 export const PERSON_ID = `${ORIGIN}/about/#person`;
 export const WEBSITE_ID = `${ORIGIN}/#website`;
 export const SERVICE_ID = `${ORIGIN}/#service`;
