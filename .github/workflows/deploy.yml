@@ -27,3 +27,7 @@ jobs:
           PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ vars.PUBLIC_WEB3FORMS_ACCESS_KEY }}
       - uses: actions/deploy-pages@v4
         id: deployment
+        with:
+          # ~140 MB of video since the AV1 copies; Pages sync took 5 min on a good run
+          # and timed out at the 10 min default on a slow one.
+          timeout: 1800000
