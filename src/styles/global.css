@@ -851,10 +851,15 @@ img {
   border-radius: 8px;
 }
 .nav-panel--wide .nav-feature-thumb > * {
-  transition: transform 700ms cubic-bezier(.22, 1, .36, 1);
+  transition: object-position 900ms cubic-bezier(.22, 1, .36, 1);
 }
-.nav-panel--wide .nav-feature:is(:hover, :focus-visible) .nav-feature-thumb > * {
-  transform: scale(1.06);
+/* Hover scrolls the page screenshot down, like browsing the site. */
+@media (prefers-reduced-motion: no-preference) {
+  .nav-panel--wide .nav-feature:is(:hover, :focus-visible) .nav-feature-thumb > * {
+    object-position: center bottom !important;
+    transition-duration: 4s;
+    transition-timing-function: cubic-bezier(.45, 0, .25, 1);
+  }
 }
 .nav-panel--wide .nav-feature p {
   font-size: 24px;
@@ -868,9 +873,6 @@ img {
   .nav-pill,
   .nav-panel--wide .nav-feature-thumb > * {
     transition: none;
-  }
-  .nav-panel--wide .nav-feature:is(:hover, :focus-visible) .nav-feature-thumb > * {
-    transform: none;
   }
 }
 .site-nav-actions {

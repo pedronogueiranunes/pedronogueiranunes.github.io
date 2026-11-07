@@ -12,16 +12,17 @@ const [bg, face, depthMix] = variant === "white" ? ["#FFFFFF", ACCENT, "#FFFFFF"
 const font = (await readFile(new URL("../public/assets/fonts/silkscreen-latin-400-normal.woff2", import.meta.url))).toString("base64");
 
 // Same recipe as .site-logo__model: stacked copies pushed back in Z, fading into the background.
-const LAYERS = 40;
+// Deep enough that the extrusion runs past the frame and gets clipped by it.
+const LAYERS = 320;
 const layers = Array.from({ length: LAYERS }, (_, d) =>
-  `<span style="transform:translateZ(${-d * 3}px);color:${d ? `color-mix(in srgb, ${face} ${Math.max(18, 62 - d * 1.2)}%, ${depthMix})` : face}">P</span>`
+  `<span style="transform:translateZ(${-d * 3}px);color:${d ? `color-mix(in srgb, ${face} ${Math.max(18, 62 - d * 0.3)}%, ${depthMix})` : face}">P</span>`
 ).join("");
 
 const html = `<!doctype html><style>
 @font-face { font-family: Silk; src: url(data:font/woff2;base64,${font}) format("woff2"); }
 html, body { margin: 0; width: 512px; height: 512px; background: ${bg}; overflow: hidden; }
 .stage { width: 512px; height: 512px; display: grid; place-items: center; perspective: 2000px; }
-.model { display: grid; transform-style: preserve-3d; transform: translate(34px, -6px) rotateX(16deg) rotateY(24deg);
+.model { display: grid; transform-style: preserve-3d; transform: translate(18px, -30px) rotateX(16deg) rotateY(24deg);
   font: 400 540px/0.78 Silk; }
 .model > span { grid-area: 1 / 1; }
 </style><div class="stage"><div class="model">${layers}</div></div>`;
@@ -34,9 +35,19 @@ const master = await page.screenshot({ type: "png" });
 await browser.close();
 
 await mkdir(outDir, { recursive: true });
-const png = (size) => sharp(master).resize(size, size, { kernel: "lanczos3" }).png().toBuffer();
+// Apple-style continuous corners: a superellipse (n = 5) mask, close to the iOS icon shape.
+const N = 5, R = 256;
+const pts = Array.from({ length: 360 }, (_, i) => {
+  const t = (i / 360) * 2 * Math.PI, c = Math.cos(t), s = Math.sin(t);
+  return `${(R + R * Math.sign(c) * Math.abs(c) ** (2 / N)).toFixed(2)},${(R + R * Math.sign(s) * Math.abs(s) ** (2 / N)).toFixed(2)}`;
+});
+const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><path d="M${pts.join("L")}Z"/></svg>`);
+const rounded = await sharp(master).composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
+const png = (size, src = rounded) => sharp(src).resize(size, size, { kernel: "lanczos3" }).png().toBuffer();
 // ponytail: no web manifest, so no 192/512 icons; add them with a manifest if the site becomes installable.
-const [p16, p32, p180] = await Promise.all([16, 32, 180].map(png));
+// iOS rounds the touch icon itself and fills transparent corners with black, so that one stays square.
+const [p16, p32, p180] = await Promise.all([png(16), png(32), png(180, master)]);
+if (process.env.PREVIEW) await writeFile(`${outDir}/preview-512.png`, rounded);
 await writeFile(`${outDir}/favicon-32.png`, p32);
 await writeFile(`${outDir}/apple-touch-icon.png`, p180);
 
