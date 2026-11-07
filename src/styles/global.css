@@ -7782,10 +7782,12 @@ main.projects-page .projects-header-copy > p:not(.section-eyebrow) { max-width: 
     margin-left: auto;
     padding: 10px;
     border-radius: 50%;
-    background: var(--projects-control-bg);
-    color: var(--projects-control-ink);
+    background: #fff;
+    color: #111;
     transition: transform 250ms ease, background-color 200ms ease, color 200ms ease;
   }
+  /* The chevron is drawn 36x60; keep that ratio instead of squashing it into a square. */
+  .mobile-dialog summary > .pixel-icon svg { width: auto; height: 100%; }
   .mobile-dialog details[open] summary { color: var(--accent-ink); }
   .mobile-dialog details[open] summary > .pixel-icon {
     transform: rotate(90deg);
