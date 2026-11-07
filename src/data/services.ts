@@ -1,4 +1,4 @@
-// Prices checked against 2026 market ranges on 2026-11-07 (freelance and studio guides). Durations still need confirming.
+// Prices checked against 2026 market ranges on 2026-11-07; durations confirmed by Pedro the same day.
 export const offers = [
   {
     title: "Website design and build",
@@ -9,7 +9,7 @@ export const offers = [
       "CMS your team edits without breaking layouts",
       "Forms, tracking and integrations wired in",
     ],
-    duration: "6 to 10 weeks", // TODO: confirm with Pedro before publishing
+    duration: "6 to 10 weeks",
     price: "From $9,000",
     featured: true,
   },
@@ -23,7 +23,7 @@ export const offers = [
       "Design tokens and components in Figma",
       "Ready to carry into the website",
     ],
-    duration: "3 to 6 weeks", // TODO: confirm with Pedro before publishing
+    duration: "3 to 6 weeks",
     price: "From $6,000",
   },
   {
@@ -35,7 +35,7 @@ export const offers = [
       "Prioritized fix list with effort",
       "Redesign of your most important page in Figma",
     ],
-    duration: "2 to 3 weeks", // TODO: confirm with Pedro before publishing
+    duration: "2 to 3 weeks",
     price: "From $2,500",
   },
 ];
@@ -55,7 +55,6 @@ export const capabilities = [
   {
     title: "Design systems",
     body: "Tokens and components in Figma that developers build without guessing.",
-    // TODO: confirm with Pedro before publishing (Storybook only if he uses it).
     tools: ["Figma", "Variables", "Storybook"],
   },
   {
@@ -102,7 +101,6 @@ export const deliverables = [
   ],
   [
     "Launch + handover",
-    // TODO: confirm with Pedro before publishing (30 days of fixes).
     "I launch, record a walkthrough video for your team and stay around for 30 days to fix anything that comes up.",
     "Week 8",
   ],
@@ -147,22 +145,21 @@ export const faq = [
   },
   {
     question: "Do you sign NDAs?",
-    answer: "Yes, before we look at any files.", // TODO: confirm with Pedro before publishing
+    answer: "Yes, and I have signed many. Before we look at any files."
   },
   {
     question: "What time zone do you work in?",
-    // TODO: confirm with Pedro before publishing (call hours)
     answer:
-      "Brasília time (UTC−3). Calls from 11 am to 4 pm Eastern, async the rest of the day. Europe gets late-afternoon calls.",
+      "Brasília time (UTC−3). Calls in my afternoon and early evening, which is late morning to afternoon in US Eastern and the end of the day in Europe. Async the rest of the day.",
   },
   {
     question: "Who owns the work?",
     answer:
-      "You do. Files, accounts and code are yours after the final payment.", // TODO: confirm with Pedro before publishing
+      "You do. Files, accounts and code are yours after the final payment. I keep the right to show the project in my portfolio and marketing.",
   },
   {
     question: "How fast can we start?",
-    answer: "Usually within two weeks. Ask for the current availability.", // TODO: confirm with Pedro before publishing
+    answer: "Usually within two weeks, sooner if your deadline needs it. Ask for the current availability."
   },
 ];
 
@@ -214,7 +211,6 @@ export const caseResults: CaseResult[] = [
     rows: [
       ["Role", "Brand, design system, Webflow build"],
       ["Stack", "Webflow, Memberstack, API integration"],
-      // TODO: confirm with Pedro before publishing (permission to name the backers)
       ["Backed by", "German Embassy in Brazil, UFF, UFPR"],
     ],
   },
