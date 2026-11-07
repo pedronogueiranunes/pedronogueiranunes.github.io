@@ -53,6 +53,20 @@ const projects = defineCollection({
       radius: z.number().min(0).max(64),
       buttonLabel: z.string(),
     }).optional(),
+    brand: z.object({
+      rationale: z.string().default(""),
+      references: z.array(z.object({ title: z.string(), url: z.string().url().optional(), note: z.string().default("") })).default([]),
+      comments: z.string().default(""),
+      groups: z.array(z.object({
+        id: z.string(), title: z.string(), cols: z.number().default(2),
+        rationale: z.string().default(""),
+        references: z.array(z.object({ title: z.string(), url: z.string().url().optional(), note: z.string().default("") })).default([]),
+        comments: z.string().default(""),
+        palette: z.array(z.object({ name: z.string(), hex: z.string().regex(/^#[0-9a-fA-F]{6}$/) })).default([]),
+        fonts: z.array(z.object({ name: z.string(), note: z.string().default("") })).default([]),
+        items: z.array(z.object({ src: z.string(), alt: z.string(), caption: z.string(), bg: z.string().optional() })).default([]),
+      })),
+    }).optional(),
     architecture: z.array(z.object({ title: z.string(), body: z.string(), icon: z.string() })).default([]),
   }),
 });

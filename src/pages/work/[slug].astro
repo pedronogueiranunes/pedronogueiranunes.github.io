@@ -13,6 +13,7 @@ import Button from "../../components/Button.astro";
 import ToolChip from "../../components/ToolChip.astro";
 import Icon from "../../components/Icon.astro";
 import CaseShowcase from "../../components/CaseShowcase.astro";
+import BrandNotes from "../../components/BrandNotes.astro";
 import RelatedProjects from "../../components/RelatedProjects.astro";
 import { logoFor } from "../../data/home";
 import { PERSON_ID, ORIGIN, jsonLd } from "../../data/seo";
@@ -84,6 +85,45 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
         <FilmGallery films={p.films} />
       </section>
       <RelatedProjects title="More films and performances." eyebrow="Music & Audiovisual" projects={related.filter(other => other.data.films.length > 0 || other.data.releases.length > 0).sort((a,b) => Number(b.data.filmType === p.filmType) - Number(a.data.filmType === p.filmType))} />
+    </>
+  ) : p.brand ? (
+    <>
+      <section class="brand-case page-section">
+        <nav class="case-breadcrumb mono" aria-label="Breadcrumb"><a href={`/projects?category=${p.kinds?.[0] || "1"}`}>Projects</a><span>/</span><span>{p.category}</span></nav>
+        <h1>{p.title}</h1>
+        {p.summary && <p class="brand-lede">{p.summary}</p>}
+        <figure class="brand-cover"><ResponsiveImage src={p.cover || p.image} alt={`${p.title} cover`} sizes="(max-width: 768px) calc(100vw - 40px), calc(100vw - 128px)" loading="eager" fetchpriority="high" /></figure>
+        <BrandNotes data={p.brand} dev={showMock} />
+        <nav class="brand-index mono" aria-label="Brand sections">
+          {p.brand.groups.map((g) => <a href={`#${g.id}`}>{g.title}</a>)}
+        </nav>
+        <div data-lightbox-group>
+          {p.brand.groups.map((g) => (
+            <section class="brand-group" id={g.id}>
+              <h2>{g.title}</h2>
+              <BrandNotes data={g} dev={showMock} />
+              {g.palette.length > 0 && <ul class="brand-palette">
+                {g.palette.map((c) => <li style={`--swatch:${c.hex}`}><i aria-hidden="true"></i><b>{c.name}</b><span class="mono">{c.hex.toUpperCase()}</span></li>)}
+              </ul>}
+              {g.fonts.length > 0 && <ul class="brand-fonts">
+                {g.fonts.map((f) => <li><b>{f.name}</b>{f.note && <span>{f.note}</span>}</li>)}
+              </ul>}
+              {g.items.length > 0 && <div class="brand-grid" style={`--cols:${g.cols}`}>
+                {g.items.map((piece) => (
+                  <figure>
+                    <a class:list={["brand-tile", { "has-bg": piece.bg }]} style={piece.bg ? `background:${piece.bg}` : undefined} href={piece.src} data-gallery-src={piece.src} data-gallery-alt={piece.alt} data-gallery-caption={piece.caption} aria-label={piece.alt}>
+                      <ResponsiveImage src={piece.src} alt={piece.alt} sizes={`(max-width: 768px) calc(100vw - 40px), ${Math.round(100 / g.cols)}vw`} loading="lazy" />
+                    </a>
+                    <figcaption>{piece.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>}
+            </section>
+          ))}
+        </div>
+        <ImageLightbox />
+      </section>
+      <RelatedProjects projects={related.filter(other => other.data.collection)} />
     </>
   ) : (p.collection || p.archivedWebsite) ? (
     <>
@@ -292,6 +332,30 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
 </Base>
 
 <style>
+  .brand-case { padding-top: clamp(128px, 14vw, 184px); padding-bottom: 80px; }
+  .brand-case h1 { margin: 24px 0 20px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
+  .brand-lede { max-width: 70ch; margin-bottom: 40px; }
+  .brand-cover { margin: 0 0 56px; border-radius: 18px; overflow: hidden; }
+  .brand-cover :global(img) { display: block; width: 100%; height: auto; }
+  .brand-index { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; font-size: 13px; }
+  .brand-index a { padding: 6px 14px; border: 1px solid var(--border, currentColor); border-radius: 999px; text-decoration: none; }
+  .brand-group { padding-top: 72px; scroll-margin-top: 96px; }
+  .brand-group h2 { margin: 0 0 24px; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; }
+  .brand-grid { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 24px; align-items: start; margin-top: 32px; }
+  .brand-grid figure { margin: 0; }
+  .brand-tile { display: block; border-radius: 14px; overflow: hidden; }
+  .brand-tile.has-bg { display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10; padding: 8%; }
+  .brand-tile :global(img) { display: block; width: 100%; height: auto; }
+  .brand-tile.has-bg :global(img) { width: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+  .brand-grid figcaption { padding-top: 10px; font-size: 14px; color: var(--text-secondary); }
+  .brand-palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; list-style: none; margin: 32px 0 0; padding: 0; }
+  .brand-palette li { display: grid; gap: 4px; }
+  .brand-palette i { display: block; height: 96px; border-radius: 14px; background: var(--swatch); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08); }
+  .brand-palette span { color: var(--text-secondary); font-size: 13px; }
+  .brand-fonts { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 12px; }
+  .brand-fonts b { display: block; font-size: clamp(40px, 6vw, 88px); line-height: 1; font-weight: 600; }
+  .brand-fonts span { color: var(--text-secondary); }
+  @media (max-width: 768px) { .brand-grid { grid-template-columns: repeat(min(var(--cols, 2), 2), minmax(0, 1fr)); gap: 16px; } .brand-group { padding-top: 56px; } }
   .film-case { padding-top: clamp(140px, 15vw, 190px); padding-bottom: 80px; max-width: 1160px; margin-inline: auto; }
   .film-case h1 { margin: 28px 0 24px; font-size: clamp(36px, 5vw, 64px); line-height: 1.08; }
   .film-case__details { display: flex; flex-wrap: wrap; gap: 12px 24px; color: var(--text-secondary); font: 500 13px/1.5 var(--font-mono); margin-bottom: 20px; }

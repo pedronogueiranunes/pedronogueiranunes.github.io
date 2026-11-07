@@ -657,49 +657,229 @@
     "height": 900,
     "srcset": "/assets/collections/molina-chambo-branding/wallpaper--w640.webp 640w, /assets/collections/molina-chambo-branding/wallpaper--w960.webp 960w, /assets/collections/molina-chambo-branding/wallpaper.webp 1600w"
   },
+  "/assets/collections/bsa-legal-branding/cover.webp": {
+    "width": 1600,
+    "height": 1165,
+    "srcset": "/assets/collections/bsa-legal-branding/cover--w320.webp 320w, /assets/collections/bsa-legal-branding/cover--w640.webp 640w, /assets/collections/bsa-legal-branding/cover--w960.webp 960w, /assets/collections/bsa-legal-branding/cover.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/logo-horizontal.webp": {
+    "width": 1600,
+    "height": 523,
+    "srcset": "/assets/collections/bsa-legal-branding/logo-horizontal--w320.webp 320w, /assets/collections/bsa-legal-branding/logo-horizontal--w640.webp 640w, /assets/collections/bsa-legal-branding/logo-horizontal--w960.webp 960w, /assets/collections/bsa-legal-branding/logo-horizontal.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/logo-horizontal-reversed.webp": {
+    "width": 1600,
+    "height": 523,
+    "srcset": "/assets/collections/bsa-legal-branding/logo-horizontal-reversed--w320.webp 320w, /assets/collections/bsa-legal-branding/logo-horizontal-reversed--w640.webp 640w, /assets/collections/bsa-legal-branding/logo-horizontal-reversed--w960.webp 960w, /assets/collections/bsa-legal-branding/logo-horizontal-reversed.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/logo-monogram.webp": {
+    "width": 1600,
+    "height": 552,
+    "srcset": "/assets/collections/bsa-legal-branding/logo-monogram--w320.webp 320w, /assets/collections/bsa-legal-branding/logo-monogram--w640.webp 640w, /assets/collections/bsa-legal-branding/logo-monogram--w960.webp 960w, /assets/collections/bsa-legal-branding/logo-monogram.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/logo-monogram-reversed.webp": {
+    "width": 1600,
+    "height": 551,
+    "srcset": "/assets/collections/bsa-legal-branding/logo-monogram-reversed--w320.webp 320w, /assets/collections/bsa-legal-branding/logo-monogram-reversed--w640.webp 640w, /assets/collections/bsa-legal-branding/logo-monogram-reversed--w960.webp 960w, /assets/collections/bsa-legal-branding/logo-monogram-reversed.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/symbol.webp": {
+    "width": 1600,
+    "height": 1600,
+    "srcset": "/assets/collections/bsa-legal-branding/symbol--w320.webp 320w, /assets/collections/bsa-legal-branding/symbol--w640.webp 640w, /assets/collections/bsa-legal-branding/symbol--w960.webp 960w, /assets/collections/bsa-legal-branding/symbol.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/app-icon-light.webp": {
+    "width": 1600,
+    "height": 1532,
+    "srcset": "/assets/collections/bsa-legal-branding/app-icon-light--w320.webp 320w, /assets/collections/bsa-legal-branding/app-icon-light--w640.webp 640w, /assets/collections/bsa-legal-branding/app-icon-light--w960.webp 960w, /assets/collections/bsa-legal-branding/app-icon-light.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/app-icon-dark.webp": {
+    "width": 1600,
+    "height": 1532,
+    "srcset": "/assets/collections/bsa-legal-branding/app-icon-dark--w320.webp 320w, /assets/collections/bsa-legal-branding/app-icon-dark--w640.webp 640w, /assets/collections/bsa-legal-branding/app-icon-dark--w960.webp 960w, /assets/collections/bsa-legal-branding/app-icon-dark.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/palette.webp": {
+    "width": 670,
+    "height": 526,
+    "srcset": "/assets/collections/bsa-legal-branding/palette--w320.webp 320w, /assets/collections/bsa-legal-branding/palette--w640.webp 640w, /assets/collections/bsa-legal-branding/palette.webp 670w"
+  },
+  "/assets/collections/bsa-legal-branding/shades.webp": {
+    "width": 670,
+    "height": 526,
+    "srcset": "/assets/collections/bsa-legal-branding/shades--w320.webp 320w, /assets/collections/bsa-legal-branding/shades--w640.webp 640w, /assets/collections/bsa-legal-branding/shades.webp 670w"
+  },
+  "/assets/collections/bsa-legal-branding/pattern-1.webp": {
+    "width": 1600,
+    "height": 1302,
+    "srcset": "/assets/collections/bsa-legal-branding/pattern-1--w320.webp 320w, /assets/collections/bsa-legal-branding/pattern-1--w640.webp 640w, /assets/collections/bsa-legal-branding/pattern-1--w960.webp 960w, /assets/collections/bsa-legal-branding/pattern-1.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/pattern-2.webp": {
+    "width": 1600,
+    "height": 1302,
+    "srcset": "/assets/collections/bsa-legal-branding/pattern-2--w320.webp 320w, /assets/collections/bsa-legal-branding/pattern-2--w640.webp 640w, /assets/collections/bsa-legal-branding/pattern-2--w960.webp 960w, /assets/collections/bsa-legal-branding/pattern-2.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/texture-1.webp": {
+    "width": 1600,
+    "height": 2126,
+    "srcset": "/assets/collections/bsa-legal-branding/texture-1--w320.webp 320w, /assets/collections/bsa-legal-branding/texture-1--w640.webp 640w, /assets/collections/bsa-legal-branding/texture-1--w960.webp 960w, /assets/collections/bsa-legal-branding/texture-1.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/texture-2.webp": {
+    "width": 1600,
+    "height": 2126,
+    "srcset": "/assets/collections/bsa-legal-branding/texture-2--w320.webp 320w, /assets/collections/bsa-legal-branding/texture-2--w640.webp 640w, /assets/collections/bsa-legal-branding/texture-2--w960.webp 960w, /assets/collections/bsa-legal-branding/texture-2.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/texture-3.webp": {
+    "width": 1600,
+    "height": 2126,
+    "srcset": "/assets/collections/bsa-legal-branding/texture-3--w320.webp 320w, /assets/collections/bsa-legal-branding/texture-3--w640.webp 640w, /assets/collections/bsa-legal-branding/texture-3--w960.webp 960w, /assets/collections/bsa-legal-branding/texture-3.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/business-card.webp": {
+    "width": 1600,
+    "height": 895,
+    "srcset": "/assets/collections/bsa-legal-branding/business-card--w320.webp 320w, /assets/collections/bsa-legal-branding/business-card--w640.webp 640w, /assets/collections/bsa-legal-branding/business-card--w960.webp 960w, /assets/collections/bsa-legal-branding/business-card.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/letterhead-header.webp": {
+    "width": 1600,
+    "height": 157,
+    "srcset": "/assets/collections/bsa-legal-branding/letterhead-header--w320.webp 320w, /assets/collections/bsa-legal-branding/letterhead-header--w640.webp 640w, /assets/collections/bsa-legal-branding/letterhead-header--w960.webp 960w, /assets/collections/bsa-legal-branding/letterhead-header.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/letterhead-footer.webp": {
+    "width": 1600,
+    "height": 202,
+    "srcset": "/assets/collections/bsa-legal-branding/letterhead-footer--w320.webp 320w, /assets/collections/bsa-legal-branding/letterhead-footer--w640.webp 640w, /assets/collections/bsa-legal-branding/letterhead-footer--w960.webp 960w, /assets/collections/bsa-legal-branding/letterhead-footer.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/letterhead-1.webp": {
+    "width": 1600,
+    "height": 2125,
+    "srcset": "/assets/collections/bsa-legal-branding/letterhead-1--w320.webp 320w, /assets/collections/bsa-legal-branding/letterhead-1--w640.webp 640w, /assets/collections/bsa-legal-branding/letterhead-1--w960.webp 960w, /assets/collections/bsa-legal-branding/letterhead-1.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/letterhead-2.webp": {
+    "width": 1600,
+    "height": 2125,
+    "srcset": "/assets/collections/bsa-legal-branding/letterhead-2--w320.webp 320w, /assets/collections/bsa-legal-branding/letterhead-2--w640.webp 640w, /assets/collections/bsa-legal-branding/letterhead-2--w960.webp 960w, /assets/collections/bsa-legal-branding/letterhead-2.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/letterhead-3.webp": {
+    "width": 1600,
+    "height": 2125,
+    "srcset": "/assets/collections/bsa-legal-branding/letterhead-3--w320.webp 320w, /assets/collections/bsa-legal-branding/letterhead-3--w640.webp 640w, /assets/collections/bsa-legal-branding/letterhead-3--w960.webp 960w, /assets/collections/bsa-legal-branding/letterhead-3.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/envelope-front.webp": {
+    "width": 1600,
+    "height": 800,
+    "srcset": "/assets/collections/bsa-legal-branding/envelope-front--w320.webp 320w, /assets/collections/bsa-legal-branding/envelope-front--w640.webp 640w, /assets/collections/bsa-legal-branding/envelope-front--w960.webp 960w, /assets/collections/bsa-legal-branding/envelope-front.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/envelope-back.webp": {
+    "width": 1600,
+    "height": 801,
+    "srcset": "/assets/collections/bsa-legal-branding/envelope-back--w320.webp 320w, /assets/collections/bsa-legal-branding/envelope-back--w640.webp 640w, /assets/collections/bsa-legal-branding/envelope-back--w960.webp 960w, /assets/collections/bsa-legal-branding/envelope-back.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/folder.webp": {
+    "width": 1600,
+    "height": 2263,
+    "srcset": "/assets/collections/bsa-legal-branding/folder--w320.webp 320w, /assets/collections/bsa-legal-branding/folder--w640.webp 640w, /assets/collections/bsa-legal-branding/folder--w960.webp 960w, /assets/collections/bsa-legal-branding/folder.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/folder-alt.webp": {
+    "width": 1600,
+    "height": 2263,
+    "srcset": "/assets/collections/bsa-legal-branding/folder-alt--w320.webp 320w, /assets/collections/bsa-legal-branding/folder-alt--w640.webp 640w, /assets/collections/bsa-legal-branding/folder-alt--w960.webp 960w, /assets/collections/bsa-legal-branding/folder-alt.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/cover-1.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/cover-1--w320.webp 320w, /assets/collections/bsa-legal-branding/cover-1--w640.webp 640w, /assets/collections/bsa-legal-branding/cover-1--w960.webp 960w, /assets/collections/bsa-legal-branding/cover-1.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/cover-2.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/cover-2--w320.webp 320w, /assets/collections/bsa-legal-branding/cover-2--w640.webp 640w, /assets/collections/bsa-legal-branding/cover-2--w960.webp 960w, /assets/collections/bsa-legal-branding/cover-2.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/cover-3.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/cover-3--w320.webp 320w, /assets/collections/bsa-legal-branding/cover-3--w640.webp 640w, /assets/collections/bsa-legal-branding/cover-3--w960.webp 960w, /assets/collections/bsa-legal-branding/cover-3.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/cover-4.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/cover-4--w320.webp 320w, /assets/collections/bsa-legal-branding/cover-4--w640.webp 640w, /assets/collections/bsa-legal-branding/cover-4--w960.webp 960w, /assets/collections/bsa-legal-branding/cover-4.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/cover-5.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/cover-5--w320.webp 320w, /assets/collections/bsa-legal-branding/cover-5--w640.webp 640w, /assets/collections/bsa-legal-branding/cover-5--w960.webp 960w, /assets/collections/bsa-legal-branding/cover-5.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/slide-bg-1.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/slide-bg-1--w320.webp 320w, /assets/collections/bsa-legal-branding/slide-bg-1--w640.webp 640w, /assets/collections/bsa-legal-branding/slide-bg-1--w960.webp 960w, /assets/collections/bsa-legal-branding/slide-bg-1.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/slide-bg-2.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/slide-bg-2--w320.webp 320w, /assets/collections/bsa-legal-branding/slide-bg-2--w640.webp 640w, /assets/collections/bsa-legal-branding/slide-bg-2--w960.webp 960w, /assets/collections/bsa-legal-branding/slide-bg-2.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/slide-bg-5.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/collections/bsa-legal-branding/slide-bg-5--w320.webp 320w, /assets/collections/bsa-legal-branding/slide-bg-5--w640.webp 640w, /assets/collections/bsa-legal-branding/slide-bg-5--w960.webp 960w, /assets/collections/bsa-legal-branding/slide-bg-5.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/launch-1.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/collections/bsa-legal-branding/launch-1--w320.webp 320w, /assets/collections/bsa-legal-branding/launch-1--w640.webp 640w, /assets/collections/bsa-legal-branding/launch-1--w960.webp 960w, /assets/collections/bsa-legal-branding/launch-1.webp 1080w"
+  },
+  "/assets/collections/bsa-legal-branding/launch-2.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/collections/bsa-legal-branding/launch-2--w320.webp 320w, /assets/collections/bsa-legal-branding/launch-2--w640.webp 640w, /assets/collections/bsa-legal-branding/launch-2--w960.webp 960w, /assets/collections/bsa-legal-branding/launch-2.webp 1080w"
+  },
+  "/assets/collections/bsa-legal-branding/launch-3.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/collections/bsa-legal-branding/launch-3--w320.webp 320w, /assets/collections/bsa-legal-branding/launch-3--w640.webp 640w, /assets/collections/bsa-legal-branding/launch-3--w960.webp 960w, /assets/collections/bsa-legal-branding/launch-3.webp 1080w"
+  },
+  "/assets/collections/bsa-legal-branding/launch-4.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/collections/bsa-legal-branding/launch-4--w320.webp 320w, /assets/collections/bsa-legal-branding/launch-4--w640.webp 640w, /assets/collections/bsa-legal-branding/launch-4--w960.webp 960w, /assets/collections/bsa-legal-branding/launch-4.webp 1080w"
+  },
+  "/assets/collections/bsa-legal-branding/launch-5.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/collections/bsa-legal-branding/launch-5--w320.webp 320w, /assets/collections/bsa-legal-branding/launch-5--w640.webp 640w, /assets/collections/bsa-legal-branding/launch-5--w960.webp 960w, /assets/collections/bsa-legal-branding/launch-5.webp 1080w"
+  },
   "/assets/collections/bsa-legal-branding/ad-1.webp": {
     "width": 1600,
     "height": 1139,
-    "srcset": "/assets/collections/bsa-legal-branding/ad-1--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-1--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-1.webp 1600w"
+    "srcset": "/assets/collections/bsa-legal-branding/ad-1--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-1--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-1--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-1.webp 1600w"
   },
   "/assets/collections/bsa-legal-branding/ad-2.webp": {
     "width": 1600,
     "height": 1139,
-    "srcset": "/assets/collections/bsa-legal-branding/ad-2--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-2--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-2.webp 1600w"
+    "srcset": "/assets/collections/bsa-legal-branding/ad-2--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-2--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-2--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-2.webp 1600w"
   },
   "/assets/collections/bsa-legal-branding/ad-3.webp": {
     "width": 1600,
     "height": 1139,
-    "srcset": "/assets/collections/bsa-legal-branding/ad-3--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-3--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-3.webp 1600w"
+    "srcset": "/assets/collections/bsa-legal-branding/ad-3--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-3--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-3--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-3.webp 1600w"
   },
   "/assets/collections/bsa-legal-branding/ad-4.webp": {
     "width": 1600,
     "height": 1139,
-    "srcset": "/assets/collections/bsa-legal-branding/ad-4--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-4--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-4.webp 1600w"
+    "srcset": "/assets/collections/bsa-legal-branding/ad-4--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-4--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-4--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-4.webp 1600w"
   },
-  "/assets/collections/bsa-legal-branding/brand-system.webp": {
-    "width": 586,
-    "height": 390,
-    "srcset": "/assets/collections/bsa-legal-branding/brand-system.webp 586w"
-  },
-  "/assets/collections/bsa-legal-branding/colors.webp": {
-    "width": 670,
-    "height": 526,
-    "srcset": "/assets/collections/bsa-legal-branding/colors--w640.webp 640w, /assets/collections/bsa-legal-branding/colors.webp 670w"
-  },
-  "/assets/collections/bsa-legal-branding/logos.webp": {
-    "width": 1019,
-    "height": 667,
-    "srcset": "/assets/collections/bsa-legal-branding/logos--w640.webp 640w, /assets/collections/bsa-legal-branding/logos--w960.webp 960w, /assets/collections/bsa-legal-branding/logos.webp 1019w"
-  },
-  "/assets/collections/bsa-legal-branding/stationery.webp": {
+  "/assets/collections/bsa-legal-branding/ad-5.webp": {
     "width": 1600,
-    "height": 900,
-    "srcset": "/assets/collections/bsa-legal-branding/stationery--w640.webp 640w, /assets/collections/bsa-legal-branding/stationery--w960.webp 960w, /assets/collections/bsa-legal-branding/stationery.webp 1600w"
+    "height": 1139,
+    "srcset": "/assets/collections/bsa-legal-branding/ad-5--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-5--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-5--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-5.webp 1600w"
   },
-  "/assets/collections/bsa-legal-branding/typefaces.webp": {
-    "width": 1048,
-    "height": 1194,
-    "srcset": "/assets/collections/bsa-legal-branding/typefaces--w640.webp 640w, /assets/collections/bsa-legal-branding/typefaces--w960.webp 960w, /assets/collections/bsa-legal-branding/typefaces.webp 1048w"
+  "/assets/collections/bsa-legal-branding/ad-6.webp": {
+    "width": 1600,
+    "height": 1139,
+    "srcset": "/assets/collections/bsa-legal-branding/ad-6--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-6--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-6--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-6.webp 1600w"
+  },
+  "/assets/collections/bsa-legal-branding/ad-7.webp": {
+    "width": 1600,
+    "height": 1138,
+    "srcset": "/assets/collections/bsa-legal-branding/ad-7--w320.webp 320w, /assets/collections/bsa-legal-branding/ad-7--w640.webp 640w, /assets/collections/bsa-legal-branding/ad-7--w960.webp 960w, /assets/collections/bsa-legal-branding/ad-7.webp 1600w"
   }
 }

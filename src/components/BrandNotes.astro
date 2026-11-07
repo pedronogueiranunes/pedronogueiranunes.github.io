@@ -1,0 +1,40 @@
+---
+// Rationale / references / comments slots for the brand cases.
+// Empty slots are hidden in production and shown as prompts in dev.
+interface Ref { title: string; url?: string; note: string }
+interface Props { data: { rationale: string; references: Ref[]; comments: string }; dev?: boolean }
+const { data, dev = false } = Astro.props;
+const blocks = [
+  { key: "Rationale", text: data.rationale },
+  { key: "Comments", text: data.comments },
+].filter((b) => b.text || dev);
+const showRefs = data.references.length > 0 || dev;
+---
+{(blocks.length > 0 || showRefs) && (
+  <div class="brand-notes">
+    {blocks.map((b) => (
+      <div class:list={["brand-note", { empty: !b.text }]}>
+        <h3 class="mono">{b.key}</h3>
+        <p>{b.text || "To fill in (frontmatter: brand)."}</p>
+      </div>
+    ))}
+    {showRefs && (
+      <div class:list={["brand-note", { empty: data.references.length === 0 }]}>
+        <h3 class="mono">References</h3>
+        {data.references.length > 0 ? (
+          <ul>{data.references.map((r) => (
+            <li>{r.url ? <a href={r.url} rel="noopener" target="_blank">{r.title}</a> : r.title}{r.note && <span> · {r.note}</span>}</li>
+          ))}</ul>
+        ) : <p>To fill in (frontmatter: brand).</p>}
+      </div>
+    )}
+  </div>
+)}
+<style>
+  .brand-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px 40px; margin: 0 0 32px; max-width: 1000px; }
+  .brand-note h3 { margin: 0 0 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+  .brand-note p, .brand-note ul { margin: 0; padding: 0; list-style: none; }
+  .brand-note li + li { margin-top: 6px; }
+  .brand-note.empty { opacity: .5; }
+  .brand-note.empty p { font-style: italic; }
+</style>
