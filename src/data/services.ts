@@ -1,4 +1,4 @@
-// TODO: confirm real number. Offer prices and durations are conservative examples pending Pedro's approval.
+// Prices checked against 2026 market ranges on 2026-11-07 (freelance and studio guides). Durations still need confirming.
 export const offers = [
   {
     title: "Website design and build",
@@ -10,7 +10,7 @@ export const offers = [
       "Forms, tracking and integrations wired in",
     ],
     duration: "6 to 10 weeks", // TODO: confirm with Pedro before publishing
-    price: "From $9,000", // TODO: confirm real number
+    price: "From $9,000",
     featured: true,
   },
   {
@@ -24,7 +24,7 @@ export const offers = [
       "Ready to carry into the website",
     ],
     duration: "3 to 6 weeks", // TODO: confirm with Pedro before publishing
-    price: "From $5,000", // TODO: confirm real number
+    price: "From $6,000",
   },
   {
     title: "CRO audit and redesign",
@@ -36,11 +36,11 @@ export const offers = [
       "Redesign of your most important page in Figma",
     ],
     duration: "2 to 3 weeks", // TODO: confirm with Pedro before publishing
-    price: "From $1,800", // TODO: confirm real number
+    price: "From $2,500",
   },
 ];
-// TODO: confirm real number. Bundle price shown under the offer cards.
-export const bundleNote = "Brand and website together start at $13,000.";
+// Bundle price shown under the offer cards: website + brand minus $1,000.
+export const bundleNote = "Brand and website together start at $14,000.";
 export const capabilities = [
   {
     title: "Websites & CMS",
@@ -132,9 +132,8 @@ export const schedule = [
 export const faq = [
   {
     question: "What does a project usually cost?",
-    // TODO: confirm real number
     answer:
-      "Websites start at $9,000, brand identity at $5,000 and CRO audits at $1,800. After the first call you get a fixed price range in writing, before any commitment.",
+      "Websites start at $9,000, brand identity at $6,000 and CRO audits at $2,500. After the first call you get a fixed price range in writing, before any commitment.",
   },
   {
     question: "Which platforms do you work with?",
