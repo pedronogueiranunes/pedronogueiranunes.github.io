@@ -59,10 +59,8 @@ const menu = [
     href: "/projects?category=experiments",
     heading: "EXPERIMENTS",
     rows: [
-      { title: "Code", num: "01" },
-      { title: "Generative art", num: "02" },
-      { title: "Prototypes", num: "03" },
-      { title: "Music", num: "04" },
+      { title: "Code & Art", num: "01" },
+      { title: "Music & Audiovisual", num: "02" },
     ],
   },
   {
@@ -108,6 +106,7 @@ import LogoModel from "./LogoModel.astro";
     <LogoModel />
   </a>
   <nav class="desktop-nav" transition:name="site-navigation" transition:animate="none" aria-label="Main navigation">
+    <span class="nav-pill" aria-hidden="true"></span>
     {visibleMenu.map((item) => (
       <div class="nav-item" data-menu={item.key}>
         <a
@@ -398,9 +397,30 @@ import LogoModel from "./LogoModel.astro";
       ".nav-heading, .nav-row, .nav-feature",
     ),
   ];
+  // One white pill slides between the open items, like the theme toggle.
+  const navPill = document.querySelector<HTMLElement>(".nav-pill");
+  navPill?.parentElement?.classList.add("has-pill");
+  const placePill = (active: HTMLElement | null, slide: boolean) => {
+    if (!navPill) return;
+    const parent = navPill.offsetParent as HTMLElement | null;
+    if (!active || !parent) {
+      navPill.classList.remove("is-visible");
+      return;
+    }
+    const link = active.querySelector<HTMLElement>(".nav-link")!.getBoundingClientRect();
+    const box = parent.getBoundingClientRect();
+    navPill.classList.toggle("no-slide", !slide || reducedMotion.matches);
+    navPill.style.setProperty("--pill-x", `${link.left - box.left - parent.clientLeft}px`);
+    navPill.style.setProperty("--pill-y", `${link.top - box.top - parent.clientTop}px`);
+    navPill.style.setProperty("--pill-w", `${link.width}px`);
+    navPill.style.setProperty("--pill-h", `${link.height}px`);
+    navPill.classList.add("is-visible");
+  };
+  addEventListener("resize", () => openItem && placePill(openItem, false), { signal: scope.signal, passive: true });
   const setOpen = (active: HTMLElement | null) => {
     clearTimeout(closeTimer);
     if (active === openItem) return;
+    const previous = openItem;
     openItem = active;
     items.forEach((item) => {
       const open = item === active;
@@ -429,6 +449,7 @@ import LogoModel from "./LogoModel.astro";
         gsap.set(content, { clearProps: "transform,opacity" });
       }
     });
+    placePill(active, !!previous && !!active);
   };
   reducedMotion.addEventListener("change", () => {
     if (reducedMotion.matches)

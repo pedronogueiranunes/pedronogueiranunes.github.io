@@ -592,6 +592,36 @@ img {
   background: #fff;
   color: #232625;
 }
+/* The white pill under the open item slides between items (see Navbar script). */
+.nav-pill {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: var(--pill-w, 0);
+  height: var(--pill-h, 28px);
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--pill-x, 0), var(--pill-y, 0));
+  transition:
+    transform 420ms cubic-bezier(.22, 1, .36, 1),
+    width 420ms cubic-bezier(.22, 1, .36, 1),
+    opacity 220ms ease;
+}
+.nav-pill.no-slide {
+  transition: opacity 220ms ease;
+}
+.nav-pill.is-visible {
+  opacity: 1;
+}
+.has-pill .nav-item.is-open .nav-link {
+  background: transparent;
+}
+.nav-link-arrow {
+  transition: opacity 260ms ease 80ms;
+}
 .nav-item.is-open .nav-link-arrow {
   width: 8px;
   height: 8px;
@@ -628,6 +658,8 @@ img {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  /* Panels cross-fade when the pointer moves between items. */
+  transition: opacity 240ms ease, visibility 0s linear 240ms;
 }
 .nav-panel:before {
   content: "";
@@ -657,6 +689,7 @@ img {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
+  transition: opacity 240ms ease, visibility 0s;
 }
 .nav-list {
   width: 100%;
@@ -810,9 +843,18 @@ img {
   gap: 12px;
   border-radius: 0 16px 16px 0;
 }
+/* The thumbnail takes the card's spare height, so the content fills the panel. */
 .nav-panel--wide .nav-feature-thumb {
-  height: 252px;
+  flex: 1 1 252px;
+  height: auto;
+  min-height: 252px;
   border-radius: 8px;
+}
+.nav-panel--wide .nav-feature-thumb > * {
+  transition: transform 700ms cubic-bezier(.22, 1, .36, 1);
+}
+.nav-panel--wide .nav-feature:is(:hover, :focus-visible) .nav-feature-thumb > * {
+  transform: scale(1.06);
 }
 .nav-panel--wide .nav-feature p {
   font-size: 24px;
@@ -822,8 +864,13 @@ img {
 @media (prefers-reduced-motion: reduce) {
   .nav-link,
   .nav-link-arrow,
-  .nav-panel {
+  .nav-panel,
+  .nav-pill,
+  .nav-panel--wide .nav-feature-thumb > * {
     transition: none;
+  }
+  .nav-panel--wide .nav-feature:is(:hover, :focus-visible) .nav-feature-thumb > * {
+    transform: none;
   }
 }
 .site-nav-actions {
