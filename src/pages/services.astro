@@ -407,6 +407,26 @@ const faqSchema = JSON.stringify({
     const status = slider.querySelector<HTMLElement>("[data-result-status]");
     if (!slides.length || !prev || !next) return;
     let index = 0;
+    // Hidden slides keep loading="lazy" for the first paint, then fetch in the
+    // background so the arrows never reveal a half-loaded screenshot.
+    const imageOf = (slide: HTMLElement) => slide.querySelector<HTMLImageElement>(".service-result-image img");
+    const preload = () => slides.forEach((slide) => { const img = imageOf(slide); if (img) img.loading = "eager"; });
+    const idle = () => ("requestIdleCallback" in window ? requestIdleCallback(preload, { timeout: 2000 }) : setTimeout(preload, 1200));
+    if (document.readyState === "complete") idle();
+    else addEventListener("load", idle, { once: true, signal: scope.signal });
+    slider.addEventListener("pointerenter", preload, { once: true, signal: scope.signal });
+    slider.addEventListener("focusin", preload, { once: true, signal: scope.signal });
+    let request = 0;
+    const go = async (target: number) => {
+      const ticket = ++request;
+      const img = imageOf(slides[(target + slides.length) % slides.length]);
+      if (img && !img.complete) {
+        img.loading = "eager";
+        // Wait for the pixels, but never hold the click for long on a slow network.
+        await Promise.race([img.decode().catch(() => {}), new Promise((done) => setTimeout(done, 700))]);
+      }
+      if (ticket === request) show(target);
+    };
     const show = (target: number, animate = true) => {
       index = (target + slides.length) % slides.length;
       slides.forEach((slide, slideIndex) => {
@@ -428,12 +448,12 @@ const faqSchema = JSON.stringify({
         status.textContent = `${index + 1} / ${slides.length} · ${headline}`;
       }
     };
-    const step = (delta: number) => () => show(index + delta);
+    const step = (delta: number) => () => go(index + delta);
     prev.addEventListener("click", step(-1), { signal: scope.signal });
     next.addEventListener("click", step(1), { signal: scope.signal });
     slider.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft") { event.preventDefault(); show(index - 1); }
-      if (event.key === "ArrowRight") { event.preventDefault(); show(index + 1); }
+      if (event.key === "ArrowLeft") { event.preventDefault(); go(index - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); go(index + 1); }
     }, { signal: scope.signal });
     show(0, false);
   });
