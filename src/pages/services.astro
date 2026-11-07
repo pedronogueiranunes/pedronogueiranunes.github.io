@@ -60,47 +60,40 @@ const faqSchema = JSON.stringify({
   <script type="application/ld+json" slot="head" set:html={faqSchema} />
   <section class="service-hero page-section">
     <PixelTrail tone="green" world worldOrigin="[data-result-slider]" />
-    <div>
+    <div class="service-hero-copy">
       <Eyebrow>Services</Eyebrow>
       <h1>
         Brands, design systems and websites.
-        <br />
-        Designed and built by the same senior pair of hands.
+        <span>Designed and built by the same senior pair of hands.</span>
       </h1>
       <p>
         I design the identity, turn it into a system, and ship the site on the
-        platform your team can run. 12+ years of client work, with the
-        illustration and motion that keep a brand from looking like a template.
+        platform your team can run.
       </p>
-      <CheckList
-        items={[
-          "Brand, design system and build in one place",
-          "Research and CRO before any redesign",
-          "Webflow, WordPress, React or Shopify, chosen for your team",
-        ]}
-      />
       <div class="actions">
         <Button href="/contact">Start a project</Button>
         <Button href="#results" secondary>
           See the work
         </Button>
       </div>
-      <div class="builds-on">
-        <span class="mono">Builds on</span>
-        {["WordPress", "Webflow", "Framer", "Shopify Hydrogen", "React"].map(
-          (tool) => (
-            <img
-              src={`/assets/logos/${logoFor(tool)}.svg`}
-              alt={tool}
-              width="24"
-              height="24"
-            />
-          ),
-        )}
+      <div class="service-hero-meta">
+        <div class="builds-on">
+          <span class="mono">Builds on</span>
+          {["WordPress", "Webflow", "Framer", "Shopify Hydrogen", "React"].map(
+            (tool) => (
+              <img
+                src={`/assets/logos/${logoFor(tool)}.svg`}
+                alt={tool}
+                width="20"
+                height="20"
+              />
+            ),
+          )}
+        </div>
+        <p class="mono muted">
+          Clients in the US, Canada, Germany and Brazil · Remote, US hours
+        </p>
       </div>
-      <p class="mono muted">
-        Clients in the US, Canada, Germany and Brazil · Remote, US hours
-      </p>
     </div>
     <div class="service-result-slider" data-result-slider>
       <div class="service-result">
