@@ -287,8 +287,8 @@ import LogoModel from "./LogoModel.astro";
       const box = logo.getBoundingClientRect();
       const dx = pointer.x - (box.left + box.width / 2);
       const dy = pointer.y - (box.top + box.height / 2);
-      // ponytail: linear falloff over 420px; tune RANGE/strength here.
-      const pull = reducedMotion.matches ? 0 : Math.max(0, 1 - Math.hypot(dx, dy) / 420);
+      // ponytail: linear falloff over 180px; tune RANGE/strength here.
+      const pull = reducedMotion.matches ? 0 : Math.max(0, 1 - Math.hypot(dx, dy) / 180);
       logo.style.setProperty("--logo-tilt-x", `${(-dy / 14) * pull}deg`);
       logo.style.setProperty("--logo-tilt-y", `${(dx / 10) * pull}deg`);
       logo.style.setProperty("--logo-shift-x", `${(dx / 9) * pull}px`);
