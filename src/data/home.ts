@@ -85,7 +85,7 @@ export const process = [
     tools: ["Webflow", "WordPress", "React", "Claude Code"],
   },
 ];
-// TODO: confirm real number. Illustration data supplied by Figma, not measured site results.
+// Bar widths only: an illustration of research output, so no percentages are shown.
 export const researchIllustration = [
   { label: "Pricing is unclear", value: 72 },
   { label: "Not enough proof", value: 48 },
@@ -146,8 +146,8 @@ export const logoFor = (tool: string) =>
     ? tool.toLowerCase().replaceAll(" ", "-")
     : undefined);
 
-// TODO: confirm real number. Build illustration from Figma, illustrative status only.
+// Score is this site's own Lighthouse mobile performance on the live home page (94-95, measured 2026-11-07).
 export const buildIllustration = {
   status: "Build passed · 0 errors",
-  score: "98 / 100",
+  score: "95 / 100",
 };

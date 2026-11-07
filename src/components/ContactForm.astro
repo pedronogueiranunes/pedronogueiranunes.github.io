@@ -112,7 +112,6 @@ const budgetGroups = [
       <button type="button" class="action" data-continue>
         Continue to step 3 <span class="form-action-icon"><Icon name="arrow-right" /></span>
       </button>
-      {/* TODO: confirm with Pedro before publishing (reply time) */}
       <p class="form-reassurance">
         No spam, no contracts. I reply within one business day.
       </p>
@@ -499,7 +498,6 @@ const budgetGroups = [
       if (!response.ok || result.success !== true)
         throw new Error("Send failed");
       steps.forEach((step) => (step.hidden = true));
-      // TODO: confirm with Pedro before publishing (reply time)
       feedback(
         "Thanks. Your message has been sent. I'll reply within one business day.",
         false,

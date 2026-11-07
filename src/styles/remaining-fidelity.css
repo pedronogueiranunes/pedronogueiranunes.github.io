@@ -129,7 +129,7 @@
 .site-footer .footer-cta h2 { font-weight:800; font-size:70px; letter-spacing:-.04em; max-width:781px; }
 .site-footer .footer-cta p { font-weight:500; }
 .site-footer .footer-cta .action--secondary { background:transparent; border-color:transparent; color:var(--green); }
-.site-footer .footer-columns h4 { font-family:var(--font-mono); }
+.site-footer .footer-columns h3 { font-family:var(--font-mono); }
 @media (max-width:1100px) and (min-width:769px) {
  .home-page .home-bio { gap:64px; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
  .case-page .case-hero-top { grid-template-columns:minmax(0,1fr) 320px; gap:40px; }

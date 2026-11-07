@@ -1241,11 +1241,6 @@ details[open] > summary > .faq-plus:after {
   min-width: 0;
 }
 .footer-columns h3 {
-  font-size: 28px;
-  color: var(--accent-ink);
-  margin: 0;
-}
-.footer-columns h4 {
   font: 500 12px var(--font-mono);
   text-transform: uppercase;
   color: #626860;
@@ -1544,7 +1539,7 @@ details[open] > summary > .faq-plus:after {
     padding: 40px 0;
     gap: 32px;
   }
-  .footer-columns h4 {
+  .footer-columns h3 {
     margin: 0 0 8px;
   }
   .footer-columns a,
@@ -1966,8 +1961,9 @@ details[open] > summary > .faq-plus:after {
   background: var(--green);
   border-radius: 16px 16px 0 0;
 }
-.comparison-row > h3 {
+.comparison-row > .comparison-rowhead {
   font: 700 16px/1.5 var(--font-display);
+  text-wrap: balance;
   padding: 24px 20px;
   margin: 0;
 }
@@ -2317,7 +2313,7 @@ html.js .article-cover img:not(.is-loaded) {
     grid-template-columns: 1fr 1.4fr 1fr 1fr;
   }
   .comparison-cell,
-  .comparison-row > h3 {
+  .comparison-row > .comparison-rowhead {
     padding: 20px 12px;
   }
   .comparison-pedro .action {
@@ -2532,7 +2528,7 @@ html.js .article-cover img:not(.is-loaded) {
     display: block;
     padding: 24px 0;
   }
-  .comparison-row > h3 {
+  .comparison-row > .comparison-rowhead {
     padding: 0 0 20px;
     font-size: 20px;
   }
@@ -4759,7 +4755,7 @@ html.js .article-cover img:not(.is-loaded) {
 .footer-cta h2 {
   color: var(--text);
 }
-.footer-columns h4,
+.footer-columns h3,
 .footer-legal {
   color: var(--text-secondary);
 }
@@ -4815,9 +4811,6 @@ html.js .article-cover img:not(.is-loaded) {
 .promises-grid p,
 .promise-facts {
   color: var(--text-secondary);
-}
-.footer-columns h3 {
-  color: var(--accent-ink);
 }
 .footer-columns a:hover {
   color: var(--accent-ink);
@@ -4908,9 +4901,6 @@ html.js .article-cover img:not(.is-loaded) {
 }
 .case-architecture > div > p {
   color: #53634f;
-}
-.footer-columns h3 {
-  color: var(--accent-ink);
 }
 .case-architecture > div > p {
   color: var(--text-secondary);
@@ -6524,7 +6514,7 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   .project-section .rail-controls > .text-link { width: auto; font-size: 10px; gap: 8px; }
   .project-section .rail-arrows { flex-shrink: 0; gap: 8px; }
   .comparison-row { margin-bottom: 20px; padding: 20px; border: 1px solid var(--border); border-radius: 20px; background: var(--comparison-card-bg, #ffffff); }
-  .comparison-row > h3 { padding-bottom: 18px; }
+  .comparison-row > .comparison-rowhead { padding-bottom: 18px; }
   .comparison-row .comparison-pedro { padding: 16px; margin-bottom: 20px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
   .comparison-mobile-label { margin-bottom: 10px; }
   .comparison-cell:not(.comparison-pedro) { padding: 0 0 18px; }

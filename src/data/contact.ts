@@ -24,7 +24,6 @@ export const budgets = ["$5k to $10k", "$10k to $20k", "$20k to $40k", "$40k+", 
 export const agencyBudgets = ["Per project", "Monthly capacity", "Not sure yet"];
 export const startDates = ["ASAP", "This month", "Next quarter"];
 export const nextSteps = [
-  // TODO: confirm with Pedro before publishing (reply time)
   ["Within one business day", "I reply by email with a couple of quick questions."],
   ["A 30-minute call", "We go through your goals on a screen share, in US or European hours."],
   [
@@ -33,8 +32,7 @@ export const nextSteps = [
   ],
 ];
 
-// TODO: confirm real number. Contact testimonial and five-star rating are Figma placeholders.
-// The page hides this block while the quote is a placeholder.
+// Placeholder until Pedro has an authorized client quote; the page hides this block while the quote contains "[".
 export const testimonial = {
   quote: '"[Short client quote.]"',
   rating: "5/5",

@@ -24,5 +24,5 @@ export const site = {
     "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
     "dither-lab": "https://pedronogueiranunes.github.io/dither-lab/",
   } as Record<string, string>,
-  availability: "Booking projects for November", // TODO: confirm current availability before publishing.
+  availability: "Taking on new projects", // No month, so it never goes stale.
 };

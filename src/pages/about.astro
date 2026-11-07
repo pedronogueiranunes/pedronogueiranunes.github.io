@@ -221,7 +221,11 @@ const careerShots = [
           const word = document.createElement("span");
           word.className = "approach-word";
           const letters = Array.from(match[0]);
-          word.setAttribute("aria-label", match[0]);
+          // The letters below are aria-hidden; this hidden copy is what screen readers read.
+          const spoken = document.createElement("span");
+          spoken.className = "sr-only";
+          spoken.textContent = match[0];
+          word.append(spoken);
           for (let i = 0; i < letters.length; i++) {
             const segment = document.createElement("span");
             segment.className = "approach-word__segment";

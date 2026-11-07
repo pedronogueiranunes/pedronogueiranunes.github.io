@@ -44,7 +44,7 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
     {comparison.map((row, i) => (
       <div class="comparison-row" role="row">
         <ComparisonShade />
-        <h3 role="rowheader">{row[0]}</h3>
+        <div role="rowheader" class="comparison-rowhead">{row[0]}</div>
         {row.slice(1).map((text, index) => (
           <div
             role="cell"
