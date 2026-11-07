@@ -74,13 +74,16 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
             )}
           </div>
         ))}
-        <div class="comparison-illustration" aria-hidden="true">
-        <ComparisonStrokes kind={comparisonIcons[i]} />
-        <picture>
-          <source media="(max-width: 768px)" srcset={`/assets/comparison/${comparisonIcons[i]}.webp`} />
-          <img width="160" height="160" alt="" loading="lazy" decoding="async" />
-        </picture>
-          <DitherIcon />
+        <div class="comparison-stage" aria-hidden="true" data-kind={comparisonIcons[i]}>
+          {comparisonIcons[i] === "platforms" && <ComparisonStrokes kind="platforms" layer="back" />}
+          <div class="comparison-illustration">
+            <picture>
+              <source media="(max-width: 768px)" srcset={`/assets/comparison/${comparisonIcons[i]}.webp`} />
+              <img width="160" height="160" alt="" loading="lazy" decoding="async" />
+            </picture>
+            <DitherIcon />
+          </div>
+          <ComparisonStrokes kind={comparisonIcons[i]} />
         </div>
       </div>
     ))}
@@ -101,6 +104,29 @@ const labels = ["Pedro Nogueira", "Generic freelancer", "Big agency"];
 
 <style>
   .comparison-platforms { display:none; }
+  .comparison-stage { display:none; }
+  @media (max-width:768px) {
+    /* Full-bleed stage at the card's foot: the icon sits right, its line art uses the rest. */
+    .comparison-stage { display:block; position:relative; width:calc(100% + 40px); height:260px; margin:4px -20px -20px; pointer-events:none; }
+    .comparison-illustration { position:absolute; top:25px; right:-6px; width:210px; height:210px; }
+    /* Icon motion, timed with each card's line art in ComparisonStrokes. Individual
+       transform properties leave `transform` free for the scroll parallax. */
+    [data-kind="work"] .comparison-illustration { animation:icon-write 7s ease-in-out infinite; }
+    [data-kind="focus"] .comparison-illustration { animation:icon-hit .8s ease-out infinite; }
+    [data-kind="platforms"] .comparison-illustration { animation:icon-breathe 4.5s ease-in-out infinite; }
+    [data-kind="time"] .comparison-illustration { animation:icon-tick 1s ease-out infinite; }
+    [data-kind="communication"] .comparison-illustration { animation:icon-talk 1s ease-out infinite; }
+    [data-kind="ownership"] .comparison-illustration { animation:icon-turn 6s ease-out infinite; transform-origin:70% 25%; }
+    [data-kind="next"] .comparison-illustration { animation:icon-ring 6s ease-out infinite; transform-origin:50% 20%; }
+  }
+  @keyframes icon-write { 0%,60%,100% { translate:0 0; } 8% { translate:-3px 2px; } 16% { translate:1px -1px; } 24% { translate:-4px 2px; } 32% { translate:0 1px; } 40% { translate:-3px -1px; } 48% { translate:1px 2px; } }
+  @keyframes icon-hit { 0%,40%,100% { scale:1; } 50% { scale:.93; } 64% { scale:1.03; } }
+  @keyframes icon-breathe { 50% { scale:1.04; rotate:-2deg; } }
+  @keyframes icon-tick { 0%,24%,100% { rotate:0deg; } 6% { rotate:-4deg; } 14% { rotate:2deg; } }
+  @keyframes icon-talk { 0%,32%,100% { scale:1; } 8% { scale:1.06 .94; } 18% { scale:.97 1.03; } }
+  @keyframes icon-turn { 0%,16%,100% { rotate:0deg; } 5% { rotate:-14deg; } 11% { rotate:4deg; } }
+  @keyframes icon-ring { 0%,20%,100% { rotate:0deg; } 2%,6%,14% { rotate:-6deg; } 4%,8%,16% { rotate:6deg; } 18% { rotate:-3deg; } 26% { scale:1.04; } 32% { scale:1; } }
+  @media (prefers-reduced-motion:reduce) { .comparison-illustration { animation:none !important; } }
   /* Keep the icon above the looping strokes before its dither canvas is ready. */
   .comparison-illustration picture { position:relative; display:block; width:100%; height:100%; }
   @media (max-width:768px) {

@@ -2437,7 +2437,8 @@ html.js .article-cover img:not(.is-loaded) {
     letter-spacing: -0.02em;
   }
   .home-portrait {
-    top: 468px;
+    /* Starts just under the "See the work" link. */
+    top: 512px;
     width: min(350px, calc(100vw - 40px));
     height: 325px;
   }
@@ -6657,19 +6658,9 @@ html[data-transition="theme"]::view-transition-old(root) { z-index: 0; }
   .problem-card:nth-child(3) .problem-art img { top: -63px; width: 360px; height: 360px; }
 }
 
-/* Decorative comparison illustrations are downloaded and displayed on mobile only. */
-.comparison-illustration { display: none; }
+/* Decorative comparison illustrations are downloaded and displayed on mobile only (see Comparison.astro). */
 @media (max-width: 768px) {
-  .comparison-row { position: relative; overflow: hidden; padding-bottom: 100px; }
-  .comparison-illustration {
-    display: block;
-    position: absolute;
-    width: 163.2px;
-    height: 163.2px;
-    right: -24px;
-    bottom: -4.4px;
-    pointer-events: none;
-  }
+  .comparison-row { position: relative; overflow: hidden; }
   .comparison-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
 }
 
@@ -6954,13 +6945,6 @@ html[lang="fr"] .your-turn-label { font-size: 32px; line-height: 0.95; }
 /* In-flow icon space prevents overlap when mobile text wraps or grows. */
 @media (max-width: 768px) {
   .comparison-row { padding-bottom: 20px; }
-  .comparison-illustration {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    flex-shrink: 0;
-    margin: 12px -44px -24.4px auto;
-  }
   .mobile-dialog:focus { outline: none; }
   .mobile-dialog { height: 100dvh; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
   .site-nav { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }

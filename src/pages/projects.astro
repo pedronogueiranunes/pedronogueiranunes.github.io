@@ -57,7 +57,7 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
             <span>{category}</span>
           </button>
         ))}
-        <button type="button" data-category="all" aria-pressed="false"><Icon name="grid2" size={22} /><span>All</span></button>
+        <button type="button" data-category="all" aria-pressed="false"><Icon name="category-all" size={22} /><span>All</span></button>
       </div>
       <div class="view-controls" role="group" aria-label="Project layout">
         {[
