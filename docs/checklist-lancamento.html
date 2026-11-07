@@ -92,7 +92,7 @@ footer { font-size: 13px; color: var(--muted); font-family: var(--mono); }
   <footer id="foot">Levantamento feito em 6 nov. 2026 a partir do main (commit e2bf02e).</footer>
 </div>
 
-<script type="application/json" id="state">{"done":["r1","r2","r3","r4","r5","r6","r7","t1","t2","t3","t4","t5","t6","t7","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","c11"],"updated":"2026-11-07T13:30:00.000Z"}</script>
+<script type="application/json" id="state">{"done":["r1","r2","r3","r4","r5","r6","r7","t1","t2","t3","t4","t5","t6","t7","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","c11","t8"],"updated":"2026-11-07T14:20:00.000Z"}</script>
 
 <script id="main">
 (function () {
@@ -131,11 +131,11 @@ footer { font-size: 13px; color: var(--muted); font-family: var(--mono); }
         ["t5", "Comprimir os vídeos dos cases", "AV1 onde vale a pena (até 61% menor, VMAF 97) e H.264 recomprimido como reserva. <code>scripts/encode-videos.sh</code>"],
         ["t6", "Verificar os avisos do build", "Inofensivos: os 3 SVGs do OfferVideo existem e o CSS final aponta certo."],
         ["t7", "Revisar alertas de dependências", "sharp atualizado. Os do Astro não se aplicam a site estático; corrigir exigiria Astro 7."],
-        ["t8", "Domínio próprio (opcional)", "Se usar, trocar <code>site</code> no astro.config.mjs, o robots.txt e o sitemap."]
+        ["t8", "Domínio próprio", "pedronogueira.dev no ar com HTTPS; o endereço antigo redireciona. DNS na Spaceship."]
       ] },
     { id: "seo", title: "SEO e divulgação", p: "seo", pl: "Na divulgação",
       items: [
-        ["s1", "Enviar o sitemap ao Google Search Console", "84 URLs em /sitemap.xml."],
+        ["s1", "Enviar o sitemap ao Google Search Console", "84 URLs em https://pedronogueira.dev/sitemap.xml."],
         ["s2", "Enviar o sitemap ao Bing Webmaster Tools", ""],
         ["s3", "Testar a imagem de compartilhamento", "Ver <code>og/default.jpg</code> no LinkedIn e no WhatsApp. Avaliar uma por case."],
         ["s4", "Decidir sobre analytics", "Nenhum está instalado. Se instalar, atualizar privacidade e aviso de cookies."],
