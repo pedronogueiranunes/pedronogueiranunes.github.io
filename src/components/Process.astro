@@ -119,5 +119,9 @@ import ToolChip from "./ToolChip.astro";
 <script>
   import { onPageLoad } from "../scripts/page-lifecycle";
   import { initProcessMotion } from "../scripts/process-motion.js";
-  onPageLoad((scope) => scope.cleanup(initProcessMotion()));
+  import { initProcessDither } from "../scripts/process-dither.js";
+  onPageLoad((scope) => {
+    scope.cleanup(initProcessMotion());
+    scope.cleanup(initProcessDither());
+  });
 </script>
