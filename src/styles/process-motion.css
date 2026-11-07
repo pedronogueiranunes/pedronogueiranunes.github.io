@@ -28,8 +28,8 @@
   .process-card.is-motion-running .process-visual *, .process-card.is-motion-running .process-visual *::before { animation-play-state:running; }
 }
 @keyframes process-research {
-  0%,8%,100% { transform:scaleX(.18); }
-  34%,83% { transform:scaleX(1); }
+  0%,8%,100% { clip-path:inset(0 82% 0 0); }
+  34%,83% { clip-path:inset(0); }
 }
 @keyframes process-control {
   0%,25%,100% { opacity:1; }
@@ -44,8 +44,8 @@
   45%,85% { opacity:1; transform:translateY(0) scale(1); }
 }
 @keyframes process-conversion {
-  0%,25%,100% { transform:scaleX(.65); }
-  45%,85% { transform:scaleX(1); }
+  0%,25%,100% { clip-path:inset(0 35% 0 0); }
+  45%,85% { clip-path:inset(0); }
 }
 @keyframes process-align {
   0%,10%,100% { transform:translate(3px,3px) scaleX(.95); }
@@ -86,4 +86,48 @@
 @media (prefers-reduced-motion:reduce) {
   .process-card { transition:none; }
   .process-card:hover { transform:none; }
+}
+
+/* Ordered (Bayer 4x4) dither in 2px pixels, the same grain as the site illustrations.
+   Patterns are sized SVG tiles, so a layer can cover just one stretch of an element. */
+.process-visual {
+  --dither-75: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='p' width='8' height='8' patternUnits='userSpaceOnUse' fill='%23FF5A1F' fill-opacity='1'%3E%3Crect x='0' y='0' width='2' height='2'/%3E%3Crect x='2' y='0' width='2' height='2'/%3E%3Crect x='4' y='0' width='2' height='2'/%3E%3Crect x='6' y='0' width='2' height='2'/%3E%3Crect x='2' y='2' width='2' height='2'/%3E%3Crect x='6' y='2' width='2' height='2'/%3E%3Crect x='0' y='4' width='2' height='2'/%3E%3Crect x='2' y='4' width='2' height='2'/%3E%3Crect x='4' y='4' width='2' height='2'/%3E%3Crect x='6' y='4' width='2' height='2'/%3E%3Crect x='2' y='6' width='2' height='2'/%3E%3Crect x='6' y='6' width='2' height='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23p)'/%3E%3C/svg%3E");
+  --dither-50: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='p' width='8' height='8' patternUnits='userSpaceOnUse' fill='%23FF5A1F' fill-opacity='1'%3E%3Crect x='0' y='0' width='2' height='2'/%3E%3Crect x='4' y='0' width='2' height='2'/%3E%3Crect x='2' y='2' width='2' height='2'/%3E%3Crect x='6' y='2' width='2' height='2'/%3E%3Crect x='0' y='4' width='2' height='2'/%3E%3Crect x='4' y='4' width='2' height='2'/%3E%3Crect x='2' y='6' width='2' height='2'/%3E%3Crect x='6' y='6' width='2' height='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23p)'/%3E%3C/svg%3E");
+  --dither-25: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='p' width='8' height='8' patternUnits='userSpaceOnUse' fill='%23FF5A1F' fill-opacity='1'%3E%3Crect x='0' y='0' width='2' height='2'/%3E%3Crect x='4' y='0' width='2' height='2'/%3E%3Crect x='0' y='4' width='2' height='2'/%3E%3Crect x='4' y='4' width='2' height='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23p)'/%3E%3C/svg%3E");
+  --dither-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='p' width='8' height='8' patternUnits='userSpaceOnUse' fill='%23FF5A1F' fill-opacity='0.3'%3E%3Crect x='0' y='0' width='2' height='2'/%3E%3Crect x='4' y='0' width='2' height='2'/%3E%3Crect x='0' y='4' width='2' height='2'/%3E%3Crect x='4' y='4' width='2' height='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23p)'/%3E%3C/svg%3E");
+}
+/* Research bars dissolve into dots at their tip. */
+.process-visual .research-bar > div, .process-visual .research-bar i { height: 6px; }
+.process-visual .research-bar i {
+  background:
+    linear-gradient(var(--action-bg), var(--action-bg)) left / calc(100% - 36px) 100% no-repeat,
+    var(--dither-75) right 24px top / 12px 100% no-repeat,
+    var(--dither-50) right 12px top / 12px 100% no-repeat,
+    var(--dither-25) right top / 12px 100% no-repeat;
+}
+/* Winning variant: dotted heat instead of a soft glow, and a dithered CTA. */
+.process-visual .mini-wireframe.winner { box-shadow: none; background: var(--dither-25) left bottom / 100% 28% no-repeat, var(--dither-glow) 0 0 / 100% 100%, #35302d; }
+.process-visual .mini-wireframe.winner em {
+  width: 40px;
+  border-radius: 2px;
+  background:
+    linear-gradient(var(--action-bg), var(--action-bg)) left / 50% 100% no-repeat,
+    var(--dither-75) left 20px top / 10px 100% no-repeat,
+    var(--dither-50) right top / 10px 100% no-repeat;
+}
+/* Design: the selection reads as a marquee filled with sparse dots. */
+.process-visual .design-selection { background: var(--dither-glow) 0 0 / 100% 100%, #424242; }
+/* Build: the separator above the status fills like a score bar (95 of 100). */
+.process-visual .build-visual > div { position: relative; }
+.process-visual .build-visual > div::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 5%;
+  top: -2px;
+  height: 4px;
+  background:
+    linear-gradient(var(--action-bg), var(--action-bg)) left / calc(100% - 24px) 100% no-repeat,
+    var(--dither-50) right 12px top / 12px 100% no-repeat,
+    var(--dither-25) right top / 12px 100% no-repeat;
 }
