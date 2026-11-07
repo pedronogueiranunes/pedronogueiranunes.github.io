@@ -7921,17 +7921,16 @@ main h1[tabindex="-1"]:focus {
 
 /* Give practical contact information its own quiet rhythm below the steps. */
 .contact-page .contact-meta { margin-top:48px; padding-top:28px; border-top:1px solid var(--border); }
-.contact-page .contact-client-note { margin:0 0 26px; max-width:48ch; font:400 14px/1.6 var(--font-body); color:var(--text-secondary); }
-.contact-page .contact-details { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:26px 32px; }
-.contact-page .contact-details > div:first-child { grid-column:1 / -1; }
+.contact-page .contact-intro h1 { margin-bottom:48px; }
+.contact-page .contact-client-note { margin:28px 0 0; max-width:48ch; font:400 14px/1.6 var(--font-body); color:var(--text-secondary); }
+.contact-page .contact-details { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px 32px; margin:0; }
 .contact-page .contact-details dt { margin:0 0 8px; padding:0; color:var(--text-secondary); }
 .contact-page .contact-details dd { line-height:1.55; font-weight:400; }
-.contact-page .contact-details > div:first-child dd { font-size:16px; font-weight:600; }
+.contact-page .contact-details > div:first-child dd { font-weight:600; }
 .contact-page .contact-details a:is(:hover,:focus-visible) { color:var(--accent-ink); text-decoration:underline; text-underline-offset:4px; }
 @media (max-width:480px) {
  .contact-page .contact-meta { margin-top:40px; padding-top:24px; }
  .contact-page .contact-details { grid-template-columns:1fr; gap:22px; }
- .contact-page .contact-details > div:first-child dd { font-size:15px; }
 }
 
 .calendar-alternative > a { transition:background-color 200ms ease; }

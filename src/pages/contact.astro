@@ -3,7 +3,6 @@ import PixelTrail from "../components/PixelTrail.astro";
 import Base from "../layouts/Base.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import ContactForm from "../components/ContactForm.astro";
-import CheckList from "../components/CheckList.astro";
 import FAQ from "../components/FAQ.astro";
 import Icon from "../components/Icon.astro";
 import { nextSteps, testimonial } from "../data/contact";
@@ -32,16 +31,6 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
         <br />
         <span>I'll reply with a clear next step.</span>
       </h1>
-      <div class="first-call">
-        <h2>What you get from the first call</h2>
-        <CheckList
-          items={[
-            "A look at your site or brief before we talk",
-            "Honest advice on scope, platform and timeline",
-            "A written price range, yours to keep even if you do not hire me",
-          ]}
-        />
-      </div>
       <div class="next-steps">
         <h2 class="mono accent">What happens next</h2>
         <ol>
@@ -56,6 +45,19 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
         </ol>
       </div>
       <div class="contact-meta">
+      <dl class="contact-details">
+        <div>
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt>Time zone</dt>
+          {/* TODO: confirm with Pedro before publishing */}
+          <dd>Brasília (UTC−3) · Calls 11 am to 4 pm ET</dd>
+        </div>
+      </dl>
       {hasTestimonial ? (
         <blockquote class="contact-testimonial">
           <span class="testimonial-avatar" aria-hidden="true"></span>
@@ -72,24 +74,6 @@ const hasTestimonial = !!testimonial.quote && !testimonial.quote.includes("[");
           Recent clients include BSA Legal, Molina Chambô and PineLake Broken Bow.
         </p>
       )}
-      <dl class="contact-details">
-        <div>
-          <dt>Email</dt>
-          <dd>
-            <a href={`mailto:${site.email}`}>{site.email}</a>
-          </dd>
-        </div>
-        <div>
-          <dt>Time zone</dt>
-          {/* TODO: confirm with Pedro before publishing */}
-          <dd>Brasília (UTC−3) · Calls 11 am to 4 pm ET</dd>
-        </div>
-        <div>
-          <dt>Reply time</dt>
-          {/* TODO: confirm with Pedro before publishing */}
-          <dd>Within one business day</dd>
-        </div>
-      </dl>
       </div>
     </div>
     <ContactForm />
