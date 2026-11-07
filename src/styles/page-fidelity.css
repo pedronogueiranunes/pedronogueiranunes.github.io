@@ -47,7 +47,7 @@
 .services-page .builds-on { gap:14px; margin:24px 0; }
 .services-page .builds-on img { width:20px; height:20px; }
 /* Hero copy: one headline in two tones, a single-sentence lede, actions, then a quiet meta row. */
-.services-page .service-hero h1 > span { display:block; color:var(--text-secondary); }
+.services-page .service-hero h1 > span { display:block; }
 .services-page .service-hero-copy > p:not(.mono) { max-width:28em; margin:0; line-height:1.45; }
 .services-page .service-hero-copy .actions { margin-top:36px; }
 .services-page .service-hero-meta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 32px; margin-top:48px; padding-top:20px; border-top:1px solid var(--border); }
