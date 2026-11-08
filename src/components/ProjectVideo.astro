@@ -1,8 +1,10 @@
 ---
 interface Props { base: string; full?: boolean }
+import { videoExt } from "../data/project-videos";
 const {base, full = false} = Astro.props;
+const ext = videoExt(base);
 ---
-{full ? (<video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video>) : (<span class="project-preview-surface"><video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.mp4`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video></span>)}
+{full ? (<video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.${ext}`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video>) : (<span class="project-preview-surface"><video class="project-video" data-project-video={full ? "full" : "preview"} data-src={`${base}/${full ? "full" : "preview"}.${ext}`} poster={`${base}/poster.webp`} preload="none" muted playsinline loop={!full} controls={full} width={full ? 1920 : 960} height={full ? 1200 : 600}></video></span>)}
 <style is:global>
 .project-video { display:block; width:100%; height:100%; object-fit:cover; }
 .project-video[data-project-video="preview"] { object-fit:contain; object-position:center top; background:#fff; transition:opacity 180ms ease; }

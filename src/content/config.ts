@@ -53,6 +53,8 @@ const projects = defineCollection({
       radius: z.number().min(0).max(64),
       buttonLabel: z.string(),
     }).optional(),
+    fullPage: z.boolean().default(false),
+    testimonial: z.object({ quote: z.string(), author: z.string(), role: z.string().optional() }).optional(),
     brand: z.object({
       rationale: z.string().default(""),
       references: z.array(z.object({ title: z.string(), url: z.string().url().optional(), note: z.string().default("") })).default([]),

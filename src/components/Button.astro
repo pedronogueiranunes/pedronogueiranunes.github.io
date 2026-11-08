@@ -15,11 +15,13 @@ const {
   icon = "arrow-right",
   type = "button",
   class: className = "",
+  ...rest
 } = Astro.props;
 const Tag = href ? "a" : "button";
 ---
 
 <Tag
+  {...rest}
   href={href}
   disabled={href ? undefined : disabled}
   type={href ? undefined : type}

@@ -44,6 +44,7 @@ const strategyTitles: Record<string, string> = {
 };
 const strategyTitle = p.strategyTitle || strategyTitles[project.slug] || p.title;
 const caseSlug = p.caseSlug || project.slug;
+const cover = p.cover || p.image;
 // ponytail: metrics left out of schema until the TODO numbers are confirmed.
 const caseSchema = jsonLd({
   "@context": "https://schema.org",
@@ -186,6 +187,11 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
         </div>
         </div>
         <div class="case-external-actions">
+          {p.fullPage ? (
+            <div data-lightbox-group>
+              <Button href={cover} secondary icon="fullscreen" data-gallery-src={cover} data-gallery-alt={`${p.title}, full page`} data-gallery-caption="Full page capture">View full page</Button>
+            </div>
+          ) : <>
           <Button
             href={liveUrl || undefined}
             disabled={!liveUrl}
@@ -195,6 +201,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
             {isExperiment ? "Open the lab" : "Visit live site"}
           </Button>
           {!isExperiment && <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>}
+          </>}
         </div>
       </div>
       {metrics.length > 0 && <div class="case-result-card">
@@ -220,7 +227,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
           <i></i>
         </div>
         <span class="mono">{liveUrl ? new URL(liveUrl).hostname : p.title.split(":")[0]}</span>
-        {p.year && <small>Live since {p.year}</small>}
+        {p.year && !p.fullPage && <small>Live since {p.year}</small>}
       </div>
       <div class="browser-mockup-viewport">
         {video ? <ProjectVideo base={video} full /> : (
@@ -239,6 +246,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
       </div>
     </div>
   </section>
+  {p.fullPage && <ImageLightbox />}
   <div class="case-body page-section">
     <div class="case-narrative">
       {showMock && <p class="case-mock-notice"><Icon name="category-experiment" />Mock content for layout review. Development preview only.</p>}
@@ -272,7 +280,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
           ))}
         </dl>
       </section>}
-      {p.gallery.length > 0 && <section>
+      {p.gallery.length > 0 && !p.fullPage && <section>
         <h2>Screens</h2>
         <div class="art-collection-grid" data-lightbox-group>
           {p.gallery.map((piece) => (
@@ -283,12 +291,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
         </div>
         <ImageLightbox />
       </section>}
-      {showMock && <blockquote class="case-testimonial">
-        <small class="case-testimonial-note">Fictional quote for layout review</small>
-        <span aria-hidden="true">“</span>
-        <p>We needed a website that made the idea easy to understand and gave our team the confidence to keep it moving. The result feels clear, considered and easy to build on.</p>
-        <cite><Icon name="chat" />Sample client, fictional testimonial</cite>
-      </blockquote>}
+      {p.testimonial ? <blockquote class="case-testimonial"><span aria-hidden="true">“</span><p>{p.testimonial.quote}</p><cite><Icon name="chat" />{p.testimonial.author}{p.testimonial.role && `, ${p.testimonial.role}`}</cite></blockquote> : null}
     </div>
     <aside class="case-sidebar">
       <div class="snapshot">
@@ -325,7 +328,16 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
       </div>
     </aside>
   </div>
-  <CaseShowcase project={p} liveUrl={liveUrl} />
+  {p.fullPage ? (
+    <section class="page-stack page-section" aria-label="Full page captures">
+      {(p.gallery.length ? p.gallery : [{ src: cover, alt: `${p.title}, full page`, caption: "" }]).map((piece) => (
+        <figure>
+          <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), min(1200px, calc(100vw - 128px))" loading="lazy" />
+          {piece.caption && <figcaption class="mono">{piece.caption}</figcaption>}
+        </figure>
+      ))}
+    </section>
+  ) : <CaseShowcase project={p} liveUrl={liveUrl} />}
   <RelatedProjects projects={related} />
     </>
   )}
@@ -366,6 +378,10 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
   .archived-website-case .art-collection-grid { grid-template-columns: minmax(0, 1fr); }
   .archived-website-case .case-studio { margin: -24px 0 12px; }
   .archived-website-case > p:last-of-type { margin-bottom: 32px; }
+  .page-stack { display: grid; gap: 48px; max-width: 1200px; margin-inline: auto; padding-bottom: 80px; }
+  .page-stack figure { margin: 0; }
+  .page-stack :global(img) { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px rgb(0 0 0 / .08); }
+  .page-stack figcaption { padding-top: 12px; font-size: 13px; color: var(--text-secondary); }
   .art-collection-grid figure { margin: 0; }
   .art-collection-grid a { display: block; border-radius: 14px; overflow: hidden; }
   .art-collection-grid :global(img) { display: block; width: 100%; height: auto; }
