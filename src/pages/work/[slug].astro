@@ -9,6 +9,7 @@ import PixelTrail from "../../components/PixelTrail.astro";
 import Base from "../../layouts/Base.astro";
 import { site } from "../../data/site";
 import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import imageSizes from "../../data/image-sizes.json";
 import Button from "../../components/Button.astro";
 import ToolChip from "../../components/ToolChip.astro";
 import Icon from "../../components/Icon.astro";
@@ -322,7 +323,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
   {p.fullPage ? (
     <section class="page-stack page-section" aria-label="Full page captures">
       {(p.gallery.length ? p.gallery : [{ src: cover, alt: `${p.title}, full page`, caption: "" }]).map((piece) => (
-        <figure>
+        <figure class:list={{ "is-mobile": ((imageSizes as Record<string, { width: number }>)[piece.src]?.width ?? 1200) < 600 }}>
           <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), min(1200px, calc(100vw - 128px))" loading="lazy" />
           {piece.caption && <figcaption class="mono">{piece.caption}</figcaption>}
         </figure>
@@ -371,6 +372,8 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
   .archived-website-case > p:last-of-type { margin-bottom: 32px; }
   .page-stack { display: grid; gap: 48px; max-width: 1200px; margin-inline: auto; padding-bottom: 80px; }
   .page-stack figure { margin: 0; }
+  /* Mobile captures stay at phone width instead of stretching to the desktop column. */
+  .page-stack figure.is-mobile { width: min(390px, 100%); justify-self: center; }
   .page-stack :global(img) { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px rgb(0 0 0 / .08); }
   .page-stack figcaption { padding-top: 12px; font-size: 13px; color: var(--text-secondary); }
   .art-collection-grid figure { margin: 0; }

@@ -17,6 +17,7 @@ const titles=[
  ['Waipono Farms: website','Waipono Farms: site','Waipono Farms: sitio web','Waipono Farms : site web'],
  ['Molina Chambô: visual identity','Molina Chambô: identidade visual','Molina Chambô: identidad visual','Molina Chambô : identité visuelle'],
  ['Peeeo: music releases','Peeeo: lançamentos musicais','Peeeo: lanzamientos musicales','Peeeo : sorties musicales'],
+ ['Tire Crew: tire finder homepage','Tire Crew: home com buscador de pneus','Tire Crew: home con buscador de neumáticos','Tire Crew : accueil avec recherche de pneus'],
  ['BSA Legal: brand system','BSA Legal: sistema de marca','BSA Legal: sistema de marca','BSA Legal : système de marque'],
 ];
 const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa de la web','aperçu du site web'];
