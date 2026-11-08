@@ -18,8 +18,8 @@ export const site = {
   projectUrls: {
     "pinelake-broken-bow": "https://pinelakebrokenbow.com/",
     "green-nation-collective": "https://greennationcollective.webflow.io/",
-    "molina-chambo": "https://molinachambo.webflow.io/",
-    "bsa-legal": "https://bsa-legal.webflow.io/",
+    "molina-chambo": "https://www.molinachambo.com.br/",
+    "bsa-legal": "https://bsa.legal/",
     "waipono-farms": "https://waipono-farms.webflow.io/",
     "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
     "dither-lab": "https://pedronogueira.dev/dither-lab/",

@@ -20,7 +20,7 @@ export const platforms = [
   ["React / Next.js", "react"],
   ["Help me choose", ""],
 ];
-export const budgets = ["$5k to $10k", "$10k to $20k", "$20k to $40k", "$40k+", "Not sure yet"];
+export const budgets = ["Under $5k", "$5k to $10k", "$10k to $20k", "$20k to $40k", "$40k+", "Not sure yet"];
 export const agencyBudgets = ["Per project", "Monthly capacity", "Not sure yet"];
 export const startDates = ["ASAP", "This month", "Next quarter"];
 export const nextSteps = [

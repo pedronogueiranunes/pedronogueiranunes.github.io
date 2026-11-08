@@ -6,7 +6,7 @@ export const problems = [
     image: "img3DConversionTarget1",
     mask: "img3DConversionTargetFade",
     tools: ["CRO audit", "Landing page redesign"],
-    outcome: "First fixes live in 2 weeks",
+    outcome: "First fixes in 2 to 3 weeks",
   },
   {
     title: '"Our site is slow and a pain to update."',
@@ -14,7 +14,7 @@ export const problems = [
     image: "img3DFastWebsite1",
     mask: "img3DFastWebsite",
     tools: ["Rebuild on the right stack", "CMS setup"],
-    outcome: "Launch in 6 to 8 weeks",
+    outcome: "Launch in 6 to 10 weeks",
   },
   {
     title: '"Our agency has more work than senior hands."',
