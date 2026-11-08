@@ -1,16 +1,30 @@
 import * as CookieConsent from "vanilla-cookieconsent";
 import "vanilla-cookieconsent/dist/cookieconsent.css";
+import { analyticsEnabled, setAnalyticsConsent } from "./analytics";
+
+const syncAnalytics = () => setAnalyticsConsent(CookieConsent.acceptedCategory("analytics"));
+const analyticsCookies = [
+  { name: "_ga, _ga_* (cookie)", purpose: "Google Analytics: tells visits apart so pages can be compared.", duration: "2 years" },
+  { name: "_clck (cookie)", purpose: "Microsoft Clarity: remembers a random visitor ID.", duration: "1 year" },
+  { name: "_clsk (cookie)", purpose: "Microsoft Clarity: groups page views into one session.", duration: "1 day" },
+];
 
 let cookieSetup: Promise<void> | undefined;
 function setupCookies() {
   return cookieSetup ??= CookieConsent.run({
     root: "#cookie-consent-root",
     mode: "opt-in",
-    autoShow: false,
+    // Banner only appears when there is something optional to accept.
+    autoShow: analyticsEnabled,
     hideFromBots: false,
-    revision: 1,
+    revision: analyticsEnabled ? 2 : 1,
     cookie: { name: "portfolio_cookie_choices", expiresAfterDays: 182 },
-    categories: { necessary: { enabled: true, readOnly: true } },
+    categories: {
+      necessary: { enabled: true, readOnly: true },
+      ...(analyticsEnabled && { analytics: {} }),
+    },
+    onConsent: syncAnalytics,
+    onChange: syncAnalytics,
     guiOptions: {
       consentModal: { layout: "box", position: "bottom right", equalWeightButtons: true },
       preferencesModal: { layout: "box", equalWeightButtons: true },
@@ -21,18 +35,24 @@ function setupCookies() {
         en: {
           consentModal: {
             title: "Your privacy choices",
-            description: "This portfolio currently uses only essential browser storage. No analytics or advertising trackers are installed.",
+            description: analyticsEnabled
+              ? "I use Google Analytics and Microsoft Clarity to see which pages help and where visitors get stuck. They set cookies only if you accept. No advertising."
+              : "This portfolio currently uses only essential browser storage. No analytics or advertising trackers are installed.",
+            ...(analyticsEnabled && { acceptAllBtn: "Accept analytics" }),
             acceptNecessaryBtn: "Essential only",
             showPreferencesBtn: "Cookie choices",
           },
           preferencesModal: {
             title: "Cookie choices",
             savePreferencesBtn: "Save choices",
+            ...(analyticsEnabled && { acceptAllBtn: "Accept analytics", acceptNecessaryBtn: "Essential only" }),
             closeIconLabel: "Close cookie choices",
             sections: [
               {
                 title: "A small footprint",
-                description: "This portfolio currently has no optional analytics or advertising cookies. There are no optional categories to enable. You can review the storage used below.",
+                description: analyticsEnabled
+                  ? "Essential storage is always on. Analytics stays off until you accept it, and you can change your choice here at any time."
+                  : "This portfolio currently has no optional analytics or advertising cookies. There are no optional categories to enable. You can review the storage used below.",
               },
               {
                 title: "Essential storage",
@@ -48,6 +68,16 @@ function setupCookies() {
                   ],
                 },
               },
+              ...(analyticsEnabled ? [{
+                title: "Analytics",
+                description: "Google Analytics counts visits and which pages lead to contact. Microsoft Clarity records clicks and scrolling, with form fields masked, to find confusing parts of the site.",
+                linkedCategory: "analytics",
+                cookieTable: {
+                  caption: "Analytics cookies",
+                  headers: { name: "Name", purpose: "Purpose", duration: "Duration" },
+                  body: analyticsCookies,
+                },
+              }] : []),
               {
                 title: "Questions?",
                 description: 'Contact <a href="mailto:pedronogueiranunes@gmail.com">pedronogueiranunes@gmail.com</a> about privacy or storage settings.',
@@ -110,5 +140,13 @@ document.addEventListener("close", (event) => {
 document.addEventListener("astro:before-swap", () => {
   document.querySelectorAll<HTMLDialogElement>(".legal-dialog[open]").forEach(closeLegal);
   CookieConsent.hidePreferences();
-  CookieConsent.hide();
+  // The banner root persists across navigations, so an open banner stays until answered.
+  if (!analyticsEnabled) CookieConsent.hide();
 });
+
+// First visit: show the banner once the page has settled, so it never competes with first paint.
+if (analyticsEnabled) {
+  const start = () => setupCookies().catch(() => {});
+  if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 3000 });
+  else setTimeout(start, 1500);
+}

@@ -25,6 +25,8 @@ jobs:
       - uses: withastro/action@v3
         env:
           PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ vars.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          PUBLIC_GA_ID: ${{ vars.PUBLIC_GA_ID }}
+          PUBLIC_CLARITY_ID: ${{ vars.PUBLIC_CLARITY_ID }}
       - uses: actions/deploy-pages@v4
         id: deployment
         with:

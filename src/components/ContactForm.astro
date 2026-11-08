@@ -293,6 +293,7 @@ const budgetGroups = [
 </div>
 <script>
   import { onPageLoad } from "../scripts/page-lifecycle";
+  import { track } from "../scripts/analytics";
 
   onPageLoad((scope) => {
     if (!document.querySelector("#contact-form")) return;
@@ -417,7 +418,10 @@ const budgetGroups = [
   const advance = () => {
     const invalid = validateStep(current);
     if (invalid) invalid.focus();
-    else show(current + 1);
+    else {
+      show(current + 1);
+      track("form_step", { step: current + 1 });
+    }
   };
   form.querySelectorAll("[data-continue]").forEach((button) =>
     button.addEventListener("click", advance, { signal: scope.signal }),
@@ -498,6 +502,7 @@ const budgetGroups = [
       if (!response.ok || result.success !== true)
         throw new Error("Send failed");
       steps.forEach((step) => (step.hidden = true));
+      track("generate_lead", { route: payload.route, budget: payload.budget });
       feedback(
         "Thanks. Your message has been sent. I'll reply within one business day.",
         false,
