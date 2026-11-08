@@ -10,6 +10,7 @@ cover: "/assets/collections/molina-chambo-branding/cover.webp"
 color: "#1c2a4a"
 tint: "#dde2ec"
 order: 6.1
+practice: "Professional work"
 caseSlug: "molina-chambo-branding"
 collection: true
 summary: "Visual identity for Molina Chambô, a São Paulo wealth planning and civil law firm: logo system, colour, typography, stationery, presentations, social media, ads and wallpapers."

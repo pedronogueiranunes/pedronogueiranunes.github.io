@@ -10,6 +10,7 @@ cover: "/assets/collections/bsa-legal-branding/cover.webp"
 color: "#e8b923"
 tint: "#f3e8c6"
 order: 6.2
+practice: "Professional work"
 caseSlug: "bsa-legal-branding"
 collection: true
 summary: "Brand and design system for Borges Sales & Alem, a São Paulo entertainment and arts law firm: logo, colour, typography, graphic elements, stationery, presentations and ads."

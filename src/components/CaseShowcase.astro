@@ -109,7 +109,7 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
     });
     document.querySelectorAll<HTMLElement>(".case-device").forEach(device=>{
       const container=device.querySelector<HTMLElement>(".case-device-viewport")!;
-      const button=device.querySelector<HTMLButtonElement>("[data-embed-url]")!;
+      const button=device.querySelector<HTMLButtonElement>(".case-device-load")!;
       const reset=device.querySelector<HTMLButtonElement>("[data-embed-reset]")!;
       let frame:HTMLIFrameElement|undefined;
       reset.addEventListener("click",()=>{frame?.remove();frame=undefined;button.hidden=false;reset.hidden=true;button.focus();},{signal:scope.signal});

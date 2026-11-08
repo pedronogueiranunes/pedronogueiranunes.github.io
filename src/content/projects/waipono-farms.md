@@ -1,5 +1,6 @@
 ---
 order: 5
+practice: "Professional work"
 country: "USA"
 location: "USA"
 image: "/assets/project-5.webp"
@@ -9,7 +10,7 @@ cover: "/assets/cases/waipono-farms-cover.webp"
 caseSlug: "waipono-farms"
 featured: false
 title: "Waipono Farms: website"
-category: "Web design & dev"
+category: "Web Design & Dev"
 summary: "Website for a regenerative agriculture and living-community project in Maui, rooted in Hawaiian culture and built to grow its community pre-opening."
 tools: ["Figma", "Webflow", "JavaScript", "Google Analytics", "Tag Manager"]
 services: ["Design", "Design system", "Webflow development", "Integrations"]

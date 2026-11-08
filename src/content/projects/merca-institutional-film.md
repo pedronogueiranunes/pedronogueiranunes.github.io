@@ -2,11 +2,13 @@
 title: "Merca: institutional film"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2019–2021"
 image: "/assets/films/-CPQCH5USZQ.webp"
 cover: "/assets/films/-CPQCH5USZQ.webp"
 color: "#171b1c"
 order: 22
+country: "Brazil"
+location: "Brazil"
 caseSlug: "merca-institutional-film"
 summary: "An institutional presentation film for Merca."
 filmType: "Corporate & presentations"

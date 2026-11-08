@@ -2,11 +2,13 @@
 title: "SeuMenu: commercials & motion"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2018–2019"
 image: "/assets/films/CApRuQGe0Xc.webp"
 cover: "/assets/films/CApRuQGe0Xc.webp"
 color: "#171b1c"
 order: 21
+country: "Brazil"
+location: "Brazil"
 caseSlug: "seumenu-commercials"
 summary: "Commercials and animated pieces for SeuMenu, collected in one case."
 filmType: "Motion & commercials"

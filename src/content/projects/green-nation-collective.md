@@ -1,6 +1,7 @@
 ---
 title: "Green Nation Collective: campaign launch"
-order: 1
+order: 4
+practice: "Professional work"
 category: "Campaign site"
 country: "USA"
 location: "USA"

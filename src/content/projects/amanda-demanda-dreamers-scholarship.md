@@ -1,6 +1,7 @@
 ---
 title: "Amanda Demanda: Dreamers Scholarship"
 order: 39
+practice: "Professional work"
 category: "Web Design & Dev"
 kinds: ["0"]
 country: "USA"

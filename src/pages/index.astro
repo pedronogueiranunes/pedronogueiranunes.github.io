@@ -20,6 +20,8 @@ const kindsOf = (project: (typeof all)[number]) => project.data.kinds ?? [projec
 // ponytail: the latest 6 per category share one rail; CSS shows the selected category's cards.
 const projects = all.filter(project => [0, 1, 2, 3, 4].some(k => all.filter(p => kindsOf(p).includes(String(k))).slice(0, 6).includes(project)));
 // ponytail: same order as the category buttons on /projects (?category=index).
+// Verb that fits each discipline, shown in front of the picker ("I build Web Design & Dev").
+const verbs = ["I design & build", "I design", "I create", "I make", "I explore"];
 const disciplines = ["Web Design & Dev", "Branding & Graphic Design", "Digital Art & Illustration", "Music & Audiovisual", "Experiments"];
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -175,7 +177,7 @@ const posts = (await getCollection("posts")).sort(
   <div id="work">
     <ProjectRail projects={projects}>
       <Fragment slot="title">
-        <span>I design</span>
+        <span class="discipline-verb" data-verbs={JSON.stringify(verbs)}>{verbs[0]}</span>
         <span class="discipline-picker">
           <button type="button" id="discipline" aria-haspopup="listbox" aria-expanded="false" data-value="0">
             <span>{disciplines[0]}</span>
@@ -328,6 +330,8 @@ const posts = (await getCollection("posts")).sort(
         const value = option.dataset.value!;
         options.forEach((o) => o.setAttribute("aria-selected", String(o === option)));
         trigger.firstElementChild!.textContent = option.textContent;
+        const verb = document.querySelector<HTMLElement>(".discipline-verb");
+        if (verb) verb.textContent = (JSON.parse(verb.dataset.verbs!) as string[])[Number(value)] ?? verb.textContent;
         setOpen(false);
         trigger.focus();
         if (rail.dataset.active === value) return;

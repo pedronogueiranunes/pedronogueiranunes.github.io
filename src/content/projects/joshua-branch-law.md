@@ -1,6 +1,7 @@
 ---
 title: "Joshua Branch Law: Digital PR and local page"
-order: 37
+order: 6
+practice: "Professional work"
 category: "Web Design & Dev"
 kinds: ["0"]
 country: "USA"

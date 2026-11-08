@@ -1,6 +1,7 @@
 ---
 title: "Issa & Castro: Atlanta personal injury page"
 order: 40
+practice: "Professional work"
 category: "Web Design & Dev"
 kinds: ["0"]
 country: "USA"
@@ -16,7 +17,7 @@ fullPage: true
 summary: "Practice-area page for an Atlanta personal injury firm at OTM, covering results, the team, case types and what to do after an injury."
 tools: ["Figma"]
 services: ["Client page"]
-year: ""
+year: "2025"
 ---
 
 <!-- Made at OTM. DPR definition: earned media coverage and backlinks via online outreach (see onthemap.com/?p=80891 and loopexdigital.com/digital-pr/digital-pr-for-law-firms). Client pages live on the client's own site. URLs and results not confirmed yet. -->

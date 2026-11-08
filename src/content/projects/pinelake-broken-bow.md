@@ -1,7 +1,8 @@
 ---
 title: "PineLake Broken Bow: luxury cabin rentals"
-order: 4
-category: "Web design & dev"
+order: 37
+practice: "Professional work"
+category: "Web Design & Dev"
 country: "USA"
 location: "USA"
 image: "/assets/project-1.webp"

@@ -1,6 +1,7 @@
 ---
 title: "Pemberton Personal Injury: Digital PR and site pages"
 order: 36
+practice: "Professional work"
 category: "Web Design & Dev"
 kinds: ["0"]
 country: "USA"

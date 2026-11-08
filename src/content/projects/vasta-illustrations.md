@@ -1,12 +1,15 @@
 ---
 title: "VASTA: illustrations"
 category: "Digital Art & Illustration"
-year: ""
+year: "2019–2021"
 image: "/assets/collections/vasta-illustrations/18499918.webp"
 cover: "/assets/collections/vasta-illustrations/18499918.webp"
 color: "#f8f8f8"
 tint: "#f8f8f8"
 order: 10
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "vasta-illustrations"
 collection: true
 summary: ""

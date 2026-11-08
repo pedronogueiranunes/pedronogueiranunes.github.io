@@ -2,7 +2,7 @@
 title: "DANCE 2025: filmed performance"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2025"
 image: "/assets/films/4cY8-A0Q45M.webp"
 cover: "/assets/films/4cY8-A0Q45M.webp"
 color: "#171b1c"

@@ -1,6 +1,7 @@
 ---
 title: "Lemmbra Olympiad: identity and registration"
-order: 2
+order: 1
+practice: "Professional work"
 category: "Identity & platform"
 year: "2024"
 image: "/assets/project-6.webp"

@@ -1,12 +1,15 @@
 ---
 title: "FERTILI: digital art"
 category: "Digital Art & Illustration"
-year: ""
+year: "2017–2018"
 image: "/assets/collections/fertili-digital-art/5685482.webp"
 cover: "/assets/collections/fertili-digital-art/5685482.webp"
 color: "#081838"
 tint: "#081838"
 order: 9
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "fertili-digital-art"
 collection: true
 summary: ""

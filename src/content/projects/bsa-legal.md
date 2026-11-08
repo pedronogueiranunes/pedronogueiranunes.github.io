@@ -1,7 +1,8 @@
 ---
 title: "BSA Legal: corporate website"
-order: 6
-category: "Web design & dev"
+order: 2
+practice: "Professional work"
+category: "Web Design & Dev"
 country: "Brazil"
 location: "Brazil"
 image: "/assets/project-4.webp"

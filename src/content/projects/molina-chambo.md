@@ -1,7 +1,8 @@
 ---
 title: "Molina Chambô: law firm website"
 order: 3
-category: "Web design & dev"
+practice: "Professional work"
+category: "Web Design & Dev"
 country: "Brazil"
 location: "Brazil"
 image: "/assets/project-3.webp"

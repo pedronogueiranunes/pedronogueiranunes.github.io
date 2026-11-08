@@ -1,12 +1,15 @@
 ---
 title: "SeuMenu: stickers"
 category: "Digital Art & Illustration"
-year: ""
+year: "2018–2019"
 image: "/assets/collections/seumenu-stickers/6733846.webp"
 cover: "/assets/collections/seumenu-stickers/6733846.webp"
 color: "#f8b8b8"
 tint: "#f8b8b8"
 order: 8
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "seumenu-stickers"
 collection: true
 summary: ""

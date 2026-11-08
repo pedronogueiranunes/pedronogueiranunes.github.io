@@ -7,6 +7,8 @@ image: "/assets/films/5cWQCRhFdcg.webp"
 cover: "/assets/films/5cWQCRhFdcg.webp"
 color: "#171b1c"
 order: 29
+country: "Brazil"
+location: "Brazil"
 caseSlug: "neojiba-sadness-sorrow"
 summary: "Personal recording of NEOJIBA in Vitória da Conquista, conducted by Thiago Azeredo. Recorded on October 5, 2022."
 filmType: "Music performances"

@@ -2,12 +2,15 @@
 title: "digitALE Brasil: nursing campaign"
 category: "Web Design & Dev"
 kinds: ["0"]
-year: ""
+year: "2021–2025"
 image: "/assets/projects/digitale-enfermagem/website.webp"
 cover: "/assets/projects/digitale-enfermagem/website.webp"
 color: "#e4e8df"
 tint: "#e4e8df"
 order: 16
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "digitale-enfermagem"
 archivedWebsite: true
 studio: "SUPERFLUID"

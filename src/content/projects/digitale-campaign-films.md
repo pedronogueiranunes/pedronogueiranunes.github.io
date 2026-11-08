@@ -2,11 +2,13 @@
 title: "digitALE Brasil: campaign films"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2021–2025"
 image: "/assets/films/iTyiydyVVVM.webp"
 cover: "/assets/films/iTyiydyVVVM.webp"
 color: "#171b1c"
 order: 23
+country: "Brazil"
+location: "Brazil"
 caseSlug: "digitale-campaign-films"
 summary: "Films for the nursing and Steinbeis campaigns."
 filmType: "Corporate & presentations"

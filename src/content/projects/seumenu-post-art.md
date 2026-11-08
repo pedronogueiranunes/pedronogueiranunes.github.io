@@ -1,12 +1,15 @@
 ---
 title: "SeuMenu: social post art"
 category: "Digital Art & Illustration"
-year: ""
+year: "2018–2019"
 image: "/assets/collections/seumenu-post-art/18499878.webp"
 cover: "/assets/collections/seumenu-post-art/18499878.webp"
 color: "#f80818"
 tint: "#f80818"
 order: 7
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "seumenu-post-art"
 collection: true
 summary: ""

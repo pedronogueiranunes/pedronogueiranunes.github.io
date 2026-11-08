@@ -2,11 +2,13 @@
 title: "FERTILI: launch films & motion"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2017–2018"
 image: "/assets/films/UOSxOHvN-V8.webp"
 cover: "/assets/films/UOSxOHvN-V8.webp"
 color: "#171b1c"
 order: 19
+country: "Brazil"
+location: "Brazil"
 caseSlug: "fertili-launch-films"
 summary: "Product launch videos, ads and motion pieces for FERTILI."
 filmType: "Motion & commercials"

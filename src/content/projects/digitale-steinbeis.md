@@ -2,12 +2,15 @@
 title: "digitALE Brasil: Steinbeis campaign"
 category: "Web Design & Dev"
 kinds: ["0"]
-year: ""
+year: "2021–2025"
 image: "/assets/projects/digitale-steinbeis/website.webp"
 cover: "/assets/projects/digitale-steinbeis/website.webp"
 color: "#e4e8df"
 tint: "#e4e8df"
 order: 18
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "digitale-steinbeis"
 archivedWebsite: true
 studio: "SUPERFLUID"

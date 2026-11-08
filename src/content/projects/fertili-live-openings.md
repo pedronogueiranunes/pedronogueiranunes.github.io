@@ -2,11 +2,13 @@
 title: "FERTILI: live show openings"
 category: "Music & Audiovisual"
 kinds: ["3"]
-year: ""
+year: "2017–2018"
 image: "/assets/films/_bv3XKMFNWM.webp"
 cover: "/assets/films/_bv3XKMFNWM.webp"
 color: "#171b1c"
 order: 20
+country: "Brazil"
+location: "Brazil"
 caseSlug: "fertili-live-openings"
 summary: "Animated openings for FERTILI live content."
 filmType: "Motion & commercials"

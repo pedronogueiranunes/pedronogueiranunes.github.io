@@ -63,10 +63,8 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
   <div class="project-body">
     <div class="project-heading">
       <p class="project-meta">
-        <span>{p.category}</span>
-        {(p.year || p.location || p.country) && <span>
-          · {[p.year, p.location || p.country].filter(Boolean).join(" · ")}
-        </span>}
+        <span class="project-meta__type">{p.category}</span>
+        {(p.year || p.location || p.country) && <span class="project-meta__facts">{[p.year, p.location || p.country].filter(Boolean).join(" · ")}</span>}
       </p>
       <h3>
         <a href={`/work/${p.caseSlug || project.slug}`}>{p.title}</a>
@@ -75,6 +73,7 @@ const artColors = imageSizes as Record<string, { dominant?: string }>;
     {p.tools?.length > 0 && (
       <ul class="project-tools mono" aria-label="Project tools" role="list">
         {p.tools.map((tool) => <li>{tool}</li>)}
+        {p.tools.length > 4 && <li class="project-tools__more" aria-label={`${p.tools.length - 4} more tools`}>+{p.tools.length - 4}</li>}
       </ul>
     )}
     </div>

@@ -2,12 +2,15 @@
 title: "Instituto DEA: website"
 category: "Web Design & Dev"
 kinds: ["0"]
-year: ""
+year: "2021–2025"
 image: "/assets/projects/instituto-dea/website.webp"
 cover: "/assets/projects/instituto-dea/website.webp"
 color: "#e4e8df"
 tint: "#e4e8df"
 order: 17
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "instituto-dea"
 archivedWebsite: true
 studio: "SUPERFLUID"

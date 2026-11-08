@@ -7,6 +7,8 @@ image: "/assets/films/oJXLGAU99oc.webp"
 cover: "/assets/films/oJXLGAU99oc.webp"
 color: "#171b1c"
 order: 32
+country: "Brazil"
+location: "Brazil"
 caseSlug: "tonus-feirandantes"
 summary: "Commissioned dance film for a school in Vitória da Conquista, for the State of Bahia, featuring the TONUS dance group."
 filmType: "Dance performances"

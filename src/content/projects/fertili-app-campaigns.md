@@ -2,12 +2,15 @@
 title: "FERTILI: app campaigns"
 category: "Branding & Graphic Design"
 kinds: ["1","2"]
-year: ""
+year: "2017–2018"
 image: "/assets/collections/fertili-app-campaigns/app-launch.webp"
 cover: "/assets/collections/fertili-app-campaigns/app-launch.webp"
 color: "#f8f8f8"
 tint: "#f8f8f8"
 order: 11
+practice: "Professional work"
+country: "Brazil"
+location: "Brazil"
 caseSlug: "fertili-app-campaigns"
 collection: true
 summary: "Ads and social media pieces for the FERTILI app, made with the brand I designed for FERTILI."
