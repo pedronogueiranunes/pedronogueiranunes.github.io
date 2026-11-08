@@ -96,40 +96,34 @@ const colors = unique(projects.map(p => p.data.tint || p.data.color || "").filte
             <button type="button" class="filter-reset" data-reset>Reset all</button>
           </header>
           <fieldset class="filter-group">
-            <legend>When and where</legend>
+            <legend class="sr-only">Filters</legend>
             <label>Year
               <select name="year"><option value="">Any year</option>{years.map(year => <option>{year}</option>)}</select>
             </label>
             <label>Location
               <select name="location"><option value="">Anywhere</option>{locations.map(value => <option>{value}</option>)}</select>
             </label>
-          </fieldset>
-          <fieldset class="filter-group">
-            <legend>The work</legend>
             <label>Project type
               <select name="service" data-facet><option value="">All types</option>{services.map(value => <option>{value}</option>)}</select>
             </label>
             <label>Practice
               <select name="practice" data-facet><option value="">All</option><option value="Professional work">Professional work</option><option value="Personal project">Personal project</option></select>
             </label>
-          </fieldset>
-          <fieldset class="filter-group">
-            <legend>Craft</legend>
             <label>Stack
               <select name="stack" data-facet><option value="">Any stack</option>{stacks.map(value => <option>{value}</option>)}</select>
             </label>
             <label>Tools
               <select name="tool" data-facet><option value="">Any tool</option>{tools.map(value => <option>{value}</option>)}</select>
             </label>
-            <label class="filter-wide">Audiovisual format
+            <label>Audiovisual format
               <select name="format" data-facet><option value="">All formats</option>{filmTypes.map(type => <option value={type}>{type}</option>)}</select>
             </label>
-          </fieldset>
-          <fieldset class="filter-group filter-colors">
-            <legend>Card color</legend>
-            <select name="color" data-facet hidden><option value="">All</option>{colors.map(color => <option value={color}>{color}</option>)}</select>
-            <div class="filter-swatches" role="group" aria-label="Card color">
-              {colors.map(color => <button type="button" data-swatch={color} aria-label={color} aria-pressed="false" style={`--swatch:${color}`}></button>)}
+            <div class="filter-colors" role="group" aria-label="Card color">
+              <span class="filter-colors-label">Card color</span>
+              <select name="color" data-facet hidden><option value="">All</option>{colors.map(color => <option value={color}>{color}</option>)}</select>
+              <div class="filter-swatches">
+                {colors.map(color => <button type="button" data-swatch={color} aria-label={color} aria-pressed="false" style={`--swatch:${color}`}></button>)}
+              </div>
             </div>
           </fieldset>
           <footer class="filter-panel-foot">

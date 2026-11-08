@@ -8030,3 +8030,17 @@ footer.site-footer { padding-top: min(var(--footer-gutter), 64px); }
 [data-projects-filter]:not([data-view="list"]):not([data-view="timeline"]) .all-projects .project-heading .project-tools { margin-top: auto; padding-top: 6px; flex-wrap: wrap; }
 [data-projects-filter]:not([data-view="list"]):not([data-view="timeline"]) .all-projects .project-tools > li:nth-child(n+5):not(.project-tools__more) { display: none; }
 [data-projects-filter]:not([data-view="list"]):not([data-view="timeline"]) .all-projects .project-tools > .project-tools__more { display: block; }
+
+/* Filter panel, compact: one 3-column grid, no section headings, fits short viewports. */
+.projects-page .filter-options > .filter-panel { width: min(580px, calc(100vw - 40px)); max-height: min(500px, calc(100dvh - 150px)); }
+.filter-panel-head { padding: 12px 20px; }
+.filter-group { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 16px 20px; border-bottom: 0; }
+.filter-options .filter-panel label { gap: 5px; font-size: 12px; }
+.filter-options .filter-panel select { min-height: 40px; font-size: 13px; padding: 0 30px 0 12px; background-position: right 12px center; }
+.filter-colors { grid-column: span 2; display: grid; gap: 8px; align-content: start; font-size: 12px; color: var(--text-secondary); }
+.filter-swatches { margin-top: 0; gap: 7px; }
+.filter-options .filter-swatches button { width: 22px; height: 22px; }
+.filter-swatches button[aria-pressed="true"] { outline-offset: 2px; }
+.filter-panel-foot { padding: 12px 20px; }
+.filter-options .filter-panel .filter-apply { min-height: 44px; }
+@media (max-width: 560px) { .filter-group { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filter-colors { grid-column: 1 / -1; } .projects-page .filter-options > .filter-panel { max-height: calc(100dvh - 130px); } }
