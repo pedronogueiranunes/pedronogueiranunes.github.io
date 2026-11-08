@@ -409,7 +409,7 @@ const careerShots = [
         video.defaultPlaybackRate = speed;
         video.playbackRate = speed;
         video.loop = false;
-        video.currentTime = 0;
+        if (video.currentTime > 0) video.currentTime = 0;
         if (video.readyState < 2) await new Promise<void>(resolve => {
           video.addEventListener('loadeddata', () => resolve(), { once: true, signal: scope.signal });
           video.addEventListener('error', () => resolve(), { once: true, signal: scope.signal });
@@ -499,15 +499,21 @@ const careerShots = [
       if (index >= 0) preview.classList.add("is-active");
       if (!frame) frame = requestAnimationFrame(follow);
     }, { signal: scope.signal });
-    // Warm each role's first clip before the first hover so the preview doesn't wait on the network.
+    // Warm every role's clips (first clip of each role first) well before the first hover, so playback starts
+    // from buffered data instead of waiting on the network. About 4 MB in total.
     const warm = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
       warm.disconnect();
-      sets.forEach(set => {
-        const first = set.querySelector('video');
-        if (first && !first.getAttribute('src')) { first.preload = 'auto'; loadVideo(first, [first.dataset.src!]); }
-      });
-    }, { rootMargin: '600px' });
+      const queue = [
+        ...sets.map(set => set.querySelector('video')),
+        ...sets.flatMap(set => [...set.querySelectorAll('video')].slice(1)),
+      ].filter((video): video is HTMLVideoElement => !!video);
+      queue.forEach((video, i) => scope.timeout(() => {
+        if (video.getAttribute('src')) return;
+        video.preload = 'auto';
+        loadVideo(video, [video.dataset.src!]);
+      }, i * 150));
+    }, { rootMargin: '2000px' });
     warm.observe(list);
     scope.cleanup(() => warm.disconnect());
     const hide = () => { preview.classList.remove("is-active"); ++transitionId; clearTimeout(timer); preview.querySelectorAll('video').forEach(video=>video.pause()); current = -1; };
@@ -583,10 +589,11 @@ const careerShots = [
     opacity: 0;
     scale: .85;
     box-shadow: 0 24px 50px -20px rgb(35 38 37 / .45);
-    transition: opacity 220ms ease, scale 320ms cubic-bezier(.22, 1, .36, 1);
+    visibility: hidden;
+    transition: opacity 220ms ease, scale 320ms cubic-bezier(.22, 1, .36, 1), visibility 0s linear 320ms;
     will-change: transform;
   }
-  .career-preview.is-active { opacity: 1; scale: 1; }
+  .career-preview.is-active { opacity: 1; scale: 1; visibility: visible; transition-delay: 0s; }
   .career-preview__set { position: absolute; inset: 0; }
   .career-preview__set.is-current { visibility: visible; }
   .career-preview__shot {

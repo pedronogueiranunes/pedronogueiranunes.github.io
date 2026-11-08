@@ -9,6 +9,8 @@ export function initReveal({ stagger = 70, maxDelay = 400 } = {}) {
   ].join(", "));
   for (const group of groups) {
     [...group.children].forEach((element, index) => {
+      // The About career hover card is a fixed overlay; revealing it would pin it open at the top left.
+      if (element.hasAttribute("data-career-preview")) return;
       if (element.matches(".section-eyebrow, h2, p, a, .actions, article, .bio-facts, .tool-chip, .about-stats-card, .promises-grid, .promise-facts, .career-timeline, .skills-grid, li, div") || (element.closest(".services-page") && element.matches("h1, ul, dl, details"))) {
         element.dataset.reveal = "";
         element.style.setProperty("--reveal-delay", `${Math.min(index * stagger, maxDelay)}ms`);
