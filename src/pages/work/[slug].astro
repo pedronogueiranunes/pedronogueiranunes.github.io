@@ -166,26 +166,6 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
         </nav>
         <h1>{p.title}</h1>
         <p>{p.summary}</p>
-        <div class="chips">
-          <ToolChip label={p.category} icon={isExperiment ? "category-experiment" : "category-web"} />
-          {p.location && <ToolChip label={p.location} icon="location" />}
-          {p.year && <ToolChip label={p.year} icon="calendar" />}
-        </div>
-        <div class="case-identity-group">
-        <div class="case-client-row">
-          <div class="case-client-badge">
-            <span class="case-client-avatar" aria-hidden="true"><Icon name="category-brand" size={18} /></span>
-            <div>
-              <p class="case-client">
-                {p.title.split(":")[0]}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="case-hero-stack" aria-label="Stack">
-          {stack.map((tool) => <ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool) ? undefined : toolIcon(tool)} />)}
-        </div>
-        </div>
         <div class="case-external-actions">
           {p.fullPage ? (
             <div data-lightbox-group>
@@ -204,6 +184,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
           </>}
         </div>
       </div>
+      <aside class="case-hero-aside">
       {metrics.length > 0 && <div class="case-result-card">
         <p class="mono accent"><Icon name="chart" size={16} />Results</p>
         <dl>
@@ -218,6 +199,27 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
           ))}
         </dl>
       </div>}
+        <div class="case-meta">
+        <dl class="case-facts">
+          {[
+            ["Client", p.title.split(":")[0]],
+            ["Studio", p.studio],
+            ["Market", p.location],
+            ["Year", p.year],
+            ["Type", p.category],
+            ["Services", p.services],
+          ].filter(([, value]) => value?.length).map(([key, value]) => (
+            <div>
+              <dt>{key}</dt>
+              <dd>{Array.isArray(value) ? value.join(", ") : value}</dd>
+            </div>
+          ))}
+        </dl>
+        {stack.length > 0 && <div class="case-hero-stack" aria-label="Stack">
+          {stack.map((tool) => <ToolChip label={tool} logo={logoFor(tool)} icon={logoFor(tool) ? undefined : toolIcon(tool)} />)}
+        </div>}
+        </div>
+      </aside>
     </div>
     <div class="browser-mockup" tabindex="0" aria-label="Website preview">
       <div class="browser-toolbar">
@@ -279,17 +281,6 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
             </div>
           ))}
         </dl>
-      </section>}
-      {p.gallery.length > 0 && !p.fullPage && <section>
-        <h2>Screens</h2>
-        <div class="art-collection-grid" data-lightbox-group>
-          {p.gallery.map((piece) => (
-            <figure><a href={piece.src} data-gallery-src={piece.src} data-gallery-alt={piece.alt} data-gallery-caption={piece.caption} aria-label={piece.alt}>
-              <ResponsiveImage src={piece.src} alt={piece.alt} sizes="(max-width: 768px) calc(100vw - 40px), 40vw" loading="lazy" />
-            </a>{piece.caption && <figcaption>{piece.caption}</figcaption>}</figure>
-          ))}
-        </div>
-        <ImageLightbox />
       </section>}
       {p.testimonial ? <blockquote class="case-testimonial"><span aria-hidden="true">“</span><p>{p.testimonial.quote}</p><cite><Icon name="chat" />{p.testimonial.author}{p.testimonial.role && `, ${p.testimonial.role}`}</cite></blockquote> : null}
     </div>

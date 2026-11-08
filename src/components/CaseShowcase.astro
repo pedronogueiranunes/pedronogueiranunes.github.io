@@ -10,7 +10,9 @@ const { project: p, liveUrl } = Astro.props;
 const preview = import.meta.env.DEV;
 const cover = p.cover || p.image;
 const galleryMock = !p.gallery.length;
-const gallery = p.gallery.length ? p.gallery : preview ? Array.from({ length: 8 }, (_, i) => ({ src: cover, alt: p.title, caption: "Screenshot detail", position: `${Math.round(i * 100 / 7)}%` })) : [];
+const allAssets = p.gallery.length ? p.gallery : preview ? Array.from({ length: 8 }, (_, i) => ({ src: cover, alt: p.title, caption: "Screenshot detail", position: `${Math.round(i * 100 / 7)}%` })) : [];
+const gallery = allAssets.filter((a) => !("group" in a && a.group === "social"));
+const social = allAssets.filter((a) => "group" in a && a.group === "social");
 const dsMock = !p.designSystem;
 // TODO: Replace preview tokens with each project's verified designSystem frontmatter.
 const ds = p.designSystem || (preview ? {
@@ -40,6 +42,22 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
     </figure>)}
   </div>
   <ImageLightbox />
+</section>}
+{social.length > 0 && <section class="case-social case-section page-section" data-lightbox-group data-social-rail>
+  <header class="case-section-heading"><h2>Social media assets</h2><span class="case-section-meta">{String(social.length).padStart(2,"0")}</span></header>
+  <div class="case-rail">
+    <button type="button" class="case-rail-arrow case-rail-arrow--prev" data-rail-prev aria-label="Previous posts"><Icon name="arrow-left" /></button>
+    <ul class="case-rail-track" data-rail-track>
+      {social.map((post, index) => <li class="case-rail-card">
+        <button type="button" class="case-gallery-open" data-gallery-src={post.src} data-gallery-alt={post.alt} data-gallery-caption={`${post.caption} ${String(index+1).padStart(2,"0")}`} aria-label={`View post ${index+1}: ${post.alt}`}>
+          <img src={post.src} alt={post.alt} loading="lazy" decoding="async" />
+        </button>
+        <span class="case-rail-caption">{post.caption}</span>
+      </li>)}
+    </ul>
+    <button type="button" class="case-rail-arrow case-rail-arrow--next" data-rail-next aria-label="Next posts"><Icon name="arrow-right" /></button>
+  </div>
+  {gallery.length === 0 && <ImageLightbox />}
 </section>}
 {ds && <section class="case-design-system case-section page-section" style={`--project-primary:${ds.colors[0]?.value || "#173B30"};--project-surface:${ds.colors[1]?.value || "#F4F7F0"};--project-ink:${ds.colors[2]?.value || "#18251E"};--project-radius:${ds.radius}px;--project-font:${ds.fontFamily};--project-weight:${ds.headingWeight}`}>
   <header class="case-section-heading"><h2>Design system</h2><Icon name="grid2"/></header>
@@ -77,6 +95,18 @@ const iconFor = (tool: string) => /ga4|gtm/i.test(tool) ? "chart" : /gsap/i.test
 <script>
   import { onPageLoad } from "../scripts/page-lifecycle";
   onPageLoad(scope=>{
+    document.querySelectorAll<HTMLElement>("[data-social-rail]").forEach(rail=>{
+      const track=rail.querySelector<HTMLElement>("[data-rail-track]")!;
+      const prev=rail.querySelector<HTMLButtonElement>("[data-rail-prev]")!;
+      const next=rail.querySelector<HTMLButtonElement>("[data-rail-next]")!;
+      const update=()=>{prev.disabled=track.scrollLeft<4;next.disabled=track.scrollLeft+track.clientWidth>=track.scrollWidth-4;};
+      const page=(dir:number)=>track.scrollBy({left:dir*track.clientWidth*0.85,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+      prev.addEventListener("click",()=>page(-1),{signal:scope.signal});
+      next.addEventListener("click",()=>page(1),{signal:scope.signal});
+      track.addEventListener("scroll",update,{passive:true,signal:scope.signal});
+      addEventListener("resize",update,{signal:scope.signal});
+      update();
+    });
     document.querySelectorAll<HTMLElement>(".case-device").forEach(device=>{
       const container=device.querySelector<HTMLElement>(".case-device-viewport")!;
       const button=device.querySelector<HTMLButtonElement>("[data-embed-url]")!;

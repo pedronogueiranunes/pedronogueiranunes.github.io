@@ -45,7 +45,7 @@ const projects = defineCollection({
     location: z.string().optional(),
     caseSlug: z.string().optional(),
     strategyTitle: z.string().optional(),
-    gallery: z.array(z.object({ src: z.string(), alt: z.string(), caption: z.string(), video: z.string().optional() })).default([]),
+    gallery: z.array(z.object({ src: z.string(), alt: z.string(), caption: z.string(), video: z.string().optional(), group: z.enum(["social"]).optional() })).default([]),
     designSystem: z.object({
       colors: z.array(z.object({ name: z.string(), value: z.string().regex(/^#[0-9a-fA-F]{6}$/) })),
       fontFamily: z.string(),

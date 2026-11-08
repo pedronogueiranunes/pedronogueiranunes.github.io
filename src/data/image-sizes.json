@@ -1131,5 +1131,95 @@
     "width": 1200,
     "height": 14854,
     "srcset": "/assets/cases/issa-castro-atlanta-cover--w320.webp 320w, /assets/cases/issa-castro-atlanta-cover--w640.webp 640w, /assets/cases/issa-castro-atlanta-cover--w960.webp 960w, /assets/cases/issa-castro-atlanta-cover.webp 1200w"
+  },
+  "/assets/projects/lemmbra-olympiad/launch-1.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/launch-1--w320.webp 320w, /assets/projects/lemmbra-olympiad/launch-1--w640.webp 640w, /assets/projects/lemmbra-olympiad/launch-1--w960.webp 960w, /assets/projects/lemmbra-olympiad/launch-1.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/launch-2.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/launch-2--w320.webp 320w, /assets/projects/lemmbra-olympiad/launch-2--w640.webp 640w, /assets/projects/lemmbra-olympiad/launch-2--w960.webp 960w, /assets/projects/lemmbra-olympiad/launch-2.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/launch-3.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/launch-3--w320.webp 320w, /assets/projects/lemmbra-olympiad/launch-3--w640.webp 640w, /assets/projects/lemmbra-olympiad/launch-3--w960.webp 960w, /assets/projects/lemmbra-olympiad/launch-3.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/launch-4.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/launch-4--w320.webp 320w, /assets/projects/lemmbra-olympiad/launch-4--w640.webp 640w, /assets/projects/lemmbra-olympiad/launch-4--w960.webp 960w, /assets/projects/lemmbra-olympiad/launch-4.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-2.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-2--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-2--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-2--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-2.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-3.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-3--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-3--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-3--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-3.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-4.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-4--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-4--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-4--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-4.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-5.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-5--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-5--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-5--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-5.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-6.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-6--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-6--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-6--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-6.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-7.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-7--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-7--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-7--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-7.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/illustration-9.webp": {
+    "width": 1600,
+    "height": 1814,
+    "srcset": "/assets/projects/lemmbra-olympiad/illustration-9--w320.webp 320w, /assets/projects/lemmbra-olympiad/illustration-9--w640.webp 640w, /assets/projects/lemmbra-olympiad/illustration-9--w960.webp 960w, /assets/projects/lemmbra-olympiad/illustration-9.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-cover.webp": {
+    "width": 1600,
+    "height": 900,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-cover--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-cover--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-cover--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-cover.webp 1600w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-overall-1.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-overall-1--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-overall-1--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-overall-1--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-overall-1.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-overall-2.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-overall-2--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-overall-2--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-overall-2--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-overall-2.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-overall-3.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-overall-3--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-overall-3--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-overall-3--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-overall-3.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-brazil-1.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-brazil-1--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-brazil-1--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-brazil-1--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-brazil-1.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-brazil-2.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-brazil-2--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-brazil-2--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-brazil-2--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-brazil-2.webp 1080w"
+  },
+  "/assets/projects/lemmbra-olympiad/winners-brazil-3.webp": {
+    "width": 1080,
+    "height": 1350,
+    "srcset": "/assets/projects/lemmbra-olympiad/winners-brazil-3--w320.webp 320w, /assets/projects/lemmbra-olympiad/winners-brazil-3--w640.webp 640w, /assets/projects/lemmbra-olympiad/winners-brazil-3--w960.webp 960w, /assets/projects/lemmbra-olympiad/winners-brazil-3.webp 1080w"
   }
 }

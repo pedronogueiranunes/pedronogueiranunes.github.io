@@ -232,3 +232,39 @@
 
 .case-lightbox-download { min-height: 44px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--fidelity-soft); color: var(--text); font: 500 12px/1 var(--font-mono); text-transform: uppercase; }
 .case-lightbox-download:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Social media assets: Netflix-style rail, scroll-snap with arrow paging and a hover lift. */
+.case-rail { position: relative; }
+.case-rail-track { display: flex; gap: 16px; margin: 0; padding: 12px 4px 20px; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 4px; scrollbar-width: none; }
+.case-rail-track::-webkit-scrollbar { display: none; }
+.case-rail-card { flex: 0 0 clamp(200px, 22vw, 280px); scroll-snap-align: start; transition: transform 200ms ease-out; }
+.case-rail-card .case-gallery-open { aspect-ratio: 4 / 5; }
+.case-rail-card .case-gallery-open img { height: 100%; }
+.case-rail-caption { display: block; margin-top: 10px; font: 400 12px/1.5 var(--font-mono); color: var(--text-secondary); }
+@media (hover: hover) { .case-rail-track:hover .case-rail-card:not(:hover) { opacity: .7; } .case-rail-card:hover { transform: translateY(-6px) scale(1.03); } .case-rail-card { transition: transform 200ms ease-out, opacity 200ms; } }
+.case-rail-arrow { position: absolute; top: calc(50% - 22px); z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--text); box-shadow: 0 4px 16px #0000001f; cursor: pointer; }
+.case-rail-arrow--prev { left: -12px; } .case-rail-arrow--next { right: -12px; }
+.case-rail-arrow:disabled { opacity: 0; pointer-events: none; }
+.case-rail-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 768px) { .case-rail-arrow { display: none; } .case-rail-card { flex-basis: 62vw; } }
+@media (prefers-reduced-motion: reduce) { .case-rail-card, .case-rail-card:hover { transition: none; transform: none; } }
+
+/* Hero: text and actions on the left, one facts card on the right (results first when a case has them). */
+.case-page .case-hero-aside { display: grid; gap: 28px; align-content: start; border-left: 1px solid var(--border); padding-left: 32px; }
+.case-page .case-hero-aside .case-result-card { border-left: 0; padding-left: 0; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+.case-page .case-facts { display: grid; gap: 0; margin: 0; }
+.case-page .case-facts > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; padding-block: 12px; border-bottom: 1px solid var(--border); }
+.case-page .case-facts > div:first-child { padding-top: 0; }
+.case-page .case-facts dt { font: 400 11px/1.6 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+.case-page .case-facts dd { margin: 0; font-size: 15px; line-height: 1.5; }
+.case-page .case-meta .case-hero-stack { margin: 20px 0 0; }
+.case-page .case-intro > .case-external-actions { margin-top: 28px; }
+@media (max-width: 1024px) { .case-page .case-hero-aside { padding-left: 24px; } }
+@media (max-width: 768px) { .case-page .case-hero-aside { padding-left: 0; border-left: 0; border-top: 1px solid var(--border); padding-top: 24px; } .case-page .case-facts > div { grid-template-columns: 84px minmax(0, 1fr); } }
+.case-page .case-meta .case-hero-stack { justify-content: flex-start; }
+/* Asset gallery: masonry columns so portrait illustrations and wide covers keep their own proportions. */
+.case-gallery-grid { display: block; columns: 3; column-gap: 24px; }
+.case-gallery-item { break-inside: avoid; margin-bottom: 24px; }
+.case-gallery-item--wide { grid-column: auto; }
+.case-gallery-open img, .case-gallery-item--wide .case-gallery-open img { height: auto; }
+@media (max-width: 768px) { .case-gallery-grid { columns: 2; column-gap: 12px; } .case-gallery-item { margin-bottom: 16px; } .case-gallery-open img, .case-gallery-item--wide .case-gallery-open img { height: auto; } }
