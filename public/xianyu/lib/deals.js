@@ -1,6 +1,7 @@
 // Analisa os anúncios: marca lixo (compra, aluguel, sinal, acessório, peça, bloqueado),
 // mede relevância ao termo, calcula o preço típico (mediana) e o desconto de cada anúncio.
 import { norm, queryTokens, productCore } from './variations.js';
+import { titleColors, attrMatch, parseQuery } from './attributes.js';
 
 const FLAGS = [
   { key: 'wanted', label: 'Pedido de compra', re: /求购|收购|回收|高价收|收一[台个部]|蹲一[个台]|想收|求一[个台]/ },
@@ -102,6 +103,9 @@ export function parseAttrs(title) {
   // tamanho: calçado (42码) ou roupa (XL码)
   if ((m = l.match(/(?:^|[^\d.])(3[4-9]|4[0-8])(?:\.5)?\s*码/))) a.size = m[0].replace(/[^\d.]/g, '');
   else if ((m = s.match(/(?:尺码|码数)?\s*\b(XXS|XS|S|M|L|XL|XXL|XXXL|2XL|3XL|4XL)\b\s*(?:码|号)/i) || s.match(/(?:尺码|码数)\s*[:：]?\s*(XXS|XS|S|M|L|XL|XXL|XXXL|2XL|3XL|4XL)\b/i))) a.size = m[1].toUpperCase();
+  // cor: a primeira citada no título; se citar várias ("黑色 白色"), todas ficam em colors
+  const cs = titleColors(s);
+  if (cs.length) { a.color = cs[0]; if (cs.length > 1) a.colors = cs; }
   return a;
 }
 
@@ -114,6 +118,7 @@ const creditLevel = (c) => { for (const [re, l] of CREDIT) if (re.test(String(c 
 
 export function analyze(items, query) {
   const tokens = queryTokens(query);
+  const qAttrs = parseQuery(query).attrs; // cor, memória, estado, versão digitados: viram chips, não palavra obrigatória
   const queryHasAccessory = ACCESSORY.test(query);
 
   const q = norm(productCore(query));
@@ -146,7 +151,9 @@ export function analyze(items, query) {
     const relevance = tokens.length ? matched / tokens.length : 1;
     const attrs = parseAttrs(it.title);
     if (battery != null) attrs.battery = battery;
-    return { ...it, flags, relevance, battery, attrs, goodSeller: GOOD_CREDIT.test(it.sellerCredit || '') };
+    // true = o título diz o atributo pedido; false = diz outro; null = não diz
+    const attrHit = qAttrs.length ? Object.fromEntries(qAttrs.map((a) => [a.id, attrMatch(a, attrs)])) : undefined;
+    return { ...it, flags, relevance, battery, attrs, attrMatch: attrHit, goodSeller: GOOD_CREDIT.test(it.sellerCredit || '') };
   });
 
   // Preço típico: só anúncios relevantes, sem lixo e com preço.

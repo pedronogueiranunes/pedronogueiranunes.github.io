@@ -2,6 +2,9 @@
 // produto em chinês, modelo sem espaço, abreviações usadas no Xianyu (pm = pro max,
 // m4 = IV...). As melhores ficam primeiro; a UI deixa marcar/desmarcar.
 
+import { parseQuery } from './attributes.js';
+export { parseQuery } from './attributes.js';
+
 // apelidos -> nome em chinês (como os vendedores escrevem)
 export const BRANDS = {
   iphone: '苹果', apple: '苹果', ipad: '苹果ipad', macbook: '苹果macbook', airpods: '苹果airpods', 'apple watch': '苹果手表',
@@ -84,7 +87,8 @@ function splitWords(q) {
 // Só o produto, sem as palavras de condição: "苹果17 无拆无修" -> "苹果 17"
 export const productCore = (q) => {
   // tira os qualificadores ANTES de separar números ("99新" e "电池100" saem inteiros)
-  const words = (splitSearches(q)[0] || '').toLowerCase().normalize('NFKC').split(/\s+/).filter((w) => w && !isQualifier(w));
+  // cor, memória, estado e versão digitados (ex.: "verde", "256gb") não fazem parte do nome do produto
+  const words = parseQuery(splitSearches(q)[0] || '').core.toLowerCase().normalize('NFKC').split(/\s+/).filter((w) => w && !isQualifier(w));
   // qualificador colado no produto: "苹果17无拆无修"
   const stripped = words.map((w) => w.replace(/无拆无修|未拆修|无拆修|验货宝|国行|自用|准新机?|\d{2}新|电池\d+%?/g, '')).filter(Boolean);
   return splitWords(stripped.join(' ')).filter((t) => !isQualifier(t)).join(' ');
@@ -100,12 +104,26 @@ const QUALIFIER_SUGGESTIONS = [
 
 // Sugestões de variações (nada é selecionado automaticamente na UI).
 export function expandQuery(query, max = 10) {
-  const q = splitSearches(query)[0] || '';
-  if (!q) return [];
+  const typed = splitSearches(query)[0] || '';
+  if (!typed) return [];
   const cands = [];
   const add = (term, reason) => term && cands.push({ term: term.trim(), reason });
+  // o produto sem cor/memória/estado/versão; os atributos entram nas buscas combinadas abaixo
+  const { core, attrs } = parseQuery(typed);
+  const q = attrs.length ? core : typed;
 
-  add(q, 'como você digitou');
+  add(typed, 'como você digitou');
+  if (attrs.length) {
+    const zhCore = (translateLead(q) || q).replace(/\s+/g, '');
+    const zhAttrs = attrs.map((a) => a.zh).filter(Boolean);
+    const enAttrs = attrs.map((a) => a.en).filter(Boolean);
+    // 1) tudo em chinês, como o vendedor escreve; 2) atributos em inglês na frente, que o Xianyu entende
+    add(`${zhCore} ${zhAttrs.join(' ')}`, 'chinês: produto + ' + attrs.map((a) => a.label).join(', '));
+    if (enAttrs.length) add(`${enAttrs.join(' ')} ${q}`, 'atributos em inglês na frente');
+    // 3) só a cor (ou o primeiro atributo), para não apertar demais a busca
+    const main = attrs.find((a) => a.kind === 'color') || attrs[0];
+    if (attrs.length > 1) add(`${zhCore} ${main.zh}`, `chinês: só ${main.label}`);
+  }
   const zh = translateLead(q);
   add(zh, 'nome em chinês');
   if (/\s/.test(q)) add(q.replace(/\s+/g, ''), 'modelo junto (sem espaço)');
