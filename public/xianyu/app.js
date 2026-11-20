@@ -2,6 +2,7 @@
 // o token de quem está usando; nada passa por servidor nosso. Cache, gastos e configurações
 // ficam no localStorage deste navegador.
 import { expandQuery, dedupeTerms, norm, productCore } from './lib/variations.js';
+import { chipsOf } from './lib/attributes.js';
 import { analyze } from './lib/deals.js';
 import { ACTORS, searchApify, estimateCost, getAccount } from './lib/sources/apify.js';
 import { SUPPORT, SORTS, cleanFilters, localFilter } from './lib/filters.js';
@@ -149,10 +150,32 @@ let variations = [];
 let custom = [];
 let lastData = null;
 let onlyGood = true;
+// Atributos da busca (cor, memória, estado, versão): a pessoa escolhe preferir, exigir ou ignorar.
+// O casamento com o título vem pronto em r.attrMatch[id]: true, false ou null (o título não diz).
+let qattrs = [];
+let attrModes = {};
+const ATTR_MODES = ['prefer', 'must', 'ignore'];
+const MODE_LABEL = { prefer: 'preferir', must: 'exigir', ignore: 'ignorar' };
+const KIND_LABEL = { color: 'Cor', storage: 'Memória', condition: 'Estado', version: 'Versão' };
+const modeOf = (id) => attrModes[id] || 'prefer';
+const activeAttrs = (mode) => qattrs.filter((a) => modeOf(a.id) === mode && (lastData?.results || []).some((r) => r.attrMatch && a.id in r.attrMatch));
+function attrCounts(id) {
+  const rows = (lastData?.results || []).filter((r) => r.eligible && r.attrMatch && id in r.attrMatch);
+  if (!rows.length) return null;
+  return { yes: rows.filter((r) => r.attrMatch[id] === true).length, other: rows.filter((r) => r.attrMatch[id] === false).length, none: rows.filter((r) => r.attrMatch[id] === null).length };
+}
+function chipsHtml() {
+  if (!qattrs.length) return '';
+  return '<span class="vlabel">Da sua busca:</span>' + qattrs.map((a) => {
+    const m = modeOf(a.id); const c = attrCounts(a.id);
+    const tip = `${KIND_LABEL[a.kind]} ${a.label}. Clique para trocar: preferir (sobe no ranking), exigir (esconde quem não cita) ou ignorar.${c ? `\n${c.yes} citam, ${c.other} citam outro, ${c.none} não dizem` : ''}`;
+    return `<button type="button" class="qa ${m}" data-qa="${esc(a.id)}" title="${esc(tip)}">${esc(KIND_LABEL[a.kind])}: ${esc(a.label)} · <b>${MODE_LABEL[m]}</b>${c ? ` <small>${c.yes}/${c.yes + c.other + c.none}</small>` : ''}</button>`;
+  }).join('');
+}
 
 function renderVars() {
   const all = [...variations, ...custom.map((term) => ({ term, reason: 'sua' }))];
-  $('#vars').innerHTML = all.map((v) => `<label class="var ${selected.has(v.term) ? 'on' : ''}" title="${esc(v.reason)}"><input type="checkbox" data-term="${esc(v.term)}" ${selected.has(v.term) ? 'checked' : ''}>${esc(v.term)}</label>`).join('')
+  $('#vars').innerHTML = chipsHtml() + all.map((v) => `<label class="var ${selected.has(v.term) ? 'on' : ''}" title="${esc(v.reason)}"><input type="checkbox" data-term="${esc(v.term)}" ${selected.has(v.term) ? 'checked' : ''}>${esc(v.term)}</label>`).join('')
     + '<input id="varAdd" placeholder="+ outra variação" aria-label="Adicionar variação">';
   updateEstimate();
 }
@@ -175,6 +198,7 @@ async function updateEstimate() {
 async function loadVariations() {
   const q = $('#q').value.trim();
   variations = q ? expandQuery(q, 8) : [];
+  qattrs = q ? chipsOf(q) : [];
   selected = new Set(variations.slice(0, S.maxVariations).map((v) => v.term));
   custom = [];
   renderVars();
@@ -207,7 +231,13 @@ function renderResults() {
     <div class="facts"><span><b>${eligible.length}</b> ofertas válidas de ${d.results.length} anúncios</span><span>${costTxt}</span><span>fonte ${esc(d.p.src)} · ¥1 = ${d.rate.toFixed(3).replace('.', ',')}</span></div>
     <div class="facts small">Por busca: ${d.perTerm.map((t) => `${esc(t.term)} <b>${t.count}</b>${t.cached ? ' (cache)' : ''}`).join(' · ')}${d.p.dropped.length ? `<br>Fora para não pagar duas vezes: ${d.p.dropped.map((x) => `${esc(x.term)} (${esc(x.reason)})`).join(' · ')}` : ''}</div>
     <label class="toggle"><input type="checkbox" id="onlyGood" ${onlyGood ? 'checked' : ''}> só ofertas válidas</label>`;
-  const list = onlyGood ? eligible : d.results;
+  let list = onlyGood ? eligible : d.results;
+  const must = activeAttrs('must');
+  if (must.length) list = list.filter((x) => must.every((a) => x.attrMatch?.[a.id] === true));
+  const pref = activeAttrs('prefer');
+  const hits = (x) => pref.reduce((n, a) => n + (x.attrMatch?.[a.id] === true ? 1 : 0), 0);
+  if (pref.length) list = [...list].sort((a, b) => (b.eligible - a.eligible) || (hits(b) - hits(a))); // sort estável: dentro de cada grupo vale a ordem de antes
+  renderVars(); // atualiza os contadores dos chips
   $('#grid').innerHTML = list.length ? list.map((x) => card(x, d.rate)).join('') : '<p class="muted">Nada por aqui. Tente desmarcar "só ofertas válidas" ou outras variações.</p>';
   $('#onlyGood').onchange = (e) => { onlyGood = e.target.checked; renderResults(); };
   renderMonth();
@@ -272,6 +302,11 @@ document.querySelectorAll('#size button').forEach((b) => b.classList.toggle('on'
 $('#size').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; S.perTerm = Number(b.dataset.size); saveSettings(); document.querySelectorAll('#size button').forEach((x) => x.classList.toggle('on', x === b)); updateEstimate(); };
 let qTimer;
 $('#q').addEventListener('input', () => { clearTimeout(qTimer); qTimer = setTimeout(loadVariations, 350); });
+$('#vars').addEventListener('click', (e) => {
+  const b = e.target.closest('.qa'); if (!b) return;
+  attrModes[b.dataset.qa] = ATTR_MODES[(ATTR_MODES.indexOf(modeOf(b.dataset.qa)) + 1) % ATTR_MODES.length];
+  if (lastData) renderResults(); else renderVars();
+});
 $('#vars').addEventListener('change', (e) => { const t = e.target.dataset.term; if (!t) return; e.target.checked ? selected.add(t) : selected.delete(t); renderVars(); });
 $('#vars').addEventListener('keydown', (e) => {
   if (e.target.id !== 'varAdd' || e.key !== 'Enter') return;
