@@ -18,6 +18,7 @@ const titles=[
  ['Molina Chambô: visual identity','Molina Chambô: identidade visual','Molina Chambô: identidad visual','Molina Chambô : identité visuelle'],
  ['Peeeo: music releases','Peeeo: lançamentos musicais','Peeeo: lanzamientos musicales','Peeeo : sorties musicales'],
  ['Tire Crew: tire finder homepage','Tire Crew: home com buscador de pneus','Tire Crew: home con buscador de neumáticos','Tire Crew : accueil avec recherche de pneus'],
+ ['Prática: a daily guitar practice app','Prática: um app de prática diária de guitarra','Prática: una app de práctica diaria de guitarra','Prática : une app de pratique quotidienne de la guitare'],
  ['BSA Legal: brand system','BSA Legal: sistema de marca','BSA Legal: sistema de marca','BSA Legal : système de marque'],
 ];
 const altWebsite=['site','sitio web','site web'];const altPreview=['prévia do site','vista previa de la web','aperçu du site web'];
