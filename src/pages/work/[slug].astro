@@ -179,7 +179,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
             secondary
             icon="arrow-up-right"
           >
-            {isExperiment ? "Open the lab" : "Visit live site"}
+            {isExperiment ? (p.openLabel || "Open the lab") : "Visit live site"}
           </Button>
           {!isExperiment && <Button href={archiveUrl} disabled={!archiveUrl} secondary icon="history">Wayback Machine</Button>}
           </>}

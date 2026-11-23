@@ -23,6 +23,7 @@ export const site = {
     "waipono-farms": "https://waipono-farms.webflow.io/",
     "lemmbra-olympiad": "https://olimpiadas-lemmbra.webflow.io/",
     "dither-lab": "https://pedronogueira.dev/dither-lab/",
+    "pratica": "https://pedronogueira.dev/pratica/",
   } as Record<string, string>,
   availability: "Taking on new projects", // No month, so it never goes stale.
 };
