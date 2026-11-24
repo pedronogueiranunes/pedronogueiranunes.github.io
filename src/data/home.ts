@@ -106,6 +106,7 @@ export const logoFor = (tool: string) =>
   (
     ({
       "Variables": "variables",
+      "Web Audio": "webaudio",
       "Storybook": "storybook",
       "GTM": "googletagmanager",
       "Clarity": "microsoftclarity",
@@ -138,6 +139,9 @@ export const logoFor = (tool: string) =>
     "Premiere",
     "After Effects",
     "Final Cut Pro",
+    "Tauri",
+    "Rust",
+    "TypeScript",
     "Krita",
     "Pixelmator Pro",
     "Google Lighthouse",
