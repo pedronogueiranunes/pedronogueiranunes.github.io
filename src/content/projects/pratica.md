@@ -40,6 +40,37 @@ The audio engine is written in Rust and runs inside a Tauri desktop app, so the 
 
 Practice data lives in SQLite on the Mac and in IndexedDB on the web, with a small event log that keeps both in step. The interface is React and TypeScript, with a shared core package that holds the music theory, the exercises and the tests. Every audio path is covered by automated checks, and the sounds are synthesized, so there are no third party samples.
 
+## Download for Mac
+
+### Prática for Mac, v0.1.0
+
+The web app runs in any browser. The Mac app does everything the web version does and adds what a browser cannot:
+
+- An Amp tab that runs your guitar through Neural Amp Modeler profiles in real time, with volume and dry/wet knobs, meters, an oscilloscope and nine pedals.
+- Live chord recognition from your guitar input, with inversions and close variations.
+- A low latency audio engine written in Rust, with separate input and output channels for each audio interface.
+- Your practice data stored on your own Mac, in a local database.
+
+<p class="case-dl"><a class="action" href="https://github.com/pedronogueiranunes/pratica/releases/download/v0.1.0/Pratica-0.1.0-arm64.dmg" rel="noopener"><span class="action-halo" aria-hidden="true"><span></span></span><span class="action-label">Download for Mac</span></a><span class="case-dl-meta">Apple Silicon, macOS 14.2 or later, 6.9 MB</span></p>
+
+### Check it before you open it
+
+I publish a SHA-256 checksum with every build, so you can confirm the file you downloaded is the one I built. After downloading, run this in Terminal:
+
+```
+shasum -a 256 ~/Downloads/Pratica-0.1.0-arm64.dmg
+```
+
+The result must be exactly this:
+
+```
+e9e7a6d658f91de9bda64c04bafe00882abca7763f3c6e8ac478fac3397da7a3
+```
+
+The same value is in the [release notes and checksum file](https://github.com/pedronogueiranunes/pratica/releases/tag/v0.1.0) on GitHub, so you can compare it in two places. If the values differ, do not open the file.
+
+This build is not notarized by Apple yet, so macOS will say it cannot verify the developer. Once the checksum matches, right click Prática in Applications, choose Open, then Open again. You only need to do this the first time. The source code is [public on GitHub](https://github.com/pedronogueiranunes/pratica) if you would rather build it yourself.
+
 ## Changelog
 
 ### Every step so far
