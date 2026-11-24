@@ -27,6 +27,7 @@ export async function getStaticPaths() {
 }
 const { project } = Astro.props;
 const p = project.data;
+const Body = p.showBody ? (await project.render()).Content : null;
 const video = videoFor(p.caseSlug || project.slug);
 const liveUrl = site.projectUrls[project.slug];
 const isExperiment = p.kinds?.includes("4");
@@ -262,6 +263,7 @@ const usesCoverImage = p.collection || p.archivedWebsite || p.films.length > 0 |
           <p>A longer narrative needs room for context, constraints and competing priorities. This paragraph tests reading rhythm, line length and the spacing between ideas before the final case copy is available.</p>
         </>}
       </section>
+      {Body && <section class="case-md"><Body /></section>}
       {showMock && <section>
         <h2>The strategy</h2>
         <h3>{strategyTitle}</h3>

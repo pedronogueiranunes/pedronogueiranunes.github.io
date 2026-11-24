@@ -55,6 +55,7 @@ const projects = defineCollection({
       buttonLabel: z.string(),
     }).optional(),
     fullPage: z.boolean().default(false),
+    showBody: z.boolean().default(false),
     testimonial: z.object({ quote: z.string(), author: z.string(), role: z.string().optional() }).optional(),
     brand: z.object({
       rationale: z.string().default(""),
