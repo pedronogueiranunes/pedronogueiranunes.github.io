@@ -8017,6 +8017,8 @@ footer.site-footer { padding-top: min(var(--footer-gutter), 64px); }
 
 /* Projects page: tighter section inset, steadier card interiors in the 2 and 3 column views. */
 .projects-page .projects-header, .projects-page .projects-filters, .projects-page .all-projects.page-section { padding-inline: clamp(20px, 3vw, 40px); }
+/* Full-bleed header/filter backgrounds, content aligned to the 1440px .all-projects container (1440 - 2*40 inset). */
+.projects-page .projects-header, .projects-page .projects-filters { padding-inline: max(clamp(20px, 3vw, 40px), calc((100% - 1360px) / 2)); }
 .project-meta__facts::before { content: "· "; }
 .project-tools__more { display: none; }
 [data-projects-filter]:not([data-view="list"]):not([data-view="timeline"]) .all-projects > .project-grid { gap: 44px 28px; align-items: stretch; }
